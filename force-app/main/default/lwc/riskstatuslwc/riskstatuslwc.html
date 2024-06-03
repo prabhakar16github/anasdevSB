@@ -1,0 +1,139 @@
+<template>
+    <template if:true={modelVisblity}>
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+        </template>
+        <lightning-card>
+            <lightning-layout variant="brand">
+                <lightning-layout-item padding="around-amall">
+                    <table class="slds-table slds-table_cell-buffer slds-table_boarded">
+                        <thead>
+                            <tr class="slds-line-height-reset">
+                                <td scope="col">
+                                    <div class="demo-only" style="padding:0.5rem;background:hsl(252, 66%, 52%)">
+                                        <div class="slds-text-color_inverse">POST RISK</div>
+                                    </div>
+                                </td>
+                                <td scope="col">
+                                    <div class="slds-box slds-box_small">
+                                        <p class="slds-text-color_success" >{poststatuspage}</p>
+                                    </div>
+                                   
+                                </td>
+                                <td scope="col">
+                                    <lightning-button variant="brand-outline"
+                                                    label = "Post Hold"
+                                                    title="Post Hold"
+                                                    onclick={handlePostHoldClick}
+                                                    disabled={disablePostHold}
+                                                   >
+                                    </lightning-button>
+                                </td>
+                                <td scope="col">
+                                    <lightning-button variant="brand-outline"
+                                                    label = "Post Release"
+                                                    title="Post Release"
+                                                    onclick={handlPostReleaseClick}
+                                                    disabled={disablePostRelease}
+                                                    >
+                                                    
+                                    </lightning-button>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </lightning-layout-item>
+                
+            </lightning-layout>
+	 </lightning-card>
+		<lightning-card>
+            <lightning-layout variant="brand">
+                <lightning-layout-item padding="around-amall">
+                    <table class="slds-table slds-table_cell-buffer slds-table_boarded">
+                        <thead>
+                            <tr class="slds-line-height-reset">
+                                <td scope="col">
+                                    <div class="demo-only" style="padding:0.5rem;background:hsl(252, 66%, 52%)">
+                                        <div class="slds-text-color_inverse">OB RISK</div>
+                                    </div>
+                                </td>
+                                <td scope="col">
+                                    <div class="slds-box slds-box_small">
+                                        <p class="slds-text-color_success" >{obstatuspage}</p>
+                                    </div>
+                                   
+                                </td>
+                                <td scope="col">
+                                    <lightning-button variant="brand-outline"
+                                                    label = "OB Hold"
+                                                    title="OB Hold"
+                                                    onclick={handleOBHoldClick}
+                                                    disabled={disableOBHold}
+                                                    >
+                                    </lightning-button>
+                                </td>
+                                <td scope="col">
+                                    <lightning-button variant="brand-outline"
+                                                    label = "OB Release"
+                                                    title="OB elease"
+                                                    onclick={handleOBReleaseClick}
+                                                    disabled={disableOBRelease}
+                                                    >
+                                    </lightning-button>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </lightning-layout-item>
+                </lightning-layout>
+		</lightning-card>
+		<lightning-card>
+                <lightning-layout variant="brand">
+                    <lightning-layout-item padding="around-amall">
+                        <table class="slds-table slds-table_cell-buffer slds-table_boarded">
+                            <thead>
+                                <tr class="slds-line-height-reset">
+                                    <td scope="col">
+                                        <div class="demo-only" style="padding:0.5rem;background:hsl(252, 66%, 52%)">
+                                            <div class="slds-text-color_inverse">PRE RISK</div>
+                                        </div>
+                                    </td>
+                                    <td scope="col">
+                                        <div class="slds-box slds-box_small">
+                                            <p class="slds-text-color_success" >{prestatuspage}</p>
+                                        </div>
+                                       
+                                    </td>
+                                    <td scope="col">
+                                        <lightning-button variant="brand-outline"
+                                                        label = "Pre Hold"
+                                                        title="Pre Hold"
+                                                        onclick={handlePreHoldClick}
+                                                        disabled={disablePreHold}
+                                                        >
+                                        </lightning-button>
+                                    </td>
+                                    <td scope="col">
+                                        <lightning-button variant="brand-outline"
+                                                        label = "Pre Release"
+                                                        title="Pre Release"
+                                                        onclick={handlePreReleaseClick}
+                                                        disabled={disablePreRelease}
+                                                        >
+                                        </lightning-button>
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </lightning-layout-item>
+                    </lightning-layout>
+        </lightning-card>
+   </template>     
+  
+    <template if:true={postHoldPage}>
+         <c-createpostriskrecord  postchild={postparent} releasechild = {releaseparent} postholdid = {postrecidpage}></c-createpostriskrecord>
+    </template>
+    <template if:true={obHoldPage}>
+        <c-createobrisk obchild={obparent} releaseobchild = {releaseparent} obrecid = {obredidpage}></c-createobrisk >
+   </template>
+</template>

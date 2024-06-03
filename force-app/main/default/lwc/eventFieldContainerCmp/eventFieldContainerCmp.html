@@ -1,0 +1,32 @@
+<template>
+    <div class="headingCls">Event Fields<strong></strong>
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="A">
+                <template if:false={eventFieldList}>
+                    
+                    <lightning-record-edit-form
+                    object-api-name={eventObjectExtract}
+                    layout-type="compact"
+                    onsuccess={handleSuccess}
+                    >
+            <lightning-messages></lightning-messages>
+            <div>
+                <lightning-input-field field-name={fieldList_1.sub} onchange={handlePlatformChange}></lightning-input-field>
+            </div>
+                    </lightning-record-edit-form>
+                </template>
+            </lightning-tab>
+            <lightning-tab label="B">
+
+            </lightning-tab>
+            <lightning-tab label="C">
+
+            </lightning-tab>
+            <lightning-tab label="D">
+
+            </lightning-tab>
+        </lightning-tabset>
+    
+    </div>
+    
+</template>

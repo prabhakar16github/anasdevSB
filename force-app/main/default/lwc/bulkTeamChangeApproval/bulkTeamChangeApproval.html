@@ -1,0 +1,40 @@
+<template>
+    <div if:true={isLoading}>
+      <lightning-spinner
+          alternative-text="Team Change Approval" variant="brand" class="slds-is-fixed">
+      </lightning-spinner>
+    </div>
+    <div>
+        <lightning-card title="Approve/Reject Team Change Request" icon-name="standard:user">
+          <template if:true={detailsList}>
+                <lightning-button   variant="success"
+                            label="Approve Requests"
+                            title="Approve Requests"
+                            onclick={actionOnRequests} 
+                            data-id="Approve"
+                            slot="actions"
+                            icon-name="utility:check"
+                            class="slds-m-around_small">
+                  </lightning-button>
+                  <lightning-button   variant="destructive"
+                            label="Reject Requests"
+                            title="Reject Requests"
+                            onclick={actionOnRequests} 
+                            data-id="Reject"
+                            slot="actions"
+                            icon-name="utility:check"
+                            class="slds-m-around_small">
+                  </lightning-button>
+                     <lightning-datatable
+                     key-field="id"
+                     data={detailsList}
+                     columns={columns}>
+                     </lightning-datatable>
+                </template>
+                <template if:false={detailsList}>
+                  <div class="slds-text-body_regular slds-align_absolute-center" ><b>No record found !</b></div>
+                </template>
+
+        </lightning-card>
+    </div>
+</template>

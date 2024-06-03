@@ -1,0 +1,23 @@
+<template>
+    <lightning-card>
+        <template if:false={accesscheck}>
+            <div class="slds-align_absolute-center">You don't have access to send the Release Note to L1!</div>
+        </template>
+
+        <template if:true={accesscheck}>
+            <template if:true={rncheck}>
+                <div class="slds-align_absolute-center">You have already assigned this Release note to L1!</div>
+            </template>
+    
+            <template if:false={rncheck}>
+                <div style="padding: 10px;">
+                    <lightning-textarea name="comment" label="Comment" placeholder="type your comment here..." onchange={commentChange}></lightning-textarea>
+                    <div style="text-align: right;">
+                        <lightning-button variant="brand" label="Save" title="Save Approval Comment" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+    </lightning-card>
+</template>

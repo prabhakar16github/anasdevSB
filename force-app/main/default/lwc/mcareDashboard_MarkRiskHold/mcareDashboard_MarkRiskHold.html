@@ -1,0 +1,48 @@
+<template>
+    <lightning-quick-action-panel header="Mark Risk Hold">
+   <template if:true={isClose}>
+       <!-- <template if:true={postHold}> -->
+        
+           <lightning-record-edit-form record-id={postRiskId}  name="Post Hold"  object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess}>
+            
+               <lightning-messages> </lightning-messages>
+               <lightning-input-field field-name="Risk_Hold_Reason__c" required=true name="Post Reason" onchange={handlePicklistValChange}> </lightning-input-field>
+               <lightning-input-field field-name="Risk_Hold_Reason_Email_Content__c"  value={conValueRisk}></lightning-input-field> <!--  onchange={changeHandlerPost} -->
+               <lightning-input-field field-name="Comments_By_Enforcer__c" required=true> </lightning-input-field>
+               <lightning-input-field field-name="Investigation_findings__c" required=true> </lightning-input-field>
+               <lightning-input-field field-name="Current_Status__c" class="slds-hidden"> </lightning-input-field>
+                <lightning-input-field field-name="Opportunity__c" value={opportunityId} class="slds-hidden" > </lightning-input-field> 
+                <lightning-input-field field-name="Enforced_By__c" value={enforcedBy} class="slds-hidden" > </lightning-input-field> 
+               <!-- <input type="submit" class="hidden" /> -->
+                <lightning-button
+                       class="slds-m-top_small"
+                       variant="Brand"
+                       type="submit"
+                       label="Put On Hold"
+                       data-id = "On Hold"
+                       >
+               </lightning-button>
+           
+               <lightning-button
+                   class="slds-m-top_small"
+                   variant="Brand"
+                   type="submit"
+                   label="Close"
+                   name="postHoldClose"
+                   onclick={handleClose}
+                   data-id = "Not On Hold"
+                   >
+               </lightning-button>
+               
+               
+              
+           </lightning-record-edit-form>
+       <!-- </template> -->
+     
+
+
+
+</template>
+            
+    </lightning-quick-action-panel>
+</template>

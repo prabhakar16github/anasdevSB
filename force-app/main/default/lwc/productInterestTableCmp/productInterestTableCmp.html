@@ -1,0 +1,333 @@
+<template>
+    <lightning-tabset variant="scoped">
+            <lightning-tab label="Core Payments" value="corePaymentTab">
+                <lightning-accordion allow-multiple-sections-open
+                            
+                             active-section-name={activeSectionsCorePayment}>
+                    <lightning-accordion-section name="Recommended for Cross-Sell" label="Recommended for Cross-Sell">
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Sub-Product</th>
+                                        <th>Status</th>
+                                        <th>Insights</th>
+                                        <th>Risk Eligibility</th>
+                                        <th>Merchant Interest</th>
+                                        <th>Interest Reason</th>
+                                        <!-- <th></th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <template if:true={visibleRecords}>
+                                    <template for:each={visibleRecords} for:item="interest" for:index="index">
+                                        <!-- <tbody key={interest.Id}> -->
+                                            <tr key={interest.Id} class="table-row">
+                                                <td onclick={handleRowClick} data-name={interest.Id}>{interest.product}</td>
+                                                <td onclick={handleRowClick} data-name={interest.Id}>{interest.sub_product}</td>
+                                                <td onclick={handleRowClick} data-name={interest.Id}>
+                                                    <div class="colorParent">
+                                                        <span class="colorPillsOptions">{interest.Active__c}({interest.Active_Status__c})</span>
+                                                    </div>
+                                                </td>
+                                                <td>{interest.Insights__c}</td>
+                                                <td>
+                                                    <div class="colorParent">
+                                                        <span class="colorPillsOptions">Need more Info.</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <lightning-button-icon-stateful
+                                                    icon-name="utility:like" 
+                                                    selected={interest.Merchant_Interest_Flag__c} 
+                                                    onclick={handleLikeButtonClick} 
+                                                    alternative-text="Like"
+                                                    disabled={isButtonDisabled}
+                                                    data-id={interest.Id}>
+                                                    </lightning-button-icon-stateful>
+                                                </td>
+                                                <td></td>
+                                                <!-- <td>
+                                                    <lightning-button variant="destructive-text" label="Open" title="Destructive action" onclick={handleLaunchModal} class="slds-m-left_x-small"></lightning-button>
+                                                </td> -->
+                                                <td>
+                                                    <lightning-button-menu alternative-text="Show menu" menu-alignment="right">
+                                                        <lightning-menu-item value="Raise risk check" label="Raise risk check"></lightning-menu-item>
+                                                        <lightning-menu-item value="Activate" label="Activate"></lightning-menu-item>
+                                                        <lightning-menu-item value="Seek Interest" label="Seek Interest"></lightning-menu-item>
+                                                    </lightning-button-menu>
+                                                </td>
+                                                
+                                            </tr>
+                                        <!-- </tbody> -->
+                                    </template>
+                                </template>
+                            </tbody>
+                            </table>
+                        </div>
+                        <div class="slds-var-m-vertical_medium">
+                            <c-pagination-cmp records={prodInterestData} onupdate={updateContactHandler}></c-pagination-cmp>
+                        </div>
+                    </lightning-accordion-section>
+    
+                    <lightning-accordion-section name="GMV Trend for Active Instruments" label="GMV Trend for Active Instruments">
+                        <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Sub-Product</th>
+                                        <th>Lifetime GMV</th>
+                                        <th>Last 30 Days GMV
+                                            <lightning-helptext content="Last 30 days from today"></lightning-helptext>
+                                        </th>
+                                        <th>Last 3 month GMV</th>
+                                        <th>Last 6 month GMV</th>
+                                        <th>Last 12 month GMV</th>
+                                        <th>Activation Date</th>
+                                        <th>Insights</th>
+                                        <!--<th>Transacting</th>-->
+                                    </tr>
+        
+                                </thead>
+                                <template if:true={activeProdInterestData}>
+                                    <template for:each={activeProdInterestData} for:item="activeInterest">
+                                        <tbody key={activeInterest.Id}>
+                                            <tr class="table-row">
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.product}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.sub_product}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.GMV_Lifetime__c}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.GMV_Last_month__c}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.GMV_Last_3_months__c}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.GMV_Last_6_months__c}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.GMV_Last_12_months__c}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.Activation_Date__c}</td>
+                                                <td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.Insights__c}</td>
+                                                <!--<td onclick={handleRowClickActiveSec} data-name={activeInterest.Id}>{activeInterest.Transacting__c}</td>-->
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </template>
+                                
+                            </table>
+                    </lightning-accordion-section>
+                    <lightning-accordion-section name="Complete GMV Trends for Merchant" label="Complete GMV Trends for Merchant">
+                        <template if:true={oppGMVFieldList}>
+                            <template for:each={oppGMVFieldList} for:item="gmv">
+                                <div key={gmv.Id}>
+                                    <div class="topContainer">
+                                        <div class="item">
+                                          <div class="itemData">
+                                            <div class="itemLabel">Lifetime GMV</div>
+                                            <div class="itemContent">{gmv.GMV_Lifetime__c}</div>
+                                          </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">Last 3 Months GMV</div>
+                                              <div class="itemContent">{gmv.Last_3_months_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">Last 6 Months GMV</div>
+                                              <div class="itemContent">{gmv.Last_6_months_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">Last 12 Months GMV</div>
+                                              <div class="itemContent">{gmv.Last_12_months_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="topContainer">
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">YTD GMV</div>
+                                              <div class="itemContent">{gmv.YTD_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">MTD GMV</div>
+                                              <div class="itemContent">{gmv.MTD_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                </div>
+                            </template>
+                        </template>
+                    </lightning-accordion-section>
+                    
+               </lightning-accordion>
+            </lightning-tab>
+            <lightning-tab label="Payment Stack"  value="paymentStackTab">
+                <lightning-accordion allow-multiple-sections-open
+                            active-section-name={activeSectionsPaymentStack}>
+                    <lightning-accordion-section name="Recommended for Cross-Sell" label="Recommended for Cross-Sell">
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Sub-Product</th>
+                                        <th>Status</th>
+                                        <th>Insights</th>
+                                        <th>Risk Eligibility</th>
+                                        <th>Merchant Interest</th>
+                                        <th>Interest Reason</th>
+                                        <!-- <th></th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <template if:true={visibleRecordsStack}>
+                                    <template for:each={visibleRecordsStack} for:item="interest" for:index="index">
+                                        <!-- <tbody key={interest.Id}> -->
+                                            <tr key={interest.Id} class="table-row">
+                                                <td onclick={handleRowClick}>{interest.product}</td>
+                                                <td onclick={handleRowClick}>{interest.sub_product}</td>
+                                                <td onclick={handleRowClick}>
+                                                    <div class="colorParent">
+                                                        <span class="colorPillsOptions">{interest.Active__c}({interest.Active_Status__c})</span>
+                                                    </div>
+                                                </td>
+                                                <td>{interest.Insights__c}</td>
+                                                <td>
+                                                    <div class="colorParent">
+                                                        <span class="colorPillsOptions">Need more Info.</span>
+                                                    </div>
+                                                </td> 
+                                                <td>
+                                                    <lightning-button-icon-stateful
+                                                    icon-name="utility:like" 
+                                                    selected={interest.Merchant_Interest_Flag__c} 
+                                                    onclick={handleLikeButtonClickStack} 
+                                                    alternative-text="Like"
+                                                    disabled={isButtonDisabled}
+                                                    data-id={interest.Id}>
+                                                    </lightning-button-icon-stateful>
+                                                </td>
+                                                <td></td>
+                                                <!-- <td>
+                                                    <lightning-button variant="destructive-text" label="Open" title="Destructive action" onclick={handleLaunchModal} class="slds-m-left_x-small"></lightning-button>
+                                                </td> -->
+                                                <td>
+                                                    <lightning-button-menu alternative-text="Show menu" menu-alignment="right">
+                                                        <lightning-menu-item value="Raise risk check" label="Raise risk check"></lightning-menu-item>
+                                                        <lightning-menu-item value="Activate" label="Activate"></lightning-menu-item>
+                                                        <lightning-menu-item value="Seek Interest" label="Seek Interest"></lightning-menu-item>
+                                                    </lightning-button-menu>
+                                                </td>
+                                                
+                                            </tr>
+                                        
+                                    </template>
+                                </template>
+                            </tbody>
+                            </table>
+                        </div>
+                        <div class="slds-var-m-vertical_medium">
+                            <c-pagination-cmp records={prodInterestDataStack} onupdate={updateContactHandlerStack}></c-pagination-cmp>
+                        </div>
+                    </lightning-accordion-section>
+    
+                    <lightning-accordion-section name="GMV Trend for Active Instruments" label="GMV Trend for Active Instruments">
+                        <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Sub-Product</th>
+                                        <th>Lifetime GMV</th>
+                                        <th>Last 30 Days GMV
+                                            <lightning-helptext content="Last 30 days from today"></lightning-helptext>
+                                        </th>
+                                        <th>Last 3 month GMV</th>
+                                        <th>Last 6 month GMV</th>
+                                        <th>Last 12 month GMV</th>
+                                        <th>Activation Date</th>
+                                        <th>Insights</th>
+                                        <!--<th>Transacting</th>-->
+                                    </tr>
+        
+                                </thead>
+                                <template if:true={activeProdInterestDataStack}>
+                                    <template for:each={activeProdInterestDataStack} for:item="activeInterest">
+                                        <tbody key={activeInterest.Id}>
+                                            <tr>
+                                                <td>{activeInterest.product}</td>
+                                                <td>{activeInterest.sub_product}</td>
+                                                <td>{activeInterest.GMV_Lifetime__c}</td>
+                                                <td>{activeInterest.GMV_Last_month__c}</td>
+                                                <td>{activeInterest.GMV_Last_3_months__c}</td>
+                                                <td>{activeInterest.GMV_Last_6_months__c}</td>
+                                                <td>{activeInterest.GMV_Last_12_months__c}</td>
+                                                <td>{activeInterest.Activation_Date__c}</td>
+                                                <td>{activeInterest.Insights__c}</td>
+                                                <!--<td>{activeInterest.Transacting__c}</td>-->
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </template>
+                                
+                            </table>
+                    </lightning-accordion-section>
+                    <lightning-accordion-section name="Complete GMV Trends for Merchant" label="Complete GMV Trends for Merchant">
+                        <template if:true={oppGMVFieldList}>
+                            <template for:each={oppGMVFieldList} for:item="gmv">
+                                <div key={gmv.Id}>
+                                    <div class="topContainer">
+                                        <div class="item">
+                                          <div class="itemData">
+                                            <div class="itemLabel">Lifetime GMV</div>
+                                            <div class="itemContent">{gmv.GMV_Lifetime__c}</div>
+                                          </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">Last 3 Months GMV</div>
+                                              <div class="itemContent">{gmv.Last_3_months_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">Last 6 Months GMV</div>
+                                              <div class="itemContent">{gmv.Last_6_months_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">Last 12 Months GMV</div>
+                                              <div class="itemContent">{gmv.Last_12_months_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="topContainer">
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">YTD GMV</div>
+                                              <div class="itemContent">{gmv.YTD_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="itemData">
+                                              <div class="itemLabel">MTD GMV</div>
+                                              <div class="itemContent">{gmv.MTD_GMV__c}</div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                </div>
+                            </template>
+                        </template>
+                    </lightning-accordion-section>
+                    
+                </lightning-accordion>
+                
+               
+            </lightning-tab>
+            <lightning-tab label="Omnichannel" value="omnichannelTab">
+                Omnichannel
+            </lightning-tab>
+        </lightning-tabset>
+        
+    </template>

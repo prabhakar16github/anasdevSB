@@ -1,0 +1,68 @@
+.exampleHolder {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+}
+.viewModeDivHeight {
+    height: 22px;
+}
+.mainStyle{
+      max-width: 90%;min-width: 90%;
+}
+.demo{
+  background: #d68f8f;
+}
+.demo1{
+  background: white;
+}
+.custompicklistCss{
+    height: 28px;
+    background: #d4d7da;
+    color: #1730af;
+    width: 100%;
+    border-bottom: 2px;
+    padding-top: 7px;
+    padding-left: 10px;
+}
+
+.toggleSectionCssWithData{
+    color: #2b967d;
+    border-color: #2b967d;
+}
+.toggleSectionCssWithoutData{
+    border-radius:10px; 
+    background: #caccce; 
+    margin-top: 5px;
+}
+.spinner{
+  background-color: #edf0f3;
+  height: 80px;
+}
+.panStyle{
+  overflow: scroll;
+  position: absolute;
+  z-index: 4;
+  max-height: 168px;
+  min-width: 662px;
+  background: white;
+  border: 1px solid #dad5d5;
+  
+}
+.panStyleOnDetailPage{
+  overflow: scroll;
+  position: absolute;
+  z-index: 4;
+  max-height: 6%;
+  min-width: 47%;
+  background: white;
+  border: 1px solid #dad5d5;
+}

@@ -1,0 +1,305 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div>
+        <div class="searchBarWrap_main">
+            &nbsp;&nbsp;&nbsp;<lightning-button label="Confirm Payment Options" variant="brand"
+                onclick={screen3Step2Show}></lightning-button>
+        </div>
+    </div>
+    <div class="tabSectionMainWrap tabSectionChildWrap">
+        <template if:true={errorSelectPayOptions}><!--Added by rohit start-->
+            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                <span class="slds-assistive-text">warning</span>
+                <h2>{showErrorMessageForSelectPayOptions}</h2>
+                <div class="slds-notify__close">
+                    <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" onclick={hideErrorMessage}>
+                        X
+                    </button> 
+                </div> 
+            </div><br/>
+        </template><!--Added by rohit End-->
+        <lightning-tabset class="tabNavigateBorder">
+            <!--Screen Third Part 1 All Payment Options Starting-->
+            <lightning-tab label="All Payment Options">
+                <table id="Table1">
+                    <thead class="thMainRow">
+                        <tr>
+                            <th class="varientThreeFirstTh" style="width:19%;text-align:center;">PAYMENT MODE</th>
+                            <th class="varientThree" style="width:19%;text-align:center;">BANKS/PAYMENT OPTIONS</th>
+                            <th class="varientThree" style="width:19%;text-align:center;">SPECIFICATIONS</th>
+                            <th class="varientThree" style="width:19%;text-align:center;">PAYMENT GATEWAY</th>
+                            <th class="varientThree" style="width:19%;text-align:center;">ONUS/OFFFUS</th>
+                            <th class="varientThree" style="width:5%;text-align:center;"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listPaymentDataTemporary} for:item="pay" for:index="indx">
+                            <tr key={pay.key}>
+                                <td class="firstTdCls" style="width:19%;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <label class="slds-checkbox__label" for="checkbox-unique-id-81">
+                                                    <span class="slds-form-element__label"><lightning-input
+                                                            type="checkbox" checked={pay.isChecked}
+                                                            onchange={handleChecked} data-id={pay.key}
+                                                            data-key={indx}></lightning-input></span>
+                                                    <span
+                                                        class="slds-form-element__label"><b>{pay.paymentMode}</b></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls" style="width:19%;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <template for:each={pay.listPaymentDataInner} for:item="payInner"
+                                                    for:index="indx1">
+                                                    <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                        <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                            <lightning-combobox data-id={pay.key} data-key={indx1}
+                                                                data-label={indx} value={payInner.selectedPaymentOption}
+                                                                options={payInner.listPaymentOptionsToShow}
+                                                                onchange={handleChangePaymentOptions}
+                                                                variant="label-hidden"
+                                                                disabled={payInner.disablePicklistValues}></lightning-combobox>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls" style="width:19%;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <template for:each={pay.listPaymentDataInner} for:item="payInner"
+                                                    for:index="indx1">
+                                                    <template if:false={payInner.disableSpecificationPicklist}>
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <c-multiselect-picklist data-id={pay.key}
+                                                                    data-key={indx1} data-label={indx}
+                                                                    multi-select="true"
+                                                                    options={payInner.listSpecificationToShow}
+                                                                    selected-value={payInner.selectedSpecifications}
+                                                                    selected-values={payInner.selectedSpecificationsList}
+                                                                    onselectoption={getSpecifications}></c-multiselect-picklist>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                    <template if:true={payInner.disableSpecificationPicklist}>
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <c-multiselect-picklist disabled="true"
+                                                                    options="[]"></c-multiselect-picklist>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls" style="width:19%;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <template for:each={pay.listPaymentDataInner} for:item="payInner"
+                                                    for:index="indx1">
+                                                    <template if:false={payInner.disablePaymentGatewayPicklist}>
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <c-multiselect-picklist data-id={pay.key}
+                                                                    data-key={indx1} data-label={indx}
+                                                                    multi-select="true"
+                                                                    options={payInner.listPaymentGatewayToShow}
+                                                                    selected-value={payInner.selectedPaymentGateway}
+                                                                    selected-values={payInner.selectedPaymentGatewayList}
+                                                                    onselectoption={getPaymentGateway}></c-multiselect-picklist>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                    <template if:true={payInner.disablePaymentGatewayPicklist}>
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <c-multiselect-picklist disabled="true"
+                                                                    options="[]"></c-multiselect-picklist>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls" style="width:19%;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <template for:each={pay.listPaymentDataInner} for:item="payInner"
+                                                    for:index="indx1">
+                                                    <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                        <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                            <lightning-combobox data-id={pay.key} data-key={indx1}
+                                                                data-label={indx} value={payInner.selectedOnusOffus}
+                                                                options={payInner.listOnusOffusToShow}
+                                                                onchange={handleChangeOnusOffus} variant="label-hidden"
+                                                                disabled={payInner.disablePicklistValues}></lightning-combobox>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls" style="width:5%;text-align:center;line-height:32px;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <template for:each={pay.listPaymentDataInner} for:item="payInner"
+                                                    for:index="indx1">
+                                                    <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                        <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                            <template if:false={payInner.showDeleteButton}>
+                                                                <svg onclick={addRow} focusable="false"
+                                                                    data-id={pay.key} data-key={indx1} data-label={indx}
+                                                                    aria-hidden="true" viewBox="0 0 52 52"
+                                                                    class="slds-icon slds-icon-text-default slds-icon_xx-small">
+                                                                    <g>
+                                                                        <path
+                                                                            d="M43 9C33.6-.3 18.4-.3 9 9-.3 18.4-.3 33.6 9 43c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.4-24.6.1-34zm-1 19c0 .6-.4 1-1 1H30c-.5 0-1 .5-1 1v11c0 .5-.5 1-1 1h-4c-.6 0-1-.4-1-1V30c0-.6-.4-1-1-1H11c-.6 0-1-.4-1-1v-4c0-.5.5-1 1-1h11c.6 0 1-.4 1-1V11c0-.5.5-1 1-1h4c.5 0 1 .4 1 1v11c0 .6.4 1 1 1h11c.5 0 1 .5 1 1v4z">
+                                                                        </path>
+                                                                    </g>
+                                                                </svg>
+                                                                <!--Added for Delete Ist Entry-->
+                                                                <lightning-icon icon-name="utility:delete"
+                                                                    size="xx-small" title="xx-small size"
+                                                                    onclick={removeRow} focusable="false"
+                                                                    data-id={pay.key} data-key={indx1} data-label={indx}
+                                                                    aria-hidden="true"></lightning-icon>
+                                                                <!--End-->
+                                                            </template>
+                                                            <template if:true={payInner.showDeleteButton}>
+                                                                <!--Added for Delete Ist Entry-->
+                                                                <svg onclick={addRow} focusable="false"
+                                                                    data-id={pay.key} data-key={indx1} data-label={indx}
+                                                                    aria-hidden="true" viewBox="0 0 52 52"
+                                                                    class="slds-icon slds-icon-text-default slds-icon_xx-small">
+                                                                    <g>
+                                                                        <path
+                                                                            d="M43 9C33.6-.3 18.4-.3 9 9-.3 18.4-.3 33.6 9 43c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.4-24.6.1-34zm-1 19c0 .6-.4 1-1 1H30c-.5 0-1 .5-1 1v11c0 .5-.5 1-1 1h-4c-.6 0-1-.4-1-1V30c0-.6-.4-1-1-1H11c-.6 0-1-.4-1-1v-4c0-.5.5-1 1-1h11c.6 0 1-.4 1-1V11c0-.5.5-1 1-1h4c.5 0 1 .4 1 1v11c0 .6.4 1 1 1h11c.5 0 1 .5 1 1v4z">
+                                                                        </path>
+                                                                    </g>
+                                                                </svg>
+                                                                <!--End-->
+                                                                <lightning-icon icon-name="utility:delete"
+                                                                    size="xx-small" title="xx-small size"
+                                                                    onclick={removeRow} focusable="false"
+                                                                    data-id={pay.key} data-key={indx1} data-label={indx}
+                                                                    aria-hidden="true"></lightning-icon>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </lightning-tab>
+            <!--Screen Third Part 1 All Payment Options Ending-->
+
+            <!--Screen Third Part 2 Selected Payment Options Starting-->
+            <lightning-tab label="Selected Payment Options" onactive={handleDataToShowNewForCombination}>
+                <table id="Table2">
+                    <thead class="thMainRow">
+                        <tr>
+                            <th style="width:20%;text-align:center;">PAYMENT MODE</th>
+                            <th style="width:20%;text-align:center;">BANKS/PAYMENT OPTIONS</th>
+                            <th style="width:20%;text-align:center;">SPECIFICATIONS</th>
+                            <th style="width:20%;text-align:center;">PAYMENT GATEWAY</th>
+                            <th style="width:20%;text-align:center;">ONUS/OFFUS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={selectedListPaymentData} for:item="pay" for:index="indx">
+                            <tr key={pay.paymentModeId}>
+                                <td rowspan="1" class="firstTdCls" style="width:20%;text-align:center;">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <label class="slds-checkbox__label" for="checkbox-unique-id-81">
+                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span
+                                                        class="slds-form-element__label"><b>{pay.paymentModeName}</b></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:20%;text-align:center;">
+                                    <template for:each={pay.selectedPaymentOptionsList} for:item="payInner"
+                                        for:index="indx1">
+                                        <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2"
+                                            for:index="indx2">
+                                            <div key={payInner.key} class="selectedOptionsTable">
+                                                <span
+                                                    class="colorPillsOptions">{payInner2.selectedPaymentOptionName}</span>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </td>
+                                <td style="width:20%;text-align:center;">
+                                    <template for:each={pay.selectedPaymentOptionsList} for:item="payInner"
+                                        for:index="indx1">
+                                        <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2"
+                                            for:index="indx2">
+                                            <div key={payInner2.key} class="selectedOptionsTable">
+                                                <span
+                                                    class="colorPillsOptionsPurple">{payInner2.selectedSpecification}</span>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </td>
+                                <td style="width:20%;text-align:center;">
+                                    <template for:each={pay.selectedPaymentOptionsList} for:item="payInner"
+                                        for:index="indx1">
+                                        <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2"
+                                            for:index="indx2">
+                                            <div key={payInner2.key} class="selectedOptionsTable">
+                                                <span
+                                                    class="colorPillsOptionsPink">{payInner2.selectedPaymentGatewayName}</span>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </td>
+                                <td style="width:20%;text-align:center;">
+                                    <template for:each={pay.selectedPaymentOptionsList} for:item="payInner"
+                                        for:index="indx1">
+                                        <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2"
+                                            for:index="indx2">
+                                            <div key={payInner2.key} class="selectedOptionsTable">
+                                                <span
+                                                    class="colorPillsOptionsOrange">{payInner2.selectedOnusOffus}</span>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </lightning-tab>
+            <!--Screen Third Part 2 Selected Payment Options Ending-->
+        </lightning-tabset>
+    </div>
+</template>

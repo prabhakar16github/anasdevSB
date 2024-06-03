@@ -1,0 +1,16 @@
+.viewModeDivHeight {
+    height: 22px;
+}
+.toggleSectionCssWithData{
+    color: #2b967d;
+    border-color: #2b967d;
+}
+.toggleSectionCssWithoutData{
+    border-radius:10px; 
+    background: #caccce; 
+    margin-top: 5px;
+}
+.spinner{
+    background-color: #edf0f3;
+    height: 80px;
+}

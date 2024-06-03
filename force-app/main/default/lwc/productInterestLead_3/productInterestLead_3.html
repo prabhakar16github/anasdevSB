@@ -1,0 +1,57 @@
+<template>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Sub Product</th>
+                <th>Interest</th>
+                <th>Interest Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={productInterests} for:item="productInterest" for:index="index">
+                <tr key={productInterest.Id}>
+                    <td>Wallets</td>
+                    <td>All Wallets</td>
+                    <td>
+                        <lightning-input type="checkbox" checked={productInterest.Checkbox_1__c} onchange={handleCheckboxChange} data-row-index={index} data-field-name="Checkbox_1__c"></lightning-input>
+                    </td>
+                    <td>
+                        <lightning-combobox value={productInterest.Picklist_1__c} options={picklistOptions} onchange={handlePicklistChange} data-row-index={index} data-field-name="Picklist_1__c"></lightning-combobox>
+                    </td>
+                </tr>
+                <tr key={productInterest.Id + '_row2'}>
+                    <td>Visa Checkout</td>
+                    <td>VISA CHECKOUT - VIES</td>
+                    <td>
+                        <lightning-input type="checkbox" checked={productInterest.Checkbox_1__c} onchange={handleCheckboxChange} data-row-index={index} data-field-name="Checkbox_1__c"></lightning-input>
+                    </td>
+                    <td>
+                        <lightning-combobox value={productInterest.Picklist_1__c} options={picklistOptions} onchange={handlePicklistChange} data-row-index={index} data-field-name="Picklist_1__c"></lightning-combobox>
+                    </td>
+                </tr>
+                <tr key={productInterest.Id + '_row3'}>
+                    <td>UPI</td>
+                    <td>Third Party Verification UPI</td>
+                    <td>
+                        <lightning-input type="checkbox" checked={productInterest.Checkbox_1__c} onchange={handleCheckboxChange} data-row-index={index} data-field-name="Checkbox_1__c"></lightning-input>
+                    </td>
+                    <td>
+                        <lightning-combobox value={productInterest.Picklist_1__c} options={picklistOptions} onchange={handlePicklistChange} data-row-index={index} data-field-name="Picklist_1__c"></lightning-combobox>
+                    </td>
+                </tr>
+                <tr key={productInterest.Id + '_row4'}>
+                    <td>UPI</td>
+                    <td>Intent UPI</td>
+                    <td>
+                        <lightning-input type="checkbox" checked={productInterest.Checkbox_1__c} onchange={handleCheckboxChange} data-row-index={index} data-field-name="Checkbox_1__c"></lightning-input>
+                    </td>
+                    <td>
+                        <lightning-combobox value={productInterest.Picklist_1__c} options={picklistOptions} onchange={handlePicklistChange} data-row-index={index} data-field-name="Picklist_1__c"></lightning-combobox>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+    <lightning-button variant="success" label="Save" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
+</template>

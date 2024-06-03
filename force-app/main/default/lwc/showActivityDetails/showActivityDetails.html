@@ -1,0 +1,43 @@
+<template>
+    <template if:true={activityValues}>
+        &nbsp;<b><p style="background-color:DodgerBlue;">ACTIVITIES</p></b><br/>
+        <table>
+            <tr>
+                <td><b>CreatedDate</b></td>
+                <td><b>Field</b></td>
+                <td><b>User</b></td>
+                <td><b>oldValue</b></td>
+                <td><b>newValue</b></td>
+            </tr>
+                    <template for:each={activityValues} for:item="item">
+                        <tr key={item.id}>
+                            <td>
+                                <textarea rows="2" cols="22" name="usrtxt" wrap="hard" disabled>
+                                    {item.createdDate}
+                                </textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2" cols="20" name="usrtxt" wrap="hard" disabled>
+                                    {item.field}
+                                </textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2" cols="12" name="usrtxt" wrap="hard" disabled>
+                                    {item.User}
+                                </textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2" cols="20" name="usrtxt" wrap="hard" disabled>
+                                    {item.oldValue}
+                                </textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2" cols="20" name="usrtxt" wrap="hard" disabled>
+                                    {item.newValue}
+                                </textarea>
+                            </td>
+                        </tr>
+                    </template>
+        </table>
+    </template>
+</template>

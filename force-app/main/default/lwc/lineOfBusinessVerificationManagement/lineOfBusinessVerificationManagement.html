@@ -1,0 +1,101 @@
+<template>
+    <div>
+        <div class="slds-grid slds-gutters">
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-input type="text" name="mccCodeName" 
+                    label="Mcc Code " maxlength="4" value={mccCodeName}  data-name="MCC_Code__c" onchange={handleChange} placeholder="Enter MCC Code"></lightning-input>
+                </div>
+            </div> 
+            <!-- value="{!v.lstWrpWebsitePage[0].OppObj.MCC_Code__c}" onchange="{!c.CheckMCCCodeLength}" -->
+            <!--Added by Pooja - DATE - 27-05-2022 //Start//MCC code - base MID mapping SFI-278-->
+            
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-input label="Base Merchant Id" value={baseMerchantIdValue} data-name="Base_Merchant_Id__c" onchange={handleChange}
+                    ></lightning-input><!--value={BaseMerchantId} commented by rohit -->
+                </div>
+            </div>  
+            <!-- value="{!v.baseMID}" updateOn="click"  -->
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-file-upload label="Add attachment" 
+                                           record-id={recordId}
+                                          ></lightning-file-upload> 
+                </div>
+            </div>
+            <!-- multiple="{!v.multiple}" accept="{!v.accept}" onuploadfinished="{!c.handleUploadFinished}" -->
+            <!-- <aura:if isTrue="{!v.lstWrpWebsitePage[0].OppObj.Merchant_Business_Type__c == 'Enterprise'}">
+                <div class="slds-col">
+                    <lightning:select aura:id="PicklistId" 
+                                      label="Please select card allowance:"
+                                      name="cardType" value="{!v.cardTypeSelection}">
+                        <option value="">None </option>
+                        <aura:iteration items="{!v.allowCardsCheck}" var="per">
+                            <option value="{!per}">{!per} </option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </aura:if> -->
+        </div>
+        
+        <!-- ======================//Ended /Update MCC Code ======================== -->
+        
+        <!--2nd Line-->
+        <div class="slds-grid slds-gutters">
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-record-edit-form record-id={recordId} object-api-name="Opportunity" onsubmit={handleSubmit}> 
+                        <lightning-input-field field-name="Business_Entity__c" class="recordFields"></lightning-input-field>
+                        
+                    </lightning-record-edit-form> 
+                </div>
+                <!-- value="{!v.businessEntityValue}"  -->
+            </div>
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-record-edit-form record-id={recordId}  object-api-name="Opportunity" onsubmit={handleSubmit}> 
+                        <lightning-input-field field-name="BusinessCategory__c" class="recordFields"></lightning-input-field>
+                    </lightning-record-edit-form> 
+                </div>
+                <!-- value="{!v.businessCategoryValue}"  -->
+            </div>
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-record-edit-form record-id={recordId}  object-api-name="Opportunity" onsubmit={handleSubmit}> 
+                        <lightning-input-field field-name="Sub_Category__c" class="recordFields"></lightning-input-field> 
+                    </lightning-record-edit-form> 
+                </div>
+                <!-- value="{!v.subCategory}" -->
+            </div> 
+        </div>
+        <div class="slds-grid slds-gutters">
+            <!--<div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-record-edit-form record-id={recordId} object-api-name="Opportunity" onsubmit={handleSubmit}> 
+                        <lightning-input-field field-name="LOB_Approver_Risk_Team__c" value={loggedInUserId} class="recordFields"></lightning-input-field>
+                        
+                    </lightning-record-edit-form> 
+                </div>
+                value="{!v.businessEntityValue}" 
+            </div>-->
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-record-edit-form record-id={recordId}  object-api-name="Opportunity" onsubmit={handleSubmit}> 
+                        <lightning-input-field field-name="LOB_Status_PreRisk__c" class="recordFields" onchange={handleLobStatus}></lightning-input-field>
+                    </lightning-record-edit-form> 
+                </div>
+                <!-- value="{!v.businessCategoryValue}"  -->
+            </div>
+            <div class="slds-size_1-of-3" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                    <lightning-record-edit-form record-id={recordId}  object-api-name="Opportunity" onsubmit={handleSubmit}> 
+                        <label for="fieldrejection">LOB Rejection Reason</label>
+                        <lightning-input-field field-name="LOB_Rejection_Reason__c"   value={lobReasonValue}  onchange={lobReasonChange} required={requiredTrueInCaseOfRejection} disabled={lobRejectionValueDisabled} id="fieldrejection" variant="label-hidden" class="recordFields" ></lightning-input-field> 
+                    </lightning-record-edit-form> 
+                </div>
+                <!-- value="{!v.subCategory}" -->
+            </div>
+        </div>
+    </div>
+</template>

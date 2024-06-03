@@ -1,0 +1,1370 @@
+<template>
+    <div style="max-width:100%;min-width: 100%;display: block;margin-left: auto;margin-right: auto;">
+        <template if:true={isShowSpinneratDetailsPage}>
+            <lightning-spinner alternative-text="Loading" style="position:fixed;" variant="brand" size="large"></lightning-spinner>
+        </template>
+        <lightning-card>
+            <template if:false={recordId}>
+                <div>
+                    <div class="slds-grid slds-wrap slds-m-bottom_medium viewModeDivHeight" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);height: auto;">
+                        <div class="slds-size_1-of-3" style="display: block;margin-left: auto;margin-right: auto;max-width: 20%;font-size: 21px;">
+                            <h3 slot="title">
+                                <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+                                Merchant Onboarding
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <div class="slds-m-bottom_medium" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                <div class="slds-p-around_x-small">
+                    <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                        <lightning-progress-step label="Basic Details" value="1"></lightning-progress-step>
+                        <lightning-progress-step label="Business Details" value="2"></lightning-progress-step>
+                        <lightning-progress-step label="Address Details" value="3"></lightning-progress-step>
+                        <lightning-progress-step label="Website Details" value="4"></lightning-progress-step>
+                        <lightning-progress-step label="Authorized signatory Details" value="5"></lightning-progress-step>
+                        <lightning-progress-step label="Bank Account Details" value="6"></lightning-progress-step>
+                    </lightning-progress-indicator>
+                </div>
+            </div>
+            <!--BASIC SECTION START-->
+            <template if:true={isShowBasicSection}>
+                <div class="" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <div>
+                        <div class="slds-section slds-m-top_medium slds-is-open">
+                            <h3 class="slds-section__title slds-m-top_medium">
+                            <button aria-controls="expando-unique-id" aria-expanded="false" data-id ={toggleCss} class="toggleSectionCssWithoutData slds-button slds-section__title-action slds-m-top_medium" onclick={toggleBasicSection}>
+                                <template if:true={toggleBasicSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevrondown" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <template if:false={toggleBasicSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevronright" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <span class="slds-truncate" title="Section Title">Basic Details</span>
+                            </button>
+                            </h3>
+                            <template if:true={toggleBasicSectionClass}>
+                            <div class="toggleSectionClass slds-section__content">
+                                <!--## Basic Section Edit Mode start ##-->
+                                <template if:false={BasicDetailsViewMode}>
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input type="text" class=""  required label="First Name" name="FirstName" value={wrap.FirstName} data-object="wrap" data-fieldapi="FirstName" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input name="LastName" class="" type="text" required label="Last Name" value={wrap.LastName} data-object="wrap" data-fieldapi="LastName" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input name="Email" class="" type="text" required label="Email" value={wrap.Email} data-object="wrap" data-fieldapi="Email" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input name="MobileNumber" class="" type="mobile" label="Mobile Number" value={wrap.MobilePhone} data-object="wrap" data-fieldapi="MobilePhone"  onchange={handleChangeLeadField} required></lightning-input>
+                                            <template if:true={mobileFieldError}>
+                                                <div>
+                                                    <h2 class="slds-text-color_error" style="font-size: 12px;">{mobileFieldError}</h2>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="Sub Status"
+                                                label="Sub Status"
+                                                value={wrap.Sub_Status__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="Sub_Status__c"
+                                                options={subStatusValue.data}
+                                                onchange={handleChangeLeadField} 
+                                                required>
+                                                
+                                            </lightning-combobox>
+                                        </div>
+                                        <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input name="MobileNumber" class="" type="mobile" label="Mobile Number" value={wrap.MobilePhone} data-object="wrap" data-fieldapi="MobilePhone"  onchange={handleChangeLeadField} required></lightning-input>
+                                            <template if:true={mobileFieldError}>
+                                                <div>
+                                                    <h2 class="slds-text-color_error" style="font-size: 12px;">{mobileFieldError}</h2>
+                                                </div>
+                                            </template>
+                                        </div>-->
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input type="text" label="Optimus Id" value={wrap.MOS_Lead_Id__c} data-object="wrap" data-fieldapi="MOS_Lead_Id__c" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="Sub Status"
+                                                label="Product holding"
+                                                value={wrap.Product_holding__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="Product_holding__c"
+                                                options={productHoldingValue.data}
+                                                onchange={handleChangeLeadField} 
+                                            >
+                                                
+                                            </lightning-combobox>
+                                        </div>
+                                        
+                                        <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input type="text" label="Subject" required value={wrap.Subject__c} data-object="wrap" data-fieldapi="Subject__c" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>-->
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="Business Entity"
+                                                label="Business Entity"
+                                                value={wrap.Business_Entity__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="Business_Entity__c"
+                                                options={businessEntityValue}
+                                                onchange={handleChangeLeadField} 
+                                                required>
+                                            </lightning-combobox>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="progress"
+                                                label="Merchant Platform"
+                                                value={wrap.Merchant_Platform__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="Merchant_Platform__c"
+                                                options={merchantPlatformValue.data}
+                                                onchange={handleChangeLeadField} >
+                                            </lightning-combobox>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="PCIMerchantCategory"
+                                                label="PCI Merchant Category"
+                                                value={wrap.PCI_Merchant_Category__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="PCI_Merchant_Category__c"
+                                                options={PCIMerchantCategoryValue.data}
+                                                onchange={handleChangeLeadField} >
+                                            </lightning-combobox>
+                                        </div>
+                                        <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="Product"
+                                                label="Product"
+                                                value={wrap.Product__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="Product__c"
+                                                options={productValue}
+                                                onchange={handleChangeLeadField} >
+                                            </lightning-combobox>-->
+                                            <!--<label class="slds-form-element__label" for="select-021">Product</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                <select class="slds-select" id="select-021" onchange={handleChangeLeadField} data-object="wrap" data-fieldapi="Product__c">
+                                                        <option value="">---None---</option>
+                                                        <template for:each={productValue} for:item="picklistItem">
+                                                            <option key={picklistItem.Name} value={picklistItem.Id}>
+                                                            {picklistItem.Name}
+                                                            </option>
+                                                        </template>
+                                                </select>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input class="" type="text" label="Potential number of centers" value={wrap.Potential_number_of_centers__c} data-object="wrap" data-fieldapi="Potential_number_of_centers__c" onchange={handleChangeLeadField}></lightning-input>
+                                            
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input class="" type="text" label="Live centers" value={wrap.Live_centers__c} data-object="wrap" data-fieldapi="Live_centers__c" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="Priority"
+                                                label="Priority"
+                                                value={wrap.Priority__c}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="Priority__c"
+                                                options={priorityValue.data}
+                                                onchange={handleChangeLeadField} 
+                                                >
+                                            </lightning-combobox>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input class="" type="number" label="Monthly Expected Sales" value={wrap.Monthly_Expected_Sale__c} data-object="wrap" data-fieldapi="Monthly_Expected_Sale__c" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input class="" type="number" label="Average Delivery Time (days)" value={wrap.Delivery_Duration__c} data-object="wrap" data-fieldapi="Delivery_Duration__c" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        
+                                        
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-textarea name="input1" label="Sales Notes" value={wrap.Sales_Notes__c} data-object="wrap" data-fieldapi="Sales_Notes__c" onchange={handleChangeLeadField}></lightning-textarea>
+                                        </div>
+                                        
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-textarea name="input1" label="Description" value={wrap.Description} data-object="wrap" data-fieldapi="Description" onchange={handleChangeLeadField}></lightning-textarea>
+                                        </div>
+                                        <div class="slds-p-around_small slds-p-top_medium lgc-bg slds-size_1-of-2">
+                                            <lightning-input class="" type="checkbox" label="Test Transaction Done" checked={wrap.Test_Transaction_Done__c}  value={wrap.Test_Transaction_Done__c} data-object="wrap" data-fieldapi="Test_Transaction_Done__c" onchange={handleChangeLeadField}></lightning-input>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-combobox name="Lead Source"
+                                                label="Lead Source"
+                                                value={wrap.LeadSource}
+                                                placeholder="-Select-"
+                                                data-object="wrap"
+                                                data-fieldapi="LeadSource"
+                                                options={LeadSourceValue.data}
+                                                onchange={handleChangeLeadField}
+                                                required 
+                                                >
+                                            </lightning-combobox>
+                                        </div>
+                                        <template if:true={isShowsubSourceField}>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-combobox name="Lead Source"
+                                                    label="Sub Source"
+                                                    value={wrap.Sub_Source__c}
+                                                    placeholder="-Select-"
+                                                    data-object="wrap"
+                                                    data-fieldapi="Sub_Source__c"
+                                                    options={subSourceValue.data}
+                                                    onchange={handleChangeLeadField} 
+                                                    s>
+                                                </lightning-combobox>
+                                            </div>
+                                        </template>
+                                        <!--<template if:true={isShowPartnerField}>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <lightning-input class="" type="search" name ="Partner" label="Partner temp" value={partner} data-object="wrap" data-fieldapi="Partner__c" onchange={handleChange_Partner} placeholder="Hdfc"></lightning-input>
+                                            <template if:true={isShowPartnerNameList}>
+                                                <div class={dynamicCssForPanAndLegalName} data-id=""> 
+                                                   <template for:each={partnerNameList} for:item="picklistItem">
+                                                    <div class="slds-border_bottom" style="height: 28px;" key={picklistItem.value}  onclick={setPartner} id={picklistItem.label} title={picklistItem.value} data-target-id={picklistItem.value} >
+                                                        {picklistItem.label}
+                                                    </div>
+                                                   </template>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        </template>-->
+                                        <template if:true={isShowPartnerField}>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-combobox name="Partner"
+                                                    label="Partner"
+                                                    value={wrap.Partner__c}
+                                                    placeholder="-Select-"
+                                                    data-object="wrap"
+                                                    data-fieldapi="Partner__c"
+                                                    options={partnerValue}
+                                                    onchange={handleChangeLeadField} >
+                                                </lightning-combobox>
+                                            </div>
+                                        </template>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                            <center>
+                                                <div>
+                                                    <template if:true={isShowErrorMsg}>
+                                                        <div>
+                                                            <h2 class="slds-text-color_error" style="font-size: 18px;">ERROR : Kindly Fill All Required fields.</h2>
+                                                        </div>
+                                                    </template>
+                                                    <template if:true={errorMsg}>
+                                                        <div>
+                                                            <h2 class="slds-text-color_error" style="font-size: 18px;">{errorMsg}</h2>
+                                                        </div>
+                                                    </template>
+                                                    <div>
+                                                        <template if:true={isShowSpinner}>
+                                                            <lightning-spinner alternative-text="Loading" style="position:fixed;" variant="brand" size="large"></lightning-spinner>
+                                                        </template>
+                                                        <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handale_SaveLead} class="slds-m-left_x-small"></lightning-button>
+                                                        <template if:true={isShowViewButton}>
+                                                            <lightning-button variant="brand" label="View Mode" title="Primary action" onclick={openViewMode} class="slds-m-left_x-small"></lightning-button>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                        </center>
+                                        </div>
+                                    </div>
+                                </template>
+                                <!--## Basic Section Edit Mode end ##-->
+                                <!--## Basic Section view Mode start ##-->
+                                <template if:true={BasicDetailsViewMode}>
+                                    
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">First Name</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.FirstName}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Last Name</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.LastName}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Email</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Email}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Mobile Number</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.MobilePhone}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Sub Status</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Sub_Status__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Optimus Id</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.MOS_Lead_Id__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Product holding</span>
+                                                <div class="slds-form-element__control">
+                                                    {wrap.Product_holding__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Business Entity</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {businessEntity}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Merchant Platform</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Merchant_Platform__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">PCI Merchant Category</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.PCI_Merchant_Category__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2 viewModeDivHeight">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent viewModeDivHeight">
+                                                <span class="slds-form-element__label slds-float--left">Product</span>
+                                                <div class="slds-form-element__control viewModeDivHeight">
+                                                    {product}
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Potential number of centers</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Potential_number_of_centers__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Live centers</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Live_centers__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Priority</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Priority__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Monthly Expected Sales</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Monthly_Expected_Sale__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Average Delivery Time (days)</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Delivery_Duration__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Sales Notes</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Sales_Notes__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Description</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Description}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Lead Source</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.LeadSource}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small slds-p-top_medium lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Test Transaction Done</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Test_Transaction_Done__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Partner</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {partner}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Sub Source</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Sub_Source__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                            <center>
+                                                <div>
+                                                    <div>
+                                                        <lightning-button variant="brand" label="Edit" title="Primary action" onclick={editBasicDetailsSection} class="slds-m-left_x-small"></lightning-button>
+                                                        <template if:false={recordId}>
+                                                            <lightning-button variant="brand" label="Go To Detail Page" title="Primary action" onclick={GoToDetailsPage} class="slds-m-left_x-small"></lightning-button>
+                                                        </template>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </template>
+                                <!--## Basic Section view Mode end ##-->
+                            </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!--BASIC SECTION END-->
+            <!--BUSINESS SECTION START-->
+            <template if:true={isShowBusinessDetail}>
+                <div class="" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <div>
+                        <div class="slds-section slds-m-top_medium slds-is-open">
+                            <h3 class="slds-section__title slds-m-top_medium">
+                            <button aria-controls="expando-unique-id" aria-expanded="false" class="toggleSectionCssWithoutData slds-button slds-section__title-action slds-m-top_medium" onclick={toggleBusinessSection}>
+                                <template if:true={toggleBusinessDetailSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevrondown" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <template if:false={toggleBusinessDetailSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevronright" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <span class="slds-truncate" title="Section Title">Business Details</span>
+                            </button>
+                            </h3>
+                            <template if:true={toggleBusinessDetailSectionClass}>
+                            <div class="slds-section__content">
+                                <!--## Business Section Edit Mode start ##-->
+                                <template if:false={BusinessDetailsViewMode}>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="GST Number" value={wrap.GST_Number__c} data-object="wrap" data-fieldapi="GST_Number__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Products and Services Sold" value={wrap.Product_Service_Description__c} data-object="wrap" data-fieldapi="Product_Service_Description__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="search" name ="PanNumber" label="Pan Number" value={wrap.PAN_Number__c} data-object="wrap" data-fieldapi="PAN_Number__c" onchange={handleChangePanNumber} placeholder="ATEPT5660K"></lightning-input>
+                                        <template if:true={isShowPanNumberList}>
+                                            <div class={dynamicCssForPanAndLegalName} data-id=""> 
+                                               <template for:each={panNumberList} for:item="picklistItem">
+                                                <div class="slds-border_bottom" style="height: 28px;" key={picklistItem.PanNumber}  onclick={setPanNumber} id={picklistItem.PanNumber} title={picklistItem.legalName} data-target-id={picklistItem.PanNumber} >
+                                                    {picklistItem.PanNumber}
+                                                </div>
+                                               </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="search" name ="LegalName" label="Legal Name" value={wrap.Legal_Name__c} data-object="wrap" data-fieldapi="Legal_Name__c" onchange={handleChangePanNumber} ></lightning-input>
+                                        <template if:true={isShowLegalNameList}>
+                                            <div class={dynamicCssForPanAndLegalName} > 
+                                               <template for:each={legalNameList} for:item="picklistItem" for:index="index">
+                                                <div class="slds-border_bottom" data-id={picklistItem.PanNumber} style="height: 28px;" key={picklistItem.legalName} onclick={setlegalName} data-name={picklistItem.PanNumber} id={picklistItem.PanNumber} title={picklistItem.legalName}>
+                                                    {picklistItem.legalName}
+                                                </div>
+                                               </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-combobox name="ENT Merchant Category Range"
+                                            label="ENT Merchant Category Range"
+                                            value={wrap.ENT_Merchant_Category_Range__c}
+                                            placeholder="-Select-"
+                                            data-object="wrap"
+                                            data-fieldapi="ENT_Merchant_Category_Range__c"
+                                            options={eNTMerchantCategoryRangeValue.data}
+                                            onchange={handleChangeLeadField} >
+                                        </lightning-combobox>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-dual-listbox name="Industries"
+                                            label="ENT PayU Product"
+                                            source-label="Available"
+                                            selected-label="Selected"
+                                            field-level-help="This is a dual listbox"
+                                            options={eNTPayUProductValue.data}
+                                            value={selectePayuProduct}
+                                            data-object="wrap"
+                                            data-fieldapi="ENT_PayU_Product__c"
+                                            onchange={handleChangeLeadField}></lightning-dual-listbox>
+                                        <!--<lightning-dual-listbox name="ENT PayU Product"
+                                            label="ENT PayU Product"
+                                            ource-label="Available"
+                                            selected-label="Selected"
+                                            value={wrap.ENT_PayU_Product__c}
+                                            data-object="wrap"
+                                            data-fieldapi="ENT_PayU_Product__c"
+                                            field-level-help="Select your preferred Product"
+                                            options={listOptions}
+                                            onchange={handleChangeLeadField}></lightning-dual-listbox>-->
+                                    </div>
+                                    
+                                    <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-combobox name="ENT PayU Product"
+                                            label="ENT PayU Product"
+                                            value={wrap.ENT_PayU_Product__c}
+                                            placeholder="-Select-"
+                                            data-object="wrap"
+                                            data-fieldapi="ENT_PayU_Product__c"
+                                            options={eNTPayUProductValue.data}
+                                            onchange={handleChangeLeadField} >
+                                        </lightning-combobox>
+                                    </div>-->
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-combobox name="Business Category"
+                                            label="Business Category"
+                                            value={wrap.BusinessCategory__c}
+                                            placeholder="-Select-"
+                                            data-object="wrap"
+                                            data-fieldapi="BusinessCategory__c"
+                                            options={businessCategoryValue}
+                                            onchange={handleChangeLeadField} 
+                                            required>
+                                        </lightning-combobox>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" name ="" label="Business Category (Others)" value={wrap.Business_Category_Other__c} onchange={handleChangeLeadField} data-object="wrap" data-fieldapi="Business_Category_Other__c"></lightning-input>
+                                        <template if:true={isShowBusinessCateErrorMsg}>
+                                            <div>
+                                                <h2 class="slds-text-color_error" style="font-size: 12px;">Kindly fill this field.</h2>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-combobox name="Sub Category"
+                                            label="Sub Category"
+                                            value={wrap.Sub_Category__c}
+                                            placeholder="-Select-"
+                                            data-object="wrap"
+                                            data-fieldapi="Sub_Category__c"
+                                            options={subCategoryValue}
+                                            onchange={handleChangeLeadField} 
+                                            >
+                                        </lightning-combobox>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Sub Categories (Others)" value={wrap.Sub_Category_Other__c} data-object="wrap" data-fieldapi="Sub_Category_Other__c" onchange={handleChangeLeadField}></lightning-input>
+                                        <template if:true={isShowSubCateErrorMsg}>
+                                            <div>
+                                                <h2 class="slds-text-color_error" style="font-size: 12px;">Kindly fill this field.</h2>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="MCC Code"></lightning-input>
+                                    </div>-->
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="date" label="Date of Incorporation" value={wrap.Date_of_Incorporation__c} data-object="wrap" data-fieldapi="Date_of_Incorporation__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                   <!-- <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="number" label="Average Delivery Time (days)" value={wrap.Delivery_Duration__c} onchange={handleChangeLeadField} data-object="wrap" data-fieldapi="Delivery_Duration__c"></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="currency" label="Trans. Monthly Vol" onchange={handleChangeLeadField} value={wrap.Monthly_Expected_Sale__c} data-object="wrap" data-fieldapi="Monthly_Expected_Sale__c"></lightning-input>
+                                    </div>-->
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Average Cost" data-object="wrap" data-fieldapi="Average_Cost__c" value={wrap.Average_Cost__c} onchange={handleChangeLeadField} ></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Maximum Cost" data-object="wrap" data-fieldapi="Maximum_Cost__c" value={wrap.Maximum_Cost__c} onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="checkbox" label="International Cards" checked={wrap.International_Cards__c} data-object="wrap" value={wrap.International_Cards__c} data-fieldapi="International_Cards__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="date" label="International Cards Date" data-object="wrap" value={wrap.International_Cards_Date__c} data-fieldapi="International_Cards_Date__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="checkbox" checked={wrap.Multicurrency_Gateway__c} label="Multicurrency Gateway" data-object="wrap" value={wrap.Multicurrency_Gateway__c} data-fieldapi="Multicurrency_Gateway__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="date" label="Multicurrency Gateway Date" data-object="wrap" value={wrap.Multi_Currency_Gateway_Date__c} data-fieldapi="Multi_Currency_Gateway_Date__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="date" label="Date Of Registration" data-object="wrap" value={wrap.Date_of_Registration__c} data-fieldapi="Date_of_Registration__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Certificate No." data-object="wrap" data-fieldapi="Certificate_Number__c" value={wrap.Certificate_Number__c} onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Courier Info" data-object="wrap"  data-fieldapi="Courier_Info__c" value={wrap.Courier_Info__c} onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="TAN Number" data-object="wrap" data-fieldapi="TAN_Number__c" value={wrap.TAN_Number__c} onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Lead Business Name" data-object="wrap" value={wrap.Lead_Business_Name__c} data-fieldapi="Lead_Business_Name__c" onchange={handleChangeLeadField}></lightning-input>
+                                        
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Marketing Source Code" data-object="wrap" value={wrap.Marketing_Source_Code__c} data-fieldapi="Marketing_Source_Code__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Registration Number" data-object="wrap" value={wrap.Company_Registration_No__c} data-fieldapi="Company_Registration_No__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="Service Tax No." data-object="wrap" value={wrap.Service_Tax_No__c} data-fieldapi="Service_Tax_No__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                        <lightning-input class="" type="text" label="VAN/TIN No" data-object="wrap" value={wrap.VAN_TIN_No__c} data-fieldapi="VAN_TIN_No__c" onchange={handleChangeLeadField}></lightning-input>
+                                    </div>
+                                    <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                        <center>
+                                            <div>
+                                                <template if:true={isShowErrorMsgForBusinessSection}>
+                                                    <div>
+                                                        <h2 class="slds-text-color_error" style="font-size: 18px;">ERROR : Kindly Fill All Required fields.</h2>
+                                                    </div>
+                                                </template>
+                                                <template if:true={errorMsgForBusinessSection}>
+                                                    <div>
+                                                        <h2 class="slds-text-color_error" style="font-size: 18px;">{errorMsgForBusinessSection}</h2>
+                                                    </div>
+                                                </template>
+                                                <div>
+                                                    <template if:true={isShowSpinner}>
+                                                        <lightning-spinner alternative-text="Loading" variant="brand" size="large" style="position:fixed;"></lightning-spinner>
+                                                    </template>
+                                                    <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handale_UpdateLeadForBusinessSection} class="slds-m-left_x-small"></lightning-button>
+                                                    <template if:true={isShowViewButtonForBusinessDetailsSection}>
+                                                        <lightning-button variant="brand" label="View Mode" title="Primary action" onclick={openViewModeForBusinessSection} class="slds-m-left_x-small"></lightning-button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                    </center>
+                                    </div>
+                                </div>
+                                </template>
+                                <!--## Business Section Edit Mode End ##-->
+                                <!--## Business Section View Mode start ##-->
+                                <template if:true={BusinessDetailsViewMode}>
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">GST Number</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.GST_Number__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Products and Services Sold</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Product_Service_Description__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Pan Number</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.PAN_Number__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Legal Name</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Legal_Name__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">ENT Merchant Category Range</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.ENT_Merchant_Category_Range__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">ENT PayU Product</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.ENT_PayU_Product__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Business Category</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {businessCategory}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Business Category (Others)</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Business_Category_Other__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Sub Category</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {subCategory}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Sub Categories (Others)</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Sub_Category_Other__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">MCC Code</span>
+                                                <div class="slds-form-element__control">
+                                                    {wrap.FirstName}
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Date of Incorporation</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Date_of_Incorporation__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Average Delivery Time (days)</span>
+                                                <div class="slds-form-element__control">
+                                                    {wrap.Delivery_Duration__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Trans. Monthly Vol</span>
+                                                <div class="slds-form-element__control">
+                                                    {wrap.Monthly_Expected_Sale__c}
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Average Cost</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Average_Cost__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Maximum Cost</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Maximum_Cost__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Authorised Signatory 1</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.FirstName}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Authorised Signatory 2</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.FirstName}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">International Cards</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.International_Cards__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">International Cards Date</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.International_Cards_Date__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Multicurrency Gateway</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Multicurrency_Gateway__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Multicurrency Gateway Date</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Multi_Currency_Gateway_Date__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Date Of Registration</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Date_of_Registration__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Certificate No.</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Certificate_Number__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Courier Info</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Courier_Info__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">TAN Number</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.TAN_Number__c	}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Lead Business Name</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Lead_Business_Name__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Marketing Source Code</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Marketing_Source_Code__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Registration Number</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Company_Registration_No__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">Service Tax No.</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.Service_Tax_No__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                            <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                <span class="slds-form-element__label slds-float--left">VAN/TIN No</span>
+                                                <div class="viewModeDivHeight slds-form-element__control">
+                                                    {wrap.VAN_TIN_No__c}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                            <center>
+                                                <div>
+                                                    <div>
+                                                        <lightning-button variant="brand" label="Edit" title="Primary action" onclick={editBusinessDetailsSection} class="slds-m-left_x-small"></lightning-button>
+                                                    </div>
+                                                </div>
+                                        </center>
+                                        </div>
+                                    </div>
+                                </template>
+                                <!--## Business Section View Mode End ##-->
+                            </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!--BUSINESS SECTION END-->
+            <!--Address DETAILS SECTION START-->
+            <template if:true={isShowAddressDetailsSection}>
+                <div class="" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <div>
+                        <div class="slds-section slds-m-top_medium slds-is-open">
+                            <h3 class="slds-section__title slds-m-top_medium">
+                            <button aria-controls="expando-unique-id" aria-expanded="false" class="toggleSectionCssWithoutData slds-button slds-section__title-action slds-m-top_medium" onclick={toggleAddressSection}>
+                                <template if:true={toggleAddressDetailsSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevrondown" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <template if:false={toggleAddressDetailsSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevronright" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <span class="slds-truncate" title="Section Title">Address Details</span>
+                            </button>
+                            </h3>
+                            <template if:true={toggleAddressDetailsSectionClass}>
+                                <div class="slds-section__content">
+                                    <!--Address DETAILS SECTION Edit Mode START-->
+                                    <template if:false={addressDetailsViewMode}>
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                                <strong>Registered Address</strong>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" name="Registered" type="text" required label="City" value={registeredAddress.City__c} data-object="registeredAddress" data-fieldapi="City__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" name="Registered" type="text" label="State" value={registeredAddress.State__c} required data-object="registeredAddress" data-fieldapi="State__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" name="Registered" type="text" label="Country" value={registeredAddress.Country__c} required data-object="registeredAddress" data-fieldapi="Country__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" name="Registered" type="text" label="Pin Code" required value={registeredAddress.Pincode__c} data-object="registeredAddress" data-fieldapi="Pincode__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-textarea name="Registered" label="Address" data-object="registeredAddress" value={registeredAddress.Address_Line__c} data-fieldapi="Address_Line__c" onchange={handleAddressFieldChange} ></lightning-textarea>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                                <strong>Operating Address</strong>
+                                                <lightning-input class="" type="checkbox" checked={isBothAddressSame} label="Operating Address Same As Registered Address" data-object="isBothAddressSame" value={isBothAddressSame} data-fieldapi=""  onchange={handleUpdateOperatingAddSameAsRegister}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" required label="City" name="Operating" value={operatingAddress.City__c} data-object="operatingAddress" data-fieldapi="City__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" label="State" name="Operating" value={operatingAddress.State__c} required data-object="operatingAddress" data-fieldapi="State__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" label="Country" name="Operating" value={operatingAddress.Country__c} required data-object="operatingAddress" data-fieldapi="Country__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" label="Pin Code" name="Operating" required value={operatingAddress.Pincode__c} data-object="operatingAddress" data-fieldapi="Pincode__c" onchange={handleAddressFieldChange}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-textarea  label="Address" name="Operating" data-object="operatingAddress" value={operatingAddress.Address_Line__c} data-fieldapi="Address_Line__c" onchange={handleAddressFieldChange}></lightning-textarea >
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                                <center>
+                                                    <div>
+                                                        <template if:true={isShowErrorMsgForAddressSection}>
+                                                            <div>
+                                                                <h2 class="slds-text-color_error" style="font-size: 18px;">ERROR : Kindly Fill All Required fields.</h2>
+                                                            </div>
+                                                        </template>
+                                                        <template if:true={errorMsgForAddressSection}>
+                                                            <div>
+                                                                <h2 class="slds-text-color_error" style="font-size: 18px;">{errorMsgForWebsiteSection}</h2>
+                                                            </div>
+                                                        </template>
+                                                        <div>
+                                                            <template if:true={isShowSpinner}>
+                                                                <lightning-spinner alternative-text="Loading" variant="brand" size="large" style="position:fixed;"></lightning-spinner>
+                                                            </template>
+                                                            <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handale_SaveAddress} class="slds-m-left_x-small"></lightning-button>
+                                                            <template if:true={isShowViewButtonForAddressDetailsSection}>
+                                                                <lightning-button variant="brand" label="View Mode" title="Primary action" onclick={openViewModeForAddressSection} class="slds-m-left_x-small"></lightning-button>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                            </center>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <!--Address DETAILS SECTION Edit Mode End-->
+                                    <!--Address DETAILS SECTION View Mode START-->
+                                    <template if:true={addressDetailsViewMode}>
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                                <strong>Registered Address</strong>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">City</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {registeredAddress.City__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">State</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {registeredAddress.State__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Country</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {registeredAddress.Country__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Pin Code</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {registeredAddress.Pincode__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">City</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {registeredAddress.Address_Line__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                                <strong>Operating Address</strong>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">City</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {operatingAddress.City__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">State</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {operatingAddress.State__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Country</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {operatingAddress.Country__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Pin Code</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {operatingAddress.Pincode__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Address</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {operatingAddress.Address_Line__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                                <center>
+                                                    <div>
+                                                        <div>
+                                                            <lightning-button variant="brand" label="Edit" title="Primary action" onclick={editAddressDetailsSection} class="slds-m-left_x-small"></lightning-button>
+                                                        </div>
+                                                    </div>
+                                            </center>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <!--Address DETAILS SECTION View Mode End-->
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!--Address DETAILS SECTION END-->
+            <!--WEBSITE DETAILS SECTION START-->
+            <template if:true={isShowWebsiteDetailsSection}>
+                <div class="" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <div>
+                        <div class="slds-section slds-m-top_medium slds-is-open">
+                            <h3 class="slds-section__title slds-m-top_medium">
+                            <button aria-controls="expando-unique-id" aria-expanded="false" class="toggleSectionCssWithoutData slds-button slds-section__title-action slds-m-top_medium" onclick={toggleWebsiteSection}>
+                                <template if:true={toggleWebsiteDetailsSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevrondown" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <template if:false={toggleWebsiteDetailsSectionClass}>
+                                    <lightning-icon size="small" icon-name="utility:chevronright" alternative-text="Approved" title="Approved"></lightning-icon>
+                                </template>
+                                <span class="slds-truncate" title="Section Title">Website Details</span>
+                            </button>
+                            </h3>
+                            <template if:true={toggleWebsiteDetailsSectionClass}>
+                                <div class="slds-section__content">
+                                    <!--## WEBSITE Section Edit Mode start ##-->
+                                    <template if:false={websiteDetailsViewMode}>
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" required label="Website URL" value={wrap.Website__c} data-object="wrap" data-fieldapi="Website__c" onchange={handleChangeLeadField}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" label="Name if third party hosted" value={wrap.Name_if_third_party_hosted__c} data-object="wrap" data-fieldapi="Name_if_third_party_hosted__c" onchange={handleChangeLeadField}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-combobox name="Website Operating System"
+                                                    label="Website Operating System"
+                                                    value={wrap.Website_Operating_System__c}
+                                                    placeholder="-Select-"
+                                                    data-object="wrap"
+                                                    data-fieldapi="Website_Operating_System__c"
+                                                    options={WebsiteOperatingSystemValue.data}
+                                                    onchange={handleChangeLeadField} 
+                                                    >
+                                                </lightning-combobox>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" label="Operating System (Other)" value={wrap.Operating_System_Other__c}  onchange={handleChangeLeadField} data-object="wrap" data-fieldapi="Operating_System_Other__c" ></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input class="" type="text" name ="Version Type" label="Version Type" value={wrap.Version_Type__c} data-object="wrap" data-fieldapi="Version_Type__c" onchange={handleChangeLeadField}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-combobox
+                                                    name="Interface Language"
+                                                    label="Interface Language"
+                                                    value={leadSourceValue}
+                                                    placeholder="Select Product"
+                                                    options={leadSourceOptions}
+                                                    onchange={handleChangeLeadSource} 
+                                                    >
+                                                </lightning-combobox>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <lightning-input type="text" label="Language (Other)" value={wrap.Language_Other__c} data-object="wrap" data-fieldapi="Language_Other__c" onchange={handleChangeLeadField}></lightning-input>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                                <center>
+                                                    <div>
+                                                        <template if:true={isShowErrorMsgForWebsiteSection}>
+                                                            <div>
+                                                                <h2 class="slds-text-color_error" style="font-size: 18px;">ERROR : Kindly Fill All Required fields.</h2>
+                                                            </div>
+                                                        </template>
+                                                        <template if:true={errorMsgForWebsiteSection}>
+                                                            <div>
+                                                                <h2 class="slds-text-color_error" style="font-size: 18px;">{errorMsgForWebsiteSection}</h2>
+                                                            </div>
+                                                        </template>
+                                                        <div>
+                                                            <template if:true={isShowSpinner}>
+                                                                <lightning-spinner alternative-text="Loading" variant="brand" size="large" style="position:fixed;"></lightning-spinner>
+                                                            </template>
+                                                            <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handale_UpdateLeadForWebsiteSection} class="slds-m-left_x-small"></lightning-button>
+                                                            <template if:true={isShowViewButtonForWebsiteSection}>
+                                                                <lightning-button variant="brand" label="View Mode" title="Primary action" onclick={openViewModeForWebsiteSection} class="slds-m-left_x-small"></lightning-button>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                            </center>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <!--## WEBSITE Section Edit Mode END ##-->
+                                    <!--## WEBSITE Section View Mode start ##-->
+                                    <template if:true={websiteDetailsViewMode}>
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Website URL</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Website__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Name if third party hosted</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Name_if_third_party_hosted__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Website Operating System</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Website_Operating_System__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Operating System (Other)</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Operating_System_Other__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Version Type</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Version_Type__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Interface Language</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Interface_Language__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                                    <span class="slds-form-element__label slds-float--left">Language (Other)</span>
+                                                    <div class="viewModeDivHeight slds-form-element__control">
+                                                        {wrap.Language_Other__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                                <center>
+                                                    <div>
+                                                        <div>
+                                                            <lightning-button variant="brand" label="Edit" title="Primary action" onclick={editWebsiteDetailsSection} class="slds-m-left_x-small"></lightning-button>
+                                                        </div>
+                                                    </div>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <!--## WEBSITE Section View Mode END ##-->
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!--WEBSITE DETAILS SECTION END-->
+            <!--Authorized signatory DETAILS SECTION START-->
+            <template if:true={isShowAuthSignatoryDetailsSection}>
+                <div class="" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <c-offline-onboarding-authorised-signatory-details-lwc toggle-auth-signatory-details-section-class={toggleAuthSignatoryDetailsSectionClass} contact-obj-one={contactObjOne} contact-obj-two={contactObjTwo}  lead-id={leadId} onmycustomevent={handleCustomEvent} onmycurrentstepevent={handleCurrentStepEvent} get-id-from-parent={recordId} contact-details-view-mode={contactDetailsViewMode}></c-offline-onboarding-authorised-signatory-details-lwc>
+                </div>
+            </template>
+            <!--Authorized signatory  DETAILS SECTION END-->
+            <!--BANK DETAILS SECTION START-->
+            <template if:true={isShowBankDetailsSection}>
+                <div class="" style="max-width:100%;min-width: 100%;display:block;margin-left: auto;margin-right: auto;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <c-offline-onboarding-bank-details-lwc toggle-bank-details-section-class={toggleBankDetailsSectionClass} lead-id={leadId} bank-account-obj={bankAccountObj} get-id-from-parent={recordId} bank-details-view-mode={bankDetailsViewMode} onmycurrentstepevent={handleCurrentStepEvent}></c-offline-onboarding-bank-details-lwc>
+                </div>
+            </template>
+            <!--BANK DETAILS SECTION END-->
+            
+        </lightning-card>
+        
+    </div>
+        
+</template>

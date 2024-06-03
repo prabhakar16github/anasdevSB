@@ -1,0 +1,45 @@
+.ScreenOneLineMessage {
+        margin-left: 520px;
+        margin-top: 30px;
+        font-size: 16px;
+    }
+    .ScreenOneBtnCls {
+        margin-top: 52px;
+        margin-bottom: 80px;
+        padding-left: 40%;
+    }
+    .button_1 {
+        margin-right: 10px;
+        font-weight: 600;
+    }
+    .button_2 {
+        font-weight: 600;
+    }
+    .secondRowBtnCls {
+        margin-top: 10px;
+    }
+    .button_3 {
+        font-weight: 600;
+    }
+    .button_4 {
+        margin-left: 32px;
+        font-weight: 600;
+    }
+    .ScreenTwoBtnCls {
+        margin-top: 36px;
+        margin-bottom: 80px;
+        padding-left: 38%;
+        font-size: 16px;
+        font-weight: 600;
+
+    }
+    .backToScreenBtnCls {
+        padding-left: 216px;
+        
+    }
+    .backToScreenBtnCls_Payout {
+        padding-left: 300px;
+    }
+    .backToScreenBtnCls_Neobanking {
+        padding-left: 300px;
+    }

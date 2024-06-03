@@ -1,0 +1,58 @@
+<!-- mcareDashboardBulkAction.html -->
+<template>
+    <lightning-card>
+        <template lwc:if={loading}>
+            <lightning-spinner alternative-text="Loading" variant="brand"></lightning-spinner>
+        </template>
+        <template lwc:if={validUserForBulkAction}>
+            
+            <div class="slds-box slds-m-around_small" style="background-color:rgb(233, 230, 230);">
+                <div class=" slds-grid slds-wrap slds-gutters " >
+                    <div class="slds-col">
+                        <lightning-combobox label="Status" options={statusValues} required="true" onchange={handleStatusChange} disabled={disableUpdate}>
+                        </lightning-combobox>
+                        
+                    </div>
+                    <div class="slds-col">
+                        <lightning-combobox label="Risk Hold Reason" options={riskHoldReason} onchange={handleRiskHoldReasonChange} disabled={disableUpdate}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-textarea label="Data Analyst Comments (Optional)"  onchange={handleCommentChange} disabled={disableUpdate}></lightning-textarea>
+                    </div>
+                    
+                </div>
+                
+                <div class="slds-text-align_center slds-m-around_x-small" style="background-color:rgb(233, 230, 230);">
+                    <lightning-button class="slds-m-around_x-small" label="Update All" variant="success" onclick={handlerUpdate} disabled={disableUpdate}></lightning-button>
+                    <lightning-button class="slds-m-around_x-small" label="Delete All" variant="destructive" onclick={handleDelete} disabled={disableDelete}></lightning-button>
+                </div>
+            </div>
+            
+            
+            <div class="slds-box slds-gutters slds-m-around_small" style="background-color:rgb(233, 230, 230);">
+                <template lwc:if={showDataTable}>
+                    <lightning-datatable class="slds-table slds-table-bordered slds-table_col-bordered"
+                        key-field="id"
+                        data={selectedRecords}
+                        columns={columns}
+                        hide-checkbox-column 
+                        show-row-number-column>
+                    </lightning-datatable>
+                </template>
+                <template lwc:else>
+                    <div class="slds-text-align_center">
+                        <i><lightning-icon icon-name="utility:info_alt"></lightning-icon></i>
+                        <p>No record found</p>
+                    </div>
+                </template>
+            
+            </div>
+        </template>
+        <template lwc:if={errorMsg}>
+            <div class="slds-align_absolute-center slds-text-color_destructive">
+                {errorMsg}
+            </div>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,54 @@
+<template>
+    <lightning-card>
+        <h1 slot="title">
+            Big Object Data Viewer
+        </h1>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+        </template>
+        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+            <div class="slds-size_1-of-3">
+              <div class="slds-box slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                <lightning-combobox 
+                                class="validate"
+                                label="Object" 
+                                name="Object"
+                                placeholder="Select Object" 
+                                value={selectedObject} 
+                                options={possibleObjects}
+                                onchange={handleObjectChange}
+                                required>
+                </lightning-combobox>
+              </div>
+            </div>
+            <div class="slds-size_1-of-3">
+              <div class="slds-box slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                <lightning-input class="validate" type="date" name="From Created Date" label="From Created Date" onchange={handleChangeFromDate} value={selectedFromCreatedDate} required></lightning-input>
+              </div>
+            </div>
+            <div class="slds-size_1-of-3">
+              <div class="slds-box slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                <lightning-input class="validate" type="date" name="To Created Date" label="To Created Date" onchange={handleChangeToDate} value={selectedToCreatedDate} required></lightning-input>
+              </div>
+            </div>
+        </div> 
+        <p slot="footer">
+            <lightning-button label="Get Records" onclick={getRecords} variant="brand" disabled={disabledButton}></lightning-button>
+            <template if:true={showData}>
+              <lightning-button icon-name="utility:download" label="Download as CSV" title="Download CSV File" onclick={downloadCSVFile} variant="brand" class="slds-p-left_x-small"></lightning-button>
+            </template>
+        </p>
+    </lightning-card>
+    <br/>
+    <template if:true={showData}>
+        <lightning-card title={totalCountOfRecords}>
+            <lightning-datatable key-field="Id" data={data} columns={columnNames} hide-checkbox-column></lightning-datatable>
+            <div class="slds-align_absolute-center slds-m-top_x-small">
+                <lightning-button variant="brand" label="First" onclick={onFirst} disabled={firstButton}></lightning-button>
+                <lightning-button-icon icon-name="utility:left" onclick={onPrev} class="slds-m-left_xx-small slds-m-right_xx-small" disabled={firstButton}></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:right" onclick={onNext} class="slds-m-left_xx-small slds-m-right_xx-small" disabled={lastButton}></lightning-button-icon>
+                <lightning-button variant="brand" label="Last" onclick={onLast} disabled={lastButton}></lightning-button>
+            </div>
+        </lightning-card>
+    </template>
+</template>

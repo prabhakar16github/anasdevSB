@@ -1,0 +1,12 @@
+<template>
+    <lightning-tabset>
+        <lightning-tab label="Risk Hold/Release">
+             <c-risk-detail-home-page record-id={recordId}></c-risk-detail-home-page>
+            </lightning-tab>
+        
+            <lightning-tab label="Risk Status Details" onactive={handleTabChange}> 
+               <c-risk-record-details record-id={recordId} ></c-risk-record-details> 
+            </lightning-tab>
+       
+    </lightning-tabset>
+</template>

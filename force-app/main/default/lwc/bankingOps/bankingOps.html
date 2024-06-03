@@ -1,0 +1,289 @@
+<template>
+    <div >
+        
+        <lightning-card title="Banking Operations" icon-name="standard:user">
+            <template if:false={showfirstScreen}>
+            <lightning-tabset>
+                <lightning-tab label="All Requests">
+                    <lightning-input type="search" icon-name="utility:search" value={searchTerm} class="search-input" placeholder="search" onchange={handleSearchTermChange}></lightning-input>
+                    <template if:false={showfirstScreen}>
+                        <ul class="bank-list">
+                            <template for:each={bankAndPorType} for:item="bank">
+                            <li key={bank.Id} class="bank-item">
+                                <div class="bank-label">
+                                    <span> 
+                                        <div onclick={redirectToSecondPage} data-bank={bank.Bank__c} data-por-type={bank.POR_Type__c} style="cursor: pointer;"> 
+                                            <img src={bank.Bank_Image__c} alt=" " border="0" class="my-image"/> &nbsp; {bank.Bank__c} - {bank.POR_Type__c}
+                                          </div>
+                                    </span>
+                                </div>
+                            </li>
+                            </template>
+                        </ul>
+                    </template>
+                </lightning-tab>
+
+                <lightning-tab label="Requests assigned to me" onactive={Requestsassignedtome}>
+                    <lightning-input type="search" icon-name="utility:search" value={searchTerm} class="search-input" placeholder="search" onchange={handleSearchTermChange}></lightning-input>
+                    <ul class="bank-list">
+                        <template for:each={RequestsassignedtomeList} for:item="bank">
+                        <li key={bank.Id} class="bank-item">
+                            <div class="bank-label">
+                                <span> 
+                                    <div onclick={redirectToSecondPage} data-bank={bank.Bank__c} data-por-type={bank.POR_Type__c} style="cursor: pointer;"> 
+                                        <img src={bank.Bank_Image__c} alt=" " border="0" class="my-image"/> &nbsp; {bank.Bank__c} - {bank.POR_Type__c}
+                                      </div>
+                                </span>
+                            </div>
+                        </li>
+                        </template>
+                    </ul>
+                </lightning-tab>
+                <lightning-tab label="Approved" onactive={getApprovedOrRejectedData}  data-id="Controlling Picklist Type for Request">
+                    <template if:true={isAppOrRecj}>
+                        <div class="table-wrapper">
+                            <table class="centered" style="width: 70%;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Status</th>
+                                        <th>Comments</th>
+                                        <th>PayU MID</th>
+                                        <th>Legal Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={approveOrRejecvtedData} for:item="item">
+                                        <tr key={item.ID}>
+                                            <td title="Redirect to detail page"><i class="fa fa-external-link" style="cursor: pointer;" onclick={handleRecordClick} data-id={item.Id}></i></td>
+                                            <td>{item.Banking_Ops_Status__c}</td>
+                                            <td>{item.Remarks__c}</td>
+                                            <td>{item.Opportunity__r.Prod_Merchant_Id__c }</td>
+                                            <td>{item.Merchant_Name_Legal__c}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                    <template if:false={isAppOrRecj}>
+                    </template>
+                </lightning-tab>
+                <lightning-tab label="Rejected" onactive={getApprovedOrRejectedData}  data-id="Controlling Picklist Type for Request">
+                    <template if:true={isAppOrRecj}>
+                        <div class="table-wrapper">
+                            <table class="centered" style="width: 70%;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Status</th>
+                                        <th>Comments</th>
+                                        <th>PayU MID</th>
+                                        <th>Legal Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={approveOrRejecvtedData} for:item="item">
+                                        <tr key={item.Id}>
+                                            <td title="Redirect to detail page"><i class="fa fa-external-link" style="cursor: pointer;" onclick={handleRecordClick} data-id={item.Id}></i></td>
+                                            <td>{item.Banking_Ops_Status__c}</td>
+                                            <td>{item.Remarks__c}</td>
+                                            <td>{item.Opportunity__r.Prod_Merchant_Id__c }</td>
+                                            <td>{item.Merchant_Name_Legal__c}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                </template>
+                <template if:false={isAppOrRecj}>
+                    <p>{noAppOrReject}</p>
+                </template>
+                </lightning-tab>
+            </lightning-tabset>
+           
+        </template>
+            <template if:true={showfirstScreen}>
+                <div class="backToButton">
+                    <div onclick={scrollToBack} style="cursor: pointer;"><b>&nbsp; &nbsp;&lt;</b> Back To Home</div>
+                    
+                </div>
+
+                <!--<div style="float: right; padding-right: 10px;">
+                    <lightning-button variant="brand" label="Send an Email" style="text-align: left;" onclick={callEmailMethod}></lightning-button>
+                </div>
+                <lightning-button label="Open Other LWC" onclick={showSearch}></lightning-button>
+                <c-send-email-to-bank if:true={showSearchComponent}></c-send-email-to-bank>-->
+
+                    <br/>
+                <div class="slds-m-around_large">
+                    <lightning-record-edit-form id="recordViewForm" record-id={recordId} object-api-name="Pricing__c">
+                        <table>
+                            <tr>
+                                <td>
+                                    <lightning-input-field field-name="Bank__c" variant="label-hidden" value={bankSelectValue}  onchange={bnakHandleChange}   data-id="Controlling Bank Picklist Type" >
+                                    </lightning-input-field>
+                                </td>
+                                <td>
+                                    <lightning-input-field field-name="POR_Type__c" variant="label-hidden" value={PORTypeName} onchange={porTypeHandleChange}  data-id="Controlling Picklist Type">
+                                    </lightning-input-field>
+                                </td>
+                            </tr>
+                        </table>   
+                    </lightning-record-edit-form>
+                </div>
+                <template if:true={disableSection}>
+                    <template if:true={noRecordsForRequestForMerchant}>
+                        <lightning-layout multiple-rows="true" vertical-align="end">
+                            <lightning-layout-item size="12" padding="around-small">
+                                <center><p style="color:red;">{recdNotFoundFOrMerchant}</p></center>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+
+                    <template if:true={checkForPORType}>
+                        <template if:true={selectedValue}>
+                                <template if:true={bankingOpsPicklist.data}>
+                                    <lightning-tabset>
+                                        <lightning-tab label="New Requests" onactive={AllRequesthandleChange}  data-id="Controlling Picklist Type for Request">
+                                        </lightning-tab>
+                                        <lightning-tab label="Pending With Bank" onactive={AllRequesthandleChange}  data-id="Controlling Picklist Type for Request">
+                                        </lightning-tab>
+                                        <lightning-tab label="Pending With Banking Ops" onactive={AllRequesthandleChange}  data-id="Controlling Picklist Type for Request">
+                                        </lightning-tab>
+                                        <lightning-tab label="Pending With KAM" onactive={AllRequesthandleChange}  data-id="Controlling Picklist Type for Request">
+                                        </lightning-tab>
+                                        <lightning-tab label="Closed" onactive={AllRequesthandleChange}  data-id="Controlling Picklist Type for Request">
+                                        </lightning-tab>
+                                        <lightning-tab label="Approved" onactive={AllRequesthandleChange}  data-id="Controlling Picklist Type for Request">
+                                        </lightning-tab>
+                                    </lightning-tabset>
+                                    <div class="button-container">     
+                                        <template if:true={openButtonForPendingWithBank}>
+                                            <lightning-button variant="brand-outline" label="Tag as pending with BO" onclick={handleClick} class="slds-m-right_x-small"></lightning-button>
+                                            <lightning-button variant="brand-outline" label="Send to Kam" onclick={handleClick} class="slds-m-right_x-small"></lightning-button>
+                                            <lightning-button variant="destructive" label="Reject" data-default-value="Rejected" onclick={getSelectedRec} class="slds-m-right_x-small"></lightning-button>
+                                            <lightning-button variant="brand" label="Approve" title="Approve"  data-default-value="Approved" onclick={openPopupForApproved} class="slds-m-right_x-small"></lightning-button>
+                                        </template>
+                                        <template if:true={openButtonForPendingWithBankOps}>
+                                            <lightning-button variant="destructive" label="Reject" data-default-value="Rejected" onclick={getSelectedRec} class="slds-m-right_x-small"></lightning-button>
+                                            <lightning-button variant="brand" label="Approve" title="Approve"  data-default-value="Approved" onclick={openPopupForApproved} class="slds-m-right_x-small"></lightning-button>
+                                        </template>
+                                </div>
+                                </template>
+                        </template>
+
+                        <template if:true={downloadOption}>
+                            <template if:true={selectedValue}>
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col">
+                                        <span>
+                                            &nbsp;&nbsp;&nbsp;&nbsp; <lightning-button variant="brand" icon-name="utility:download" label="Download as CSV" 
+                                            title="Download CSV File" onclick={exportContactData}></lightning-button>
+                                        </span>
+                                    </div>
+                                   <!--<div class="slds-col">
+                                        <span>
+                                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <lightning-button icon-name="utility:refresh" variant="brand" onclick={handleChange}></lightning-button>
+                                        </span>
+                                    </div>-->
+                                </div>
+                            </template>
+                        </template>   
+                       
+                                <!--<div class="slds-grid slds-gutters">
+                                    <div class="slds-col">
+                                    <span>
+                                        <template if:true={selectedValue}>
+                                            <div class="slds-combobox_container slds-size_small" >
+                                                <template if:true={statusPicklist.data}>
+                                                    <lightning-combobox name="Inry" label="Status" placeholder="All Requests" value={value}
+                                                        options={statusPicklist.data.values} onchange={getStatusChangeValue} disabled={disableStatus}>
+                                                    </lightning-combobox>
+                                                                            
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </span>
+                                    </div>-->
+                                    <!--<div class="slds-col">
+                                    <span>
+                                        <template if:true={selectedValue}>
+                                            <template if:false={applyToShow}>
+                                                    <button class="slds-button"  onclick={getSelectedRec}>Apply For All</button>
+                                            </template>
+                                        </template>
+                                    </span>
+                                    </div>
+                                </div>-->
+                                <div if:true={noRecordsForPaymentGatway} >
+
+                                        <div class="wrapper" >
+                                        
+                                            <div if:true={DataTableResponseWrappper} class="datatable">
+                                                <lightning-datatable data={finalSObjectDataList} 
+                                                    class="fixed-column"
+                                                    style="height: auto;"
+                                                    columns={cols}
+                                                    key-field="Id"
+                                                    onsave={handleSave}
+                                                    draft-values={saveDraftValues} 
+                                                    onrowselection={handleRowSelection}
+                                                    onrowaction={handleRowAction}
+                                                    onclick={chatterCall}>
+                                                </lightning-datatable>
+                                            </div>
+                                            <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                                                <thead>
+                                                    <tr class="slds-line-height_reset">
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Status">Status</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Chatter"></div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={finalSObjectDataList} for:item="record">
+                                                        <tr key={record.Id} class="slds-hint-parent" style="background-color: #F3F3F3;">
+                                                            <td style="vertical-align: top;"> {record.Banking_Ops_Status__c}</td>
+                                                            <td style="vertical-align: top;" class="small">
+                                                            <button  class="my-button" onclick={handleRowAction} data-id={record.Id}>chat</button>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <div if:true={noRecordsForRequest}>
+                                    <lightning-layout multiple-rows="true" vertical-align="end">
+                                        <lightning-layout-item size="12" padding="around-small">
+                                            <center><p style="color:red;">{recdNotFound}</p></center>
+                                        </lightning-layout-item>
+                                    </lightning-layout>
+                                </div>
+                    </template>
+                </template> 
+            </template>
+        </lightning-card>
+    </div>
+    <template if:true={isModalOpenForApproved}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section style="width: 100px;" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" >
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <center><p><b>Are you sure you want to Approve  ?<br/>Confirming will approve all the requested tickets to Approved status
+                    </b></p><br/>
+                    <lightning-button variant="success" label="Yes, Approve"  title="Approve"  data-default-value="Approved" onclick={getSelectedRec} ></lightning-button><br/>
+                    <button onclick={closeModal} title="Cancel">Cancel</button></center>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                    
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

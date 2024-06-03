@@ -1,0 +1,123 @@
+<template>
+   
+      <div class="slds-card__header slds-grid" style="padding: 0.5rem 0.5rem 0 0.5rem;">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title">
+              Comment History
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner" style="padding: 0 0.5rem;">
+        <!-- <lightning-datatable
+        key-field="Id"
+        data={responsedata}
+        columns={columns}>
+        </lightning-datatable> -->
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th class="" scope="col">Name</th>
+                <th class="" scope="col">Sales Comment</th>
+                <th class="" scope="col">Risk Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={responsedata} for:item="item">
+              <tr key={item.Id}>
+                  <td>
+                    {item.Name}
+                  </td>
+                  <td>
+                      {item.Sales_Remarks__c}  
+                  </td>
+                  <td>
+                        {item.Risk_Remarks__c}
+                  </td>
+              </tr>
+              </template>
+            </tbody>
+          </table>
+        <!-- <ul >
+           
+          <template for:each={releaseNotes} for:item="rn">
+            <li key={rn.Id}
+            >
+            <article
+              class="slds-tile slds-media slds-card__tile slds-hint-parent"
+            >
+              
+              <div class="slds-media__body">
+                <div
+                  class="slds-grid slds-grid_align-spread slds-has-flexi-truncate" style="flex-wrap: nowrap;
+                  flex-direction: column;"
+                >
+                  <h3
+                    class="slds-tile__title slds-truncate"
+                    title={rn.Name}
+                  >
+                  #{rn.index} <a href={rn.url}>{rn.Name}</a>
+                  </h3>
+                  
+                </div>
+                <div class="slds-tile__detail">
+                  <dl class="slds-list_horizontal slds-wrap">
+                    <dt
+                      class="slds-item_label slds-text-color_weak slds-truncate listLabel"
+                      title="Status"
+                    >
+                      Status :
+                    </dt>
+                    <dd
+                      class="slds-item_detail slds-truncate listItem"
+                      title={rn.Status__c}
+                    >
+                      {rn.Status__c}
+                    </dd>
+                    <dt
+                      class="slds-item_label slds-text-color_weak slds-truncate listLabel"
+                      title="Ageing From Hold (Days)"
+                    >
+                      Ageing From Hold (Days) :
+                    </dt>
+                    <dd
+                      class="slds-item_detail slds-truncate listItem"
+                      title={rn.Ageing_From_Hold_Days__c}
+                    >
+                      {rn.Ageing_From_Hold_Days__c}
+                    </dd>
+                    <dt
+                      class="slds-item_label slds-text-color_weak slds-truncate listLabel"
+                      title="Created Date"
+                    >
+                      Created Date :
+                    </dt>
+                    <dd
+                      class="slds-item_detail slds-truncate listItem"
+                      title={rn.CreatedDate}
+                    >
+                      {rn.CreatedDate}
+                    </dd>
+                    <dt
+                      class="slds-item_label slds-text-color_weak slds-truncate listLabel"
+                      title="Submitted Date"
+                    >
+                      Submitted Date :
+                    </dt>
+                    <dd
+                      class="slds-item_detail slds-truncate listItem"
+                      title={rn.submittedDate}
+                    >
+                      {rn.submittedDate}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </article>
+          </li>
+          </template>
+         
+        </ul> -->
+      </div>
+</template>

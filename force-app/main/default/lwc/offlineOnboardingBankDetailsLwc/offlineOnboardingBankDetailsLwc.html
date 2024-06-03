@@ -1,0 +1,163 @@
+<template>
+    <div>
+        <div class="slds-section slds-m-top_medium slds-is-open">
+            <h3 class="slds-section__title slds-m-top_medium">
+            <button aria-controls="expando-unique-id" aria-expanded="false" class="toggleSectionCssWithoutData slds-button slds-section__title-action slds-m-top_medium" onclick={toggleBankSection}>
+                <template if:true={toggleBankDetailsSectionClass}>
+                    <lightning-icon size="small" icon-name="utility:chevrondown" alternative-text="Approved" title="Approved"></lightning-icon>
+                </template>
+                <template if:false={toggleBankDetailsSectionClass}>
+                    <lightning-icon size="small" icon-name="utility:chevronright" alternative-text="Approved" title="Approved"></lightning-icon>
+                </template>
+                <span class="slds-truncate" title="Section Title">Bank Account Details</span>
+            </button>
+            </h3>
+            <template if:true={toggleBankDetailsSectionClass}>
+                <div class="slds-section__content">
+                    <!--BANK DETAILS SECTION EDIT START-->
+                    <template if:false={bankDetailsViewMode}>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-input class="" type="text" required label="Bank Account Number" value={bankAccountObj.Account_Number__c} data-object="bankAccountObj" data-fieldapi="Account_Number__c" onchange={handleChangeBankAccount}></lightning-input>
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-input class="" type="text" label="Bank Account Name" value={bankAccountObj.Account_Holder_Name__c}  onchange={handleChangeBankAccount} required data-object="bankAccountObj" data-fieldapi="Account_Holder_Name__c"></lightning-input>
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-combobox name="Account Type (Savings/Current)"
+                                label="Account Type (Savings/Current)"
+                                value={bankAccountObj.Account_Type__c}
+                                placeholder="-Select-"
+                                data-object="bankAccountObj"
+                                data-fieldapi="Account_Type__c"
+                                options={accountTypeValue.data}
+                                onchange={handleChangeBankAccount}
+                                required >
+                            </lightning-combobox>
+                            
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-combobox name="Bank Name"
+                                label="Bank Name"
+                                value={bankAccountObj.Bank_Name__c}
+                                placeholder="-Select-"
+                                data-object="bankAccountObj"
+                                data-fieldapi="Bank_Name__c"
+                                options={bankNameValue.data}
+                                onchange={handleChangeBankAccount}
+                                required >
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-input class="" type="text" label="Bank Branch" onchange={handleChangeBankAccount} required data-object="bankAccountObj" value={bankAccountObj.Branch__c} data-fieldapi="Branch__c"></lightning-input>
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-input class="" type="text" label="IFSC Code" onchange={handleChangeBankAccount} required data-object="bankAccountObj" value={bankAccountObj.IFSC_Code__c} data-fieldapi="IFSC_Code__c"></lightning-input>
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                            <lightning-textarea name="textArea" label="Bank Branch Address" data-fieldapi="Branch_Address__c" value={bankAccountObj.Branch_Address__c} data-object="bankAccountObj" onchange={handleChangeBankAccount} required></lightning-textarea>
+                        </div>
+                        <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                            <center>
+                                <div>
+                                    <template if:true={isShowErrorMsgForBankSection}>
+                                        <div>
+                                            <h2 class="slds-text-color_error" style="font-size: 18px;">ERROR : Kindly Fill All Required fields.</h2>
+                                        </div>
+                                    </template>
+                                    <template if:true={errorMsg}>
+                                        <div>
+                                            <h2 class="slds-text-color_error" style="font-size: 18px;">{errorMsg}</h2>
+                                        </div>
+                                    </template>
+                                    <div>
+                                        <template if:true={isShowSpinner}>
+                                            <lightning-spinner alternative-text="Loading" variant="brand" size="large" style="position:fixed;"></lightning-spinner>
+                                        </template>
+                                        <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handale_SaveBankDetails} class="slds-m-left_x-small"></lightning-button>
+                                        <template if:true={isShowViewButtonForBankDetailsSection}>
+                                            <lightning-button variant="brand" label="View Mode" title="Primary action" onclick={openViewModeForBankDetails} class="slds-m-left_x-small"></lightning-button>
+                                        </template>
+                                    </div>
+                                </div>
+                        </center>
+                        </div>
+                    </div>
+                    </template>
+                    <!--BANK DETAILS SECTION EDIT END-->
+                    <!--BANK DETAILS SECTION View END-->
+                    <template if:true={bankDetailsViewMode}>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Bank Account Number</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.Account_Number__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Bank Account Name</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.Account_Holder_Name__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Account Type (Savings/Current)</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.Account_Type__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Bank Name</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.Bank_Name__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Bank Branch</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.Branch__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">IFSC Code</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.IFSC_Code__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Bank Branch Address</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {bankAccountObj.Branch_Address__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                <center>
+                                    <div>
+                                        <div>
+                                            <lightning-button variant="brand" label="Edit" title="Primary action" onclick={editBankDetailsSection} class="slds-m-left_x-small"></lightning-button>
+                                        </div>
+                                    </div>
+                            </center>
+                            </div>
+                        </div>
+                    </template>
+                    <!--BANK DETAILS SECTION View END-->
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

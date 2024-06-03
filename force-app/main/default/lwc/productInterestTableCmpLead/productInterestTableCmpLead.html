@@ -1,0 +1,156 @@
+<template>
+    <lightning-tabset variant="scoped">
+        <lightning-tab label="Core Payments">
+            <!-- <lightning-accordion allow-multiple-sections-open
+                         onsectiontoggle={handleSectionToggle}
+                         active-section-name={activeSections}>
+                <lightning-accordion-section name="Recommended" label="Recommended"> -->
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Sub-Product</th>
+                                    <th>Merchant Interest</th>
+                                    <th>Interest Reason</th>
+                                    <!-- <th></th> -->
+                                </tr>
+                            </thead>
+                            <!-- <template if:true={visibleRecords}>
+                                <template for:each={visibleRecords} for:item="interest">
+                                    <tbody key={interest.Id}>
+                                        <tr>
+                                            <td>{interest.product}</td>
+                                            <td>{interest.sub_product}</td>
+                                            <td></td>
+                                            <td></td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </template> -->
+                            <tbody>
+                                <tr>
+                                    <td>Wallets</td>
+                                    <td>All Wallets</td>
+                                    <td><lightning-button-icon-stateful
+                                        icon-name="utility:like" 
+                                         
+                                        alternative-text="Like"
+                                        disabled={isButtonDisabled}
+                                        >
+                                        </lightning-button-icon-stateful></td>
+                                    <td ><lightning-combobox class="comboCls"
+                                        name="progress"
+                                        value={value}
+                                        placeholder="Select Progress"
+                                        options={options}
+                                        onchange={handleChange} >
+                                        </lightning-combobox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Visa Checkout</td>
+                                    <td>VISA CHECKOUT - VIES</td>
+                                    <td><lightning-button-icon-stateful
+                                        icon-name="utility:like" 
+                                         
+                                        alternative-text="Like"
+                                        disabled={isButtonDisabled}
+                                        >
+                                        </lightning-button-icon-stateful></td>
+                                    <td ><lightning-combobox class="comboCls"
+                                        name="progress"
+                                        value={value}
+                                        placeholder="Select Progress"
+                                        options={options}
+                                        onchange={handleChange} >
+                                        </lightning-combobox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UPI</td>
+                                    <td>Third Party Verification UPI</td>
+                                    <td><lightning-button-icon-stateful
+                                        icon-name="utility:like" 
+                                         
+                                        alternative-text="Like"
+                                        disabled={isButtonDisabled}
+                                        >
+                                        </lightning-button-icon-stateful></td>
+                                    <td ><lightning-combobox class="comboCls"
+                                        name="progress"
+                                        value={value}
+                                        placeholder="Select Progress"
+                                        options={options}
+                                        onchange={handleChange} >
+                                        </lightning-combobox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UPI</td>
+                                    <td>Intent UPI</td>
+                                    <td><lightning-button-icon-stateful
+                                        icon-name="utility:like" 
+                                         
+                                        alternative-text="Like"
+                                        disabled={isButtonDisabled}
+                                        >
+                                        </lightning-button-icon-stateful></td>
+                                    <td ><lightning-combobox class="comboCls"
+                                        name="progress"
+                                        value={value}
+                                        placeholder="Select Progress"
+                                        options={options}
+                                        onchange={handleChange} >
+                                        </lightning-combobox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UPI</td>
+                                    <td>Generic UPI</td>
+                                    <td><lightning-button-icon-stateful
+                                        icon-name="utility:like" 
+                                         
+                                        alternative-text="Like"
+                                        disabled={isButtonDisabled}
+                                        >
+                                        </lightning-button-icon-stateful></td>
+                                    <td ><lightning-combobox class="comboCls"
+                                        name="progress"
+                                        value={value}
+                                        placeholder="Select Progress"
+                                        options={options}
+                                        onchange={handleChange} >
+                                        </lightning-combobox>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination">
+                            <lightning-button label="Previous" onclick={handlePrevious}></lightning-button>
+                            <lightning-button label="Next" onclick={handleNext}></lightning-button>
+                        </div>
+                        <!-- <td>
+                                                <lightning-button-menu alternative-text="Show menu" menu-alignment="right">
+                                                    <lightning-menu-item value="Raise risk check" label="Raise risk check"></lightning-menu-item>
+                                                    <lightning-menu-item value="Activate" label="Activate"></lightning-menu-item>
+                                                    <lightning-menu-item value="Seek Interest" label="Seek Interest"></lightning-menu-item>
+                                                </lightning-button-menu>
+                                            </td> -->
+                    </div>
+                    <!-- <div class="slds-var-m-vertical_medium">
+                        <c-pagination-cmp records={prodInterestData} onupdate={updateContactHandler}></c-pagination-cmp>
+                    </div> -->
+                    
+                <!-- </lightning-accordion-section>
+            </lightning-accordion> -->
+        </lightning-tab>
+        <lightning-tab label="Payment Stack" title="2nd tab extended title">
+            Payment Stack
+        </lightning-tab>
+        <lightning-tab label="Omnichannel">
+            Omnichannel
+        </lightning-tab>
+    </lightning-tabset>
+</template>

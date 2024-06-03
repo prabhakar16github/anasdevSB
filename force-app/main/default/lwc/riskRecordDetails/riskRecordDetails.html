@@ -1,0 +1,62 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <th></th>
+    <div class="slds-col slds-size_3-of-12 ">
+        <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+            <div class="slds-text-color_inverse">POST RISK</div>
+        </div>
+    </div>
+    <div style="height: 300px;">
+        
+        <lightning-datatable 
+                title="POST Risk Details History"
+                key-field="id"
+                data={data1}
+                columns={columns1}
+                show-row-number-column = "true"
+                hide-checkbox-column="true"
+                >
+                
+        </lightning-datatable>
+    </div>
+    <th></th>
+    <div class="slds-col slds-size_3-of-12 ">
+        <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+            <div class="slds-text-color_inverse">OB RISK</div>
+        </div>
+    </div>
+    <div style="height: 300px;">
+        
+        <lightning-datatable 
+                title="OB Risk Details History"
+                key-field="id"
+                data={data2}
+                columns={columns2}
+                show-row-number-column = "true"
+                hide-checkbox-column="true"
+                >
+                
+        </lightning-datatable>
+    </div>
+    <th></th>
+    <div class="slds-col slds-size_3-of-12 ">
+        <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+            <div class="slds-text-color_inverse">PRE RISK</div>
+        </div>
+    </div>
+    <div style="height: 300px;">
+        
+        <lightning-datatable 
+                title="PRE Risk Details History"
+                key-field="id"
+                data={data3}
+                columns={columns3}
+                show-row-number-column = "true"
+                hide-checkbox-column="true"
+                >
+                
+        </lightning-datatable>
+    </div>
+</template>

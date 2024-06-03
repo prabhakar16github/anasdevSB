@@ -1,0 +1,618 @@
+.SecondPageClass_SelectPaymentOptions{
+    border-bottom: 1px solid #DDDBDA;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    
+    }
+    
+    .SecondPageClass_SelectPaymentOptions.borderNone {
+    border-bottom: none;
+    }
+    
+    .selectPaymentOptions {
+    color: #9FA5AF;
+    line-height: normal;
+    font-size: 14px;
+    margin-right: 16px;
+    }
+    
+    .buttonWrap lightning-button {
+    margin-left: 24px !important;
+    
+    }
+    .buttonWrap.variant_two lightning-button {
+    margin-left: 4px !important;
+    
+    }
+    .buttonWrap lightning-button button.slds-button_neutral {
+    border-color: #131414 !important;
+    color: #2F76CC;
+    
+    }
+    
+    .noDataBox {
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    padding-bottom: 100px;
+    background-color: #F6F6F6;
+    }
+    .noDataBox i { /* defining i-tag under noDataBox class */
+    margin-bottom: 24px;
+    display:block;
+    }
+    
+    .popUpCustomContainer  {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+    }
+    .popUpCustomContainer .commercialContainer  {
+    /* background-color: red; */
+    min-height: 299px;
+    height: 100%;
+    
+    }
+    
+    .popUpCls .slds-modal__container .slds-p-around_medium {
+    padding: 24px 27px;
+    }
+    
+    .popUpBoxCls {
+    max-width: 386px;
+    width: 100%;
+    }
+    
+    .commercialContainer {
+    border: 1px solid #DDDBDA;
+    border-radius: 6px;
+    }
+    
+    .paymentSelectHeader {
+    text-align: center;
+    color: #1F1F1F;
+    font-size: 18px;
+    line-height: 14px;
+    font-weight: 500;
+    padding: 24px;
+    }
+    
+    .fieldsContainer {
+    margin: 0 12.5%;
+    }
+    .mt40{
+    margin-top: 40px;
+    } 
+    
+    .popUpCls .slds-modal__container {
+    max-width: 899px;
+    width: 100%;
+    margin-top: 10%;
+    position: relative;
+    padding-top: 0;
+    
+    
+    }
+    .popUpCls .slds-modal__container .slds-p-around_medium {
+    padding: 24px 27px;
+    }
+    
+    .colorPillsOptions {
+    background: #DCF0FF;
+    padding: 3px;
+    border-radius: 4px;
+    
+    }
+    
+    .colorPillsOptionsPurple {
+    background: #D3D3FF;
+    padding: 3px;
+    border-radius: 4px;
+    }
+    
+    .colorPillsOptionsPink {
+    background: #FFE3DD;
+    padding: 3px;
+    border-radius: 4px;
+    }
+    
+    .colorPillsOptionsOrange {
+    background: #FFF0DF;
+    padding: 3px;
+    border-radius: 4px;
+    }
+    
+    .colorPillsOptions2 {
+        background: #41a18d;
+        padding: 3px;
+        border-radius: 4px;    
+    }
+    
+    .colorPillsOptions3 {
+        background: #f4e8bd;
+        padding: 3px;
+        border-radius: 4px;    
+    }
+    
+    .colorPillsOptions4 {
+        background: #e5b7b7;
+        padding: 3px;
+        border-radius: 4px;    
+    }
+    
+    .selectedOptionsTable {
+    padding: 10px;   
+    }
+    
+    .formCheckBoxWrap .slds-form-element__label {
+    padding-left: 10px;
+    margin: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    padding-top: 0;
+    
+    }
+    .formCheckBoxWrap .slds-p-around_medium {
+    padding: 0 8px
+    }
+    .formCheckBoxWrap.comboAlignment {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    }
+    .formCheckBoxWrap.comboThirdScreen {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 11px;
+    }
+    
+    .secondScreenTableCls td {
+    border: 1px solid #D7D7D7;
+    padding: 8px 0 8px 0;
+    }
+    .secondScreenTableCls td.firstTdCls {
+    padding-left: 8px;
+    }
+    
+    .thMainRow {
+    background: #F2F2F3;
+    border: 1px solid #D7D7D7;
+    }
+    .thMainRow th{
+    padding-left: 48px;
+    font-size: 12px;
+    line-height: 14px;
+    color: #575757;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    font-weight: normal;
+    }
+    .thMainRow th.varientTwo{
+        /* padding-left: 48px; */
+        padding-right: 8px;
+        padding-left: 8px;
+        width: 11%;
+        border-right: 1px solid #D7D7D7;
+        
+        }
+        
+    .tableDetailPadding {
+        padding:0;
+    }
+    
+    .thMainRow th.varientThree{
+        /* 2nd screen table for th */
+        padding-right: 8px;
+        padding-left: 8px;
+        
+        border : 1px solid #D7D7D7;
+        
+        }
+        .thMainRow th.varientThreeFirstTh{
+            /* 2nd screen table for First th */
+            padding-left: 8px;
+            
+            }
+    
+            .alignCenter  {
+            text-align: center;
+            }
+    
+            .hoverColorBackground:hover {
+                background: #F8FBFF;
+            }
+            .hoverColorBackground:hover svg,
+            .hoverColorBackground:hover svg path {
+                fill: #2F76CC ;
+            }
+    
+            .tabNavigateBorder .slds-tabs_default .slds-tabs_default__nav {
+        border-bottom-style: none !important;
+        border-bottom-color: none !important;
+        }
+    
+    .tabTitleClass {
+        margin-bottom: 12px;
+    }
+    .tableThirdScreen {
+        margin: 0;
+        padding: 0;
+    }
+    .tableThirdScreen thead {
+        border: #DDDBDA solid 1px;
+        background: #FAFAF9;
+    }
+    .tableThirdScreen th {
+        padding: 8px 50px 8px 11px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #575757;
+        font-weight: 500;
+    }
+    .tableThirdScreen td {
+        border-bottom: #DDDBDA solid 1px;
+        /* padding: 8px 50px 8px 11px; */
+        padding: 8px 11px 8px 11px;
+        line-height: 14px;
+        font-size: 13px;
+        color: #1C1C1C;
+    }
+    
+    .tabSectionMainWrap {
+        position: relative;
+    }
+    .tabSectionMainWrap.tabSectionChildWrap {
+       margin-top: 10px;
+    }
+    .tabSectionMainWrap .slds-tabs_default__nav {
+        border-bottom: none!important;
+        
+    }
+    
+    .searchBarWrap_main {
+        position: absolute;
+        right: 0px;
+        z-index: 10;
+        top: 18px;
+    }
+    .searchBarThirdPage {
+        display:inline-block;
+    }
+    .searchBarWrap {
+        border: #C9C7C7 solid 1px;
+        width: 306px;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #9B9B9B;
+        line-height: normal;
+        display: inline-block;
+    }
+    .searchBarWrap.thirdScreenSearch {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+    .searchBarWrap.fourthScreenSearch {
+        margin-right: 12px;
+    }
+    .searchBarWrap:hover {
+        border-color: #2F76CC;
+    
+    }
+    .searchBarWrap input {
+        background: none;
+        border: none;
+        width: 100%;
+    }
+    .searchBarWrap input:focus  {
+        outline: none;
+        border-color: none;
+        box-shadow: none;
+        background: transparent;
+    }
+    
+    .toolTipMain {
+        position: relative;
+    }
+    .toolTipMain:hover .toolTipContent {
+        display: block;
+    }
+    .toolTipMain .toolTipContent {
+        position: absolute;
+        background: #2F76CC;
+        border-radius: 4px;
+        display: none;
+        padding: 10px 12px 0 12px;
+        z-index: 1;
+        top: -18px;
+        left: 12%;
+        width: 200px;
+        /* margin-left: -49px; */
+        
+    }
+    .toolTipMain .toolTipContent span {
+        display: block;
+       padding-bottom: 10px;
+        font-size: 12px;
+        color: #ffffff;
+        line-height: normal;
+    }
+    .toolTipMain .toolTipContent:after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      right: 100%;
+      margin-top: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent #2F76CC transparent transparent ;
+      
+    }
+    
+    .tabToolTip {
+        position: relative;
+    }
+    .tabToolTip:hover .toolTipContent{
+        display: block;
+    }
+    .toolTipContent {
+        display: none;
+    }
+    
+    .plusClassCSS {
+        color: #9B9B9B;
+        font-size: 14px;
+        line-height: normal;
+        text-decoration: none;
+        margin-right: 5px;
+        
+    
+    }
+
+    .plusClassCSSNew {
+        font-size: 14px;
+        line-height: normal;
+        text-decoration: none;
+        margin-right: 5px;    
+    }
+     
+    .tdrSection {
+        width: 206px;
+    }
+    .tdrSection.inputBg {
+        display:inline-block;
+        /* margin-left: 10px; */
+        font-size: 14px;
+        width: auto;
+    }
+    .tdrSection input:focus {
+        border-color: #2F76CC;
+    }
+    .tdrSection input {
+        background: white;
+        border: #DDDBDA solid 1px;
+        padding: 8px;
+        border-radius: 4px;
+        width: 56px;
+        margin-right: 6px;
+        color: #C0C0C0;
+        font-size: 11px;
+        line-height: 14px;
+    }
+    .tdrSection.globalAllignment {
+     /* padding-left: 18px; */
+     display:inline-flex;
+     align-items: center;
+    
+    }
+    .tdrSection input:last-child {
+        margin-right: 0;
+    }
+    
+    .tdrSection input:focus  {
+        outline: none;
+        border-color: none;
+        box-shadow: none;
+        background: transparent;
+    }
+    .tdrSection input.two {
+        width: 44px;
+    }
+    .tdrSection input.three {
+        width: 44px;
+    }
+    
+    .comboSizeCls {
+        width: 90px;
+        padding: 0;
+    }
+    
+    .highlightedRow {
+        background: #F2F8FF;
+        
+    
+    }
+    
+    .tableScrollCls {
+        overflow-x: scroll;
+        width : 100%;
+        /*width:1132px;*/
+        border-left: #DDDBDA solid 1px;
+        border-right: #DDDBDA solid 1px;
+        /*margin-bottom: 10px;*/
+        overflow-y: scroll;
+        height: 76vh;
+    }
+    
+    /* New CSS of vertical tab START */
+    
+    .tabordion {
+        color: #333;
+        display: block;
+        font-family: arial, sans-serif;
+        position: relative;
+        height:75vh;
+        /* width: 80%; */
+      }
+      
+      .tabordion input[name="sections"] {
+        left: -9999px;
+        position: absolute;
+        top: -9999px;
+      }
+      
+      .tabordion section {
+        display: block;
+      }
+      
+      .tabordion section label {
+        background: #F2F8FF;
+        border-left: #F2F8FF solid 4px;
+        color: #222222;
+        cursor: pointer;
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 15px;
+        /* position: relative; */
+        width: 180px;
+        z-index:100;
+        margin-bottom: 8px;
+      }
+      
+      .tabordion section article {
+        display: none;
+        left: 0;
+        position: absolute;  
+        top: 0;
+        margin-left: 200px;
+        word-wrap: break-word;
+        height: 100px;
+        /* margin-right: 10px; */
+      }
+      
+      /* .tabordion section article:after {
+        background-color: #ccc;
+        bottom: 0;
+        content: "";
+        display: block;
+        left:-229px;
+        position: absolute;
+        top: 0;
+        width: 220px;
+        z-index:1;
+      } */
+      
+      
+      
+      /*.tabordion input[name="sections"]:checked + label { 
+        background: #C7E1FF;
+        color: #222222;
+        border-left: #599AEA solid 4px;
+      }*/
+      
+      .tabordion input[name="sections"]:checked ~ article {
+        display: block;
+      }
+    
+    @media (max-width: 992px) { /* Used in Mobile View */
+        .tabordion {
+          width: 100%;
+          height: 100%;
+        }
+        
+        .tabordion section label {
+          font-size: 14px;
+          width: auto;
+          border-bottom: #F2F8FF solid 3px;
+          border-left: none;
+          margin-bottom: 3px;
+          padding: 18px 22px;
+        }  
+      
+       .tabordion section article {
+          left: 0;
+          position: relative;
+          max-width: 100%;
+          padding: 0;
+        } 
+        .tabordion input[name="sections"]:checked + label { 
+        border-bottom: #599AEA solid 3px;
+        border-left: none;
+      }
+      .tabordion section article {
+        margin-left: 0;
+        padding: 10px 22px;
+        word-break: break-word;
+        margin-right: 0;
+      }
+      
+      
+      }
+    
+      .bulkUpdateTDR {
+        text-align: right;
+    }
+    
+    .headingCls_paymentMode {
+        color: #9A9A9A;
+        font-size: 14px;
+        display: inline-block;
+        margin-right: 206px;
+    }
+    
+    .fourthScreenSpacer {
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+    .noBottomBorder {
+        border-bottom: none;
+    }
+    
+    .tdAccordionHeading .slds-accordion__section {
+        padding: 0;
+    }
+    
+    .accordionTDR_Defaut .slds-accordion__summary {
+        background: black;
+    }
+    .accordionTDR_Defaut h3 {
+       font-size: 11px;
+    }
+    
+    .tableAccordionDetails td {
+        border: #DDDBDA solid 1px; 
+        font-size: 12px;
+        line-height: 14px;
+        padding: 8px;
+        width: 11%;
+        word-break: break-all;
+    }
+    
+    .belowRackRate {
+        color: #9D0404;
+        font-size: 12px;
+        line-height: 14px;
+        padding-left: 12px;
+    }
+    
+    .listCommercialTable > tbody > tr:hover > td { 
+        background-color: lightblue !important;
+        color: black !important; 
+        cursor: pointer;
+    }
+    
+    .mainWrap{
+        display: flex;
+        gap:10px;
+    }
+    
+    .iconWrap{
+        display: inline-block;
+        margin-top: 5px;
+    }
+    
+     .inputSpacing{
+        width: 100%;
+    }

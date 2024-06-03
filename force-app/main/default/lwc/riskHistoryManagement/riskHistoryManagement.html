@@ -1,0 +1,424 @@
+<template>
+  
+  <div class="accordionContainer">
+    <div class="accordion" onclick={handleAccordion} data-type="post">
+      <div class="icon">
+        <template if:true={showPostRiskHistory}>
+          <span
+            class="slds-icon_container slds-icon-utility-chevrondown"
+            title="Open"
+          >
+            <svg
+              class="slds-icon slds-icon-text-default slds-icon--x-small"
+              aria-hidden="true"
+            >
+              <use
+                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevrondown"
+              ></use>
+            </svg>
+          </span>
+        </template>
+        <template if:false={showPostRiskHistory}>
+          <span
+            class="slds-icon_container slds-icon-utility-chevronright"
+            title="Open"
+          >
+            <svg
+              class="slds-icon slds-icon-text-default slds-icon--x-small"
+              aria-hidden="true"
+            >
+              <use
+                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright" 
+              ></use>
+            </svg>
+          </span>
+        </template>
+      </div>
+      <div class="riskType">Post-Risk</div>
+      <div class="accordionDetails">
+        <template if:true={onHoldPostRisk}>
+          <div class="holdStatusContainer onHoldStatusContainer">
+            <div class="onHoldStatus holdStatus">
+              <span class="onHoldIcon holdIcon">
+                <span
+                  class="slds-icon_container slds-icon-utility-clear"
+                  title="Open"
+                >
+                  <svg
+                    class="slds-icon slds-icon-text-error slds-icon--x-small"
+                    aria-hidden="true"
+                  >
+                    <use
+                      xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#clear"
+                    ></use>
+                  </svg>
+                </span>
+              </span>
+              <div class="holdText">On Hold</div>
+            </div>
+          </div>
+        </template>
+        <template if:true={notonholdPostRisk}>
+          <div class="holdStatusContainer notOnHoldStatusContainer">
+            <div class="notOnHoldStatus holdStatus">
+              <span class="notOnHoldIcon holdIcon"> 
+                <span
+                  class="slds-icon_container slds-icon-utility-choice slds-current-color"
+                  title="Open"
+                >
+                  <svg
+                    class="slds-icon slds-icon-text-default slds-icon--x-small"
+                    aria-hidden="true"
+                  >
+                    <use
+                      xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#choice"
+                    ></use>
+                  </svg>
+                </span>
+              </span>
+              Not On Hold 
+            </div>
+          </div>
+        </template> 
+      </div> 
+      <div class="accordionButtonGroup">
+        <template if:true={onHoldPostRisk}>
+          <button class="slds-button slds-button_neutral" onclick={createNewReleaseNote}>Create Release Note</button><!--added by rohit-->
+          <div
+            class="releaseButton accordionButton"
+            data-name="Post Release"
+            onclick={handleRisk}
+          >
+            Release
+          </div>
+        </template>
+        <template if:true={notonholdPostRisk}>
+          <div
+            class="holdButton accordionButton"
+            data-name="Post Hold"
+            onclick={handleRisk}
+          >
+            Hold
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+  <template if:true={showPostRiskHistory}>
+    <div class="historyData" style="height: 300px">
+      <lightning-datatable
+        title="POST Risk Details History"
+        key-field="id"
+        data={data1}
+        columns={columns1}
+        show-row-number-column="true"
+        hide-checkbox-column="true"
+      >
+      </lightning-datatable>
+    </div>
+  </template>
+  <div class="accordionContainer">
+    <div class="accordion" onclick={handleAccordion} data-type="ob">
+      <div class="icon">
+        <template if:true={showObRiskHistory}>
+          <span
+            class="slds-icon_container slds-icon-utility-chevrondown"
+            title="Open"
+          >
+            <svg
+              class="slds-icon slds-icon-text-default slds-icon--x-small"
+              aria-hidden="true"
+            >
+              <use
+                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevrondown"
+              ></use>
+            </svg>
+          </span>
+        </template>
+        <template if:false={showObRiskHistory}>
+          <span
+            class="slds-icon_container slds-icon-utility-chevronright"
+            title="Open"
+          >
+            <svg
+              class="slds-icon slds-icon-text-default slds-icon--x-small"
+              aria-hidden="true"
+            >
+              <use
+                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"
+              ></use>
+            </svg>
+          </span>
+        </template>
+      </div>
+      <div class="riskType">OB-Risk</div>
+      <div class="accordionDetails">
+        <template if:true={onHoldOBRisk}>
+          <div class="holdStatusContainer onHoldStatusContainer">
+            <div class="onHoldStatus holdStatus">
+              <span class="onHoldIcon holdIcon">
+                <span
+                  class="slds-icon_container slds-icon-utility-clear"
+                  title="Open"
+                >
+                  <svg
+                    class="slds-icon slds-icon-text-error slds-icon--x-small"
+                    aria-hidden="true"
+                  >
+                    <use
+                      xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#clear"
+                    ></use>
+                  </svg>
+                </span>
+              </span>
+              <div class="holdText">On Hold</div>
+            </div>
+          </div>
+        </template>
+        <template if:true={notonholdOBRisk}>
+          <div class="holdStatusContainer notOnHoldStatusContainer">
+            <div class="notOnHoldStatus holdStatus">
+              <span class="notOnHoldIcon holdIcon">
+                <span
+                  class="slds-icon_container slds-icon-utility-choice slds-current-color"
+                  title="Open"
+                >
+                  <svg
+                    class="slds-icon slds-icon-text-default slds-icon--x-small"
+                    aria-hidden="true"
+                  >
+                    <use
+                      xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#choice"
+                    ></use>
+                  </svg>
+                </span>
+              </span>
+              Not On Hold
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="accordionButtonGroup">
+        <template if:true={onHoldOBRisk}>
+          <div
+            class="releaseButton accordionButton" 
+            data-name="OB Release"
+            onclick={handleRisk}
+          >
+            Release
+          </div>
+        </template>
+        <template if:true={notonholdOBRisk}>
+          <div
+            class="holdButton accordionButton"
+            data-name="OB Hold"
+            onclick={handleRisk}
+          >
+            Hold
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+  <template if:true={showObRiskHistory}>
+    <div class="historyData" style="height: 300px">
+      <lightning-datatable
+        title="OB Risk Details History"
+        key-field="id"
+        data={data2}
+        columns={columns2}
+        show-row-number-column="true"
+        hide-checkbox-column="true"
+      >
+      </lightning-datatable>
+    </div>
+  </template>
+  <div class="accordionContainer">
+    <div class="accordion" onclick={handleAccordion} data-type="pre">
+      <div class="icon">
+        <template if:true={showPreRiskHistory}>
+          <span
+            class="slds-icon_container slds-icon-utility-chevrondown"
+            title="Open"
+          >
+            <svg
+              class="slds-icon slds-icon-text-default slds-icon--x-small"
+              aria-hidden="true"
+            >
+              <use
+                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevrondown"
+              ></use>
+            </svg>
+          </span>
+        </template>
+        <template if:false={showPreRiskHistory}>
+          <span
+            class="slds-icon_container slds-icon-utility-chevronright"
+            title="Open"
+          >
+            <svg
+              class="slds-icon slds-icon-text-default slds-icon--x-small"
+              aria-hidden="true"
+            >
+              <use
+                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"
+              ></use>
+            </svg>
+          </span>
+        </template>
+      </div>
+      <div class="riskType">Pre-Risk</div>
+      <div class="accordionDetails">
+        <template if:true={onHoldPreRisk}>
+          <div class="holdStatusContainer onHoldStatusContainer">
+            <div class="onHoldStatus holdStatus">
+              <span class="onHoldIcon holdIcon">
+                <span
+                  class="slds-icon_container slds-icon-utility-clear"
+                  title="Open"
+                >
+                  <svg
+                    class="slds-icon slds-icon-text-error slds-icon--x-small"
+                    aria-hidden="true"
+                  >
+                    <use
+                      xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#clear"
+                    ></use>
+                  </svg>
+                </span>
+              </span>
+              <div class="holdText">On Hold</div>
+            </div>
+          </div>
+        </template>
+        <template if:true={notonholdPreRisk}>
+          <div class="holdStatusContainer notOnHoldStatusContainer">
+            <div class="notOnHoldStatus holdStatus">
+              <span class="notOnHoldIcon holdIcon">
+                <span
+                  class="slds-icon_container slds-icon-utility-choice slds-current-color"
+                  title="Open"
+                >
+                  <svg
+                    class="slds-icon slds-icon-text-default slds-icon--x-small"
+                    aria-hidden="true"
+                  >
+                    <use
+                      xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#choice"
+                    ></use>
+                  </svg>
+                </span>
+              </span>
+              Not On Hold
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="accordionButtonGroup">
+        <template if:true={onHoldPreRisk}>
+          <div
+            class="releaseButton accordionButton"
+            data-name="Pre Release"
+            onclick={handleRisk}
+          >
+            Release
+          </div>
+        </template>
+        <template if:true={notonholdPreRisk}>
+          <div
+            class="holdButton accordionButton"
+            data-name="Pre Hold"
+            onclick={handleRisk}
+          >
+            Hold
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+  <template if:true={showPreRiskHistory}>
+    <div class="historyData" style="height: 300px">
+      <lightning-datatable
+        title="PRE Risk Details History"
+        key-field="id"
+        data={data3}
+        columns={columns3}
+        show-row-number-column="true"
+        hide-checkbox-column="true"
+      >
+      </lightning-datatable>
+    </div>
+  </template>
+
+  <template if:true={riskManagementModal}>
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-modal="true"
+      aria-labelledby="modal-heading-01"
+      class="slds-modal slds-fade-in-open"
+    >
+      <div class="slds-modal__container">
+        
+        <div class="slds-modal__header">
+          <h1 id="modal-heading-01" class="slds-modal__title slds-float--left slds-hyphenate">
+            <template if:true={modalHeaderPost}>
+              <!--Risk Hold-->{holdHeader}
+            </template>
+            <template if:true={modalHeaderRelease}>
+              <!--Risk Hold Release-->{releaseHeader}
+            </template>
+          </h1>
+          <button
+          class="slds-button slds-button_icon slds-float--right slds-button_icon-inverse"
+          onclick={handleModalClose}
+        >
+          <lightning-button-icon variant="container" icon-name="utility:close" alternative-text="close"></lightning-button-icon>
+        </button>
+        </div>
+        <div
+          class="slds-modal__content slds-p-around_medium"
+          id="modal-content-id-1"
+        >
+        <template if:true={isLoading}> 
+          <lightning-spinner
+            alternative-text="Loading"
+            size="medium"
+            variant="brand"
+          ></lightning-spinner>  
+        </template>
+        <!-- Risk_status_Detail__c == postrecid for Post Hold-->
+        <!-- Risk_status_Detail__c == obredid for QBHold-->
+        <!-- Risk_status_Detail__c == preredid for preHold--> 
+
+        <!-- templatetypeparent  {Pre Hold,Pre Release} or {'OB Hold' || eventName == 'OB Release' } or  '{Post Hold' || eventName == 'Post Release' }-->
+        <div if:true={spinner}>
+          <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </div>
+        <c-risk-record-type-new onstatus ={handleStatus}  riskmanagementmodalclose={riskManagementModal} postriskidchild ={postrecid} obriskidchild ={obredid}  preriskidchild={preredid} onriskhistorymanagement={refreshdata} templatetype ={templatetypeparent}></c-risk-record-type-new>
+         
+        </div>
+        <div class="slds-modal__footer">
+         
+          <button class="slds-button slds-button_brand" data-name="c-risk-record-type-new"  onclick={handleSave}>
+            <template if:true={modalHeaderPost}><!--added by rohit-->
+              {holdHeader} &amp; Save 
+            </template>
+            <template if:true={modalHeaderRelease}><!--added by rohit-->
+              {releaseHeader} Hold &amp; Save
+            </template>
+           
+          </button>
+          <button
+          class="slds-button slds-button_neutral"
+          aria-label="Cancel and close"
+          onclick={handleModalClose}
+        >
+          Cancel
+        </button>
+        </div>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+  </template>
+</template>

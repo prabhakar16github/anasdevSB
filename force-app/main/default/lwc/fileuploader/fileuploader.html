@@ -1,0 +1,13 @@
+<template>
+    <label for="file-upload" style="padding: 6px 12px;size:10px;border:black;float:left">
+        <img src={AttIcon} style="width:15px;height:15px;">Choose File</label>
+    <div style="display:none">
+            <input type="file" id="file-upload" onchange={handleFileChanges}  multiple=true/>
+    </div>
+    <button style="float:left;font-family: emoji" onclick={handleSaveFiles} >Upload Files</button>
+    <div if:true={fileNames} class="slds-text-body_small slds-text-color_error">{fileNames}
+        <template if:true={showLoadingSpinner}>
+            <lightning-spinner alternative-text="Uploading......" size="medium"></lightning-spinner>
+        </template>
+    </div><br />
+</template>

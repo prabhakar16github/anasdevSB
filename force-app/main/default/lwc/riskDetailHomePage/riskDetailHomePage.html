@@ -1,0 +1,138 @@
+<template> 
+    
+    <lightning-card title="Hold/Release Risk Status By Type">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+        </template>
+        <div class="slds-grid slds-wrap ">
+            <div class="slds-col slds-size_3-of-12 ">
+                <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse">Risk Type</div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_2-of-12 ">
+                <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse">Status</div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_3-of-12 ">
+                <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse">Hold Type</div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_3-of-12 ">
+                <div class="demo-only slds-text-align_center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse ">Release Type</div>
+                </div>
+            </div>
+        </div>
+        <br></br>
+        <div class="slds-grid slds-wrap "> 
+            <div class="slds-col slds-size_2-of-12 ">
+                <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse">POST RISK</div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+                    <p class={textColorPost}>{poststatus}</p>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center" >
+                <lightning-button variant="brand"
+                label = "Post Hold"
+                title="Post Hold"
+                name = "Post Hold"
+                onclick={handleClick}
+                disabled={disablePostHold}
+               >
+                </lightning-button>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+                <lightning-button variant="Success"
+                label = "Post Release"
+                title="Post Release"
+                name = "Post Release"
+                onclick={handleClick}
+                disabled={disablePostRelease}
+               >
+                </lightning-button>
+               
+            </div>
+            
+          </div>
+          <br></br>
+          <div class="slds-grid slds-wrap ">
+            <div class="slds-col slds-size_2-of-12 ">
+                <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse">OB RISK</div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+                    <p class={textColorOB}>{obstatus}</p>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center" >
+                <lightning-button variant="brand"
+                label = "OB Hold"
+                title="OB Hold"
+                name="OB Hold"
+                onclick={handleClick}
+                disabled={disableOBHold}
+               >
+                </lightning-button>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+                <lightning-button variant="Success"
+                label = "OB Release"
+                title="OB Release"
+                name="OB Release"
+                onclick={handleClick}
+                disabled={disableOBRelease}
+               >
+                </lightning-button>
+    
+            </div>
+          </div>  
+          <br></br>
+          <div class="slds-grid slds-wrap ">
+            <div class="slds-col slds-size_2-of-12 ">
+                <div class="demo-only slds-align_absolute-center" style="padding:0.5rem;background:hsl(223, 43%, 70%)">
+                    <div class="slds-text-color_inverse">PRE RISK</div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+                    <p class={textColorPre}>{prestatus}</p>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center" >
+                <lightning-button variant="brand"
+                label = "Pre Hold"
+                title="Pre Hold"
+                name="Pre Hold"
+                onclick={handleClick}
+                disabled={disablePreHold}
+               >
+                </lightning-button>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+                <lightning-button variant="Success"
+                label = "Pre Release"
+                title="Pre Release"
+                name="Pre Release"
+                onclick={handleClick}
+                disabled={disablePreRelease}
+               >
+                </lightning-button>
+            </div>
+          </div>     
+    </lightning-card>
+    <template if:true={showRiskRecord}>
+        <!--Added opprecordid by rohit-->
+        <lightning-card>
+            <c-risk-record-types onstatus ={handleStatus} postriskidchild ={postrecid}  obriskidchild ={obredid}  preriskidchild={preredid} templatetype ={templatetypeparent}></c-risk-record-types>
+        </lightning-card>
+       
+   </template>
+    
+</template>

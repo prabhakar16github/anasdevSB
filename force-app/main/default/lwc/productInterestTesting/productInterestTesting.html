@@ -1,0 +1,52 @@
+<template>
+    <lightning-tabset variant="scoped">
+        <lightning-tab label="Core Payments">
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Sub-Product</th>
+                            <th>Merchant Interest</th>
+                            <th>Interest Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={visibleRecords} for:item="interest" for:index="index">
+                            <template if:true={visibleRecords}>
+                                <tr key={interest.Id}>
+                                    <td>{interest.product}</td>
+                                    <td>{interest.sub_product}</td>
+                                    <td><lightning-button-icon-stateful
+                                        icon-name="utility:like"
+                                        alternative-text="Like"
+                                        disabled={isButtonDisabled}
+                                    ></lightning-button-icon-stateful></td>
+                                    <td><lightning-combobox class="comboCls"
+                                        name="progress"
+                                        value={value}
+                                        placeholder="Select Progress"
+                                        options={options}
+                                        onchange={handleChange}
+                                    ></lightning-combobox></td>
+                                </tr>
+                            </template>
+                        </template>
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="pagination">
+                <lightning-button-icon icon-name="utility:left" onclick={goToPreviousPage} disabled={isFirstPage}></lightning-button-icon>
+                <span>{currentPage}</span>
+                <lightning-button-icon icon-name="utility:right" onclick={goToNextPage} disabled={isLastPage}></lightning-button-icon>
+            </div>
+        </lightning-tab>
+        <lightning-tab label="Payment Stack" title="2nd tab extended title">
+            Payment Stack
+        </lightning-tab>
+        <lightning-tab label="Omnichannel">
+            Omnichannel
+        </lightning-tab>
+    </lightning-tabset>
+</template>

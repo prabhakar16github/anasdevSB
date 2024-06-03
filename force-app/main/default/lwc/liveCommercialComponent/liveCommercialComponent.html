@@ -1,0 +1,123 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="slds-page-header slds-align_absolute-center" style="background-color: #FFE3DD;height:10px;"><b>Transformed Data</b></div>
+    <div class="slds-grid slds-wrap tabTitleClass">
+        <div class="slds-size_12-of-12">
+            <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                <table id="Table41">
+                    <thead class="thMainRow">
+                        <tr>
+                            <!--<th class="varientTwo" style="width:14%;text-align:left;">PAYMENT MODE</th>-->
+                            <th class="varientTwo" style="width:16%;text-align:left;">PAYMENT OPTIONS</th>
+                            <th class="varientTwo" style="width:16%;text-align:left;">SPECIFICATIONS</th>
+                            <th class="varientTwo" style="width:16%;text-align:left;">PAYMENT GATEWAY</th>
+                            <th class="varientTwo" style="width:12%;text-align:left;">ONUS/OFFUS</th>
+                            <th class="varientTwo" style="width:20%;text-align:center;">TDR</th>
+                            <th class="varientTwo" style="width:20%;text-align:center;">CONVENIENCE FEE</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tdAccordionHeading">
+                        <tr>
+                            <td colspan="8">
+                                <lightning-accordion allow-multiple-sections-open>
+                                    <template for:each={selectedListPaymentDataLiveFromTreasury} for:item="paymentData">
+                                        <lightning-accordion-section name={paymentData.paymentModeName}
+                                            label={paymentData.paymentModeName} class="accordionTDR_Defaut"
+                                            key={paymentData.paymentModeName}>
+                                            <table class="tableAccordionDetails">
+                                                <tbody>
+                                                    <template for:each={paymentData.selectedPaymentOptionsList}
+                                                        for:item="payInner1">
+                                                        <template for:each={payInner1.selectedPaymentIndividualList}
+                                                            for:item="payInner2">
+                                                            <tr key={payInner2.key}>
+                                                                <!--<td style="width:14%;text-align:left;"></td>-->
+                                                                <td style="width:16%;text-align:left;">
+                                                                    {payInner2.selectedPaymentOptionName}</td>
+                                                                <td style="width:16%;text-align:left;">
+                                                                    {payInner2.selectedSpecification}</td>
+                                                                <td style="width:16%;text-align:left;">
+                                                                    {payInner2.selectedPaymentGatewayName}</td>
+                                                                <td style="width:12%;text-align:left;">
+                                                                    {payInner2.selectedOnusOffus}</td>
+                                                                <td style="width:20%;text-align:center;">
+                                                                    <div class="tdrSection globalAllignment">
+                                                                        <lightning-input type="text"
+                                                                            value={payInner2.tdrAmount}
+                                                                            disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                            type="text" value={payInner2.tdrFee}
+                                                                            disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                            type="text" value={payInner2.tdrPercentage}
+                                                                            disabled="true"></lightning-input></div>
+                                                                </td>
+                                                                <td style="width:20%;text-align:center;">
+                                                                    <div class="tdrSection globalAllignment">
+                                                                        <lightning-input type="text"
+                                                                            value={payInner2.convenienceAmount}
+                                                                            disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                            type="text" value={payInner2.convenienceFee}
+                                                                            disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                            type="text"
+                                                                            value={payInner2.conveniencePercentage}
+                                                                            disabled="true"></lightning-input></div>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </lightning-accordion-section>
+                                    </template>
+                                </lightning-accordion>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="slds-page-header slds-align_absolute-center" style="background-color: #FFE3DD;height:10px;"><b>Untransformed Data</b></div>
+    <div class="slds-grid slds-wrap tabTitleClass">
+        <div class="slds-size_12-of-12">
+            <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                <table id="Table4544" class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead class="thMainRow">
+                        <tr>
+                            <th class="varientTwo" style="width:15%;text-align:center;">debitModel</th>
+                            <th class="varientTwo" style="width:14%;text-align:center;">type</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">paymentMode</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">subPaymentMode</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">paymentScheme</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">paymentEntity</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">cardType</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">isOnus</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">moreThanAmount</th>
+                            <th class="varientTwo" style="width:8%;text-align:center;">flatFee</th>
+                            <th class="varientTwo" style="width:7%;text-align:center;">percentageFee</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tdAccordionHeading">
+                        <template for:each={listUntransformedData} for:item="ud">
+                            <tr key={ud.ruleId}>
+                                <td style="width:15%;text-align:center;">{ud.debitModel}</td>
+                                <td style="width:14%;text-align:center;">{ud.type}</td>
+                                <td style="width:8%;text-align:center;">{ud.paymentMode}</td>
+                                <td style="width:8%;text-align:center;">{ud.subPaymentMode}</td>
+                                <td style="width:8%;text-align:center;">{ud.paymentScheme}</td>
+                                <td style="width:8%;text-align:center;">{ud.paymentEntity}</td>
+                                <td style="width:8%;text-align:center;">{ud.cardType}</td>
+                                <td style="width:8%;text-align:center;">{ud.isOnus}</td>
+                                <td style="width:8%;text-align:center;">{ud.moreThanAmount}</td>
+                                <td style="width:8%;text-align:center;">{ud.flatFee}</td>
+                                <td style="width:7%;text-align:center;">{ud.percentageFee}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+</div>
+</div>
+</template>

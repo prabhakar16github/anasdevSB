@@ -1,0 +1,68 @@
+table, th, td {
+    border: 1px solid grey;
+    border-radius: 1px;
+    
+}
+th {
+    
+    background-color:#FFE3DD;
+    font: Inter;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20.8px;
+    text-align: center;
+    padding: 1px;
+
+}
+td {
+    background-color: #FBFBFB;
+    
+    font: Inter;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20.8px;
+    text-align: center;
+}
+
+.secondTable {
+    /* width: 100vw; */
+    /* overflow-x: scroll; */
+    /* table-layout:fixed; */
+    /* overflow: hidden; */
+    /* width: fit-content; */
+    display: flex;
+    overflow: auto;
+}
+.colorParent{
+    padding: 10px;  
+}
+.colorPillsOptions{
+    color: #D3485D;
+    background: #FBF3FF;
+    padding: 3px;
+    border-radius: 4px;
+}
+table tr.clickable-row {
+    cursor: pointer;
+}
+
+table tr.hovered {
+    background-color: green;
+}
+.textCls {
+    color: #999999;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    letter-spacing: 0.4px;
+    margin-bottom: 5px;
+}
+
+.buttonCls {
+    margin-left: 306px;
+}
+.modalHeadreCls{
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;
+}

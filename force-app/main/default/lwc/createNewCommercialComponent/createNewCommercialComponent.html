@@ -1,0 +1,67 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="background-color:rgb(209,206,206);padding-left:20%;padding-right:20%;">
+        <div class="slds-grid popUpCustomContainer slds-box" style="background-color:white;">
+            <div class="slds-col popUpBoxCls" >
+                <div class="commercialContainer">
+                    <div class="paymentSelectHeader">
+                        Quick start with a plan
+                    </div>
+                <div class="fieldsContainer">
+                    <div class="slds-m-bottom_medium">
+                        <lightning-combobox 
+                                    label="Plan" 
+                                    name="Plan"
+                                    placeholder="Select Plan" 
+                                    value={selectedPlan} 
+                                    options={availablePlanMaster}
+                                    onchange={handlePlanChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-m-bottom_medium">
+                        <lightning-combobox 
+                                    label="Sub Plan" 
+                                    name="Sub Plan"
+                                    placeholder="Select Sub Plan" 
+                                    value={selectedSubPlan} 
+                                    options={availableSubPlanMaster}
+                                    onchange={handleSubPlanChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-m-bottom_medium">
+                        <lightning-combobox 
+                                    label="Template" 
+                                    name="Template"
+                                    placeholder="Select Template" 
+                                    value={selectedTemplate} 
+                                    options={availableTemplateMaster}
+                                    onchange={handleTemplateChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-m-bottom_medium slds-text-align_center">
+                        <lightning-button label="Add Payment Plan" disabled={disabledAddPaymentPlan} onclick={handleThirdScreen}></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popUpBoxCls slds-col">
+            <div class="commercialContainer">
+                <div class="paymentSelectHeader">
+                    Start from scratch
+                    <br/>
+                </div>
+                <div class="fieldsContainer mt40">
+                    <div class="slds-m-bottom_medium textContainer slds-text-align_center">
+                        Create a new set of payment options for the merchant.
+                    </div>
+                    <div class="slds-m-bottom_xx-large slds-text-align_center selectBtnContainer">
+                        <lightning-button label="Select payment options" variant="brand" onclick={handleThirdScreen} data-id="Select payment options"></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</template>

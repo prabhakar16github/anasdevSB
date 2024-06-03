@@ -1,0 +1,23 @@
+<template>
+    <lightning-input    
+    data-id="search-input"
+      value={searchValue}
+      placeholder="Search by user first name or last name"
+      onchange={searchKeyword}
+      label="Tag User"
+      required
+  ></lightning-input> 
+  
+  
+  <template if:true={showRecordList}>
+      <ul data-id="waiver-list" class="slds-has-dividers_bottom-space container-border" if:true={userRecord}>
+          <template for:each={userRecord} for:item="userList">
+              <li key={userList.Id} 
+              class="slds-item"
+              data-id={userList.Id}
+              data-name={userList.Name}
+              onclick={selectedId}>{userList.Name}</li>
+          </template>
+      </ul>
+  </template>
+</template>

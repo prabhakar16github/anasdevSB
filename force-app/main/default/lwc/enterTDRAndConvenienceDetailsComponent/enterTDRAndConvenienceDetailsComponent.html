@@ -1,0 +1,233 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="searchBarWrap_main">
+        <lightning-button label="Save Pricing" variant="brand" onclick={savePricing} disabled={disabledSavePricingButton}></lightning-button>
+        </div>
+    <div>
+        <!--Alert Message-->
+        <template if:true={errorSelectPayOptions}><!--Added by rohit start-->   
+            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert"><!--Added by rohit-->
+                <span class="slds-assistive-text">warning</span>
+                <h2>{showErrorMessageForSelectPayOptions}</h2>
+                <div class="slds-notify__close">
+                    <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" onclick={hideErrorMessage}>
+                        X
+                    </button>
+                </div>
+            </div><br/> 
+        </template>
+        <template if:true={showErrorMessage}>
+            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert" >
+                    <span class="slds-assistive-text">warning</span>
+                    <div>
+                        <lightning-formatted-rich-text value={errorMessage}>
+                        </lightning-formatted-rich-text>
+                        <!--<h2>{errorMessage}</h2>-->
+                    </div>
+                    <div class="slds-notify__close">
+                        <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" onclick={hideErrorMessage}>
+                            X
+                        </button>
+                    </div>
+            </div><br/>
+        </template>
+        <!--End Alert Message--> 
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="TDR">
+                <div class="tabSectionMainWrap">
+                    <div class="tabordion">
+                        <template for:each={selectedListPaymentData} for:item="paymentMode" for:index="indx">
+                            <section id="section1" key={paymentMode.paymentModeId}>
+                                <input type="radio" name="sections" id="option1" checked>
+                                    <label for="option1" data-id={indx} onclick={getListForPaymentMode} style={paymentMode.styleClass}>{paymentMode.paymentModeName}</label>
+                                <article>
+                                    <div class="tableScrollCls"> 
+                                        <table class="tableThirdScreen"> 
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:14%;text-align:center">BANKS/PAYMENT OPTIONS</th>
+                                                    <th style="width:9%;text-align:center">SPECIFICATIONS</th>
+                                                    <th style="width:9%;text-align:center">PAYMENT GATEWAY</th>
+                                                    <th style="width:9%;text-align:center">FEE MODEL</th>
+                                                    <th style="width:9%;text-align:center">TRANSACTION TYPE</th>
+                                                    <th style="width:25%;text-align:center">TDR</th>
+                                                    <th style="width:25%;text-align:center">CONVENIENCE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="highlightedRow">
+                                            <!--Highlighted First Row-->  
+                                            <template for:each={listFirstRowForAddCommercials} for:index="index" for:item="firstRow">
+                                                <tr key={firstRow.key}>
+                                                    <td style="width:25%;">
+                                                        <template if:true={firstRow.showCheckbox}>
+                                                            <span class="slds-form-element__label">
+                                                                <lightning-input type="checkbox" checked={firstRow.isChecked} onchange={handleCheckedForCommercialsFirstRow} 
+                                                                data-id={index}></lightning-input>
+                                                                 <!--added by rohit-->
+                                                                <lightning-combobox data-id="index" data-key="indx1"
+                                                                    data-label={indx} value={PaymentOptionPicklistValue}
+                                                                    options={paymentOptions}
+                                                                    onchange={handleChangePaymentOption}
+                                                            ></lightning-combobox>
+                                                          <!--END -value={PaymentOptionPicklistValue}-->
+                                                          <!-- value={firstRow.selectedPaymentOptionName} -->
+                                                            </span>
+                                                        </template>
+                                                    </td>
+                                                    <td style="width:4%;text-align:center">
+                                                          <!--added by rohit-->
+                                                        <template if:true={firstRow.showCheckbox}>
+                                                            <lightning-combobox data-id="index.key" data-key="indx1"
+                                                                data-label={indx} value={specificationPicklistValue}
+                                                                options={specificationOptions}
+                                                                onchange={handleChangePaymentOption}
+                                                            ></lightning-combobox>
+                                                        </template>
+                                                          <!--END-->
+                                                    </td>
+                                                    <td style="width:3%;text-align:center">
+                                                          <!--added by rohit-->
+                                                        <template if:true={firstRow.showCheckbox}>
+                                                            <lightning-combobox data-id={index.key} data-key={indx1}
+                                                                data-label={indx} value={firstRow.selectedPaymentGatewayName}
+                                                                options={paymentGatewayOptions}
+                                                                onchange={handleChangePaymentOption}
+                                                            ></lightning-combobox>
+                                                        </template>
+                                                          <!--END-->
+                                                    </td>
+                                                    <td style="width:9%;text-align:center"><div class="formCheckBoxWrap comboThirdScreen">
+                                                        <div class="slds-p-around_medium lgc-bg">
+                                                            <template if:true={firstRow.showCheckbox}>
+                                                                <lightning-combobox value={firstRow.selectedFeeModel}  options={firstRow.listFeeModel} onchange={handleChangeFeeModelFirstRow} variant="label-hidden" data-id={index}></lightning-combobox>
+                                                            </template>
+                                                        </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:9%;text-align:center">
+                                                        <div class="formCheckBoxWrap comboThirdScreen">
+                                                            <div class="slds-p-around_medium lgc-bg comboSizeCls">
+                                                                <template if:true={firstRow.showCheckbox}>
+                                                                <lightning-combobox  value={firstRow.selectedTransactionType} options={firstRow.listTransactionType} onchange={handleChangeTransactionTypeFirstRow} variant="label-hidden" data-id={index}></lightning-combobox>
+                                                            </template>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:25%;text-align:center">
+                                                        <template if:true={firstRow.showTDR}>
+                                                            <div class="tdrSection globalAllignment">
+                                                                <a onclick={addrowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>+</a>
+                                                                <template if:false={firstRow.showCheckbox}><a onclick={removeRowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>-</a></template>
+                                                                 <!-- added by rohit : this disabled={firstRow.showCheckbox}-->
+                                                                <span class="plusClassCSS">></span> <lightning-input variant="label-hidden" type="number" value={firstRow.tdrAmount} disabled={firstRow.showCheckbox} onchange={handleTDRAmountForFirstRow} data-id={index} placeholder="Amount" step="0.01" class="inputSpacing"></lightning-input>
+                                                                &nbsp;<lightning-input variant="label-hidden" type="number" value={firstRow.tdrFee} onchange={handleTDRFeeForFirstRow} data-id={index} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                &nbsp;<lightning-input variant="label-hidden" type="number" value={firstRow.tdrPercentage} onchange={handleTDRPercentageForFirstRow} data-id={index} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                            </div>
+                                                        </template>
+                                                    </td>
+                                                    <td style="width:25%;text-align:center">
+                                                        <template if:true={firstRow.showConvenience}>
+                                                            <div class="tdrSection globalAllignment">
+                                                                <a onclick={addrowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>+</a>
+                                                                <template if:false={firstRow.showCheckbox}><a onclick={removeRowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>-</a></template>
+                                                                 <!-- added by rohit : this disabled={firstRow.showCheckbox}-->
+                                                                <span class="plusClassCSS">></span> <lightning-input variant="label-hidden" type="number" value={firstRow.convenienceAmount} disabled={firstRow.showCheckbox} onchange={handleConvenienceAmountForFirstRow} data-id={index} placeholder="Amount" step="0.01"></lightning-input>
+                                                                &nbsp;<lightning-input  variant="label-hidden" type="number" value={firstRow.convenienceFee} onchange={handleConvenienceFeeForFirstRow} data-id={index} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                &nbsp;<lightning-input  variant="label-hidden" type="number" value={firstRow.conveniencePercentage} onchange={handleConveniencePercentageForFirstRow} data-id={index} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                            </div>
+                                                            <template if:true={firstRow.showCheckbox}>
+                                                                <a onclick={populateDataForAllSelected}>Apply to all selected</a>
+                                                            </template>
+                                                        </template>
+                                                        <template if:false={firstRow.showConvenience}>
+                                                            <template if:true={firstRow.showCheckbox}>
+                                                                <a onclick={populateDataForAllSelected}>Apply to all selected</a>
+                                                            </template>
+                                                        </template>
+                                                    </td>
+                                                </tr>
+                                            </template> 
+                                            
+                                        </tbody>
+                                    <!-- highlight table Row End-->
+                                        <tbody>
+                                        <!--<template if:true={haveRecords}>-->
+                                            <template if:true={showScreen4}>
+                                                <template for:each={listDataForPaymentMode} for:index="index1" for:item="payInner">
+                                                    <template for:each={payInner.selectedPaymentIndividualList} for:index="index2" for:item="payInner2">
+                                                        <tr key={payInner2.key} style={payInner2.backgroundColor}>
+                                                            <td style="width:14%;"><template if:true={payInner2.showCheckbox}><span class="slds-form-element__label"><lightning-input type="checkbox" checked={payInner2.isChecked} onchange={handleCheckedForCommercials} data-id={index1} data-key={index2}></lightning-input></span> {payInner2.selectedPaymentOptionName}</template></td>
+                                                            <td style="width:9%;text-align:center"><template if:true={payInner2.showCheckbox}>{payInner2.selectedSpecification}</template></td>
+                                                            <td style="width:9%;text-align:center"><template if:true={payInner2.showCheckbox}>{payInner2.selectedPaymentGatewayName}</template></td>
+                                                            <td style="width:9%;text-align:center">
+                                                                <template if:true={payInner2.showCheckbox}>
+                                                                    <div class="formCheckBoxWrap comboThirdScreen">
+                                                                            <div class="slds-p-around_medium lgc-bg">
+                                                                                <lightning-combobox value={payInner2.selectedFeeModel}  options={payInner2.listFeeModel} onchange={handleChangeFeeModel} variant="label-hidden" data-id={index1} data-key={index2}></lightning-combobox>
+                                                                            </div>
+                                                                    </div>
+                                                                </template>
+                                                            </td>
+                                                            <td style="width:9%;text-align:center">
+                                                                <template if:true={payInner2.showCheckbox}>
+                                                                    <div class="formCheckBoxWrap comboThirdScreen">
+                                                                        <div class="slds-p-around_medium lgc-bg comboSizeCls">
+                                                                            <lightning-combobox  value={payInner2.selectedTransactionType} options={payInner2.listTransactionType} onchange={handleChangeTransactionType} variant="label-hidden" data-id={index1} data-key={index2}></lightning-combobox>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+                                                            </td>
+                                                            <td style="width:25%;text-align:center">
+                                                                <template if:true={payInner2.showTDR}>
+                                                                    <div class="tdrSection globalAllignment">
+                                                                        <a onclick={addrowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>+</a>
+                                                                        <template if:false={payInner2.showCheckbox}><a onclick={removeRowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>-</a></template>
+                                                                        <span class="plusClassCSS">></span>
+                                                                         <!-- added by rohit : this disabled={payInner2.showCheckbox}-->
+                                                                        <div class="inputSpacing"><lightning-input class="inputSpacing" variant="label-hidden" type="number" value={payInner2.tdrAmount} disabled={payInner2.showCheckbox} onchange={handleTDRAmountForSecondRow} data-id={index1} data-key={index2} placeholder="Amount" step="0.01"></lightning-input></div> 
+                                                                        &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.tdrFee} onchange={handleTDRFeeForSecondRow} data-id={index1} data-key={index2} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                        &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.tdrPercentage} onchange={handleTDRPercentageForSecondRow} data-id={index1} data-key={index2} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                                    </div>
+                                                                </template>
+                                                            </td>
+                                                            <td style="width:25%;text-align:center">
+                                                                <template if:true={payInner2.showConvenience}>
+                                                                    <div class="tdrSection globalAllignment">
+                                                                        <!-- added by rohit : this disabled={payInner2.showCheckbox}-->
+                                                                        <a onclick={addrowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>+</a>
+                                                                        <template if:false={payInner2.showCheckbox}><a onclick={removeRowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>-</a></template>
+                                                                        <span class="plusClassCSS">></span> <lightning-input  variant="label-hidden" type="number" value={payInner2.convenienceAmount} disabled={payInner2.showCheckbox} onchange={handleConvenienceAmountForSecondRow} data-id={index1} data-key={index2} placeholder="Amount" step="0.01"></lightning-input>
+                                                                        &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.convenienceFee} onchange={handleConvenienceFeeForSecondRow} data-id={index1} data-key={index2} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                        &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.conveniencePercentage} onchange={handleConveniencePercentageForSecondRow} data-id={index1} data-key={index2} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                                    </div>
+                                                                </template>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </template>
+                                            </template>
+                                        <!--</template>
+                                            <template if:false={haveRecords}>
+                                                <h1><center>{noValueForPaymentsOptionAndSpecification}</center></h1>
+                                            </template>-->
+                                        </tbody>    
+                                    </table>
+                                </div>
+                            </article>
+                        </section>
+                    </template>
+                </div>
+            </div>
+            </lightning-tab>
+                <div class="toolTipMain">
+                    <lightning-tab label="Add Product" icon-name="" size="x-small" icon-position="right" class="tabToolTip">
+                        <div class="toolTipContent" style="display: block;">
+                            <span>More Products Coming Soon !</span>
+                        </div>
+                    </lightning-tab>
+                </div>
+            </lightning-tabset>
+        </div>
+</template>

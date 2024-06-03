@@ -1,0 +1,102 @@
+<template>
+    <template if:true={commentList} >
+        <template for:each={commentList} for:item="com">
+            <section role="log" class="slds-chat" key={com.cm.Id}>
+                <ul class="slds-chat-list">
+                    <!-- {com.cm.Comment__c} -->
+                    
+                    
+                    <template if:false={com.isSalesforce}>
+                        <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                            <div class="slds-chat-message">
+                                <!-- <span aria-hidden="true" class="slds-avatar slds-avatar_circle slds-chat-avatar">
+                                    <abbr class="slds-avatar__initials slds-avatar__initials_inverse" title="Taylor Watson-Rice">TW</abbr>
+                                </span> -->
+                                <div class="slds-chat-message__body">
+                                    <div class="slds-chat-message__meta" aria-label="said Taylor Watson-Rice at 4:59 PM">Consumer<br/>
+                                        <lightning-formatted-date-time value={com.cm.CreatedDate} year="numeric" month="short" day="2-digit" hour="numeric" minute="2-digit" time-zone-name="short"></lightning-formatted-date-time><!-- </p>{com.cm.CreatedDate} -->
+                                    </div>
+                                
+                                <div class="slds-chat-message__text slds-chat-message__text_inbound">
+                                    <span>
+                                        <span class="slds-icon_container slds-icon-doctype-attachment slds-chat-icon" title="Attachment">
+                                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                <use xlink:href="/assets/icons/doctype-sprite/svg/symbols.svg#attachment"></use>
+                                            </svg>
+                                            {com.cm.Comment__c}<br/>
+                                            
+                                            
+                                            <!-- <span class="slds-assistive-text">Attachment</span> -->
+                                        </span>
+                                        <!-- <div class="slds-chat-message__meta slds-text-color_inverse" aria-label="said Taylor Watson-Rice at 4:59 PM">{com.cm.CreatedBy.Name}<br/>{com.cm.CreatedDate}</div> -->
+                                        <!-- <a href="#">filename_of_attachment.jpg</a> -->
+                                    </span>
+                                </div>
+                                <template if:true={com.hasAttachment}>
+                                    
+                                    <span class="slds-text-align_center documentSpan" title="Attachment">
+                                        
+                                        <!-- File Name : Inbound Attachment -->
+                                        <a target="_blank" href={com.cm.Document_Link__c} class="docLink">
+                                            <lightning-icon icon-name="doctype:attachment" alternative-text="attachment"></lightning-icon>
+                                        </a>
+                                        
+                                        
+                                        <!-- <span class="slds-assistive-text">Attachment</span> -->
+                                    </span>
+                                </template>
+                                
+                            </div>
+                            
+                            
+                        </div>
+                    </li>
+                </template>
+                
+                <template if:true={com.isSalesforce}>
+                    <li class="slds-chat-listitem slds-chat-listitem_outbound">
+                        <div class="slds-chat-message">
+                            <!-- <span aria-hidden="true" class="slds-avatar slds-avatar_circle slds-chat-avatar">
+                                <abbr class="slds-avatar__initials slds-avatar__initials_inverse" title="Taylor Watson-Rice">TW</abbr>
+                            </span> -->
+                            <div class="slds-chat-message__body">
+                                <div class="slds-chat-message__meta" aria-label={com.cm.CreatedBy.Name}>{com.cm.CreatedBy.Name}<br/>
+                                    <lightning-formatted-date-time value={com.cm.CreatedDate} year="numeric" month="short" day="2-digit" hour="numeric" minute="2-digit" time-zone-name="short"></lightning-formatted-date-time><!-- </p>{com.cm.CreatedDate} -->
+                                </div>
+                                <div class="slds-chat-message__text slds-chat-message__text_outbound">
+                                    <span>
+                                        <span class="slds-icon_container slds-icon-doctype-attachment slds-chat-icon" title="Attachment">
+                                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                <use xlink:href="/assets/icons/doctype-sprite/svg/symbols.svg#attachment"></use>
+                                            </svg>
+                                            {com.cm.Comment__c}
+                                            <!-- <span class="slds-assistive-text">Attachment</span> -->
+                                        </span>
+                                        <!-- <div class="slds-chat-message__meta slds-text-color_inverse" aria-label="said Taylor Watson-Rice at 4:59 PM">{com.cm.CreatedBy.Name}<br/>{com.cm.CreatedDate}</div> -->
+                                        <!-- <a href="#">filename_of_attachment.jpg</a> -->
+                                    </span>
+                                </div>
+                                <template if:true={com.hasAttachment}>
+                                    <span class="slds-text-align_center slds-m-top_x-small slds-box slds-icon-doctype-attachment slds-chat-icon" title="Attachment" style="padding:2px; background-color: rgb(240, 234, 234);">
+                                        
+                                        <a target="_blank" href={com.cm.Document_Link__c}>File</a>
+                                        
+                                        <!-- <span class="slds-assistive-text">Attachment</span> -->
+                                    </span>
+                                </template>
+                            </div>
+                            
+                            
+                        </div>
+                    </li>
+                </template>
+                
+                
+            </ul>
+        </section>
+    </template>
+    
+</template>
+
+
+</template>

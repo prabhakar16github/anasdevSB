@@ -1,0 +1,127 @@
+<template>
+<lightning-quick-action-panel header="View Pending Docs"  >
+    <!-- <lightning-button label="View Pending Docs" onclick={handleButtonClick} variant="brand"></lightning-button> -->
+<div if:true={rekycJourney} class="slds-m-top_medium center-container">   
+            <div class="center-content">         
+                    <h2 style="color: green; font-weight: bold; text-align: center; font-size: 20px;">Journey is Re-KYC</h2>      
+                        </div>              
+                        </div>        
+                        <!-- If rekycJourney is false, display a different heading -->  
+                                <div if:false={rekycJourney} class="slds-m-top_medium center-container">        
+                                    <div class="center-content">          
+                                                <h2 style="color: green; font-weight: bold; text-align: center; font-size: 20px;">Journey is KYC</h2>        
+                                                </div>     
+                                                        
+                                                        </div>
+    
+    
+        <table class="slds-table slds-table_bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <tr>
+                    <td>REKYC Journey</td>
+                    <td>{rekycJourney}</td>
+                </tr> -->
+                <template if:true={panStatus}>
+                    <tr>
+                        <td>PAN Status</td>
+                        <td class="changeColor">{panStatus}</td>
+                    </tr>
+                </template>
+                <template if:true={bankStatus}>
+                    <tr>
+                        <td>Bank Status</td>
+                        <td class="changeColor">{bankStatus}</td>
+                    </tr>
+                </template>
+                <template if:true={websiteStatus}>
+                    <tr>
+                        <td>Website Status</td>
+                        <td class="changeColor">{websiteStatus}</td>
+                    </tr>
+                </template>
+                <template if:true={agreementStatus}>
+                    <tr>
+                        <td>Agreement Status</td>
+                        <td class="changeColor">{agreementStatus}</td>
+                    </tr>
+                </template>
+                <template if:true={documentstatus}>
+                    <tr>
+                        <td>Document Status</td>
+                        <td class="changeColor">{documentstatus}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+  
+
+    <!-- Add some space between tables -->
+    <div style="margin-top: 30px;"></div>
+
+    <!-- Multiple Docs Status Table -->
+    <template if:true={docsStatus}>
+        <table class="slds-table slds-table_bordered">
+            <thead>
+                <tr>
+                    <th>Document Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={docsStatus} for:item="doc">
+                    <tr key={doc.name}>
+                        <td>{doc.name}</td>
+                        <td class="changeColor">{doc.status}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </template>
+
+          <!-- Add some space between tables -->
+    <div style="margin-top: 30px;"></div>  
+    
+    <div class="center-content">         
+        <h3 style="color: green; font-weight: bold; text-align: center; font-size: 20px;">Dictionary</h3>      
+            </div> 
+
+        <table class="slds-table slds-table_bordered">
+            <thead>
+                <tr>
+                    <th>Status </th>
+                    <th>Meaning</th>
+                </tr>
+            </thead>
+           
+                <tr>
+                    <td>PENDING</td>
+                    <td>Not Recieved Merchant Details</td>
+                </tr>
+
+                <tr>
+                    <td>COMPLETED</td>
+                    <td>Successfully Verified</td>
+                </tr>
+                <tr>
+                    <td>IN_PROGRESS</td>
+                    <td>Verification In Progress</td>
+                </tr>
+                <tr>
+                    <td>FAILURE</td>
+                    <td>Rejected /Resubmit</td>
+                </tr>
+                <tr>
+                    <td>LOCKED</td>
+                    <td>Currently Step Is Not Enabled</td>
+                </tr>
+           
+        </table>
+    
+</lightning-quick-action-panel>
+</template>

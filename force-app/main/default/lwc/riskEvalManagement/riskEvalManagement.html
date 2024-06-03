@@ -1,0 +1,315 @@
+<template>
+    <template if:true={isLoading}>
+      <lightning-spinner
+        alternative-text="Loading"
+        size="medium"
+        variant="brand"
+      ></lightning-spinner>
+    </template>
+    <div class="accordionContainer">
+      <div class="accordion"  data-type="post">
+        <div class="riskType">Line of Business</div>
+        <div class="accordionDetails">
+          <template if:false={onHoldPostRisk}>
+            <div class={lobprocessstatus}>
+              <div class="notOnHoldStatus holdStatus">
+                <span class="notOnHoldIcon holdIcon">
+                  <span
+                    class="slds-icon_container slds-icon-utility-choice slds-current-color"
+                    title="Open"
+                  >
+                    <svg
+                      class="slds-icon slds-icon-text-default slds-icon--x-small"
+                      aria-hidden="true"
+                    >
+                      <use
+                        xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#choice"
+                      ></use>
+                    </svg>
+                  </span>
+                </span>
+                {lobprocessstatus}
+              </div>
+            </div>
+          </template>
+          <div class="businessEntityContainer accordionInnerDetails" >
+            <div class="Label" >Business Entity</div>
+            <div class="value" title={BusinessEntity}>{BusinessEntity}</div>
+          </div>
+          <div><!--class="businessCategoryContainer accordionInnerDetails" commented by rohit-->
+            <div class="Label">Category</div>
+            <div class="value" title={BusinessCategory}>{BusinessCategory}</div>
+          </div>
+          &nbsp;&nbsp;&nbsp;
+          <div><!--class="businessSubCategoryContainer accordionInnerDetails" commented by rohit-->
+            <div class="Label">Sub-Category</div>
+            <div class="value" title={BusinessSubCatagory}>{BusinessSubCatagory}</div>
+          </div>
+
+        </div>
+        <div class="accordionButtonGroup">
+            <!-- <div
+              class="releaseButton accordionButton"
+              data-name="businessEvaluation"
+              onclick={handleComment}
+            >
+              Comment
+            </div> -->
+            <div
+              class="holdButton accordionButton"
+              data-name="businessEvaluation"
+              onclick={handleEvaluate}
+            >
+              Evaluate
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordionContainer">
+      <div class="accordion" data-type="ob"> 
+        <div class="riskType">Website</div>
+        <div class="accordionDetails">
+          <template if:true={onHoldOBRisk}>
+            <div class={Progressstatus}>
+              <div class="notOnHoldStatus holdStatus"> 
+                <span class="notOnHoldIcon holdIcon">
+                  <span
+                    class="slds-icon_container slds-icon-utility-choice slds-current-color"
+                    title="Open"
+                  >
+                    <svg
+                      class="slds-icon slds-icon-text-default slds-icon--x-small"
+                      aria-hidden="true"
+                    >
+                      <use
+                        xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#choice"
+                      ></use>
+                    </svg>
+                  </span>
+                </span>
+                {Progressstatus}
+                <!--{websiteStatusValue}-->
+              </div>
+            </div>
+          </template>
+          <div  ><!--class="businessEntityContainer accordionInnerDetails" commented this line by rohit-->
+            <div class="Label">Website</div> 
+            <div class="value" title={website}>{website}</div>
+          </div>
+        </div>
+        <div class="accordionButtonGroup">
+          <div  class="releaseButton accordionButton"
+          data-name="adddocument">
+            <lightning-icon icon-name='action:add_file' alternative-text='add_file' size='small' onclick={showdocument} title='add_file'></lightning-icon>
+          
+          </div>
+           <div
+              class="releaseButton accordionButton"
+              data-name="websiteEvaluation"
+              onclick={handleComment}
+
+            > 
+              Comment
+            </div>
+            <div
+              class="holdButton accordionButton"
+              data-name="websiteEvaluation"
+              onclick={handleEvaluate}
+
+            >
+              Evaluate 
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordionContainer">
+      <div class="accordion" data-type="pre">
+        <div class="riskType">Other Products</div>
+        <div class="accordionButtonGroup">
+            <div
+              class="holdButton accordionButton"
+              data-name="otherProductsEvaluation"
+              onclick={handleEvaluate}
+            >
+              Evaluate
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <template if:true={websiteVerification}>
+      
+      <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_medium"
+      > 
+        <div class="slds-modal__container">
+
+          <div class="slds-modal__header">
+            <h1 id="modal-heading-01" class="slds-modal__title slds-float--left slds-hyphenate">
+              Website Verification
+            </h1>
+            <button
+            class="slds-button slds-button_icon slds-float--right slds-button_icon-inverse"
+            onclick={handleModalClose} 
+          >
+            <lightning-button-icon variant="container" icon-name="utility:close" alternative-text="close"></lightning-button-icon>
+          </button>
+          </div>
+          <div
+            class="slds-modal__content slds-p-around_medium" 
+            id="modal-content-id-1"
+          >
+          <div if:true={spinner}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+          </div>
+            <c-website-verfication-management   onwebsiteverificationcall ={datarefresh}  record-id={recordId}></c-website-verfication-management>
+          </div>
+          <div class="slds-modal__footer">
+            <button
+              class="slds-button slds-button_neutral"
+              aria-label="Cancel and close"
+              onclick={handleModalClose}
+            >
+              Cancel
+            </button>
+            <button class="slds-button slds-button_brand" data-name="c-website-verfication-management" onclick={handleSave}>Save</button>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+    <template if:true={lineOfBusinessVerification}>
+      business verification
+      <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_medium"
+      >
+        <div class="slds-modal__container">
+
+          <div class="slds-modal__header">
+            <h1 id="modal-heading-02" class="slds-modal__title slds-float--left slds-hyphenate">
+              Line Of Business Verification
+            </h1>
+            <button
+            class="slds-button slds-button_icon slds-float--right slds-button_icon-inverse"
+            onclick={handleModalClose}
+          >
+            <lightning-button-icon variant="container" icon-name="utility:close" alternative-text="close"></lightning-button-icon>
+          </button>
+          </div>
+          <div
+            class="slds-modal__content slds-p-around_large"
+            id="modal-content-id-2"
+          >
+          <div if:true={lobspinner}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner> 
+          </div>
+            <c-line-of-business-verification-management onsave={handlesave} record-id={recordId}></c-line-of-business-verification-management>
+          </div>
+          <div class="slds-modal__footer">
+            <button
+              class="slds-button slds-button_neutral"
+              aria-label="Cancel and close"
+              onclick={handleModalClose}
+            >
+              Cancel
+            </button>
+            <button class="slds-button slds-button_brand" data-name="c-line-of-business-verification-management" onclick={handleSave}>Save</button>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+    <template if:true={OtherProductsModal}>
+      
+      <section
+        role="dialog" 
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_medium"
+      >
+        <div class="slds-modal__container">
+
+          <div class="slds-modal__header">
+            <h1 id="modal-heading-03" class="slds-modal__title slds-float--left slds-hyphenate">
+              Other Products
+            </h1>
+            <button
+            class="slds-button slds-button_icon slds-float--right slds-button_icon-inverse"
+            onclick={handleModalClose}
+          >
+            <lightning-button-icon variant="container" icon-name="utility:close" alternative-text="close"></lightning-button-icon>
+          </button>
+          </div>
+          <div
+            class="slds-modal__content slds-p-around_large"
+            id="modal-content-id-3"
+          >
+          <c-risk-eval-other-prod-management record-id={recordId}></c-risk-eval-other-prod-management>
+          </div>
+          <div class="slds-modal__footer">
+            <button
+              class="slds-button slds-button_neutral"
+              aria-label="Cancel and close"
+              onclick={handleModalClose}
+            >
+              Cancel
+            </button>
+            <button class="slds-button slds-button_brand" data-name="c-risk-eval-other-prod-management" onclick={handleSave}>Save</button>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+    <template if:true={commentsection}>
+      <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_medium"
+      >
+        <div class="slds-modal__container">
+
+          <div class="slds-modal__header">
+            <h1 id="modal-heading-04" class="slds-modal__title slds-float--left slds-hyphenate">
+              Comment
+            </h1>
+            <div if:true={showedit}>
+            
+            <button
+            class="slds-button slds-button_icon slds-float--right slds-button_icon-inverse"
+            onclick={handleModalClose}
+          >
+            
+            <lightning-button-icon variant="container" icon-name="utility:close" class="slds-float_right" alternative-text="close"></lightning-button-icon>
+          </button>
+          <lightning-button label="Edit" onclick={edittable} data-name="c-comment-management" ></lightning-button>
+          </div>
+          <div if:false={showedit}>
+            <lightning-button label="Cancel" onclick={cancletable} data-name="c-comment-management" class="slds-float_right"></lightning-button>
+            <lightning-button label="Save" onclick={savetable} data-name="c-comment-management" class="slds-float_right"></lightning-button>
+          </div>
+          </div>
+          <div
+            class="slds-modal__content slds-p-around_medium"
+            id="modal-content-id-5"
+          >
+            <c-comment-management record-id={recordId}></c-comment-management>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+  </template>

@@ -1,0 +1,81 @@
+<template>
+
+    <template if:true={interestFieldList}>
+        <template for:each={interestFieldList} for:item="ins" for:index="index">
+            <lightning-modal-header key={ins.id}>
+                <div class="modalHeadreCls">
+                    {ins.Sales_Bundle__c}-{ins.Sub_Sales_Bundle__c}
+                </div>
+            </lightning-modal-header>
+        </template>
+    </template>
+    <lightning-modal-body>
+        <lightning-tabset variant="scoped">
+            
+            <lightning-tab label="Active">
+                <div>
+                    
+                    <table>
+                        <thead>
+                            <th>Options</th>
+                            <th>Specifications</th>
+                            <th>Payment Gateway</th>
+                            <th>Onus/Offus</th>
+                            <th>Lifetime GMV</th>
+                            <th>Last month GMV</th>
+                            <th>Last 3 month GMV</th>
+                            <th>Last 6 month GMV</th>
+                            <th>Last 12 month GMV</th>
+                            <th>Activation Date</th>
+                            <th>Transacting</th>
+                        </thead>
+                        <tbody>
+                            <template if:true={activeInstrumentList}>
+                                <template for:each={activeInstrumentList} for:item="ins" for:index="index">
+                                    <tr key={ins.id}>
+                                        <td>
+                                            <template if:true={ins.master_PR.Payment_Option__r}>
+                                                {ins.master_PR.Payment_Option__r.Name}
+                                            </template>
+                                            
+                                        </td>
+                                        <td>
+                                        <template if:true={ins.master_PR.Pricing_Specification__r}>
+                                            {ins.master_PR.Pricing_Specification__r.Name}
+                                        </template>
+                                        </td>
+                                        
+                                        <td>
+                                            <template if:true={ins.master_PR.Payment_Gateway__r}>
+                                                {ins.master_PR.Payment_Gateway__r.Name}
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <template if:true={ins.master_PR.ONUS_OFFUS__c}>
+                                                {ins.master_PR.ONUS_OFFUS__c}
+                                            </template>
+                                        </td>
+                                        <td>{ins.lifetime_GMV}</td>
+                                        <td>{ins.lastMonth_GMV}</td>
+                                        <td>{ins.last3Month_GMV}</td>
+                                        <td>{ins.last6Month_GMV}</td>
+                                        <td>{ins.last12Month_GMV}</td>
+                                        <td>{ins.activation_Date}</td>
+                                        <td>{ins.transacting}</td>
+                                    </tr>
+                                </template>
+                                
+                            </template>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </lightning-tab>
+            
+        </lightning-tabset>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="OK" onclick={handleOkay}></lightning-button>
+    </lightning-modal-footer>  
+    
+</template>

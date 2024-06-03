@@ -1,0 +1,55 @@
+<template>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <!-- <ui:inputCheckbox aura:id="PreApprovedforprioritysettlementId"
+                              label="Pre Approved for priority settlement"
+                              change="{!c.handleCheck}" value="{!v.lstWrpWebsitePage[0].OppObj.Pre_Approved_for_priority_settlement__c}"/> -->
+             <lightning-input type="checkbox"  label="Pre Approved for priority settlement" onchange={handleChange} data-name="Pre_Approved_for_priority_settlement__c" checked={preApprovedForPrioritySettlement} ></lightning-input>   
+        </div>
+        <div class="slds-size_1-of-4" role="listitem">
+            <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                <lightning-combobox label="Pre approved for EMI" options={EMIoptions} onchange={handleChange} data-name="Pre_approved_for_EMI__c"  value={preApprovedForEMI}></lightning-combobox>
+                <!-- <lightning:select aura:id="PreapprovedforEMIId" label="Pre approved for EMI"
+                                  value="{!v.selectedPreappEMI}" Name="PreapprovedEMI">
+                    
+                    <option value=""> None </option>
+                    <aura:iteration items="{!v.listPreappEMI}" var="per" indexVar="key">
+                        <option text="{!per.value}" value="{!per.key}"></option>
+                    </aura:iteration>
+                    
+                </lightning:select> -->
+            </div>
+        </div>
+        <div class="slds-size_1-of-4" role="listitem">
+            <div class="slds-form-element slds-form-element_edit slds-form-element_stacked slds-hint-parent">
+                <lightning-combobox label="Pre approved for MCP" options={MCPoptions} onchange={handleChange} data-name="Pre_approved_for_MCP__c"  value={preApprovedForMCP}></lightning-combobox>
+                <!-- <lightning:select aura:id="PreapprovedforMCPId" label="Pre approved for MCP"
+                                  value="{!v.selectedPreappMCP}" Name="PreapprovedMCP">
+                    
+                    <option value="">None</option>
+                    <aura:iteration items="{!v.listPreappMCP}" var="per" indexVar="key">
+                        <option text="{!per.value}" value="{!per.key}"></option>
+                    </aura:iteration>
+                    
+                </lightning:select> -->
+            </div>
+        </div>
+        <div class="slds-col"></div>
+        <div class="slds-col"></div>                
+    </div>
+    <br/>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <!-- <lightning:input type="string" aura:id="MaxSameDaySettlementAmount"
+                             name="MaxSameDaySettlementAmount" 
+                             value="{!v.lstWrpWebsitePage[0].OppObj.Max_Same_Day_Settlement_Amount__c}"
+                             label="Max Same Day Settlement Amount" onchange="{!c.handleAmount}"/>     -->
+            <lightning-input label="Max Same Day Settlement Amount" onchange={handleChange} data-name="Max_Same_Day_Settlement_Amount__c" value={maxSameDaySettlementAmount}></lightning-input>                             
+        </div> 
+        <div class="slds-col"></div>
+        <div class="slds-col"></div>
+        <div class="slds-col"></div>     
+        <div class="slds-col"></div>
+    </div>
+    
+</template>

@@ -1,0 +1,117 @@
+table, th, td {
+    border: 1px solid grey;
+    border-radius: 1px;
+    
+}
+
+
+/* table, tr, td {
+    background-color: #FBFBFB;
+    &:hover{
+        background-color: pink!important;
+    }
+    
+
+} */
+
+th {
+    background-color: #F2F2F2;
+    font: Inter;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20.8px;
+    text-align: center;
+    padding: 1px;
+
+}
+
+
+td {
+    /* background-color: #FBFBFB; */
+    font: Inter;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20.8px;
+    text-align: center;
+    
+
+}
+
+/* .priorityCls {
+    width: 3%;
+} */
+.secondTable {
+    /* width: 100vw; */
+    /* overflow-x: scroll; */
+    /* table-layout:fixed; */
+    /* overflow: hidden; */
+    /* width: fit-content; */
+    display: flex;
+    overflow: auto;
+}
+.colorParent{
+    padding: 10px;  
+}
+.colorPillsOptions{
+    color: #D3485D;
+    background: #FBF3FF;
+    padding: 3px;
+    border-radius: 4px;
+}
+
+.table-row:hover {
+    color: rgb(39, 158, 171)!important;
+    background-color: rgb(159, 216, 242)!important;
+    cursor: pointer;
+}
+/* table tr:hover {
+    
+    background-color: brown!important;
+} */
+
+:host {
+   display: block;
+}
+.helpText {
+   /* Add your styling for the help text */
+   position: absolute;
+   background-color: #fff;
+   border: 1px solid #ccc;
+   padding: 5px;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.topContainer {
+    /* height: 10rem; */
+    display: flex;
+}
+
+.item {
+    width: 16rem;
+    height: 5rem;
+    margin: 2rem 0 2rem 2rem;
+    border-style: solid;
+    border-color: #e9f6f9;
+    border-width: 0 0 0 0.3rem;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    
+
+}
+.itemLabel{
+    font-size: 0.8rem;
+    font-family: inherit;
+    font-weight: 550;
+    line-height: 26px;
+    letter-spacing: 0.4px;
+}
+
+.itemContent{
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.itemData {
+    padding: 1rem;
+}

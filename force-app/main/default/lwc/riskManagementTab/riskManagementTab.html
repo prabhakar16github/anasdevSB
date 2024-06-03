@@ -1,0 +1,53 @@
+<template>
+  <div class="main">
+    <div class="topContainer">
+      <div class="item">
+        <div class="itemData">
+          <div class="itemLabel">Risk Score</div>
+          <div class="itemContent">{riskScore}</div>
+        </div>
+      </div>
+      <div class="item"> 
+        <div class="itemData">
+          <div class="itemLabel">Website Crawler</div>
+          <div class="itemContent">..</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="itemData">
+          <div class="itemLabel">Risk Classification Status</div>
+          <div class="itemContent">{riskClassificationStatus}</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="itemData">
+          <div class="itemLabel">Settlement status</div>
+          <div class="itemContent">{settlementStatus}</div> 
+        </div>
+      </div>
+    </div>
+    <div class="mainContainer">
+      <ul id="vertical-nav-tabs" class="vertical-nav">
+        <template for:each={tabs} for:item="tab">
+          <li class={tab.class} key={tab.id}>
+            <a data-id={tab.id} onclick={handleTabs}>{tab.title}</a>
+          </li>
+        </template>
+      </ul>
+      <div class="content">
+        <template if:true={showEval}>
+            <c-risk-eval-management record-id={recordId} ></c-risk-eval-management>
+        </template>
+        <template if:true={showStatus}>
+            <c-risk-history-management record-id={recordId}></c-risk-history-management>
+        </template>
+      </div>
+      <div if:true={showStatus} class="notesContainer">
+        <c-release-notes-history-management rec-id={recordId} ></c-release-notes-history-management>
+      </div>
+      <div  if:true={showEval} class="notesContainer">
+        <lightning-textarea onchange={commentsection} label="Communication" data-name={commentsection}></lightning-textarea>
+      </div>
+    </div>
+  </div>
+</template>

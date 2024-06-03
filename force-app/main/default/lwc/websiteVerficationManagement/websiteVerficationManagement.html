@@ -1,0 +1,706 @@
+<template> 
+  <div class="main">
+    <div class="accordionContainer" onclick={handleAccordion} data-type="ProductInfo">
+      <div class="accordion" >
+        <div class="icon"  >
+          <template if:true={showProductInfo}>
+            <span
+              class="slds-icon_container slds-icon-utility-chevrondown"
+              title="Open"
+            >
+              <svg
+                class="slds-icon slds-icon-text-default slds-icon--x-small"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevrondown"
+                ></use>
+              </svg>
+            </span>
+          </template>
+          <template if:false={showProductInfo}>
+            <span
+              class="slds-icon_container slds-icon-utility-chevronright"
+              title="Open"
+            >
+              <svg
+                class="slds-icon slds-icon-text-default slds-icon--x-small"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"
+                ></use>
+              </svg>
+            </span>
+          </template>
+        </div>
+        <div class="riskType">Product Info</div>
+        <div class="accordionDetails">
+          <template if:true={productInfoStatus}>
+            <div class="holdStatusContainer onHoldStatusContainer">
+              <div class="onHoldStatus holdStatus">
+                <div class="holdText">Failed</div>
+              </div>
+            </div>
+          </template>
+          <template if:false={productInfoStatus}>
+            <div class= {allProductInfoStatus}>
+              <div class="notOnHoldStatus holdStatus">{ProductStatus}</div>
+            </div>
+          </template>
+        </div>
+        <div class="accordionButtonGroup" >
+          <!-- <lightning-icon
+            size="xx-small"
+            icon-name="utility:threedots_vertical"
+          ></lightning-icon> -->
+
+          <div
+            data-type="ProductInfo"
+            onclick={handleMenuButton}
+            class="slds-dropdown-trigger slds-dropdown-trigger_click "
+          >
+            <button
+              class="slds-button slds-button_icon "
+              aria-haspopup="true"
+              aria-expanded="true"
+              title="Show More"
+
+            >
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#threedots_vertical"
+                ></use>
+              </svg>
+              <span class="slds-assistive-text">Show More</span>
+            </button>
+            <div class="slds-dropdown slds-dropdown--right" onclick={createNewWebpage} >
+              <ul
+                class="slds-dropdown__list"
+                role="menu"
+                aria-label="Show More"
+              >
+                <li class="slds-dropdown__item"  role="presentation" >
+                  <a  role="menuitem" tabindex="0">
+                    <span class="slds-truncate" title="New WebPage" data-type="ProductInfo" onclick={createNewWebpage}>New WebPage</span
+                    >
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template if:true={showProductInfo}>
+      <div class="productInfoData">
+        <table class="slds-table productTable">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="tableHead">Website Section</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Availability</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Url</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Approval Type</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Risk Remarks</div>
+              </th>          
+            </tr>
+          </thead>
+          <tbody>
+            <template
+              if:true={showWebsitesdata} 
+              for:each={productData}
+              for:item="item"
+              for:index="index"
+            >
+              <tr key={item}>
+                <td>
+                  <div class="WebsiteSectionData">{item.Name}</div>
+                </td>
+                <td>
+                  <select
+                    data-name="Availability__c"
+                    data-group={item.Group__c}
+                    data-id={item.Id}
+                    data-index={index}
+                    disabled={item.statusDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">select</option>
+                    <template for:each={item.webstatus} for:item="status">
+                      <option
+                        key={status.value}
+                        value={status.value}
+                        selected={status.selected}
+                      >
+                        {status.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                <td>
+                  <div class="Url">
+                    <lightning-input
+                      data-name="Products"
+                      variant="label-hidden"
+                      disabled={item.inputDisabled}
+                      value={item.URL__c}
+                      onchange={handleUrl}
+                      data-id={item.Id}
+                    ></lightning-input>
+                  </div>
+                </td>
+                <td>
+                  <select
+                    data-name="Approval_Type__c"
+                    data-group={item.Group__c} 
+                    data-index={index}
+                    data-id={item.Id}
+                    disabled={item.approvalDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">select</option>
+                    <template for:each={item.approvalTypes} for:item="type">
+                      <option
+                        key={type.value}
+                        value={type.value}
+                        selected={type.selected}
+                      >
+                        {type.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    data-name="Pick_Risk_Remark__c"
+                    data-group={item.Group__c}
+                    data-index={index}
+                    data-id={item.Id}
+                    disabled={item.remarksDisabled}
+                    onchange={handleSelect}
+                    required
+                  >
+                    <option value="">select</option>
+                    <template for:each={item.riskRemarks} for:item="remark">
+                      <option
+                        key={remark.value}
+                        value={remark.value}
+                        selected={remark.selected}
+                      >
+                        {remark.label} 
+                      </option>
+                    </template>
+                  </select>
+                  <!--<div if:true={showError} class="slds-text-color_error">
+                    Please select an option
+                  </div>-->
+                </td>
+                
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
+    
+
+    <div class="accordionContainer" onclick={handleAccordion} data-type="Policies">
+      <div class="accordion" >
+        <div class="icon"  >
+          <template if:true={showPolicies}>
+            <span
+              class="slds-icon_container slds-icon-utility-chevrondown"
+              title="Open"
+            >
+              <svg
+                class="slds-icon slds-icon-text-default slds-icon--x-small"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevrondown"
+                ></use>
+              </svg>
+            </span>
+          </template>
+          <template if:false={showPolicies}>
+            <span
+              class="slds-icon_container slds-icon-utility-chevronright"
+              title="Open"
+            >
+              <svg
+                class="slds-icon slds-icon-text-default slds-icon--x-small"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"
+                ></use>
+              </svg>
+            </span>
+          </template>
+        </div>
+        <div class="riskType">Policies</div>
+        <div class="accordionDetails">
+          <template if:true={policiesStatus}>
+            <div class="holdStatusContainer onHoldStatusContainer">
+              <div class="onHoldStatus holdStatus">
+                <div class="holdText">Failed</div>
+              </div>
+            </div>
+          </template>
+          <template if:false={policiesStatus}>
+            <div class={allPoliciesStatus}>
+              <div class="notOnHoldStatus holdStatus">{PolicieStatus}</div>
+            </div>
+          </template>
+        </div>
+        <!-- <div class="accordionButtonGroup">
+          <lightning-icon
+            size="xx-small"
+            icon-name="utility:threedots_vertical"
+          ></lightning-icon>
+        </div> -->
+        <div class="accordionButtonGroup" >
+          <!-- <lightning-icon
+            size="xx-small"
+            icon-name="utility:threedots_vertical"
+          ></lightning-icon> -->
+
+          <div 
+            data-type="Policies"
+            onclick={handleMenuButton}
+            class="slds-dropdown-trigger slds-dropdown-trigger_click "
+          >
+            <button
+              class="slds-button slds-button_icon "
+              aria-haspopup="true"
+              aria-expanded="true"
+              title="Show More"
+
+            >
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#threedots_vertical"
+                ></use>
+              </svg>
+              <span class="slds-assistive-text">Show More</span>
+            </button>
+            <div class="slds-dropdown slds-dropdown--right" onclick={createNewWebpage}>
+              <ul
+                class="slds-dropdown__list"
+                role="menu"
+                aria-label="Show More"
+              >
+                <li class="slds-dropdown__item"  role="presentation" >
+                  <a  role="menuitem" tabindex="0"><!--commented by rohit href="#"-->
+                    <span class="slds-truncate" title="New WebPage" data-type="Policies" onclick={createNewWebPage}
+                      >New WebPage</span
+                    >
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template if:true={showPolicies}>
+      <div class="productInfoData">
+        <table class="slds-table productTable">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="tableHead">Website Section</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Availability</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Url</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Approval Type</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Risk Remarks</div>
+              </th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <template
+              if:true={showWebsitesdata}
+              for:each={policiesData}
+              for:item="item"
+              for:index="index"
+            >
+              <tr key={item}>
+                <td>
+                  <div class="WebsiteSectionData">{item.Name}</div>
+                </td>
+                <td>
+                  <select
+                    data-name="Availability__c"
+                    data-group={item.Group__c}
+                    data-index={index}
+                    data-id={item.Id}
+                    disabled={item.statusDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">--select--</option>
+                    <template for:each={item.webstatus} for:item="status">
+                      <option
+                        key={status.value}
+                        value={status.value}
+                        selected={status.selected}
+                      >
+                        {status.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                <td>
+                  <div class="Url">
+                    <lightning-input
+                      data-name="Policies"
+                      variant="label-hidden"
+                      value={item.URL__c}
+                      disabled={item.inputDisabled}
+                      onchange={handleUrl}
+                      data-id={item.Id}
+                    ></lightning-input>
+                  </div>
+                </td>
+                <td>
+                  <select
+                    data-name="Approval_Type__c"
+                    data-index={index}
+                    data-group={item.Group__c}
+                    data-id={item.Id}
+                    disabled={item.approvalDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">--select--</option>
+                    <template for:each={item.approvalTypes} for:item="type">
+                      <option
+                        key={type.value}
+                        value={type.value}
+                        selected={type.selected}
+                      >
+                        {type.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    data-name="Pick_Risk_Remark__c"
+                    data-index={index}
+                    data-group={item.Group__c}
+                    data-id={item.Id}
+                    disabled={item.remarksDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">--select--</option>
+                    <template for:each={item.riskRemarks} for:item="remark">
+                      <option
+                        key={remark.value}
+                        value={remark.value}
+                        selected={remark.selected}
+                      >
+                        {remark.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </template>
+    <div class="accordionContainer" onclick={handleAccordion} data-type="ContactInfo">
+      <div class="accordion" >
+        <div class="icon"  >
+          <template if:true={showContactInfo}>
+            <span
+              class="slds-icon_container slds-icon-utility-chevrondown"
+              title="Open"
+            >
+              <svg
+                class="slds-icon slds-icon-text-default slds-icon--x-small"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevrondown"
+                ></use>
+              </svg>
+            </span>
+          </template>
+          <template if:false={showContactInfo}>
+            <span
+              class="slds-icon_container slds-icon-utility-chevronright"
+              title="Open"
+            >
+              <svg
+                class="slds-icon slds-icon-text-default slds-icon--x-small"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"
+                ></use>
+              </svg>
+            </span>
+          </template>
+        </div>
+        <div class="riskType">Contact Info</div>
+        <div class="accordionDetails">
+          <template if:true={contactInfoStatus}>
+            <div class="holdStatusContainer onHoldStatusContainer">
+              <div class="onHoldStatus holdStatus">
+                <div class="holdText">Failed</div>
+              </div>
+            </div>
+          </template>
+          <template if:false={contactInfoStatus}>
+            <div class={allContactInfoStatus}>
+              <div class="notOnHoldStatus holdStatus">{ContactStatus}</div>
+            </div>
+          </template>
+        </div>
+        <!-- <div class="accordionButtonGroup">
+          <lightning-icon
+            size="xx-small"
+            icon-name="utility:threedots_vertical"
+          ></lightning-icon>
+        </div> -->
+        <div class="accordionButtonGroup" >
+          <!-- <lightning-icon
+            size="xx-small"
+            icon-name="utility:threedots_vertical"
+          ></lightning-icon> -->
+
+          <div
+            data-type="ContactInfo"
+            onclick={handleMenuButton}
+            class="slds-dropdown-trigger slds-dropdown-trigger_click "
+          >
+            <button
+              class="slds-button slds-button_icon "
+              aria-haspopup="true"
+              aria-expanded="true"
+              title="Show More"
+
+            >
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use
+                  xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#threedots_vertical"
+                ></use>
+              </svg>
+              <span class="slds-assistive-text">Show More</span>
+            </button>
+            <div class="slds-dropdown slds-dropdown--right" onclick={createNewWebpage}>
+              <ul
+                class="slds-dropdown__list"
+                role="menu"
+                aria-label="Show More"
+              >
+                <li class="slds-dropdown__item"  role="presentation" >
+                  <a  role="menuitem" tabindex="0"><!--commented by rohit href="#"-->
+                    <span class="slds-truncate" title="New WebPage" data-type="ContactInfo" onclick={createNewWebPage}
+                      >New WebPage</span
+                    >
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template if:true={showContactInfo}>
+      <div class="productInfoData">
+        <table class="slds-table productTable">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="tableHead">Website Section</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Availability</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Url</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Approval Type</div>
+              </th>
+              <th scope="col">
+                <div class="tableHead">Risk Remarks</div> 
+              </th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <template
+              if:true={showWebsitesdata}
+              for:each={contactData} 
+              for:item="item"
+              for:index="index"
+            >
+              <tr key={item}>
+                <td>
+                  <div class="WebsiteSectionData">{item.Name}</div>
+                </td>
+                <td>
+                  <select
+                    data-name="Availability__c"
+                    data-group={item.Group__c}
+                    data-id={item.Id}
+                    data-index={index}
+                    disabled={item.statusDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">--select--</option>
+                    <template for:each={item.webstatus} for:item="status">
+                      <option
+                        key={status.value}
+                        value={status.value}
+                        selected={status.selected}
+                      >
+                        {status.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                <td>
+                  <div class="Url">
+                    <lightning-input
+                      data-name="Contacts"
+                      variant="label-hidden"
+                      disabled={item.inputDisabled}
+                      value={item.URL__c}
+                      onchange={handleUrl}
+                      data-id={item.Id}
+                    ></lightning-input>
+                  </div>
+                </td>
+                <td>
+                  <select
+                    data-name="Approval_Type__c"
+                    data-group={item.Group__c}
+                    data-index={index}
+                    data-id={item.Id}
+                    disabled={item.approvalDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">--select--</option>
+                    <template for:each={item.approvalTypes} for:item="type">
+                      <option
+                        key={type.value}
+                        value={type.value}
+                        selected={type.selected}
+                      >
+                        {type.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                <td>
+                  <select 
+                    data-name="Pick_Risk_Remark__c"
+                    data-index={index}
+                    data-group={item.Group__c}
+                    data-id={item.Id}
+                    disabled={item.remarksDisabled}
+                    onchange={handleSelect}
+                  >
+                    <option value="">--select--</option>
+                    <template for:each={item.riskRemarks} for:item="remark">
+                      <option
+                        key={remark.value}
+                        value={remark.value}
+                        selected={remark.selected}
+                      >
+                        {remark.label}
+                      </option>
+                    </template>
+                  </select>
+                </td>
+                
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </template>
+  </div>
+  <template if:true={showCreateWebPageModal}>
+
+    <section
+    role="dialog"
+    tabindex="-1"
+    aria-modal="true"
+    aria-labelledby="modal-heading-01"
+    class="slds-modal slds-fade-in-open slds-modal_medium"
+  >
+    <div class="slds-modal__container">
+
+      <div class="slds-modal__header">
+        <h1 id="modal-heading-02" class="slds-modal__title slds-float--left slds-hyphenate">
+          New WebPage
+        </h1>
+        <button
+        class="slds-button slds-button_icon slds-float--right slds-button_icon-inverse"
+        onclick={handleModalClose}
+      >
+        <lightning-button-icon variant="container" icon-name="utility:close" alternative-text="close"></lightning-button-icon>
+      </button>
+      </div>
+      
+       
+      <div
+        class="slds-modal__content slds-p-around_large"
+        id="modal-content-id-2"
+      ><template if:true={spinner}>
+        <lightning-spinner alternative-text="Loading" size="x-small"></lightning-spinner>
+      </template>
+        <!-- <lightning-input typefield-name='Name' label="Name" value={websitepagename} onchange={handlenamechange}>Name</lightning-input> -->
+        <!-- <lightning-input type="text" label="Name" value={websitepagename} onchange={handlenamechange} required></lightning-input> -->
+        <lightning-combobox
+        name="name"
+        label="Name"
+        value={websitepagename}
+        placeholder="Select Name"
+        options={websitepagenameoptions}
+        onchange={handlenamechange} 
+        required></lightning-combobox>
+      </div>
+      <div class="slds-modal__footer">
+        <button
+          class="slds-button slds-button_neutral"
+          aria-label="Cancel and close"
+          onclick={handleModalClose}
+        >
+          Cancel
+        </button>
+        <button class="slds-button slds-button_brand"  type="submit" data-name="c-line-of-business-verification-management" onclick={handleSaveWebsiteRecord}>Save</button>
+      </div>
+    </div>
+  </section>
+  <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+  </template>
+
+
+ 
+</template>

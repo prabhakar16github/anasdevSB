@@ -1,0 +1,176 @@
+<template>
+    <div >
+        <lightning-card title="Banking Operations" icon-name="standard:user">
+            <!--<template if:false={showfirstScreen}>
+                <ul class="bank-list">
+                    <template for:each={bankAndPorType} for:item="bank">
+                    <li key={bank.Id} class="bank-item">
+                        <div class="bank-label">
+                            <span> 
+                                <img src={bank.Bank_Image__c} alt=" " border="0" class="my-image"/>
+                                <div onclick={handleChange} style="cursor: pointer;"> {bank.Bank__c}-{bank.POR_Type__c}
+                                </div>
+                            </span>
+                        </div>
+                    </li>
+                    </template>
+                </ul>
+            </template>-->
+            <template if:true={showfirstScreen}>
+                <!--<div class="backToButton">
+                    <div onclick={scrollToBack} style="cursor: pointer;"><b>&lt;</b> Back To Home</div>
+                    
+                </div>-->
+
+                <!--<div style="float: right; padding-right: 10px;">
+                    <lightning-button variant="brand" label="Send an Email" style="text-align: left;" onclick={callEmailMethod}></lightning-button>
+                </div>-->
+                <!--<lightning-button label="Open Other LWC" onclick={showSearch}></lightning-button>
+                <c-send-email-to-bank if:true={showSearchComponent}></c-send-email-to-bank>-->
+
+                    <!--<br/><br/> need to uncomment-->
+                <div class="slds-m-around_large">
+                    <lightning-record-edit-form id="recordViewForm" record-id={recordId} object-api-name="Pricing__c">
+                        <table>
+                            <tr>
+                                <td>
+                                    <lightning-input-field field-name="Bank__c"  onchange={bnakHandleChange}   data-id="Controlling Bank Picklist Type" >
+                                    </lightning-input-field>
+                                </td>
+                                <td>
+                                    <lightning-input-field field-name="POR_Type__c"  onchange={handleChange}  data-id="Controlling Picklist Type">
+                                    </lightning-input-field>
+                                </td>
+                            </tr>
+                        </table>   
+                    </lightning-record-edit-form>
+                </div>
+                <template if:true={disableSection}>
+                    <template if:true={noRecordsForRequestForMerchant}>
+                        <lightning-layout multiple-rows="true" vertical-align="end">
+                            <lightning-layout-item size="12" padding="around-small">
+                                <center><p style="color:red;">{recdNotFoundFOrMerchant}</p></center>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+
+                    <template if:true={checkForPORType}>
+                        <template if:true={selectedValue}>
+                            <div class="slds-m-around_medium">
+                                <template if:true={bankingOpsPicklist.data}>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <lightning-combobox name="Inry" label="Requests" placeholder="All Requests" value={valueForRequest}
+                                                    options={bankingOpsPicklist.data.values} onchange={AllRequesthandleChange}
+                                                    data-id="Controlling Picklist Type for Request" >
+                                                </lightning-combobox>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:true={downloadOption}>
+                            <template if:true={selectedValue}>
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col">
+                                        <span>
+                                            &nbsp;&nbsp;&nbsp;&nbsp; <lightning-button variant="brand" icon-name="utility:download" label="Download as CSV" 
+                                            title="Download CSV File" onclick={exportContactData}></lightning-button>
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <lightning-button icon-name="utility:refresh" variant="brand" onclick={handleChange}></lightning-button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <div class="slds-p-horizontal_large"></div>         
+                        <lightning-layout multiple-rows="true" vertical-align="end">
+                            <lightning-layout-item size="12" padding="around-large">
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col">
+                                    <span>
+                                        <template if:true={selectedValue}>
+                                            <div class="slds-combobox_container slds-size_small" >
+                                                <template if:true={statusPicklist.data}>
+                                                    <lightning-combobox name="Inry" label="Status" placeholder="All Requests" value={value}
+                                                        options={statusPicklist.data.values} onchange={getStatusChangeValue} disabled={disableStatus}>
+                                                    </lightning-combobox>
+                                                                            
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </span>
+                                    </div>
+                                    <div class="slds-col">
+                                    <span>
+                                        <template if:true={selectedValue}>
+                                            <template if:false={applyToShow}>
+                                                    <button class="slds-button"  onclick={getSelectedRec}>Apply For All</button>
+                                            </template>
+                                        </template>
+                                    </span>
+                                    </div>
+                                </div>
+                                        <br/>
+                                <div if:true={noRecordsForPaymentGatway} >
+
+                                        <div class="wrapper" >
+                                        
+                                            <div if:true={DataTableResponseWrappper} class="datatable">
+                                                <lightning-datatable data={finalSObjectDataList} 
+                                                    class="fixed-column"
+                                                    style="height: auto;"
+                                                    columns={cols}
+                                                    key-field="Id"
+                                                    onsave={handleSave}
+                                                    draft-values={saveDraftValues} 
+                                                    onrowselection={handleRowSelection}
+                                                    onrowaction={handleRowAction}
+                                                    onclick={chatterCall}>
+                                                </lightning-datatable>
+                                            </div>
+                                            <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                                                <thead>
+                                                    <tr class="slds-line-height_reset">
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Status">Status</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Chatter"></div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={finalSObjectDataList} for:item="record">
+                                                        <tr key={record.Id} class="slds-hint-parent" style="background-color: #F3F3F3;">
+                                                            <td style="vertical-align: top;"> {record.Banking_Ops_Status__c}</td>
+                                                            <td style="vertical-align: top;" class="small">
+                                                            <button  class="my-button" onclick={handleRowAction} data-id={record.Id}>chat</button>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <div if:true={noRecordsForRequest}>
+                                    <lightning-layout multiple-rows="true" vertical-align="end">
+                                        <lightning-layout-item size="12" padding="around-small">
+                                            <center><p style="color:red;">{recdNotFound}</p></center>
+                                        </lightning-layout-item>
+                                    </lightning-layout>
+                                </div>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                    </template>
+                </template> 
+            </template>
+        </lightning-card>
+    </div>
+</template>

@@ -1,0 +1,252 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="searchBarWrap_main">
+        <lightning-button label="Download as PDF" variant="brand" onclick={generatePDF}
+        ></lightning-button>&nbsp;
+        <lightning-button label="Send to BH" variant="brand" onclick={sendToBH}
+            disabled={disabledBHButton}></lightning-button>&nbsp;
+        <lightning-button label="Update Below Rack Rates Records" variant="brand" onclick={updatePricing}
+            disabled={disabledUpdatePricingButton}></lightning-button>&nbsp;
+        <lightning-button label="Validate Pricing" variant="brand" onclick={publishPricing}
+            disabled={disabledPublishPricingButton}></lightning-button>
+    </div>
+    <div class="slds-grid slds-wrap tabTitleClass">
+        <div class="slds-size_12-of-12">
+            <template if:true={showBelowRackRateMessage}>
+                <h2 class="slds-align_absolute-center" style="color:red;">{belowRackRateMessage}</h2>
+            </template>
+            <h2 class="headingCls_paymentMode">Products</h2>
+            <lightning-tabset variant="scoped">
+                <lightning-tab label="Payment Gateway">
+                    <div
+                        class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                        <table id="Table4">
+                            <thead class="thMainRow">
+                                <tr>
+                                    <!--<th class="varientTwo" style="width:13%;text-align:left;">PAYMENT MODE</th>-->
+                                    <th class="varientTwo" style="width:15%;text-align:left;">PAYMENT OPTIONS</th>
+                                    <th class="varientTwo" style="width:15%;text-align:left;">SPECIFICATIONS</th>
+                                    <th class="varientTwo" style="width:15%;text-align:left;">PAYMENT GATEWAY</th>
+                                    <th class="varientTwo" style="width:10%;text-align:left;">ONUS/OFFUS</th>
+                                    <th class="varientTwo" style="width:18%;text-align:center;">TDR</th>
+                                    <th class="varientTwo" style="width:18%;text-align:center;">CONVENIENCE FEE</th>
+                                    <th class="varientTwo" style="width:9%;text-align:left;">GATEWAY TYPE</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tdAccordionHeading">
+                                <tr>
+                                    <td colspan="8">
+                                        <lightning-accordion allow-multiple-sections-open>
+                                            <template for:each={selectedListPaymentData} for:item="paymentData">
+                                                <lightning-accordion-section name={paymentData.paymentModeName}
+                                                    label={paymentData.paymentModeName} class="accordionTDR_Defaut"
+                                                    key={paymentData.paymentModeName}>
+                                                    <table class="tableAccordionDetails">
+                                                        <tbody>
+                                                            <template for:each={paymentData.selectedPaymentOptionsList}
+                                                                for:item="payInner1">
+                                                                <template
+                                                                    for:each={payInner1.selectedPaymentIndividualList}
+                                                                    for:item="payInner2">
+                                                                    <tr key={payInner2.key}>
+                                                                        <!--<td style="width:13%;text-align:left;"></td>-->
+                                                                        <td style="width:15%;text-align:left;">
+                                                                            {payInner2.selectedPaymentOptionName}</td>
+                                                                        <td style="width:15%;text-align:left;">
+                                                                            {payInner2.selectedSpecification}</td>
+                                                                        <td style="width:15%;text-align:left;">
+                                                                            {payInner2.selectedPaymentGatewayName}</td>
+                                                                        <td style="width:10%;text-align:left;">
+                                                                            {payInner2.selectedOnusOffus}</td>
+                                                                        <td style="width:18%;text-align:center;">
+                                                                            <div class="tdrSection globalAllignment">
+                                                                                <lightning-input type="text"
+                                                                                    value={payInner2.tdrAmount}
+                                                                                    disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                                    type="text" value={payInner2.tdrFee}
+                                                                                    disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                                    type="text"
+                                                                                    value={payInner2.tdrPercentage}
+                                                                                    disabled="true"></lightning-input>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td style="width:18%;text-align:center;">
+                                                                            <div class="tdrSection globalAllignment">
+                                                                                <lightning-input type="text"
+                                                                                    value={payInner2.convenienceAmount}
+                                                                                    disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                                    type="text"
+                                                                                    value={payInner2.convenienceFee}
+                                                                                    disabled="true"></lightning-input>&nbsp;<lightning-input
+                                                                                    type="text"
+                                                                                    value={payInner2.conveniencePercentage}
+                                                                                    disabled="true"></lightning-input>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td style="width:9%;text-align:left;">
+                                                                            {payInner2.gatewayType}</td>
+                                                                    </tr>
+                                                                </template>
+                                                            </template>
+                                                        </tbody>
+                                                    </table>
+                                                </lightning-accordion-section>
+                                            </template>
+                                        </lightning-accordion>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </lightning-tab>
+            </lightning-tabset>
+        </div>
+    </div>
+
+    <!--Modal Governance Screen Staring-->
+    <template if:true={openGovernanceModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Pricing below min threshold</h1>
+                <h3>The pricing for the below payment modes is not as per the rack rates defined. Please change the pricing above the threshold.</h3>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+                <template if:false={showBelowRackRateRecords}>
+                    <h2 class="slds-align_absolute-center" style="color:red;">No records found</h2>
+                </template>
+                <template if:true={showBelowRackRateRecords}>
+                    <table id="Table7" class="slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <th style="width:12%;text-align:left;">PAYMENT MODE</th>
+                                <th style="width:12%;text-align:left;">PAYMENT OPTIONS</th>
+                                <th style="width:12%;text-align:left;">SPECIFICATIONS</th>
+                                <th style="width:12%;text-align:left;">PAYMENT GATEWAY</th>
+                                <th style="width:12%;text-align:center;">TDR REFERENCE</th>
+                                <th style="width:14%;text-align:center;">TDR RATE</th>
+                                <th style="width:12%;text-align:center;">CONVENIENCE REFERENCE</th>
+                                <th style="width:14%;text-align:center;">CONVENIENCE RATE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:center;"><b>Flat Fee | Percentage</b></td>
+                                <td style="width:14%;text-align:center;"><b>Amount | Flat Fee | Percentage</b></td>
+                                <td style="width:12%;text-align:center;"><b>Flat Fee | Percentage</b></td>
+                                <td style="width:14%;text-align:center;"><b>Amount | Flat Fee | Percentage</b></td>
+                            </tr> 
+                            <template for:each={belowRackRatesRecords} for:item="belowRecord" for:index="index1">
+                                <tr key={belowRecord.pricingRecordId}>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentMode}</td>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentOption}</td>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentSpecification}</td>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentGateway}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.tdrAmountReference} | {belowRecord.tdrPercentageReference} %</td>
+                                    <!--<td style="width:14%;text-align:center;">{belowRecord.tdrAmount} | <lightning-input type="number" value={belowRecord.tdrFlatFee} onchange={updateBelowRackRateTdrFlatFee} data-id={index1} step="0.01"></lightning-input> | <lightning-input type="number" value={belowRecord.tdrPercentage} onchange={updateBelowRackRateTdrPercentage} data-id={index1} step="0.01"></lightning-input></td>-->
+                                    <td style="width:14%;text-align:center;">
+                                        <div class="tdrSection globalAllignment">
+                                            <lightning-input type="number" value={belowRecord.tdrAmount} disabled style="width:34%"></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.tdrFlatFee} onchange={updateBelowRackRateTdrFlatFee} data-id={index1} step="0.001" style="width:33%"></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.tdrPercentage} onchange={updateBelowRackRateTdrPercentage} data-id={index1} step="0.001" style="width:33%"></lightning-input>   
+                                        </div>  
+                                    </td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.convenienceAmountReference} | {belowRecord.conveniencePercentageReference} %</td>
+                                    <!--<td style="width:14%;text-align:center;">{belowRecord.convenienceAmount} | <lightning-input type="number" value={belowRecord.convenienceFlatFee} onchange={updateBelowRackRateConvenienceFlatFee} data-id={index1} step="0.01"></lightning-input> | <lightning-input type="number" value={belowRecord.conveniencePercentage} onchange={updateBelowRackRateConveniencePercentage} data-id={index1} step="0.01"></lightning-input></td>--> 
+                                    <td style="width:14%;text-align:center;">
+                                        <div class="tdrSection globalAllignment">
+                                            <lightning-input type="number" value={belowRecord.convenienceAmount} style="width:34%" disabled></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.convenienceFlatFee} onchange={updateBelowRackRateConvenienceFlatFee} data-id={index1} step="0.001" style="width:33%"></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.conveniencePercentage} onchange={updateBelowRackRateConveniencePercentage} data-id={index1} step="0.001" style="width:33%"></lightning-input>
+                                        </div>
+                                    </td>  
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </template>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModal}>Cancel</button>
+                    <template if:true={showBelowRackRateRecords}>
+                        <button class="slds-button slds-button_brand" onclick={saveUpdatePricing}>Update and Start BH Approval</button>
+                    </template>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Modal Governance Screen Ending-->
+
+    <!--Send to BH Screen Staring-->
+    <template if:true={openSendToBH}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-011" class="slds-modal__title slds-hyphenate">Message for BH Approval</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-151">
+                <!--<lightning-input type="text" label="To" value={bhAddress} disabled="true"></lightning-input>-->
+                <lightning-combobox label="To" value={bhAddress} options={listBHAddress} onchange={handleChangeBHAddress} required="true" class="validateNewLatest slds-p-right_small"></lightning-combobox>   
+                <lightning-input type="text" label="Subject" value={subject} disabled="true"></lightning-input> 
+                <br/>
+                <lightning-input-rich-text value={body} onchange={updateBody}></lightning-input-rich-text>  
+                <br/>
+                <template if:false={showBelowRackRateRecords}>
+                    <h2 class="slds-align_absolute-center" style="color:red;">No records found</h2>
+                </template>
+                <template if:true={showBelowRackRateRecords}>
+                    <table id="Table90" class="slds-table_bordered slds-table_col-bordered">
+                        <thead class="thMainRow">
+                            <tr>
+                                <th style="width:12%;text-align:center;">PAYMENT MODE</th>
+                                <th style="width:12%;text-align:center;">PAYMENT OPTIONS</th>
+                                <th style="width:12%;text-align:center;">SPECIFICATIONS</th>
+                                <th style="width:12%;text-align:center;">PAYMENT GATEWAY</th>
+                                <th style="width:13%;text-align:center;">TDR REFERENCE</th>
+                                <th style="width:13%;text-align:center;">TDR RATE</th>
+                                <th style="width:13%;text-align:center;">CONVENIENCE REFERENCE</th>
+                                <th style="width:13%;text-align:center;">CONVENIENCE RATE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:13%;text-align:center;">Flat Fee | Percentage</td>
+                                <td style="width:13%;text-align:center;">Amount | Flat Fee | Percentage</td>
+                                <td style="width:13%;text-align:center;">Flat Fee | Percentage</td>
+                                <td style="width:13%;text-align:center;">Amount | Flat Fee | Percentage</td>
+                            </tr> 
+                            <template for:each={belowRackRatesRecords} for:item="belowRecord" for:index="index1">
+                                <tr key={belowRecord.pricingRecordId}>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentMode}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentOption}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentSpecification}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentGateway}</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.tdrAmountReference} | {belowRecord.tdrPercentageReference} %</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.tdrAmount} | {belowRecord.tdrFlatFee} | {belowRecord.tdrPercentage} %</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.convenienceAmountReference} | {belowRecord.conveniencePercentageReference} %</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.convenienceAmount} | {belowRecord.convenienceFlatFee} | {belowRecord.conveniencePercentage} %</td>   
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </template>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModalSendBH}>Cancel</button>
+                    <template if:true={showBelowRackRateRecords}>
+                        <button class="slds-button slds-button_brand" onclick={sendToBHEmail} disabled={disabledSendRequestButton}>Send Request</button>
+                    </template>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Send to BH Screen Ending-->
+</template>

@@ -1,0 +1,31 @@
+<template>
+    <div class="">
+        <lightning-card  variant="Narrow"  
+            title="Generic Solutions" icon-name="standard:record">
+                <div class="slds-m-around_small" style="color: red;" >
+                    Note:- Task Object is not supported by lightning/*Api 
+                </div>
+                <div class="slds-m-around_small">
+                    Account Object
+                    <c-generic-dependent-picklist 
+                        object-api-name="Case"
+                        dependent-picklist-api-name="LP_Sub_Issue__c"
+                        dependent-picklist-label="Sub Issue"
+                        controlling-picklist-api-name="LP_Issue__c"
+                        controlling-picklist-label="Issue"
+                        onselectedpicklists={handlePicklist} >
+                    </c-generic-dependent-picklist>
+                    <template if:true={selectedvalues}>
+                        <div class="slds-m-around_small">
+                            <p style="color: red;"> 
+                                Selected Controlling Picklist : {selectedvalues.controlling}
+                            </p>
+                            <p style="color: red;"> 
+                                Selected Dependent Picklist   : {selectedvalues.dependent} 
+                            </p>
+                        </div>
+                    </template>
+                </div>
+        </lightning-card>
+    </div>
+</template>

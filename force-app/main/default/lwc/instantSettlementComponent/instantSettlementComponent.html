@@ -1,0 +1,229 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <template if:false={showCreateCommercialScreen}>
+        <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions">
+            <div>
+                <b class="slds-text-heading_medium">Instant Settlement Commercials</b>
+            </div>
+            <div class="buttonWrap">
+                <lightning-button variant="brand" label="Publish Instant Settlement Commercials"
+                    onclick={publishInstantSettlementCommercial} disabled={disabledPublishCommercial}></lightning-button>
+                <lightning-button icon-name="utility:new" variant="brand" label="Add Commercial for Instant Settlement"
+                    onclick={createNewCommercial} class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+    </template>
+    <template if:false={showCreateCommercialScreen}>
+        <template if:false={showInstantSettlementCommercials}>
+            <div class="noDataBox">
+                <i><lightning-icon icon-name="utility:info_alt"></lightning-icon></i>
+                <p class="selectPaymentOptions">No Commercials found for the Instant Settlement</p>
+            </div>
+        </template>
+    </template>
+    <template if:false={showCreateCommercialScreen}>
+        <template if:true={showInstantSettlementCommercials}>
+            <div class="noDataBox">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered listCommercialTable">
+                    <thead>
+                        <tr>
+                            <th style="width:7%;padding-left:5px;">Debit Model</th>
+                            <th style="width:7%;padding-left:5px;">Amount Slab</th>
+                            <th style="width:7%;padding-left:5px;">Percent Fee</th>
+                            <th style="width:7%;padding-left:5px;">Flat Fee</th>
+                            <th style="width:12%;padding-left:5px;">Valid From</th>
+                            <th style="width:12%;padding-left:5px;">Valid Till</th>
+                            <th style="width:7%;padding-left:5px;">From Time</th>
+                            <th style="width:7%;padding-left:5px;">Till Time</th>
+                            <th style="width:7%;padding-left:5px;">Day of the week</th>
+                            <th style="width:7%;padding-left:5px;">Last Edited On</th>
+                            <th style="width:7%;padding-left:5px;">Last Published On</th>
+                            <th style="width:7%;padding-left:5px;">Published</th>
+                            <th style="width:6%;padding-left:5px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listCommercials} for:item="commercial">
+                            <tr key={commercial.recordId}>
+                                <td style="width:7%;padding-left:5px;">{commercial.debitModel}</td>
+                                <td style="width:7%;padding-left:5px;">{commercial.amountSlab}</td>
+                                <td style="width:7%;padding-left:5px;">{commercial.percentFee}</td>
+                                <td style="width:7%;padding-left:5px;">{commercial.flatFee}</td>
+                                <td style="width:12%;padding-left:5px;">{commercial.validFrom}&nbsp;<lightning-formatted-time
+                                    value={commercial.validFromTime}></lightning-formatted-time></td>
+                                
+                                <td style="width:12%;padding-left:5px;">{commercial.validTill}&nbsp;<lightning-formatted-time
+                                    value={commercial.validTillTime}></lightning-formatted-time></td>
+                                <td style="width:7%;padding-left:5px;"><lightning-formatted-time
+                                        value={commercial.fromTime}></lightning-formatted-time></td>
+                                <td style="width:7%;padding-left:5px;"><lightning-formatted-time
+                                        value={commercial.tillTime}></lightning-formatted-time></td>
+                                <td style="width:7%;padding-left:5px;">{commercial.dayOfTheWeek}</td>
+                                <td style="width:7%;padding-left:5px;">{commercial.lastEditedOn}</td>
+                                <td style="width:7%;padding-left:5px;">{commercial.lastPublishedOn}</td>
+                                <td style="width:7%;padding-left:5px;"><lightning-input type="checkbox" checked={commercial.published} disabled></lightning-input></td>
+                                <td style="width:6%;padding-left:5px;">
+                                    <div>
+                                        <lightning-button-menu>
+                                            <lightning-menu-item label="View Details" onclick={handleViewDetails}
+                                                data-id={commercial.recordId}></lightning-menu-item>
+                                            <lightning-menu-item label="Delete" onclick={handleDelete}
+                                                    data-id={commercial.recordId}></lightning-menu-item>
+                                        </lightning-button-menu>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </template>
+    <template if:true={showCreateCommercialScreen}>
+        <lightning-card>
+            <h3 slot="title">
+                Instant Settlement
+            </h3>
+            <div slot="footer" class="slds-float_right">
+                <lightning-button variant="neutral" label="Cancel" onclick={cancelCreateNewCommercial}
+                    class="slds-m-right_x-small"></lightning-button>
+                <template if:false={editNotAllowed}>
+                    <lightning-button variant="brand" label="Save Commercial" onclick={saveCommercial}
+                        class="slds-m-left_x-small" disabled={disabledSave}></lightning-button>
+                </template>
+                <template if:true={editNotAllowed}>
+                <lightning-button variant="brand" label="Edit Commercial" onclick={editCommercial}
+                    class="slds-m-left_x-small"></lightning-button>
+                </template>
+            </div>
+
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title">
+                    <button aria-controls="expando-unique-id" aria-expanded="true"
+                        class="slds-button slds-section__title-action">
+                        <span class="slds-truncate" title="Section Title">Pricing</span></button>
+                </h3>
+                <div class="slds-section__content" id="expando-unique-id">
+                    <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-combobox label="Debit Model" value={commercialObj.selectedDebitModel}
+                                    options={commercialObj.listDebitModel} onchange={handleChangeDebitModel}
+                                    class="slds-p-right_small validateNew" required disabled={editNotAllowed}></lightning-combobox>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="number" label="Amount Slab" value={commercialObj.amountSlab}
+                                    onchange={handleChangeAmount} step="0.001"
+                                    class="slds-p-right_small validateNew" required disabled={editNotAllowed}></lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="number" label="Percent Fee" value={commercialObj.percentage}
+                                    onchange={handleChangePercentage} step="0.00001"
+                                    class="slds-p-right_small validateNew" disabled={editNotAllowed}></lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="number" label="Flat Fee" value={commercialObj.flatFee}
+                                    onchange={handleChangeFlatFee} step="0.001"
+                                    class="slds-p-right_small validateNew" disabled={editNotAllowed}></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title">
+                    <button aria-controls="expando-unique-id" aria-expanded="true"
+                        class="slds-button slds-section__title-action">
+                        <span class="slds-truncate" title="Section Title">Time Conditions</span></button>
+                </h3>
+                <div class="slds-section__content" id="expando-unique1-id">
+                    <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="date" label="Valid From" value={commercialObj.validFrom} onchange={handleValidFromChange} disabled={editNotAllowed}></lightning-input>       
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <template if:true={editNotAllowed}>
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="time" label="Valid From Time" value={commercialObj.validFromTime} onchange={handleValidFromTimeChange} disabled={editNotAllowed}></lightning-input>       
+                                </div>
+                            </template>
+                            <template if:false={editNotAllowed}>
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="time" label="Valid From Time" value={commercialObj.validFromTime} onchange={handleValidFromTimeChange} disabled={validFromNotPopulated}></lightning-input>       
+                                </div>
+                            </template>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="date" label="Valid Till" value={commercialObj.validTill} onchange={handleValidTillChange} disabled={editNotAllowed}></lightning-input>    
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <template if:true={editNotAllowed}>
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="time" label="Valid Till Time" value={commercialObj.validTillTime} onchange={handleValidTillTimeChange} disabled={editNotAllowed}></lightning-input>       
+                                </div>
+                            </template>
+                            <template if:false={editNotAllowed}>
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="time" label="Valid Till Time" value={commercialObj.validTillTime} onchange={handleValidTillTimeChange} disabled={validTillNotPopulated}></lightning-input>       
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="time" label="From time" value={commercialObj.fromTime} onchange={handleFromTimeChange} disabled={editNotAllowed}></lightning-input>   
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="time" label="Till time" value={commercialObj.tillTime} onchange={handleTillTimeChange} disabled={editNotAllowed}></lightning-input>  
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-4">
+                            <div class="slds-m-around_x-small">
+                                <lightning-combobox label="Day of the week" value={commercialObj.selectedDayOfTheWeek}
+                                    options={commercialObj.listDaysOfTheWeek} onchange={handleDayChange}
+                                    class="slds-p-right_small" disabled={editNotAllowed}></lightning-combobox>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+    <!--Modal to prompt message to take confirmation from the user before deletion of the records-->
+    <template if:true={showConfirmationModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-0111212" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <lightning-icon icon-name="utility:warning" alternative-text="warning" title="warning"></lightning-icon>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6021209">
+                <p style="text-align:center;"><b>Are you sure you want to delete this commercial?</b></p>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelMessageModalConfirmation}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Proceed" onclick={callDeleteFunction}>Proceed</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--End of Modal to prompt message to take confirmation from the user before deletion the records-->
+</template>

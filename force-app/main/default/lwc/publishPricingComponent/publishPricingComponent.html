@@ -1,0 +1,870 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="searchBarWrap_main">
+        <!--  <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>&nbsp;&nbsp;&nbsp;-->
+        <template if:false={hidePublishCommercialButton}>
+            <lightning-button label="Back" variant="brand" onclick={back}></lightning-button>
+        </template>
+        <template lwc:if={enableAddFixedPricingButton}>
+            <lightning-button class="slds-p-left_small slds-p-right_small" label="Add Fixed Pricing" variant="brand" onclick={getFixedPricingData} ></lightning-button>
+        </template>
+        <lightning-button class="slds-p-left_small slds-p-right_small" label="Save As Template" variant="brand" onclick={saveAsTemplate} disabled={disabledSaveAsTemplateButton}></lightning-button>
+        <lightning-button label="Publish Commercial" variant="brand" onclick={publishCommercial} disabled={disabledPublishPricingButton}></lightning-button>
+    </div>  
+    <lightning-tabset>
+        <div>
+            <lightning-tab label="Add Fixed Pricing">
+                <table id="Table145">
+                    <thead class="thMainRow">
+                            <tr>
+                            <th class="varientThreeFirstTh">Fee Type</th>
+                            <th class="varientThree">Debit Model</th>
+                            <th class="varientThree">Start Date</th>
+                            <th class="varientThree">End Date</th>
+                            <th class="varientThree">Payment Frequency</th>
+                            <th class="varientThree">Amount</th>
+                            <th class="varientThree">Flat Fee</th>
+                            <th class="varientThree">Percentage</th>
+                            <th class="varientThree"></th>
+                        </tr>
+                        </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listFixedPricing2} for:item="fixed" for:index="indx">
+                            <tr key={fixed.recordId}>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="text" value={fixed.flatFeeType} data-id={indx} class="validateNew slds-p-right_small" disabled></lightning-input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox value={fixed.debitModel} options={availableDebitModelFP} data-id={indx} onchange={handleChangeDebitModelFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="date" value={fixed.startDate} data-id={indx} onchange={handleChangeStartDateFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>    
+                                            </div>
+                                            </div>
+                                        </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="date" value={fixed.endDate} data-id={indx} onchange={handleChangeEndDateFP} class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>    
+                                            </div>
+                                        </div>
+                                        </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox value={fixed.paymentFrequency} options={availableIntervalFP} data-id={indx} onchange={handleChangeIntervalFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fixed.amount} data-id={indx} onchange={handleChangeAmountFP} step="0.001" class="slds-p-right_small" disabled></lightning-input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fixed.flatFee} data-id={indx} onchange={handleChangeFlatFeeFP} step="0.001" class="validateNew slds-p-right_small" required disabled={hidePublishCommercialButton}></lightning-input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fixed.percentage} data-id={indx} onchange={handleChangePercentageFP} step="0.001" class="slds-p-right_small"  disabled></lightning-input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <template if:false={hidePublishCommercialButton}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template if:true={fixed.showDeleteButton}>
+                                                        <lightning-icon icon-name="utility:delete"
+                                                                        size="xx-small" title="xx-small size"
+                                                                        onclick={deleteFixedPricingRow} focusable="false"
+                                                                        data-id={indx}
+                                                                        aria-hidden="true"></lightning-icon>    
+                                                    </template>
+                                                </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                </template>
+                                <!--<td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <template if:false={hidePublishCommercialButton}>
+                                                    <a onclick={addRowFixedPricing} class="plusClassCSS" data-id={indx}>+</a>&nbsp;<a onclick={removeRowFixedPricing} class="plusClassCSS" data-id={indx}>-</a>   
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>-->
+                            </tr>      
+                        </template>
+                    </tbody>
+                </table>
+            </lightning-tab>
+        </div>
+    </lightning-tabset>
+
+
+    <lightning-tabset>
+        <div>
+            <lightning-tab label="Add Platform Fee">
+                <table id="Table1451223">
+                    <thead class="thMainRow">
+                            
+                        </thead>
+                    <tbody class="secondScreenTableCls">
+                            <tr>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox label="Platform Fee Type"
+                                                                value={selectedType}
+                                                                options={availableType}
+                                                                onchange={handleChangeType}
+                                                                class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>      
+                                            </div>
+                                        </div>
+                                        </div>
+                                </td>
+
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox label="Debit Model"
+                                                                value={selectedDebitModel}
+                                                                options={availableDebitModel}
+                                                                onchange={handleChangeDebitModel}
+                                                                class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>      
+                                            </div>
+                                        </div>
+                                        </div>
+                                </td>
+
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="date" label="Start Date"
+                                                                value={selectedStartDate}
+                                                                onchange={handleChangeStartDate}
+                                                                class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>   
+                                            </div>
+                                        </div>
+                                        </div>
+                                </td>
+
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="date" label="End Date"
+                                                                value={selectedEndDate}
+                                                                onchange={handleChangeEndDate}
+                                                                class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>   
+                                            </div>
+                                        </div>
+                                        </div>
+                                </td>
+
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox label="Platform Payment Frequency"
+                                                                value={selectedInterval}
+                                                                options={availableInterval}
+                                                                onchange={handleChangeInterval}
+                                                                class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>   
+                                            </div>
+                                        </div>
+                                        </div>
+                                </td>
+                                
+                                
+                                
+                            </tr>      
+                        
+                    </tbody>
+                </table><br/>
+                
+                <table id="Table1451213211" style="width:30%;">
+                    <thead class="thMainRow">
+                        <tr>
+                        <th class="varientThree">Amount</th>
+                        <th class="varientThree">Flat Fee</th>
+                        <th class="varientThree">Percentage</th>
+                        <!--<th class="varientThree"></th>-->
+                    </tr>
+                    </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listPlatformFee} for:item="pf" for:index="indx">
+                            <tr key={pf.Id} style={pf.backgroundColor}>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <template if:true={hidePublishCommercialButton}>
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="number" value={pf.amount} data-id={indx}  step="0.001" onchange={handlePlatformFeeAmount} class="slds-p-right_small validateNew" disabled={hidePublishCommercialButton} placeholder="Amount" required></lightning-input>
+                                                 </div>
+                                            </template>
+                                            <template if:false={hidePublishCommercialButton}>
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="number" value={pf.amount} data-id={indx}  step="0.001" onchange={handlePlatformFeeAmount} class="slds-p-right_small validateNew" disabled={pf.disabledAmount} placeholder="Amount" required></lightning-input>
+                                                 </div>
+                                            </template>
+                                            
+                                        </div>
+                                    </div>
+                                    </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={pf.flatFee} data-id={indx} step="0.001" onchange={handlePlatformFeeFlatFee} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Flat Fee"></lightning-input>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={pf.percentage} data-id={indx} step="0.001" onchange={handlePlatformFeePercentage} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Percentage"></lightning-input>    
+                                            </div>
+                                            </div>
+                                        </div>
+                                </td>
+                                <template if:false={hidePublishCommercialButton}>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-icon icon-name="utility:add"
+                                                                    size="xx-small" title="xx-small size"
+                                                                    onclick={addPlatformFeeRow} focusable="false"
+                                                                    data-id={indx}
+                                                                    aria-hidden="true"></lightning-icon> &nbsp;&nbsp;   
+                                                <template if:true={pf.showRemoveButton}>
+                                                    <lightning-icon icon-name="utility:delete"
+                                                                    size="xx-small" title="xx-small size"
+                                                                    onclick={deletePlatformFeeRow} focusable="false"
+                                                                    data-id={indx}
+                                                                    aria-hidden="true"></lightning-icon>    
+                                                </template>
+                                            </div>
+                                            </div>
+                                        </div>
+                                </td>
+                            </template>
+                            </tr>      
+                        </template>
+                    </tbody>
+                </table>
+            </lightning-tab>
+        </div>
+    </lightning-tabset>
+    <!--
+    <lightning-tabset>
+        <div>
+            <lightning-tab label="Add Fallback Charges">
+                <div class="slds-grid">
+                <div class="slds-col" style="width:40%;">
+                <table id="Table14123212">
+                    <thead class="thMainRow">
+                            <tr>
+                            <th class="varientThree">Payment Mode</th>
+                            <th class="varientThree">Flat Fee</th>
+                            <th class="varientThree">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listFallback1} for:item="fall" for:index="indx">
+                            <tr key={fall.Id}>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                {fall.paymentModeName}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fall.flatFee} data-id={indx} step="0.01" onchange={handleFallbackFlatFee1} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Flat Fee"></lightning-input>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fall.percentage} data-id={indx} step="0.01" onchange={handleFallbackPercentage1} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Percentage" ></lightning-input>    
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                
+                                </tr>      
+                        </template>
+                    </tbody>
+                </table>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="slds-col slds-float_right" style="width:40%;">
+                <table id="Table1412321321222">
+                    <thead class="thMainRow">
+                            <tr>
+                            <th class="varientThree">Payment Mode</th>
+                            <th class="varientThree">Flat Fee</th>
+                            <th class="varientThree">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listFallback2} for:item="fall" for:index="indx">
+                            <tr key={fall.Id}>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                {fall.paymentModeName}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fall.flatFee} data-id={indx} step="0.01" onchange={handleFallbackFlatFee2} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Flat Fee"></lightning-input>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </td>
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-input type="number" value={fall.percentage} data-id={indx} step="0.01" onchange={handleFallbackPercentage2} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Percentage"></lightning-input>    
+                                            </div>
+                                            </div>
+                                        </div>
+                                </td>
+                                
+                            </tr>      
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+                </div>
+            </lightning-tab>
+        </div>
+    </lightning-tabset>
+-->
+        <div class="slds-size_12-of-12">
+            <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                <table id="Table78">
+                    <thead class="thMainRow">
+                        <tr>
+                            <!--<th class="varientTwo" style="width:8%;text-align:left;">PAYMENT MODE</th>-->
+                            <th class="varientTwo" style="width:11%;text-align:left;">PAYMENT OPTIONS</th>
+                            <th class="varientTwo" style="width:11%;text-align:left;">SPECIFICATIONS</th>
+                            <th class="varientTwo" style="width:11%;text-align:left;">PAYMENT GATEWAY</th>
+                            <th class="varientTwo" style="width:10%;text-align:left;">ONUS/OFFUS</th>
+                            <th class="varientTwo" style="width:15%;text-align:center;">TDR</th>
+                            <th class="varientTwo" style="width:15%;text-align:center;">CONVENIENCE FEE</th>
+                            <th class="varientTwo" style="width:11%;text-align:left;">STATUS</th>
+                            <th class="varientTwo" style="width:10%;text-align:left;">GATEWAY TYPE</th>
+                            <th class="varientTwo" style="width:6%;text-align:left;">CHAT</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tdAccordionHeading">
+                        <tr>
+                            <td colspan="10">
+                                <lightning-accordion allow-multiple-sections-open>
+                                    <template for:each={selectedListPaymentData} for:item="paymentData">
+                                        <lightning-accordion-section name={paymentData.paymentModeName} label={paymentData.paymentModeName} class="accordionTDR_Defaut" key={paymentData.paymentModeName}> 
+                                            <table class="tableAccordionDetails">
+                                                <tbody>
+                                                    <template for:each={paymentData.selectedPaymentOptionsList} for:item="payInner1">
+                                                        <template for:each={payInner1.selectedPaymentIndividualList} for:item="payInner2">
+                                                            <tr key={payInner2.key}>
+                                                                <!--<td style="width:8%;text-align:left;"></td>-->
+                                                                <td style="width:11%;text-align:left;">{payInner2.selectedPaymentOptionName}</td>
+                                                                <td style="width:11%;text-align:left;">{payInner2.selectedSpecification}</td>
+                                                                <td style="width:11%;text-align:left;">{payInner2.selectedPaymentGatewayName}</td>
+                                                                <td style="width:10%;text-align:left;">{payInner2.selectedOnusOffus}</td>
+                                                                <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.tdrAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrPercentage} disabled="true"></lightning-input></div></td>
+                                                                <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.convenienceAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.convenienceFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.conveniencePercentage} disabled="true"></lightning-input></div></td>
+                                                                <td style="width:11%;text-align:left;"><span class={payInner2.className}>{payInner2.status}</span></td>
+                                                                <td style="width:10%;text-align:left;">{payInner2.gatewayType}</td>
+                                                                <td style="width:6%;text-align:left;">
+                                                                    <template if:true={payInner2.showChatter}>
+                                                                        <lightning-button-icon size="medium" variant="brand" icon-name="utility:anywhere_chat" onclick={clickChatter} data-id={payInner2.key} data-label={payInner2.bankingOpsStatus} data-info1={payInner2.bankName} data-info2={payInner2.porType} data-info3={payInner2.currentUserProfileName}></lightning-button-icon>
+                                                                    </template>
+                                                                </td>
+                                                            </tr>
+                                                        </template>  
+                                                    </template>
+                                                </tbody>
+                                            </table>           
+                                        </lightning-accordion-section>
+                                    </template>
+                                </lightning-accordion>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--Save as Template Modal-->
+        <template if:true={showSaveAsTemplateModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Create a Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <lightning-radio-group name="radioGroup"
+                                            label="Select any to proceed further"
+                                            options={planChoiceOptions}
+                                            value={selectedPlanChoice}
+                                            onchange={handleChangeSelectedPlanChoice}
+                                            required
+                                            class="validateOption"
+                            type="radio"></lightning-radio-group>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={cancelShowTempalteModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={nextTemplateModal}>Next</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Save as Template Modal End-->
+    
+        <!--Ordinary User Create Template-->
+        <template if:true={ordinaryUserCreateTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-0900" class="slds-modal__title slds-hyphenate">Create New Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60009">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateNewPlanOUser"></lightning-input>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButton}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelOrdinaryUserCreateTemplate}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveOrdinaryUserNewTemplate} disabled={disabledSaveCreateTemplateOrdinaryUser}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Ordinary User Create Template End-->
+    
+        <!--Ordinary User Update Existing Template-->
+        <template if:true={ordinaryUserUpdateTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-090011" class="slds-modal__title slds-hyphenate">Update Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60312009">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-combobox 
+                                                label="Select Template" 
+                                                name="Select Template"
+                                                placeholder="Select Template" 
+                                                value={templateName} 
+                                                options={availablePrivateTemplate}
+                                                onchange={handleTemplateName}
+                                                required
+                                                class="validateNewPlanOUser">
+                                    </lightning-combobox>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButton}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelOrdinaryUserCreateTemplate}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveOrdinaryUserNewTemplate} disabled={disabledSaveCreateTemplateOrdinaryUser}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Ordinary User Update Existing Template End-->
+    
+        <!--Modal to prompt message to enter fixed pricing before saving data as template-->
+        <template if:true={showFixedPricingModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-090" class="slds-modal__title slds-hyphenate">Add Fixed Pricing</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6009">
+                    <p style="text-align:center;">Are you sure want to proceed without Fixed Pricing?</p>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelMessageModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Proceed" onclick={openSaveAsTemplateModal}>Proceed</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--End of Modal prompt to enter the fixed pricing-->
+    
+    
+        <!--Super User Update Existing Template-->
+        <template if:true={superUserUpdateTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-0900121" class="slds-modal__title slds-hyphenate">Update Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6031322009">
+                    <!--Add to incorporate Template architecture changes-->
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-combobox 
+                                                label="Select Plan" 
+                                                name="Select Plan"
+                                                placeholder="Select Plan" 
+                                                value={selectedPlanName} 
+                                                options={availablePlanMaster}
+                                                onchange={handlePlanName}
+                                                required class="validateOption1">
+                                    </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-combobox 
+                                            label="Select Sub Plan" 
+                                            name="Select Sub Plan"
+                                            placeholder="Select Sub Plan" 
+                                            value={selectedSubPlanName} 
+                                            options={availableSubPlanMaster}
+                                            onchange={handleSubPlanName}
+                                            required class="validateOption1">
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    <!--End | Template architecture change-->
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-combobox 
+                                                label="Select Template" 
+                                                name="Select Template"
+                                                placeholder="Select Template" 
+                                                value={templateName} 
+                                                options={availablePrivateTemplate}
+                                                onchange={handleTemplateName}
+                                                required
+                                                class="validateOption1">
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveUpdateTemplateSuperUser} disabled={disabledOption1Save}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Super User Update Existing Template End-->
+    
+    
+        <!--Super User Choose Existing Plan,Sub Plan and Create new template-->
+        <template if:true={superUserChooseExistingPlanSunPlanCreateNewTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-012900121" class="slds-modal__title slds-hyphenate">Choose Existing Plan and Sub Plan, Create new Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60313223009">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-combobox 
+                                                        label="Select Plan" 
+                                                        name="Select Plan"
+                                                        placeholder="Select Plan" 
+                                                        value={selectedPlanName} 
+                                                        options={availablePlanMaster}
+                                                        onchange={handlePlanName}
+                                                        required class="validateOption2">
+                                            </lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-combobox 
+                                                    label="Select Sub Plan" 
+                                                    name="Select Sub Plan"
+                                                    placeholder="Select Sub Plan" 
+                                                    value={selectedSubPlanName} 
+                                                    options={availableSubPlanMaster}
+                                                    onchange={handleSubPlanName}
+                                                    required class="validateOption2">
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateOption2"></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption2} disabled={disabledOption2Save}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Super User Choose Existing Plan,Sub Plan and Create new template End-->
+    
+        <!--Super User Create New Plan,Sub Plan and update template-->
+        <template if:true={superUserCreatePlanSunPlanUpdateTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-01290032121" class="slds-modal__title slds-hyphenate">Create New Plan and Sub Plan, Update Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-603132123009">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Plan" value={selectedPlanName} onchange={handlePlanName} required class="validateOption3"></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Sub Plan" value={selectedSubPlanName} onchange={handleSubPlanName} required class="validateOption3"></lightning-input>
+    
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-combobox 
+                                                label="Select Template" 
+                                                name="Select Template"
+                                                placeholder="Select Template" 
+                                                value={templateName} 
+                                                options={availablePrivateTemplate}
+                                                onchange={handleTemplateName}
+                                                required
+                                                class="validateOption3">
+                            </lightning-combobox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption3} disabled={disabledOption3Save}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Super User Create New Plan,Sub Plan and update template End-->
+
+        <!--Super User | Choose Existing template,create new sub plan and template-->
+        <template if:true={superUserChooseExistingPlanCreateNewSubPlanAndTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-01290032112121" class="slds-modal__title slds-hyphenate">Choose Existing Template, Create new Sub Plan and Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60313131321123009">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-combobox 
+                                                        label="Select Plan" 
+                                                        name="Select Plan"
+                                                        placeholder="Select Plan" 
+                                                        value={selectedPlanName} 
+                                                        options={availablePlanMaster}
+                                                        onchange={handlePlanName}
+                                                        required class="validateOption5">
+                                            </lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Sub Plan" value={selectedSubPlanName} onchange={handleSubPlanName} required class="validateOption5"></lightning-input>
+    
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateOption5"></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption5} disabled={disabledOption5Save}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--End | Super User | Choose Existing Template, create new sub plan and template-->
+    
+        <!--Super User Create New Plan,Sub Plan and Create template-->
+        <template if:true={superUserCreatePlanSunPlanTemplate}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-012900321121" class="slds-modal__title slds-hyphenate">Create new Plan, Sub Plan and Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6031321123009">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Plan" value={selectedPlanName} onchange={handlePlanName} required class="validateOption4"></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Sub Plan" value={selectedSubPlanName} onchange={handleSubPlanName} required class="validateOption4"></lightning-input>
+                                    </div>
+                            </div>
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-m-around_x-small">
+                                    <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateOption4"></lightning-input>
+                                </div>       
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-m-around_x-small">
+                            <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                        </div>
+                    </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption4} disabled={disabledOption4Save}>Save</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--Super User Create New Plan,Sub Plan and Create template End-->
+
+
+        <!--Modal to prompt message to take confirmation from the user to publish the records-->
+        <template if:true={showModalInformation.showModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-0111212" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                    <lightning-icon icon-name="utility:warning" alternative-text="warning" title="warning"></lightning-icon>
+                    <h1 id="modal-heading-03390" class="slds-modal__title slds-hyphenate">Are you sure you want to make commercial <b>{showModalInformation.newLiveCommercialName}</b> LIVE for this merchant?</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6021209">
+                    <p style="text-align:center;">This will remove all pricing, instruments and commercials previously charged on the Merchant from <b>{showModalInformation.oldLiveCommercialName}</b> to new commercial: <b>{showModalInformation.newLiveCommercialName}</b></p>
+                    </div>
+                    <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelMessageModalConfirmation}>Cancel</button>
+                    <button class="slds-button slds-button_brand" aria-label="Proceed" onclick={callPublishPricingFunction}>Proceed</button>
+                    </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+        <!--End of Modal to prompt message to take confirmation from the user to publish the records-->
+</template>

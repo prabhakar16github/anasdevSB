@@ -1,0 +1,13 @@
+<template>
+    <template if:true={homePage}>
+        <button class="slds-button slds-button_destructive" onclick={handleRiskButton}>Risk Hold Management</button>
+    </template>
+    <template if:true={statusPage}>
+        <c-riskstatuslwc  poststatuspage = {poststatus} obstatuspage = {obstatus} prestatuspage={prestatus}
+        postrecidpage = {postrecid} obredidpage = {obredid} preredidpage ={preredid}>
+
+        </c-riskstatuslwc>
+     
+    </template>
+  
+</template>

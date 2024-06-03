@@ -1,0 +1,35 @@
+<template>
+    <div class="slds-p-horizontal--small slds-size--2-of-2" >
+       <div class="slds-form-element slds-has-error">
+        
+        <div class="slds-form-element__control">
+          <div class="slds-select_container" >
+            <select aria-describedby="error-01" class="slds-select" onchange={handleControllingChange} id="select-01" required
+              style="width: 100%; height: 5%">
+              <template for:each={optionValues.controlling} for:item="acc">
+                    <option key={acc} class="uiInputSelectOption" value={acc.value}> {acc.value} </option>
+              </template>
+            </select>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div if:true={isIssueEmpty}><span style="display: block;color: red;margin: 3px 0 0 0;font-size:10px;float:left;padding: 5px;">{errorIssue}</span></div><br>
+  
+  <div class="slds-p-horizontal--small slds-size--2-of-2">
+    <div class="slds-form-element slds-has-error">
+      
+      <div class="slds-form-element__control">
+        <div class="slds-select_container">
+          <select aria-describedby="error-01" class="slds-select"  onchange={handleDependentChange} id="select-02" required
+          style="width: 100%; height: 5%">
+            <template for:each={optionValues.dependent} for:item="acc1" >
+              <option key={acc1} class="uiInputSelectOption" value={acc1.value}> {acc1.value} </option>
+            </template>
+          </select>
+        </div>
+      </div>
+    </div>                
+  </div>
+  <div if:true={isSubIssueEmpty}><span style="display: block;color: red;margin: 3px 0 0 0;font-size:10px;float:left;padding: 5px;">{errorSubIssue}</span></div><br>
+  </template>

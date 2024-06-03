@@ -1,0 +1,32 @@
+<template>
+  
+
+    <div class="slds-box slds-theme-default">
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+      <thead>
+        <tr class="slds-line-height_reset">
+          <th class="" scope="col">Name</th>
+          <th class="" scope="col">Sales Comment</th>
+          <th class="" scope="col">Risk Comment</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <template for:each={responsedata} for:item="item">
+        <tr key={item.Id}>
+            <td> 
+              {item.Name}
+            </td>
+            <td>
+                <lightning-textarea name="salescomment" data-id={item.Id} data-name="salescomment" onchange={handlecommentchange} disabled={edittable} placeholder="Enter Sales Comment" value={item.Sales_Comment__c}></lightning-textarea> <!--value={salescommnet} -->  
+            </td>
+            <td>
+                <lightning-textarea name="riskcomment" data-id={item.Id} data-name="riskcomment" onchange={handlecommentchange} disabled={edittable} placeholder="Enter Risk Comment" value={item.Risk_Comment__c}></lightning-textarea> <!--value={riskcommnet} -->
+            </td>
+        </tr>
+        </template>
+      </tbody>
+    </table>
+    </div>
+  
+    
+</template>

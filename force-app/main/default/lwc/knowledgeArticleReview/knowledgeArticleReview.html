@@ -1,0 +1,35 @@
+<template>
+    <!--<div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:24px 18px;">-->
+        <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:0px 18px;">
+    <template if:true={showForm}>
+        <div>
+            <div class="slds-text-heading_medium slds-text-color" style="font-size:16px;line-height:24px;padding-bottom:8px;color:#314235; font-weight:700; font-family:Roboto Slab;"> Was this article helpful? </div>
+        </div>
+    
+        <div>
+            <div class="slds-text-heading_medium slds-text-color" style="font-size:13px;line-height:16px;padding-bottom:20px;color:#4F4F4F; font-family: Open Sans">Share your rating (1 is lowest and 5 is highest) and feedback with us. </div>
+        </div>
+     
+        <lightning-radio-group 
+            name="rating" options={ratingOptions} value={rating} type="button" onchange={handleRatingChange}>
+        </lightning-radio-group>
+        <!-- <div class="slds-size_1-of-5"> -->
+    <div style="padding-bottom:24px; font-family: Open Sans">
+        <lightning-textarea 
+            name="comments" placeholder="Add your suggestions here..." value={review} onchange={handleReviewChange}>
+        </lightning-textarea>
+    </div>
+        <!-- </div> -->
+        <div style="font-family:Roboto Slab;">
+            <lightning-button 
+            variant="brand" label="Submit" title="Submit" onclick={handleSubmit} >
+            </lightning-button>
+        </div>
+        
+<!-- <span style="font-size:13px;line-height:16px;padding-bottom:20px;color:#4F4F4F; padding:0 20px;">or</span> -->
+        <!-- <lightning-button 
+            variant="brand" label="Raise A Request" title="Raise A Request" disabled={disableSubmit} >
+        </lightning-button> -->
+    </template>   
+</div> 
+</template>

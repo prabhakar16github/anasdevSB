@@ -1,0 +1,47 @@
+<template>
+    <!-- spinner -->
+    <lightning-spinner lwc:if={isLoading} alternative-text="Loading" class="spinnerSize slds-align_absolute-center slds-is-relative" size="large" variant="brand"></lightning-spinner>
+    <div lwc:if={isLoading} class="slds-backdrop slds-backdrop_open"></div>
+    
+    <lightning-card lwc:if={isCreate} title="Create JIRA" icon-name="standard:task">
+        <form class="slds-m-around_x-small">
+
+            <div class="slds-p-top_small">
+                <lightning-combobox class="req inputTag" name="Engineer Team" label="Engineering Team"
+                    value={engTeam}
+                    placeholder="Select Team"
+                    options={engTeamOptions}
+                    onchange={handleTeamChange} required></lightning-combobox>
+            </div>
+            <div class="slds-p-top_small">
+                <lightning-combobox class="req inputTag" name="Priority" label="Priority"
+                    value={priority}
+                    placeholder="Select Priority"
+                    options={prioOptions}
+                    onchange={handlePrioChange} required></lightning-combobox>
+            </div>
+            <div class="slds-p-top_small">
+                <lightning-input class="inputTag" type="email" label="Assignee Email" placeholder="Enter email address" value={assigneeId} onchange={handleAssigneeChange}></lightning-input>
+            </div>
+            <div class="slds-p-top_small">
+                <lightning-input class="inputTag" type="email" label="Reporter Email" placeholder="Enter email address" value={reporterId} onchange={handleReporterChange}></lightning-input>
+            </div>
+
+            <div class="slds-m-top_small slds-align_absolute-center">
+                <lightning-button label="Save" variant="brand-outline" class="slds-m-left_x-small" icon-name="utility:save" onclick={createJIRA}></lightning-button>
+                <lightning-button label="Reset" type="reset" variant="destructive-text" class="slds-m-left_x-small" icon-name="utility:clear" onclick={resetForm}></lightning-button>
+            </div>
+        </form>
+    </lightning-card>
+
+    <lightning-card lwc:else title="JIRA Details" icon-name="standard:task">
+        <lightning-button label="Get Status" slot="actions" onclick={getStatus}></lightning-button>
+
+        <div class="slds-m-around_x-small">
+        Track JIRA status here :
+        <lightning-formatted-url value={jiraURL} tooltip={jiraNumber} class="slds-m-left_xx-small"
+                                label={jiraNumber} target="_blank" ></lightning-formatted-url>
+        </div>
+    </lightning-card>
+
+</template>

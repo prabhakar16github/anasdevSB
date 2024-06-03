@@ -1,0 +1,1300 @@
+<template>
+<lightning-card>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+
+    <lightning-tabset class="tabNavigateBorder" active-tab-value="two">
+        <lightning-tab label="Live Commercial" value="one" onactive={handleLiveCommercialActive}>
+            <div class="slds-grid slds-wrap tabTitleClass">
+                <div class="slds-size_12-of-12">
+                   
+                        
+                            <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                                <table id="Table41">
+                                    <thead class="thMainRow">
+                                        <tr>
+                                            <th class="varientTwo" style="width:14%;text-align:left;">PAYMENT MODE</th>
+                                            <th class="varientTwo" style="width:14%;text-align:left;">PAYMENT OPTIONS</th>
+                                            <th class="varientTwo" style="width:14%;text-align:left;">SPECIFICATIONS</th>
+                                            <th class="varientTwo" style="width:14%;text-align:left;">PAYMENT GATEWAY</th>
+                                            <th class="varientTwo" style="width:10%;text-align:left;">ONUS/OFFUS</th>
+                                            <th class="varientTwo" style="width:17%;text-align:center;">TDR</th>
+                                            <th class="varientTwo" style="width:17%;text-align:center;">CONVENIENCE FEE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tdAccordionHeading">
+                                        <tr>
+                                            <td colspan="8">
+                                                <lightning-accordion allow-multiple-sections-open>
+                                                    <template for:each={selectedListPaymentDataLiveFromTreasury} for:item="paymentData">
+                                                        <lightning-accordion-section name={paymentData.paymentModeName} label={paymentData.paymentModeName} class="accordionTDR_Defaut" key={paymentData.paymentModeName}> 
+                                                            <table class="tableAccordionDetails">
+                                                                <tbody>
+                                                                    <template for:each={paymentData.selectedPaymentOptionsList} for:item="payInner1">
+                                                                        <template for:each={payInner1.selectedPaymentIndividualList} for:item="payInner2">
+                                                                            <tr key={payInner2.key}>
+                                                                                <td style="width:14%;text-align:left;"></td>
+                                                                                <td style="width:14%;text-align:left;">{payInner2.selectedPaymentOptionName}</td>
+                                                                                <td style="width:14%;text-align:left;">{payInner2.selectedSpecification}</td>
+                                                                                <td style="width:14%;text-align:left;">{payInner2.selectedPaymentGatewayName}</td>
+                                                                                <td style="width:10%;text-align:left;">{payInner2.selectedOnusOffus}</td>
+                                                                                <td style="width:17%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.tdrAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrPercentage} disabled="true"></lightning-input></div></td>
+                                                                                <td style="width:17%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.convenienceAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.convenienceFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.conveniencePercentage} disabled="true"></lightning-input></div></td>
+                                                                            </tr>
+                                                                        </template>  
+                                                                    </template>
+                                                                </tbody>
+                                                            </table>           
+                                                        </lightning-accordion-section>
+                                                    </template>
+                                                </lightning-accordion>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                </div>
+            </div> 
+        </lightning-tab>
+        <lightning-tab label="All Commercials" value="two">
+            <!--Screen First Starting-->
+    <template if:true={showFirstScreen}>
+        <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions">
+            <div>
+                <b class="slds-text-heading_medium">Commercials</b> 
+            </div>
+            <div class="buttonWrap">
+                <!--<lightning-button variant="brand-outline" label="View Change Log" class="slds-m-left_x-small"></lightning-button>
+                <lightning-button variant="brand-outline" label="Global Conditional Pricing" class="slds-m-left_x-small"></lightning-button>-->
+                <lightning-button icon-name="utility:new" variant="brand" label="Create New Commercial" onclick={getPlanDetails} class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+        <template if:false={showCommercial}>
+            <div class="noDataBox">
+                <i><lightning-icon icon-name="utility:info_alt"></lightning-icon></i>
+                <p class="selectPaymentOptions">No new commercial setup for the merchant.</p>
+            </div>
+        </template>
+        <template if:true={showCommercial}>
+            <div class="noDataBox">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered listCommercialTable">
+                    <thead>
+                            <tr>
+                            <th style="width:30%;padding-left:20px;">Name of the Commercial</th>
+                            <th style="width:20%;padding-left:20px;">Status</th>
+                            <th style="width:40%;padding-left:20px;">Created Date</th>
+                            <th style="width:10%;padding-left:20px;">Actions</th>
+                        </tr>
+                        </thead>
+                    <tbody class="secondScreenTableCls">
+                        <template for:each={listExistingCommercial} for:item="commercial">
+                            <!--<tr key={commercial.Id} onclick={getPlanRecordsForCommercial} data-id={commercial.Id} data-key={commercial.name}>--><tr key={commercial.Id}>
+                                <td style="width:30%;padding-left:20px;" onclick={getPlanRecordsForCommercial} data-id={commercial.Id} data-key={commercial.name}>{commercial.name}</td>   
+                                <td style="width:20%;padding-left:20px;" onclick={getPlanRecordsForCommercial} data-id={commercial.Id} data-key={commercial.name}>{commercial.status}</td>
+                                <td style="width:40%;padding-left:20px;" onclick={getPlanRecordsForCommercial} data-id={commercial.Id} data-key={commercial.name}>{commercial.createdDate}</td> 
+                                <td style="width:10%;padding-left:20px;">
+                                    <div>
+                                        <lightning-button-menu>
+                                            <lightning-menu-item label="Edit" onclick={handleEditCommercial} data-id={commercial.Id} data-key={commercial.name}></lightning-menu-item>
+                                        </lightning-button-menu>
+                                    </div>
+                                </td>  
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>        
+            </div>
+        </template>
+    </template>
+    <!--Screen First Ending-->
+
+    <!--Screen Second Starting-->
+    <template if:true={showSecondScreen}>
+        <div>
+            <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>
+            <b class="slds-align_absolute-center slds-p-bottom_medium">Create Commercials</b>     
+        </div>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="background-color:rgb(209,206,206);padding-left:20%;padding-right:20%;">
+            <div class="slds-grid popUpCustomContainer slds-box" style="background-color:white;">
+                <div class="slds-col popUpBoxCls" >
+                    <div class="commercialContainer">
+                        <div class="paymentSelectHeader">
+                            Quick start with a plan
+                        </div>
+                        <div class="fieldsContainer">
+                            <div class="slds-m-bottom_medium">
+                                <lightning-combobox 
+                                            label="Plan" 
+                                            name="Plan"
+                                            placeholder="Select Plan" 
+                                            value={selectedPlan} 
+                                            options={availablePlanMaster}
+                                            onchange={handlePlanChange}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-m-bottom_medium">
+                                <lightning-combobox 
+                                            label="Sub Plan" 
+                                            name="Sub Plan"
+                                            placeholder="Select Sub Plan" 
+                                            value={selectedSubPlan} 
+                                            options={availableSubPlanMaster}
+                                            onchange={handleSubPlanChange}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-m-bottom_medium">
+                                <lightning-combobox 
+                                            label="Template" 
+                                            name="Template"
+                                            placeholder="Select Template" 
+                                            value={selectedTemplate} 
+                                            options={availableTemplateMaster}
+                                            onchange={handleTemplateChange}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-m-bottom_medium slds-text-align_center">
+                                <lightning-button label="Add Payment Plan" disabled={disabledAddPaymentPlan} onclick={handleThirdScreen}></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="popUpBoxCls slds-col" >
+                    <div class="commercialContainer">
+                        <div class="paymentSelectHeader">
+                            Start from scratch
+                            <br/>
+                        </div>
+                        <div class="fieldsContainer mt40">
+                            <div class="slds-m-bottom_medium textContainer slds-text-align_center">
+                                Create a new set of payment options for the merchant.
+                            </div>
+                            <div class="slds-m-bottom_xx-large slds-text-align_center selectBtnContainer">
+                                <lightning-button label="Select payment options" variant="brand" onclick={handleThirdScreen} data-id="Select payment options"></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </template>
+    <!--Screen Second Ending-->
+
+    <!--Screen Third Staring-->
+    <template if:true={showThirdScreen}>
+        
+    <div class="mainWrap">
+        <div class="iconWrap">
+            <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>
+        </div>
+        <div style="width:50%">
+            <lightning-input type="text" label="Name of the Commercial" onchange={handleCommercialName} value={commercialName} required="true" class="validate" disabled={disabledCommercialName}></lightning-input>
+        </div>    
+    </div>
+    
+    
+    
+    <div style="margin-top:20px;"> 
+        <lightning-progress-indicator current-step={currentStep} type="path">
+            <lightning-progress-step label="Select Payment Option" value="1" onclick={showRespectiveScreen}></lightning-progress-step>
+            <lightning-progress-step label="Add Commercials" value="2" onclick={showRespectiveScreen}></lightning-progress-step>
+            <lightning-progress-step label="Review and Publish" value="3" onclick={showRespectiveScreen}></lightning-progress-step>
+        </lightning-progress-indicator>
+    </div>
+    <div class="tabContainerMain" style={hideScreen3Step1}>
+        <div>
+            <div class="searchBarWrap_main">
+                <!--<div class="searchBarWrap thirdScreenSearch">
+                    <i></i>
+                        <input type="text" value="" placeholder="Search">
+                    </div>-->
+                <!--  <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>-->
+                &nbsp;&nbsp;&nbsp;<lightning-button label="Confirm Payment Options" variant="brand" onclick={screen3Step2Show}></lightning-button>
+                </div>
+        </div>
+        <!--<div style="width:50%">
+            <lightning-input type="text" label="Name of the Commercial" onchange={handleCommercialName} value={commercialName} required="true" class="validate"></lightning-input><br/>
+            </div>-->
+        <div class="tabSectionMainWrap tabSectionChildWrap">
+            <lightning-tabset class="tabNavigateBorder">
+                <!--Screen Third Part 1 All Payment Options Starting-->
+                <lightning-tab label="All Payment Options">
+                        <table id="Table1">
+                        <thead class="thMainRow">
+                                <tr>
+                                <th class="varientThreeFirstTh" style="width:19%;text-align:center;">PAYMENT MODE</th>
+                                    <th class="varientThree" style="width:19%;text-align:center;">BANKS/PAYMENT OPTIONS</th>
+                                <th class="varientThree" style="width:19%;text-align:center;">SPECIFICATIONS</th>
+                                <th class="varientThree" style="width:19%;text-align:center;">PAYMENT GATEWAY</th>
+                                <th class="varientThree" style="width:19%;text-align:center;">ONUS/OFFFUS</th>
+                                <th class="varientThree" style="width:5%;text-align:center;"></th>
+                            </tr>
+                            </thead>
+                        <tbody class="secondScreenTableCls">
+                            <template for:each={listPaymentData} for:item="pay" for:index="indx">
+                                <tr key={pay.key}>
+                                    <td class="firstTdCls" style="width:19%;">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <label class="slds-checkbox__label" for="checkbox-unique-id-81">
+                                                        <span class="slds-form-element__label"><lightning-input type="checkbox" checked={pay.isChecked} onchange={handleChecked} data-id={pay.key} data-key={indx}></lightning-input></span>
+                                                        <span class="slds-form-element__label"><b>{pay.paymentMode}</b></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    <td class="firstTdCls" style="width:19%;">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template for:each={pay.listPaymentDataInner} for:item="payInner" for:index="indx1">
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                    <lightning-combobox data-id={pay.key} data-key={indx1} data-label={indx} value={payInner.selectedPaymentOption} options={payInner.listPaymentOptionsToShow} onchange={handleChangePaymentOptions} variant="label-hidden" disabled={payInner.disablePicklistValues}></lightning-combobox>
+                                                            </div>
+                                                        </div>   
+                                                    </template>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    <td class="firstTdCls" style="width:19%;">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template for:each={pay.listPaymentDataInner} for:item="payInner" for:index="indx1">
+                                                        <template if:false={payInner.disableSpecificationPicklist}>
+                                                            <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                                <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                    <c-multiselect-picklist data-id={pay.key} data-key={indx1} data-label={indx} multi-select="true"  options={payInner.listSpecificationToShow} selected-value={payInner.selectedSpecifications} selected-values={payInner.selectedSpecificationsList} onselectoption={getSpecifications}></c-multiselect-picklist>
+                                                                </div>
+                                                            </div>  
+                                                        </template> 
+                                                        <template if:true={payInner.disableSpecificationPicklist}>
+                                                            <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                                <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                    <c-multiselect-picklist disabled="true" options="[]"></c-multiselect-picklist>
+                                                                </div>
+                                                            </div>  
+                                                        </template> 
+                                                    </template>    
+                                                </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                    <td class="firstTdCls" style="width:19%;">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template for:each={pay.listPaymentDataInner} for:item="payInner" for:index="indx1">
+                                                        <!--<div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <c-multiselect-picklist data-id={pay.key} data-key={indx1} data-label={indx} multi-select="true" onselectoption={handleSelectOptionList} options={payInner.listPaymentGatewayToShow} selected-value={payInner.selectedPaymentGateway} disabled={payInner.disablePicklistValues}></c-multiselect-picklist>
+                                                            </div>
+                                                        </div>   -->
+                                                        <template if:false={payInner.disablePaymentGatewayPicklist}>
+                                                            <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                                <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                    <c-multiselect-picklist data-id={pay.key} data-key={indx1} data-label={indx} multi-select="true"  options={payInner.listPaymentGatewayToShow} selected-value={payInner.selectedPaymentGateway} selected-values={payInner.selectedPaymentGatewayList} onselectoption={getPaymentGateway}></c-multiselect-picklist>
+                                                                </div>
+                                                            </div>  
+                                                        </template> 
+                                                        <template if:true={payInner.disablePaymentGatewayPicklist}>
+                                                            <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                                <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                    <c-multiselect-picklist disabled="true" options="[]"></c-multiselect-picklist>
+                                                                </div>
+                                                            </div>  
+                                                        </template> 
+                                                    </template>    
+                                                </div>
+                                            </div>
+                                            </div>
+                                    </td>
+                                    <td class="firstTdCls" style="width:19%;">
+                                            <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template for:each={pay.listPaymentDataInner} for:item="payInner" for:index="indx1">
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <lightning-combobox data-id={pay.key} data-key={indx1} data-label={indx} value={payInner.selectedOnusOffus}  options={payInner.listOnusOffusToShow} onchange={handleChangeOnusOffus} variant="label-hidden" disabled={payInner.disablePicklistValues}></lightning-combobox>
+                                                            </div>
+                                                        </div>   
+                                                    </template>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="firstTdCls" style="width:5%;text-align:center;line-height:32px;">
+                                        <div class="formCheckBoxWrap">
+                                                <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template for:each={pay.listPaymentDataInner} for:item="payInner" for:index="indx1">
+                                                        <div key={payInner.key} class="formCheckBoxWrap comboAlignment">
+                                                            <div key={payInner.key} class="slds-p-around_medium lgc-bg">
+                                                                <template if:false={payInner.showDeleteButton}>
+                                                                <svg onclick={addRow} focusable="false" data-id={pay.key} data-key={indx1} data-label={indx} aria-hidden="true" viewBox="0 0 52 52" class="slds-icon slds-icon-text-default slds-icon_xx-small"><g><path d="M43 9C33.6-.3 18.4-.3 9 9-.3 18.4-.3 33.6 9 43c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.4-24.6.1-34zm-1 19c0 .6-.4 1-1 1H30c-.5 0-1 .5-1 1v11c0 .5-.5 1-1 1h-4c-.6 0-1-.4-1-1V30c0-.6-.4-1-1-1H11c-.6 0-1-.4-1-1v-4c0-.5.5-1 1-1h11c.6 0 1-.4 1-1V11c0-.5.5-1 1-1h4c.5 0 1 .4 1 1v11c0 .6.4 1 1 1h11c.5 0 1 .5 1 1v4z"></path></g></svg>
+                                                                </template>
+                                                                <!--<lightning-icon icon-name="utility:add" size="xx-small" title="xx-small size" onclick={addRow} focusable="false" data-id={pay.key} data-key={indx1} data-label={indx} aria-hidden="true"></lightning-icon>--> 
+                                                                    <template if:true={payInner.showDeleteButton}>
+                                                                        <!--<svg onclick={removeRow} focusable="false" data-id={pay.key} data-key={indx1} data-label={indx} aria-hidden="true" viewBox="0 0 52 52" class="slds-icon slds-icon-text-default slds-icon_xx-small"><g><path d="M43 9C33.6-.3 18.4-.3 9 9-.3 18.4-.3 33.6 9 43c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.4-24.6.1-34zm-1 19c0 .6-.4 1-1 1H30c-.5 0-1 .5-1 1v11c0 .5-.5 1-1 1h-4c-.6 0-1-.4-1-1V30c0-.6-.4-1-1-1H11c-.6 0-1-.4-1-1v-4c0-.5.5-1 1-1h11c.6 0 1-.4 1-1V11c0-.5.5-1 1-1h4c.5 0 1 .4 1 1v11c0 .6.4 1 1 1h11c.5 0 1 .5 1 1v4z"></path></g></svg>-->
+                                                                        <lightning-icon icon-name="utility:delete" size="xx-small" title="xx-small size" onclick={removeRow} focusable="false" data-id={pay.key} data-key={indx1} data-label={indx} aria-hidden="true"></lightning-icon>
+                                                                    </template>
+                                                            </div>
+                                                        </div>  
+                                                    </template>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr> 
+                            </template>
+                        </tbody>
+                    </table>
+                </lightning-tab>
+                <!--Screen Third Part 1 All Payment Options Ending-->
+
+                <!--Screen Third Part 2 Selected Payment Options Starting-->
+                <lightning-tab label="Selected Payment Options" onactive={handleDataToShowNewForCombination}>
+                    <table id="Table2">
+                        <thead class="thMainRow">
+                            <tr>
+                                <th style="width:20%;text-align:center;">PAYMENT MODE</th>
+                                <th style="width:20%;text-align:center;">BANKS/PAYMENT OPTIONS</th>
+                                <th style="width:20%;text-align:center;">SPECIFICATIONS</th>
+                                <th style="width:20%;text-align:center;">PAYMENT GATEWAY</th>
+                                <th style="width:20%;text-align:center;">ONUS/OFFUS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="secondScreenTableCls">
+                            <template for:each={selectedListPaymentData} for:item="pay" for:index="indx">
+                                <tr key={pay.paymentModeId}>
+                                    <td rowspan="1" class="firstTdCls" style="width:20%;text-align:center;"> 
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <label class="slds-checkbox__label" for="checkbox-unique-id-81">
+                                                        <span class="slds-checkbox_faux"></span>
+                                                        <span class="slds-form-element__label"><b>{pay.paymentModeName}</b></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:20%;text-align:center;">
+                                        <template for:each={pay.selectedPaymentOptionsList} for:item="payInner" for:index="indx1">
+                                            <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2" for:index="indx2">
+                                                <div key={payInner.key} class="selectedOptionsTable">
+                                                    <span class="colorPillsOptions">{payInner2.selectedPaymentOptionName}</span>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </td>
+                                    <td style="width:20%;text-align:center;">
+                                        <template for:each={pay.selectedPaymentOptionsList} for:item="payInner" for:index="indx1">
+                                            <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2" for:index="indx2">
+                                                <div key={payInner2.key} class="selectedOptionsTable">
+                                                    <span class="colorPillsOptionsPurple">{payInner2.selectedSpecification}</span>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </td>
+                                    <td style="width:20%;text-align:center;">
+                                        <template for:each={pay.selectedPaymentOptionsList} for:item="payInner" for:index="indx1">
+                                            <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2" for:index="indx2">
+                                                <div key={payInner2.key} class="selectedOptionsTable">
+                                                    <span class="colorPillsOptionsPink">{payInner2.selectedPaymentGatewayName}</span>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </td>
+                                    <td style="width:20%;text-align:center;">
+                                        <template for:each={pay.selectedPaymentOptionsList} for:item="payInner" for:index="indx1">
+                                            <template for:each={payInner.selectedPaymentIndividualList} for:item="payInner2" for:index="indx2">
+                                                <div key={payInner2.key} class="selectedOptionsTable">
+                                                    <span class="colorPillsOptionsOrange">{payInner2.selectedOnusOffus}</span>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>    
+                </lightning-tab>
+                <!--Screen Third Part 2 Selected Payment Options Ending-->
+            </lightning-tabset>
+        </div>
+    </div>
+
+    <!--Screen Fourth Starting-->
+    <div class="slds-grid slds-wrap tabTitleClass" style={hideScreen3Step2}>
+        <div class="searchBarWrap_main">
+            <!--<lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>&nbsp;&nbsp;&nbsp;-->
+            <!--<lightning-button class="slds-p-right_small" label="Save As Template" variant="brand" onclick={saveAsTemplate} disabled={disabledSaveAsTemplateButton}></lightning-button>-->
+            <lightning-button label="Save Pricing" variant="brand" onclick={savePricing} disabled={disabledSavePricingButton}></lightning-button>
+            </div>
+        <div class="slds-size_12-of-12">
+            <!--Alert Message-->
+            <!--<div style="width:50%">
+                <lightning-input type="text" label="Name of the Commercial" onchange={handleCommercialName} value={commercialName} required="true" class="validate"></lightning-input><br/>
+            </div>-->
+            <template if:true={showErrorMessage}>
+                <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <h2>{errorMessage}</h2>
+                    <div class="slds-notify__close">
+                        <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse" onclick={hideErrorMessage}>
+                            X
+                        </button>
+                    </div>
+                </div><br/>
+            </template>
+            <!--End Alert Message--> 
+            <lightning-tabset variant="scoped">
+                <lightning-tab label="TDR">
+                    <div class="tabSectionMainWrap">
+                        <div class="tabordion">
+                            <template for:each={selectedListPaymentData} for:item="paymentMode" for:index="indx">
+                                <section id="section1" key={paymentMode.paymentModeId}>
+                                    <input type="radio" name="sections" id="option1" checked>
+                                        <label for="option1" data-id={indx} onclick={getListForPaymentMode} style={paymentMode.styleClass}>{paymentMode.paymentModeName}</label>
+                                    <article>
+                                        <div class="tableScrollCls"> 
+                                            <table class="tableThirdScreen">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:14%;text-align:center">BANKS/PAYMENT OPTIONS</th>
+                                                        <th style="width:9%;text-align:center">SPECIFICATIONS</th>
+                                                        <th style="width:9%;text-align:center">PAYMENT GATEWAY</th>
+                                                        <th style="width:9%;text-align:center">FEE MODEL</th>
+                                                        <th style="width:9%;text-align:center">TRANSACTION TYPE</th>
+                                                        <th style="width:25%;text-align:center">TDR</th>
+                                                        <th style="width:25%;text-align:center">CONVENIENCE</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="highlightedRow">
+                                                <!--Highlighted First Row-->  
+                                                <template for:each={listFirstRowForAddCommercials} for:index="index" for:item="firstRow">
+                                                    <tr key={firstRow.key}>
+                                                        <td style="width:25%;"><template if:true={firstRow.showCheckbox}><span class="slds-form-element__label"><lightning-input type="checkbox" checked={firstRow.isChecked} onchange={handleCheckedForCommercialsFirstRow} data-id={index}></lightning-input></span></template> {firstRow.selectedPaymentOptionName}</td>
+                                                        <td style="width:4%;text-align:center"></td>
+                                                        <td style="width:3%;text-align:center"></td>
+                                                        <td style="width:9%;text-align:center"><div class="formCheckBoxWrap comboThirdScreen">
+                                                            <div class="slds-p-around_medium lgc-bg">
+                                                                <template if:true={firstRow.showCheckbox}>
+                                                                    <lightning-combobox value={firstRow.selectedFeeModel}  options={firstRow.listFeeModel} onchange={handleChangeFeeModelFirstRow} variant="label-hidden" data-id={index}></lightning-combobox>
+                                                                </template>
+                                                            </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width:9%;text-align:center">
+                                                            <div class="formCheckBoxWrap comboThirdScreen">
+                                                                <div class="slds-p-around_medium lgc-bg comboSizeCls">
+                                                                    <template if:true={firstRow.showCheckbox}>
+                                                                    <lightning-combobox  value={firstRow.selectedTransactionType} options={firstRow.listTransactionType} onchange={handleChangeTransactionTypeFirstRow} variant="label-hidden" data-id={index}></lightning-combobox>
+                                                                </template>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width:25%;text-align:center">
+                                                            <template if:true={firstRow.showTDR}>
+                                                                <div class="tdrSection globalAllignment">
+                                                                    <a onclick={addrowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>+</a>
+                                                                    <template if:false={firstRow.showCheckbox}><a onclick={removeRowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>-</a></template>
+                                                                    <span class="plusClassCSS">></span> <lightning-input variant="label-hidden" type="number" value={firstRow.tdrAmount} onchange={handleTDRAmountForFirstRow} data-id={index} placeholder="Amount" step="0.01" class="inputSpacing"></lightning-input>
+                                                                    &nbsp;<lightning-input variant="label-hidden" type="number" value={firstRow.tdrFee} onchange={handleTDRFeeForFirstRow} data-id={index} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                    &nbsp;<lightning-input variant="label-hidden" type="number" value={firstRow.tdrPercentage} onchange={handleTDRPercentageForFirstRow} data-id={index} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                                </div>
+                                                            </template>
+                                                        </td>
+                                                        <td style="width:25%;text-align:center">
+                                                            <template if:true={firstRow.showConvenience}>
+                                                                <div class="tdrSection globalAllignment">
+                                                                    <a onclick={addrowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>+</a>
+                                                                    <template if:false={firstRow.showCheckbox}><a onclick={removeRowInListFirstRowForAddCommercials} class="plusClassCSSNew" data-id={index}>-</a></template>
+                                                                    <span class="plusClassCSS">></span> <lightning-input variant="label-hidden" type="number" value={firstRow.convenienceAmount} onchange={handleConvenienceAmountForFirstRow} data-id={index} placeholder="Amount" step="0.01"></lightning-input>
+                                                                    &nbsp;<lightning-input  variant="label-hidden" type="number" value={firstRow.convenienceFee} onchange={handleConvenienceFeeForFirstRow} data-id={index} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                    &nbsp;<lightning-input  variant="label-hidden" type="number" value={firstRow.conveniencePercentage} onchange={handleConveniencePercentageForFirstRow} data-id={index} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                                </div>
+                                                                <template if:true={firstRow.showCheckbox}>
+                                                                    <a onclick={populateDataForAllSelected}>Apply to all selected</a>
+                                                                </template>
+                                                            </template>
+                                                            <template if:false={firstRow.showConvenience}>
+                                                                <template if:true={firstRow.showCheckbox}>
+                                                                    <a onclick={populateDataForAllSelected}>Apply to all selected</a>
+                                                                </template>
+                                                            </template>
+                                                        </td>
+                                                    </tr>
+                                                </template> 
+                                            </tbody>
+                                        <!-- highlight table Row End-->
+                                            <tbody>
+                                                <template if:true={showScreen4}>
+                                                    <template for:each={listDataForPaymentMode} for:index="index1" for:item="payInner">
+                                                        <template for:each={payInner.selectedPaymentIndividualList} for:index="index2" for:item="payInner2">
+                                                            <tr key={payInner2.key} style={payInner2.backgroundColor}>
+                                                                <td style="width:14%;"><template if:true={payInner2.showCheckbox}><span class="slds-form-element__label"><lightning-input type="checkbox" checked={payInner2.isChecked} onchange={handleCheckedForCommercials} data-id={index1} data-key={index2}></lightning-input></span> {payInner2.selectedPaymentOptionName}</template></td>
+                                                                <td style="width:9%;text-align:center"><template if:true={payInner2.showCheckbox}>{payInner2.selectedSpecification}</template></td>
+                                                                <td style="width:9%;text-align:center"><template if:true={payInner2.showCheckbox}>{payInner2.selectedPaymentGatewayName}</template></td>
+                                                                <td style="width:9%;text-align:center">
+                                                                    <template if:true={payInner2.showCheckbox}>
+                                                                        <div class="formCheckBoxWrap comboThirdScreen">
+                                                                                <div class="slds-p-around_medium lgc-bg">
+                                                                                    <lightning-combobox value={payInner2.selectedFeeModel}  options={payInner2.listFeeModel} onchange={handleChangeFeeModel} variant="label-hidden" data-id={index1} data-key={index2}></lightning-combobox>
+                                                                                </div>
+                                                                        </div>
+                                                                    </template>
+                                                                </td>
+                                                                <td style="width:9%;text-align:center">
+                                                                    <template if:true={payInner2.showCheckbox}>
+                                                                        <div class="formCheckBoxWrap comboThirdScreen">
+                                                                            <div class="slds-p-around_medium lgc-bg comboSizeCls">
+                                                                                <lightning-combobox  value={payInner2.selectedTransactionType} options={payInner2.listTransactionType} onchange={handleChangeTransactionType} variant="label-hidden" data-id={index1} data-key={index2}></lightning-combobox>
+                                                                            </div>
+                                                                        </div>
+                                                                    </template>
+                                                                </td>
+                                                                <td style="width:25%;text-align:center">
+                                                                    <template if:true={payInner2.showTDR}>
+                                                                        <div class="tdrSection globalAllignment">
+                                                                            <a onclick={addrowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>+</a>
+                                                                            <template if:false={payInner2.showCheckbox}><a onclick={removeRowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>-</a></template>
+                                                                            <span class="plusClassCSS">></span>
+                                                                            <div class="inputSpacing"><lightning-input class="inputSpacing" variant="label-hidden" type="number" value={payInner2.tdrAmount} onchange={handleTDRAmountForSecondRow} data-id={index1} data-key={index2} placeholder="Amount" step="0.01"></lightning-input></div> 
+                                                                            &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.tdrFee} onchange={handleTDRFeeForSecondRow} data-id={index1} data-key={index2} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                            &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.tdrPercentage} onchange={handleTDRPercentageForSecondRow} data-id={index1} data-key={index2} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                                        </div>
+                                                                    </template>
+                                                                </td>
+                                                                <td style="width:25%;text-align:center">
+                                                                    <template if:true={payInner2.showConvenience}>
+                                                                        <div class="tdrSection globalAllignment">
+                                                                            <a onclick={addrowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>+</a>
+                                                                            <template if:false={payInner2.showCheckbox}><a onclick={removeRowInListSecondRow} class="plusClassCSSNew" data-id={index1} data-key={index2}>-</a></template>
+                                                                            <span class="plusClassCSS">></span> <lightning-input  variant="label-hidden" type="number" value={payInner2.convenienceAmount} onchange={handleConvenienceAmountForSecondRow} data-id={index1} data-key={index2} placeholder="Amount" step="0.01"></lightning-input>
+                                                                            &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.convenienceFee} onchange={handleConvenienceFeeForSecondRow} data-id={index1} data-key={index2} placeholder="Fee" class="two" step="0.01"></lightning-input>
+                                                                            &nbsp;<lightning-input  variant="label-hidden" type="number" value={payInner2.conveniencePercentage} onchange={handleConveniencePercentageForSecondRow} data-id={index1} data-key={index2} placeholder="%" class="three" step="0.01"></lightning-input>
+                                                                        </div>
+                                                                    </template>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                    </template>
+                                                </template>
+                                            </tbody>    
+                                        </table>
+                                    </div>
+                                </article>
+                            </section>
+                        </template>
+                    </div>
+                </div>
+                </lightning-tab>
+                    <div class="toolTipMain">
+                        <lightning-tab label="Add Product" icon-name="" size="x-small" icon-position="right" class="tabToolTip">
+                            <div class="toolTipContent" style="display: block;">
+                                <span>More Products Coming Soon !</span>
+                            </div>
+                        </lightning-tab>
+                    </div>
+                </lightning-tabset>
+            </div>
+        </div>    
+    <!--Screen Fourth Ending-->
+    </template>
+
+    <!--Screen Fifth Starting-->
+    <template if:true={showScreen5}>
+        <div class="searchBarWrap_main">
+            <!-- <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>&nbsp;&nbsp;&nbsp;-->
+            <lightning-button label="Send to BH" variant="brand" onclick={sendToBH} disabled={disabledBHButton}></lightning-button>&nbsp;
+            <lightning-button label="Update Below Rack Rates Records" variant="brand" onclick={updatePricing} disabled={disabledUpdatePricingButton}></lightning-button>&nbsp;
+            <lightning-button label="Validate Pricing" variant="brand" onclick={publishPricing} disabled={disabledPublishPricingButton}></lightning-button>
+        </div>  
+        <div class="slds-grid slds-wrap tabTitleClass">
+            <div class="slds-size_12-of-12">
+                <template if:true={showBelowRackRateMessage}>
+                    <h2 class="slds-align_absolute-center" style="color:red;">{belowRackRateMessage}</h2>
+                </template>
+                <h2 class="headingCls_paymentMode">Products</h2> 
+                <lightning-tabset variant="scoped">
+                    <lightning-tab label="Payment Gateway">
+                        <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                            <table id="Table4">
+                                <thead class="thMainRow">
+                                    <tr>
+                                        <th class="varientTwo" style="width:13%;text-align:left;">PAYMENT MODE</th>
+                                        <th class="varientTwo" style="width:13%;text-align:left;">PAYMENT OPTIONS</th>
+                                        <th class="varientTwo" style="width:13%;text-align:left;">SPECIFICATIONS</th>
+                                        <th class="varientTwo" style="width:13%;text-align:left;">PAYMENT GATEWAY</th>
+                                        <th class="varientTwo" style="width:8%;text-align:left;">ONUS/OFFUS</th>
+                                        <th class="varientTwo" style="width:16%;text-align:center;">TDR</th>
+                                        <th class="varientTwo" style="width:16%;text-align:center;">CONVENIENCE FEE</th>
+                                        <th class="varientTwo" style="width:8%;text-align:left;">GATEWAY TYPE</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tdAccordionHeading">
+                                    <tr>
+                                        <td colspan="8">
+                                            <lightning-accordion allow-multiple-sections-open>
+                                                <template for:each={selectedListPaymentData} for:item="paymentData">
+                                                    <lightning-accordion-section name={paymentData.paymentModeName} label={paymentData.paymentModeName} class="accordionTDR_Defaut" key={paymentData.paymentModeName}> 
+                                                        <table class="tableAccordionDetails">
+                                                            <tbody>
+                                                                <template for:each={paymentData.selectedPaymentOptionsList} for:item="payInner1">
+                                                                    <template for:each={payInner1.selectedPaymentIndividualList} for:item="payInner2">
+                                                                        <tr key={payInner2.key}>
+                                                                            <td style="width:13%;text-align:left;"></td>
+                                                                            <td style="width:13%;text-align:left;">{payInner2.selectedPaymentOptionName}</td>
+                                                                            <td style="width:13%;text-align:left;">{payInner2.selectedSpecification}</td>
+                                                                            <td style="width:13%;text-align:left;">{payInner2.selectedPaymentGatewayName}</td>
+                                                                            <td style="width:8%;text-align:left;">{payInner2.selectedOnusOffus}</td>
+                                                                            <td style="width:16%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.tdrAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrPercentage} disabled="true"></lightning-input></div></td>
+                                                                            <td style="width:16%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.convenienceAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.convenienceFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.conveniencePercentage} disabled="true"></lightning-input></div></td>
+                                                                            <td style="width:8%;text-align:left;">{payInner2.gatewayType}</td>
+                                                                        </tr>
+                                                                    </template>  
+                                                                </template>
+                                                            </tbody>
+                                                        </table>           
+                                                    </lightning-accordion-section>
+                                                </template>
+                                            </lightning-accordion>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </lightning-tab>
+                </lightning-tabset>
+            </div>
+        </div> 
+    </template>
+    <!--Screen Fifth Ending-->
+
+    <!--Screen sixth Starting-->
+    <template if:true={showScreen6}>
+        <div class="searchBarWrap_main">
+            <!--  <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>&nbsp;&nbsp;&nbsp;-->
+            <template if:false={hidePublishCommercialButton}>
+                <lightning-button label="Back" variant="brand" onclick={back}></lightning-button>
+            </template>
+            <lightning-button class="slds-p-left_small slds-p-right_small" label="Save As Template" variant="brand" onclick={saveAsTemplate} disabled={disabledSaveAsTemplateButton}></lightning-button>
+            <lightning-button label="Publish Commercial" variant="brand" onclick={publishCommercial} disabled={disabledPublishPricingButton}></lightning-button>
+        </div>  
+        <lightning-tabset>
+            <div>
+                <lightning-tab label="Add Fixed Pricing">
+                    <table id="Table145">
+                        <thead class="thMainRow">
+                                <!--<tr>
+                                <th class="varientThreeFirstTh">Setup Fee</th>
+                                <th class="varientThree">Security Deposit</th>
+                                <th class="varientThree">AMC Fee</th>
+                                <th class="varientThree">AMC Interval</th>-->
+                                <!--<th class="varientThree"></th>-->
+                            <!--</tr>-->
+                            </thead>
+                        <tbody class="secondScreenTableCls">
+                            <template for:each={listFixedPricing} for:item="fixed" for:index="indx">
+                                <tr key={fixed.key}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input label="Setup Fee" type="number" value={fixed.setupFee} data-id={indx}  step="0.01" onchange={handleSetupFee} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input label="Security Deposit" type="number" value={fixed.securityDeposit} data-id={indx} step="0.01" onchange={handleSecurityDeposit} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>       
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input label="AMC Fee" type="number" value={fixed.amcFee} data-id={indx} step="0.01" onchange={handleAmcFee} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>    
+                                                </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input label="AMC Interval" type="number" value={fixed.amcInterval} data-id={indx} step="0.01" onchange={handleAmcInterval} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>    
+                                                </div>
+                                            </div>
+                                            </div>
+                                    </td>
+                                    <!--<td class="firstTdCls">
+                                            <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <template if:false={hidePublishCommercialButton}>
+                                                        <a onclick={addRowFixedPricing} class="plusClassCSS" data-id={indx}>+</a>&nbsp;<a onclick={removeRowFixedPricing} class="plusClassCSS" data-id={indx}>-</a>   
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>-->
+                                </tr>      
+                            </template>
+                        </tbody>
+                    </table>
+                </lightning-tab>
+            </div>
+        </lightning-tabset>
+            <div class="slds-size_12-of-12">
+                <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions fourthScreenSpacer noBottomBorder">
+                    <table id="Table78">
+                        <thead class="thMainRow">
+                            <tr>
+                                <th class="varientTwo" style="width:8%;text-align:left;">PAYMENT MODE</th>
+                                <th class="varientTwo" style="width:10%;text-align:left;">PAYMENT OPTIONS</th>
+                                <th class="varientTwo" style="width:10%;text-align:left;">SPECIFICATIONS</th>
+                                <th class="varientTwo" style="width:10%;text-align:left;">PAYMENT GATEWAY</th>
+                                <th class="varientTwo" style="width:8%;text-align:left;">ONUS/OFFUS</th>
+                                <th class="varientTwo" style="width:15%;text-align:center;">TDR</th>
+                                <th class="varientTwo" style="width:15%;text-align:center;">CONVENIENCE FEE</th>
+                                <th class="varientTwo" style="width:10%;text-align:left;">STATUS</th>
+                                <th class="varientTwo" style="width:9%;text-align:left;">GATEWAY TYPE</th>
+                                <th class="varientTwo" style="width:5%;text-align:left;">CHAT</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tdAccordionHeading">
+                            <tr>
+                                <td colspan="10">
+                                    <lightning-accordion allow-multiple-sections-open>
+                                        <template for:each={selectedListPaymentData} for:item="paymentData">
+                                            <lightning-accordion-section name={paymentData.paymentModeName} label={paymentData.paymentModeName} class="accordionTDR_Defaut" key={paymentData.paymentModeName}> 
+                                                <table class="tableAccordionDetails">
+                                                    <tbody>
+                                                        <template for:each={paymentData.selectedPaymentOptionsList} for:item="payInner1">
+                                                            <template for:each={payInner1.selectedPaymentIndividualList} for:item="payInner2">
+                                                                <tr key={payInner2.key}>
+                                                                    <td style="width:8%;text-align:left;"></td>
+                                                                    <td style="width:10%;text-align:left;">{payInner2.selectedPaymentOptionName}</td>
+                                                                    <td style="width:10%;text-align:left;">{payInner2.selectedSpecification}</td>
+                                                                    <td style="width:10%;text-align:left;">{payInner2.selectedPaymentGatewayName}</td>
+                                                                    <td style="width:8%;text-align:left;">{payInner2.selectedOnusOffus}</td>
+                                                                    <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.tdrAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrPercentage} disabled="true"></lightning-input></div></td>
+                                                                    <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.convenienceAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.convenienceFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.conveniencePercentage} disabled="true"></lightning-input></div></td>
+                                                                    <td style="width:10%;text-align:left;"><span class={payInner2.className}>{payInner2.status}</span></td>
+                                                                    <td style="width:9%;text-align:left;">{payInner2.gatewayType}</td>
+                                                                    <td style="width:5%;text-align:left;">
+                                                                        <template if:true={payInner2.showChatter}>
+                                                                            <lightning-button-icon size="medium" variant="brand" icon-name="utility:anywhere_chat" onclick={clickChatter} data-id={payInner2.key} data-label={payInner2.bankingOpsStatus} data-info1={payInner2.bankName} data-info2={payInner2.porType} data-info3={payInner2.currentUserProfileName}></lightning-button-icon>
+                                                                        </template>
+                                                                    </td>
+                                                                </tr>
+                                                            </template>  
+                                                        </template>
+                                                    </tbody>
+                                                </table>           
+                                            </lightning-accordion-section>
+                                        </template>
+                                    </lightning-accordion>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+    </template>
+    <!--Screen sixth Ending-->
+
+    <!--Modal Governance Screen Staring-->
+    <template if:true={openGovernanceModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Pricing below min threshold</h1>
+                <h3>The pricing for the below payment modes is not as per the rack rates defined. Please change the pricing above the threshold.</h3>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+                <template if:false={showBelowRackRateRecords}>
+                    <h2 class="slds-align_absolute-center" style="color:red;">No records found</h2>
+                </template>
+                <template if:true={showBelowRackRateRecords}>
+                    <table id="Table7" class="slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <th style="width:12%;text-align:left;">PAYMENT MODE</th>
+                                <th style="width:12%;text-align:left;">PAYMENT OPTIONS</th>
+                                <th style="width:12%;text-align:left;">SPECIFICATIONS</th>
+                                <th style="width:12%;text-align:left;">PAYMENT GATEWAY</th>
+                                <th style="width:12%;text-align:center;">TDR REFERENCE</th>
+                                <th style="width:14%;text-align:center;">TDR RATE</th>
+                                <th style="width:12%;text-align:center;">CONVENIENCE REFERENCE</th>
+                                <th style="width:14%;text-align:center;">CONVENIENCE RATE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:left;"></td>
+                                <td style="width:12%;text-align:center;"><b>Flat Fee | Percentage</b></td>
+                                <td style="width:14%;text-align:center;"><b>Amount | Flat Fee | Percentage</b></td>
+                                <td style="width:12%;text-align:center;"><b>Flat Fee | Percentage</b></td>
+                                <td style="width:14%;text-align:center;"><b>Amount | Flat Fee | Percentage</b></td>
+                            </tr> 
+                            <template for:each={belowRackRatesRecords} for:item="belowRecord" for:index="index1">
+                                <tr key={belowRecord.pricingRecordId}>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentMode}</td>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentOption}</td>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentSpecification}</td>
+                                    <td style="width:12%;text-align:left;">{belowRecord.paymentGateway}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.tdrAmountReference} | {belowRecord.tdrPercentageReference} %</td>
+                                    <!--<td style="width:14%;text-align:center;">{belowRecord.tdrAmount} | <lightning-input type="number" value={belowRecord.tdrFlatFee} onchange={updateBelowRackRateTdrFlatFee} data-id={index1} step="0.01"></lightning-input> | <lightning-input type="number" value={belowRecord.tdrPercentage} onchange={updateBelowRackRateTdrPercentage} data-id={index1} step="0.01"></lightning-input></td>-->
+                                    <td style="width:14%;text-align:center;">
+                                        <div class="tdrSection globalAllignment">
+                                            <lightning-input type="number" value={belowRecord.tdrAmount} disabled style="width:34%"></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.tdrFlatFee} onchange={updateBelowRackRateTdrFlatFee} data-id={index1} step="0.01" style="width:33%"></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.tdrPercentage} onchange={updateBelowRackRateTdrPercentage} data-id={index1} step="0.01" style="width:33%"></lightning-input>   
+                                        </div>  
+                                    </td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.convenienceAmountReference} | {belowRecord.conveniencePercentageReference} %</td>
+                                    <!--<td style="width:14%;text-align:center;">{belowRecord.convenienceAmount} | <lightning-input type="number" value={belowRecord.convenienceFlatFee} onchange={updateBelowRackRateConvenienceFlatFee} data-id={index1} step="0.01"></lightning-input> | <lightning-input type="number" value={belowRecord.conveniencePercentage} onchange={updateBelowRackRateConveniencePercentage} data-id={index1} step="0.01"></lightning-input></td>--> 
+                                    <td style="width:14%;text-align:center;">
+                                        <div class="tdrSection globalAllignment">
+                                            <lightning-input type="number" value={belowRecord.convenienceAmount} style="width:34%" disabled></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.convenienceFlatFee} onchange={updateBelowRackRateConvenienceFlatFee} data-id={index1} step="0.01" style="width:33%"></lightning-input>&nbsp;<lightning-input type="number" value={belowRecord.conveniencePercentage} onchange={updateBelowRackRateConveniencePercentage} data-id={index1} step="0.01" style="width:33%"></lightning-input>
+                                        </div>
+                                    </td>  
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </template>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModal}>Cancel</button>
+                    <template if:true={showBelowRackRateRecords}>
+                        <button class="slds-button slds-button_brand" onclick={saveUpdatePricing}>Update and Start BH Approval</button>
+                    </template>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Modal Governance Screen Ending-->
+
+
+    <!--Send to BH Screen Staring-->
+    <template if:true={openSendToBH}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-011" class="slds-modal__title slds-hyphenate">Message for BH Approval</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-151">
+                <lightning-input type="text" label="To" value={bhAddress} disabled="true"></lightning-input>  
+                <lightning-input type="text" label="Subject" value={subject} disabled="true"></lightning-input> 
+                <br/>
+                <lightning-input-rich-text value={body} onchange={updateBody}></lightning-input-rich-text>  
+                <br/>
+                <template if:false={showBelowRackRateRecords}>
+                    <h2 class="slds-align_absolute-center" style="color:red;">No records found</h2>
+                </template>
+                <template if:true={showBelowRackRateRecords}>
+                    <table id="Table90" class="slds-table_bordered slds-table_col-bordered">
+                        <thead class="thMainRow">
+                            <tr>
+                                <th style="width:12%;text-align:center;">PAYMENT MODE</th>
+                                <th style="width:12%;text-align:center;">PAYMENT OPTIONS</th>
+                                <th style="width:12%;text-align:center;">SPECIFICATIONS</th>
+                                <th style="width:12%;text-align:center;">PAYMENT GATEWAY</th>
+                                <th style="width:13%;text-align:center;">TDR REFERENCE</th>
+                                <th style="width:13%;text-align:center;">TDR RATE</th>
+                                <th style="width:13%;text-align:center;">CONVENIENCE REFERENCE</th>
+                                <th style="width:13%;text-align:center;">CONVENIENCE RATE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:12%;text-align:center;"></td>
+                                <td style="width:13%;text-align:center;">Flat Fee | Percentage</td>
+                                <td style="width:13%;text-align:center;">Amount | Flat Fee | Percentage</td>
+                                <td style="width:13%;text-align:center;">Flat Fee | Percentage</td>
+                                <td style="width:13%;text-align:center;">Amount | Flat Fee | Percentage</td>
+                            </tr> 
+                            <template for:each={belowRackRatesRecords} for:item="belowRecord" for:index="index1">
+                                <tr key={belowRecord.pricingRecordId}>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentMode}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentOption}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentSpecification}</td>
+                                    <td style="width:12%;text-align:center;">{belowRecord.paymentGateway}</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.tdrAmountReference} | {belowRecord.tdrPercentageReference} %</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.tdrAmount} | {belowRecord.tdrFlatFee} | {belowRecord.tdrPercentage} %</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.convenienceAmountReference} | {belowRecord.conveniencePercentageReference} %</td>
+                                    <td style="width:13%;text-align:center;">{belowRecord.convenienceAmount} | {belowRecord.convenienceFlatFee} | {belowRecord.conveniencePercentage} %</td>   
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </template>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModalSendBH}>Cancel</button>
+                    <template if:true={showBelowRackRateRecords}>
+                        <button class="slds-button slds-button_brand" onclick={sendToBHEmail} disabled={disabledSendRequestButton}>Send Request</button>
+                    </template>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Send to BH Screen Ending-->
+
+    
+
+    <!--Screen Third Ending-->
+
+    <!--Save as Template Modal-->
+    <template if:true={showSaveAsTemplateModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Create a Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                <lightning-radio-group name="radioGroup"
+                                        label="Select any to proceed further"
+                                        options={planChoiceOptions}
+                                        value={selectedPlanChoice}
+                                        onchange={handleChangeSelectedPlanChoice}
+                                        required
+                                        class="validateOption"
+                        type="radio"></lightning-radio-group>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={cancelShowTempalteModal}>Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={nextTemplateModal}>Next</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Save as Template Modal End-->
+
+    <!--Ordinary User Create Template-->
+    <template if:true={ordinaryUserCreateTemplate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-0900" class="slds-modal__title slds-hyphenate">Create New Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60009">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateNewPlanOUser"></lightning-input>
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButton}>Back</button>
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelOrdinaryUserCreateTemplate}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveOrdinaryUserNewTemplate} disabled={disabledSaveCreateTemplateOrdinaryUser}>Save</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Ordinary User Create Template End-->
+
+    <!--Ordinary User Update Existing Template-->
+    <template if:true={ordinaryUserUpdateTemplate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-090011" class="slds-modal__title slds-hyphenate">Update Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60312009">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-combobox 
+                                            label="Select Template" 
+                                            name="Select Template"
+                                            placeholder="Select Template" 
+                                            value={templateName} 
+                                            options={availablePrivateTemplate}
+                                            onchange={handleTemplateName}
+                                            required
+                                            class="validateNewPlanOUser">
+                                </lightning-combobox>
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButton}>Back</button>
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelOrdinaryUserCreateTemplate}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveOrdinaryUserNewTemplate} disabled={disabledSaveCreateTemplateOrdinaryUser}>Save</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Ordinary User Update Existing Template End-->
+
+    <!--Modal to prompt message to enter fixed pricing before saving data as template-->
+    <template if:true={showFixedPricingModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-090" class="slds-modal__title slds-hyphenate">Add Fixed Pricing</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6009">
+                <p style="text-align:center;">Are you sure want to proceed without Fixed Pricing?</p>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelMessageModal}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Proceed" onclick={openSaveAsTemplateModal}>Proceed</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--End of Modal prompt to enter the fixed pricing-->
+
+
+    <!--Super User Update Existing Template-->
+    <template if:true={superUserUpdateTemplate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-0900121" class="slds-modal__title slds-hyphenate">Update Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6031322009">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-combobox 
+                                            label="Select Template" 
+                                            name="Select Template"
+                                            placeholder="Select Template" 
+                                            value={templateName} 
+                                            options={availablePrivateTemplate}
+                                            onchange={handleTemplateName}
+                                            required
+                                            class="validateOption1">
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveUpdateTemplateSuperUser} disabled={disabledOption1Save}>Save</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Super User Update Existing Template End-->
+
+
+    <!--Super User Choose Existing Plan,Sub Plan and Create new template-->
+    <template if:true={superUserChooseExistingPlanSunPlanCreateNewTemplate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-012900121" class="slds-modal__title slds-hyphenate">Choose Existing Plan and Sub Plan, Create new Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-60313223009">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-combobox 
+                                                    label="Select Plan" 
+                                                    name="Select Plan"
+                                                    placeholder="Select Plan" 
+                                                    value={selectedPlanName} 
+                                                    options={availablePlanMaster}
+                                                    onchange={handlePlanName}
+                                                    required class="validateOption2">
+                                        </lightning-combobox>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-combobox 
+                                                label="Select Sub Plan" 
+                                                name="Select Sub Plan"
+                                                placeholder="Select Sub Plan" 
+                                                value={selectedSubPlanName} 
+                                                options={availableSubPlanMaster}
+                                                onchange={handleSubPlanName}
+                                                required class="validateOption2">
+                                </lightning-combobox>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateOption2"></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption2} disabled={disabledOption2Save}>Save</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Super User Choose Existing Plan,Sub Plan and Create new template End-->
+
+    <!--Super User Create New Plan,Sub Plan and update template-->
+    <template if:true={superUserCreatePlanSunPlanUpdateTemplate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-01290032121" class="slds-modal__title slds-hyphenate">Create New Plan and Sub Plan, Update Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-603132123009">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="text" label="Name of the Plan" value={selectedPlanName} onchange={handlePlanName} required class="validateOption3"></lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="text" label="Name of the Sub Plan" value={selectedSubPlanName} onchange={handleSubPlanName} required class="validateOption3"></lightning-input>
+
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-combobox 
+                                            label="Select Template" 
+                                            name="Select Template"
+                                            placeholder="Select Template" 
+                                            value={templateName} 
+                                            options={availablePrivateTemplate}
+                                            onchange={handleTemplateName}
+                                            required
+                                            class="validateOption3">
+                        </lightning-combobox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption3} disabled={disabledOption3Save}>Save</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Super User Create New Plan,Sub Plan and update template End-->
+
+    <!--Super User Create New Plan,Sub Plan and Create template-->
+    <template if:true={superUserCreatePlanSunPlanTemplate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-012900321121" class="slds-modal__title slds-hyphenate">Create new Plan, Sub Plan and Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6031321123009">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="text" label="Name of the Plan" value={selectedPlanName} onchange={handlePlanName} required class="validateOption4"></lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="text" label="Name of the Sub Plan" value={selectedSubPlanName} onchange={handleSubPlanName} required class="validateOption4"></lightning-input>
+                                </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-around_x-small">
+                                <lightning-input type="text" label="Name of the Template" value={templateName} onchange={handleTemplateName} required class="validateOption4"></lightning-input>
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <div class="slds-m-around_x-small">
+                        <lightning-input label="Public Template" type="checkbox" checked={publicTemplateCheckbox} onchange={handlePublicTemplateCheckbox}></lightning-input> 
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Back" onclick={backButtonSuperUser}>Back</button>
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelSuperUser}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Save" onclick={saveCreateNewTemplateOption4} disabled={disabledOption4Save}>Save</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Super User Create New Plan,Sub Plan and Create template End-->
+    
+    <!--Redirect to home modal-->
+    <template if:true={showRedirectToHomeModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-09120" class="slds-modal__title slds-hyphenate">Are you sure?</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-61009">
+                <p style="text-align:center;">If you proceed, you will lose all your entered data.</p><br/> 
+                <p style="text-align:center;">Are you sure you want to redirect to home?</p><br/> 
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel" onclick={cancelRedirectToHomeModal}>Cancel</button>
+                <button class="slds-button slds-button_brand" aria-label="Proceed" onclick={redirectToHome}>Proceed</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Redirect to home modal End-->    
+        </lightning-tab>
+    </lightning-tabset>
+    
+</lightning-card>
+</template>

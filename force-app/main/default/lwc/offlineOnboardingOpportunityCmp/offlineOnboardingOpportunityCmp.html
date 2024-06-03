@@ -1,0 +1,630 @@
+<template>
+    <!-- <lightning-card> -->
+        <div class="headingCls">KAM ASSISTED ONBOARDING<strong></strong></div>
+    <lightning-tabset variant="scoped">
+        <lightning-tab label="Business Details">
+            <template if:true={oppStatusList}>
+                <template for:each={oppStatusList} for:item="opp">
+                    <lightning-record-form
+                    key={opp.Id}
+                    record-id={oppStatusId}
+                    object-api-name={objectName_6}
+                    fields={fieldList_6}
+                    columns="2"></lightning-record-form>
+                </template>
+            </template>
+            <lightning-button
+                class="buttonPositionCls"
+                variant="brand-outline"
+                label="Merchant Status Details"
+                title="View Merchant Status Details"
+                onclick={globalNavigator}
+                data-label="Merchant_Status_Details__r"
+                ></lightning-button> 
+        </lightning-tab>
+        <!--Website Tab-->
+        <lightning-tab label="Website">
+            <div class="slds-is-relative">
+                <!-- <div if:true={isLoading} class="slds-spinner-container">
+                    <div class="slds-spinner slds-spinner_medium">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-a"></div>
+                    </div>
+                </div> -->
+                <!-- <template if:true={websiteList}>
+                    <lightning-card title="Present Website">
+                        <template for:each={websiteList} for:item="website">
+                            <lightning-record-form
+                            key={website.Id}
+                            record-id={websiteId}
+                            object-api-name={objectName_1}
+                            fields={fieldList_1}
+                            columns="2"></lightning-record-form>
+                        </template>
+                    </lightning-card>
+                    </template> -->
+
+                    <template if:true={oppStatusList}>
+                        <template for:each={oppStatusList} for:item="opp">
+                                <lightning-record-form
+                                key={opp.Id}
+                                record-id={oppStatusId}
+                                object-api-name={objectName_6}
+                                fields={fieldList_6_Website}
+                                columns="2"></lightning-record-form>
+                        </template>
+                    </template>
+            </div>
+            
+                <!-- <template if:false={websiteList}>
+                    <lightning-card title="Enter New Website Details">
+                    <lightning-record-edit-form
+                    object-api-name={objectName_1}
+                    layout-type="compact"
+                    onsuccess={handleSuccess}
+                    >
+            <lightning-messages></lightning-messages>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input-field field-name={fieldList_1_v2.merchantPlatField} onchange={handlePlatformChange}></lightning-input-field>
+                </div>
+                <template if:true={isPlatform_AppOnly}>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_1_v2.iosUrlField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.andUrlField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.activeField} value={activeWebsite} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.statusField} value={websiteStatus} disabled="true"></lightning-input-field>
+                    </div>
+                </template>
+                <template if:true={isPlatform_WebOnly}>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_1_v2.wbUrlField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.activeField} value={activeWebsite} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.statusField} value={websiteStatus} disabled="true"></lightning-input-field>
+                    </div>
+                </template>
+                <template if:true={isPlatform_Both}>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_1_v2.iosUrlField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.andUrlField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.wbUrlField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.activeField} value={activeWebsite} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_1_v2.statusField} value={websiteStatus} disabled="true"></lightning-input-field>
+                    </div>
+                </template>
+            </div>
+                <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Create Website"></lightning-button>
+        </lightning-record-edit-form>
+    </lightning-card>
+    </template> -->
+                        <lightning-button
+                            class="buttonPositionCls"
+                            variant="brand-outline"
+                            label="Website Details"
+                            title="View Website Records"
+                            onclick={globalNavigator}
+                            data-label="Website_Details__r"></lightning-button>
+
+                        <lightning-button
+                            class="buttonPositionCls"
+                            variant="brand-outline"
+                            label="Website Pages"
+                            title="View Website Pages"
+                            onclick={globalNavigator}
+                            data-label="Website_Pages__r"></lightning-button>  
+                            
+                        <lightning-button
+                            class="buttonPositionCls"
+                            variant="brand-outline"
+                            label="Risk Status Details"
+                            title="View Website Records"
+                            onclick={globalNavigator}
+                            data-label="Risk_status_Details__r"></lightning-button>    
+    </lightning-tab>
+        
+        <!--Address Detail Tab-->
+        <lightning-tab label="Address Details">
+            <lightning-tabset>
+                <lightning-tab label="Operating Adress">
+                    <!--Operating Address Card-->
+                <template if:true={oppAddressList}>
+                    <lightning-card title="Present Operating Address">
+                    <template for:each={oppAddressList} for:item="address">
+                        
+                        <lightning-record-form
+                        key={address.Id}
+                        record-id={oppAddressId}
+                        object-api-name={objectName_2}
+                        fields={fieldList_2}
+                        columns="2"></lightning-record-form>
+                    </template>
+                </lightning-card>
+                </template>
+                <template if:false={oppAddressList}>
+                        <lightning-card title="Enter New Operating Address">
+                        <lightning-record-edit-form
+                        object-api-name={objectName_2}
+                        layout-type="compact"
+                        onsuccess={handleSuccess}>
+
+                        <lightning-messages></lightning-messages>
+                        <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-4">
+                        <lightning-input-field field-name={fieldList_2_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_2_v2.accountField} value={accountId} disabled="true"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                        <lightning-input-field field-name={fieldList_2_v2.addLineField}></lightning-input-field>
+                        <!-- <lightning-input-field field-name={fieldList_2_v2.cityField} disabled="true"></lightning-input-field> -->
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                        <lightning-input-field field-name={fieldList_2_v2.pincodeField}></lightning-input-field>
+                        <!-- <lightning-input-field field-name={fieldList_2_v2.stateField} disabled="true"></lightning-input-field> -->
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                        <!-- <lightning-input-field field-name={fieldList_2_v2.countryField}></lightning-input-field> -->
+                        <lightning-input-field field-name={fieldList_2_v2.activeField} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_2_v2.addTypeField} value="Operating" disabled="true"></lightning-input-field>
+                        </div>
+                        </div>
+
+
+                        <!-- <lightning-button class="slds-m-around_xx-small" label="Cancel"></lightning-button> -->
+                        <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Create Operating Address"></lightning-button>
+                        </lightning-record-edit-form>
+                    </lightning-card>
+                </template>
+                </lightning-tab>
+                <lightning-tab label="Registered Address">
+                     <!--Registered Address Card-->
+            
+                 <template if:true={regAddressList}>
+                    <lightning-card title="Present Registered Address">
+                    <template for:each={regAddressList} for:item="address">
+                        <lightning-record-form
+                        key={address.Id}
+                        record-id={regAddressId}
+                        object-api-name={objectName_2}
+                        fields={fieldList_2}
+                        columns="2"></lightning-record-form>
+                    </template>
+                    </lightning-card>
+                </template>
+                <template if:false={regAddressList}>
+                    <lightning-card title="Enter New Registered Address">
+                    <lightning-record-edit-form
+                        object-api-name={objectName_2}
+                        layout-type="compact"
+                        onsuccess={handleSuccess}>
+
+                        <lightning-messages></lightning-messages>
+
+                        <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-4">
+                        <lightning-input-field field-name={fieldList_2_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_2_v2.accountField} value={accountId} disabled="true"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                        <lightning-input-field field-name={fieldList_2_v2.addLineField} ></lightning-input-field>
+                        <!-- <lightning-input-field field-name={fieldList_2_v2.cityField} disabled="true"></lightning-input-field> -->
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                        <lightning-input-field field-name={fieldList_2_v2.pincodeField}></lightning-input-field>
+                        <!-- <lightning-input-field field-name={fieldList_2_v2.stateField} disabled="true"></lightning-input-field> -->
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                        <!-- <lightning-input-field field-name={fieldList_2_v2.countryField}></lightning-input-field> -->
+                        <lightning-input-field field-name={fieldList_2_v2.activeField} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_2_v2.addTypeField} value="Registered" disabled="true"></lightning-input-field>
+                        </div>
+                        </div>
+                        <!-- <lightning-button class="slds-m-around_xx-small" label="Cancel"></lightning-button> -->
+                        <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Create Registered Address"></lightning-button>
+                        </lightning-record-edit-form>
+                    </lightning-card>
+                </template>
+                </lightning-tab>
+                <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Address Details" 
+                        title="View Address Records"
+                        onclick={globalNavigator}
+                        data-label="Address_Details__r"></lightning-button> 
+            </lightning-tabset>
+            
+        </lightning-tab>
+        <lightning-tab label="Bank Account">
+            <!-- <lightning-card title="Bank Account Details"> -->
+                <template if:true={bankAccountList}>
+                    <lightning-card title="Present Bank Account">
+                    <template for:each={bankAccountList} for:item="bank">
+                        <lightning-record-form
+                        key={bank.Id}
+                        record-id={bankAccountId}
+                        object-api-name={bankAcc_obj}
+                        fields={fieldList_bank}
+                        columns="2"></lightning-record-form>
+                    </template>
+                </lightning-card>
+                </template>
+                <template if:false={bankAccountList}>
+                    <lightning-card title="Enter New Bank Account">
+                    <lightning-record-edit-form
+            object-api-name={bankAcc_obj}
+            layout-type="compact"
+            onsuccess={handleSuccess}>
+
+            <lightning-messages></lightning-messages>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_3_v2.accType}></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_3_v2.accHolderName} required="true"></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_3_v2.accNumber} required="true"></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_3_v2.ifscCode} required="true"></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_3_v2.bankName}></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_3_v2.branchAdd}></lightning-input-field>
+                    
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_3_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_3_v2.activeField} value={activeBank} disabled="true"></lightning-input-field>
+                </div>
+            </div>
+            
+            
+            <!-- <lightning-button class="slds-m-around_xx-small" label="Cancel"></lightning-button> -->
+            <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Create Bank Account"></lightning-button>
+        </lightning-record-edit-form>
+        
+    </lightning-card>
+                </template>
+            <!-- </lightning-card> -->
+            <lightning-button
+            class="buttonPositionCls"
+            variant="brand-outline" 
+            label="Bank Account Details"
+            title="View Bank Account Records"
+            onclick={globalNavigator}
+            data-label="Bank_Account_Details__r"></lightning-button>
+        </lightning-tab>
+        <!--Signatory Contact Detail-->
+        <lightning-tab label="Signing authority details">
+            
+                <template if:true={contactList}>
+                    <lightning-card title="Present Signatory Contact">
+                    <template for:each={contactList} for:item="contact">
+                        <lightning-record-form
+                        key={contact.Id}
+                        record-id={contactId}
+                        object-api-name={objectName_4}
+                        fields={fieldList_4}
+                        columns="2"></lightning-record-form>
+                    </template>
+                </lightning-card>
+                </template>
+                <template if:false={contactList}>
+                    <lightning-card title="Enter New Signatory Contact">
+                    <lightning-record-edit-form
+            object-api-name={objectName_4}
+            layout-type="compact"
+            onsuccess={handleSuccess}>
+
+            <lightning-messages></lightning-messages>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_4_v2.nameField}></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_4_v2.accountField} value={accountId} disabled="true"></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_4_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_4_v2.mobileField}></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_4_v2.emailField} required="true"></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_4_v2.panField} required="true"></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_4_v2.cinField}></lightning-input-field>
+                    <!-- <template if:true={isCINRequired}>
+                        <lightning-input-field field-name={fieldList_4_v2.cinField} required="true"></lightning-input-field>
+                    </template> -->
+                    
+                    
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-input-field field-name={fieldList_4_v2.authSign} value={authSignatory} disabled="true"></lightning-input-field>
+                    <lightning-input-field field-name={fieldList_4_v2.activeField} value={activeContact} disabled="true"></lightning-input-field>
+                </div>
+            </div>
+            
+            
+            <!-- <lightning-button class="slds-m-around_xx-small" label="Cancel"></lightning-button> -->
+            <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Create Signatory Contact"></lightning-button>
+        </lightning-record-edit-form>
+        
+    </lightning-card>
+                </template>
+
+                <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Contacts"
+                        title="View Contact Records"
+                        onclick={globalNavigator}
+                        data-label="Contacts__r"></lightning-button>
+           
+        </lightning-tab>
+
+        <lightning-tab label="UBO Details">
+            <lightning-card title="UBO Details">
+                <template if:true={isUBOEntity}>
+                    <div class="colorParent">
+                        <p class="colorPillsOptions_2">
+                            Does anyone own or control <strong>{ownershipPercentage} %</strong> or more of the business?
+                        </p>
+                    </div>
+                    
+                    <lightning-radio-group
+                        name="ownership"
+                        options={ownershipOptions}
+                        value={selectedOwnership}
+                        onchange={handleOwnerhipChange}></lightning-radio-group>
+
+                    <template if:true={selectedOwnershipYes}>
+                        <lightning-record-edit-form
+            object-api-name={objectName_5}
+            layout-type="compact"
+            onsuccess={handleSuccess}>
+
+            <lightning-messages></lightning-messages>
+            <div class="slds-grid">
+                <template if:true={isNationalityIndian}>
+                    <div class="slds-col slds-size_1-of-2">
+                        
+                        <lightning-input-field field-name={fieldList_5_v2.nationality} onchange={handleNationalityChangeUBO} value={selectedNationality}></lightning-input-field>
+                        <!-- <lightning-input-field field-name={fieldList_5_v2.nationality} onchange={handleNationalityChangeUBO}></lightning-input-field> -->
+                        <lightning-input-field field-name={fieldList_5_v2.ownership} required="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.panField}></lightning-input-field>
+                        
+                        <lightning-input-field field-name={fieldList_5_v2.addressField}></lightning-input-field>
+                        
+                        <lightning-input-field field-name={fieldList_5_v2.stateField}></lightning-input-field>
+                        
+                        
+                        
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_5_v2.uboName} required="true"></lightning-input-field>
+                        
+                        <lightning-input-field field-name={fieldList_5_v2.dobField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.pincodeField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.cityField}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.activeField} value={activeUBO} disabled="true"></lightning-input-field>
+
+                    </div>
+                </template>
+                
+                    <template if:false={isNationalityIndian}>
+                    <div class="slds-col slds-size_1-of-2">
+                        
+                        <lightning-input-field field-name={fieldList_5_v2.nationality} onchange={handleNationalityChangeUBO} value={selectedNationality}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.uboName} required="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.ownership} required="true"></lightning-input-field>
+                        
+                        
+                        
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_5_v2.oppField} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_5_v2.activeField} value={activeUBO} disabled="true"></lightning-input-field>
+                    </div>
+    
+                </template>
+            </div>
+            
+            
+            <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Save UBO"></lightning-button>
+        </lightning-record-edit-form>
+
+        
+        </template>
+                    
+       <!-- </lightning-card> -->
+            <lightning-card title="Available UBOs">
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>UBO Name</th>
+                                <th>Ownership</th>
+                                <th>Nationality</th>
+                                <th>Active</th>
+                            </tr>
+                        </thead>
+                        <template if:true={uboList}>
+                            <template for:each={uboList} for:item="ubo">
+                                <tbody key={ubo.Id}>
+                                    <tr>
+                                        <td>{ubo.UBO_Name__c}</td>
+                                        <td>{ubo.Ownership_num__c}</td>
+                                        <td>{ubo.Nationality__c}</td>
+                                        <td>{ubo.Active__c}</td>
+                                    </tr>
+                                </tbody>
+                                
+                            </template>
+                        </template>
+                    </table>
+                </div>
+                
+            </lightning-card>
+        </template>
+        <template if:false={isUBOEntity}>
+            <div class="colorParent">   
+                <p class="colorPillsOptions"><strong>No UBO for the MID's Business Entity.</strong></p>
+                <p class="colorPillsOptions_2">We take UBO only for the following Business Entities : </p> 
+                <strong class="colorPillsOptions_2">Partnership, Private Limited, Public Limited, LLP, Society and Trust.</strong>
+            </div>
+            
+        </template>
+        </lightning-card>
+        <lightning-button
+                    class="buttonPositionCls"
+                    variant="brand-outline"
+                    label="View Related UBO records"
+                    title="View UBO Records"
+                    onclick={globalNavigator}
+                    data-label="Ultimate_Beneficiary_Owners_UBO__r"></lightning-button>  
+                
+        </lightning-tab>
+        <lightning-tab label="Senior Management">
+            <lightning-card title="Senior Management Details">
+                <lightning-record-edit-form
+                    object-api-name={objectName_7}
+                    layout-type="compact"
+                    onsuccess={handleSuccess}>
+                
+
+                <lightning-messages></lightning-messages>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_7_v2.snrName} required="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_7_v2.snrDesignation}></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_7_v2.snrActive} value={activeSeniorManagement} disabled="true"></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name={fieldList_7_v2.snrOpp} value={recordId} disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name={fieldList_7_v2.snrDob}></lightning-input-field>
+                    </div>
+                </div>
+
+                <lightning-button variant="brand" type="submit" class="slds-m-around_xx-small" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+                
+            </lightning-card>
+            <lightning-card title="Available Senior Management Details">
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Designation</th>
+                                <th>DOB</th>
+                                
+                            </tr>
+                        </thead>
+                        <template if:true={seniorMngList}>
+                            <template for:each={seniorMngList} for:item="seniorMng">
+                                <tbody key={seniorMng.Id}>
+                                    <tr>
+                                        <td>{seniorMng.Name}</td>
+                                        <td>{seniorMng.Designation__c}</td>
+                                        <td>{seniorMng.DOB__c}</td>
+                                        
+                                    </tr>
+                                </tbody>
+                                
+                            </template>
+                        </template>
+                    </table>
+                </div>
+                
+            </lightning-card>
+        </lightning-tab>
+        <lightning-tab label="PEP">
+            <lightning-card title="PEP Details">
+                <template if:true={oppStatusList}>
+                    <template for:each={oppStatusList} for:item="opp">
+                        <lightning-record-form
+                        key={opp.Id}
+                        record-id={oppStatusId}
+                        object-api-name={objectName_6}
+                        fields={fieldList_6_PEP}
+                        columns="2"></lightning-record-form>
+                    </template>
+                </template>
+
+            </lightning-card>
+
+        </lightning-tab>
+
+        <lightning-tab label="Document">
+            <lightning-card>
+                    <template if:true={oppStatusList}>
+                        <template for:each={oppStatusList} for:item="status">
+                            <div key={status.Id} class = "textClass">
+                                <strong>Document Status : </strong> <p class="innerTextCls">{status.Document_Status_Document_Issue__c}</p>
+                            </div>
+                        </template>
+                    </template>
+                    <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Merchant Documents"
+                        title="View Merchant Documents"
+                        onclick={globalNavigator}
+                        data-label="Merchant_Documents__r"></lightning-button>  
+                    <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Files"
+                        title="View Files"
+                        onclick={globalNavigator}
+                        data-label="AttachedContentDocuments"></lightning-button>    
+            </lightning-card>
+        </lightning-tab>
+        <lightning-tab label="Agreement Details">
+            <lightning-card>
+                <template if:true={oppStatusList}>
+                    <template for:each={oppStatusList} for:item="status">
+                        <div key={status.Id} class = "textClass">
+                            <strong>Agreement Status : </strong> <p class="innerTextCls">{status.Agreement_Status__c}</p>
+                        </div>
+                    </template>
+                </template>
+                <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Addendum"
+                        title="View Addendum"
+                        onclick={globalNavigator}
+                        data-label="Contracts__r"></lightning-button> 
+        </lightning-card>
+        </lightning-tab>
+        <lightning-tab label="Commercials">
+            <div class = "textClass"><strong>Commercial Status : </strong></div>
+            <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Pricings"
+                        title="View Pricings"
+                        onclick={globalNavigator}
+                        data-label="Pricings__r"></lightning-button>
+            
+            <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Commercial2"
+                        title="View Commercial2"
+                        onclick={globalNavigator}
+                        data-label="Commercial2__r"></lightning-button>
+
+            <lightning-button
+                        class="buttonPositionCls"
+                        variant="brand-outline"
+                        label="Publish Pricing Details"
+                        title="View Publish Pricing Details"
+                        onclick={globalNavigator}
+                        data-label="Publish_Pricing_Details__r"></lightning-button>
+        </lightning-tab>
+    </lightning-tabset>
+    <div class="slds-box headingCls2"></div>
+    <!-- </lightning-card> -->
+</template>

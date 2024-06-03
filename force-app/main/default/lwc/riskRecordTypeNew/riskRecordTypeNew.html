@@ -1,0 +1,164 @@
+<template>
+    <!-- <div if:true={isLoading}>
+       <lightning-spinner
+           alternative-text="Loading..." variant="brand" class="slds-is-fixed">
+       </lightning-spinner> 
+   </div> --> 
+   <template if:true={isClose}>
+       <template if:true={postHold}> 
+           <!--{opprecordid}-->
+           <lightning-record-edit-form name="Post Hold"  record-id={postriskidchild} object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess}>
+          
+               <lightning-messages> </lightning-messages>
+               <lightning-input-field field-name="Risk_Hold_Reason__c" required=true value={pickListVal} name="Post Reason" onchange={handlePicklistValChange}> </lightning-input-field>
+               <lightning-input-field field-name="Risk_Hold_Reason_Email_Content__c" onchange={changeHandlerPost} value={conValueRisk} ></lightning-input-field>
+               <lightning-input-field field-name="Comments_By_Enforcer__c" required=true> </lightning-input-field>
+               <input type="submit" class="hidden" />
+                <!--<lightning-button
+                       class="slds-m-top_small"
+                       variant="Brand"
+                       type="submit"
+                       label="Put On Hold"
+                       >
+               </lightning-button>
+           
+               <lightning-button
+                   class="slds-m-top_small"
+                   variant="Brand"
+                   type="submit"
+                   label="Close"
+                   name="postHoldClose"
+                   onclick={handleClose}
+                   >
+               </lightning-button>-->
+               
+               
+              
+           </lightning-record-edit-form>
+       </template>
+       <template if:true={postRelease}>
+           <lightning-record-edit-form onchange={changeHandlerPost} name="Post Release"  record-id={postriskidchild} object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess}>
+               <lightning-messages> </lightning-messages>
+               <lightning-input-field field-name="Release_Comment__c"> </lightning-input-field>
+               <input type="submit" class="hidden" />
+               <!-- <lightning-button
+               variant="Brand"
+               class="slds-m-top_small"
+               type="submit"
+               label="Release"
+           >
+           </lightning-button>
+           <lightning-button
+           variant="Brand"
+           class="slds-m-top_small"
+           type="submit"
+           label="Close"
+           name="postReleaseClose"
+           onclick={handleClose}
+           >
+           </lightning-button> -->
+           </lightning-record-edit-form>
+       </template>
+       <template if:true={obHold}>
+               <lightning-record-edit-form  name="OB Hold"  record-id={obriskidchild} object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess}>
+                       <lightning-messages> </lightning-messages>
+
+                       <lightning-input-field field-name="Risk_Hold_Reason__c" required=true value={pickListVal} name="OB Reason" onchange={handlePicklistValChange}> </lightning-input-field>
+                       <lightning-input-field field-name="Risk_Hold_Reason_Email_Content__c" onchange={changeHandlerOB}  value={conValueRisk}></lightning-input-field>
+                       <lightning-input-field field-name="Comments_By_Enforcer__c" required=true > </lightning-input-field>
+                       <input type="submit" class="hidden" />
+                    <!--<lightning-button
+                       class="slds-m-top_small"
+                       variant="Brand"
+                       type="submit"
+                       label="Put On Hold"
+                   >
+                   </lightning-button>
+                   <lightning-button
+                   class="slds-m-top_small"
+                   variant="Brand"
+                   type="submit"
+                   label="Close"
+                   name="obHoldClose"
+                   onclick={handleClose}
+               >
+               </lightning-button>--> 
+               </lightning-record-edit-form>
+               
+   </template>
+   <template if:true={obRelease}>
+       <lightning-record-edit-form name="OB Release" record-id={obriskidchild} object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess} onchange={changeHandlerOB}>
+           <lightning-messages> </lightning-messages>
+           <lightning-input-field field-name="Release_Comment__c"> </lightning-input-field>
+           <input type="submit" class="hidden" />
+           <!-- <lightning-button
+           class="slds-m-top_small"
+           variant="Brand"
+           type="submit"
+           label="Release"
+       >
+       </lightning-button>
+       <lightning-button
+       class="slds-m-top_small"
+       variant="Brand"
+       type="submit"
+       label="Close"
+       name="obReleaseClose"
+       onclick={handleClose}
+       > -->
+       <!-- </lightning-button> -->
+       </lightning-record-edit-form>
+   </template>
+   <template if:true={preHold}>
+       <lightning-record-edit-form  name="Pre Hold"  record-id={preriskidchild} object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess}>
+           
+               <lightning-messages> </lightning-messages>
+               <lightning-input-field field-name="Risk_Hold_Reason__c" required=true name="Pre Hold" value={pickListVal} onchange={handlePicklistValChange}> </lightning-input-field>
+               <lightning-input-field field-name="Risk_Hold_Reason_Email_Content__c" onchange={changeHandlerPre} value={conValuePre}></lightning-input-field>
+               <lightning-input-field field-name="Comments_By_Enforcer__c" required=true > </lightning-input-field>
+               <input type="submit" class="hidden" />
+           <!-- <lightning-button
+               variant="Brand"
+               class="slds-m-top_small"
+               type="submit"
+               label="Put On Hold"
+           >
+           </lightning-button>
+           <lightning-button
+           class="slds-m-top_small"
+           variant="Brand"
+           type="submit" 
+           label="Close"
+           name="preHoldClose"
+           onclick={handleClose}
+       >
+       </lightning-button> -->
+       </lightning-record-edit-form>
+   </template>
+   <template if:true={preRelease}>
+       <lightning-record-edit-form onchange={changeHandlerPre} name="Pre Release" record-id={preriskidchild} object-api-name="Risk_status_Detail__c" onsubmit={handleSubmit} onsuccess={handleSuccess}>
+           <lightning-messages> </lightning-messages>
+           <lightning-input-field field-name="Release_Comment__c"> </lightning-input-field>
+           <input type="submit" class="hidden" />
+           <!-- <lightning-button
+           class="slds-m-top_small"
+           variant="Brand"
+           type="submit"
+           name="preReleaseClose"
+           label="Release"
+       >
+       </lightning-button>
+       <lightning-button
+       class="slds-m-top_small"
+       variant="Brand"
+       type="submit"
+       label="Close"
+       onclick={handleClose}
+       >
+       </lightning-button> -->
+       </lightning-record-edit-form>
+   </template>
+
+
+</template>
+</template>

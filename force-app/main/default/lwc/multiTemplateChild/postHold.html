@@ -1,0 +1,29 @@
+<template>
+    
+    <template if:true={close}>
+        <lightning-record-edit-form record-id={riskrecordid} object-api-name="Risk_status_Details__c" onsubmit={handlePostHold} onsuccess={handleSuccess}>
+           
+                <lightning-messages> </lightning-messages>
+                <lightning-input-field field-name="Current_Status__c"> </lightning-input-field>
+                <lightning-input-field field-name="Risk_Hold_Reason__c"> </lightning-input-field>
+                <lightning-input-field field-name="Comments_By_Enforcer__c"> </lightning-input-field>
+            
+
+                <lightning-button
+                    class="slds-m-top_small"
+                    type="submit"
+                    label="Put On Hold"
+                >
+                </lightning-button>
+                <lightning-button
+                class="slds-m-top_small"
+                type="submit"
+                label="Close"
+                onclick={handleClose}
+                >
+                </lightning-button>
+        </lightning-record-edit-form>
+    </template>
+
+
+</template>

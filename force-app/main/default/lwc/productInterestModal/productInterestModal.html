@@ -1,0 +1,179 @@
+<template>
+    <!-- <lightning-modal-header label="Schemes"></lightning-modal-header> -->
+    <!-- <lightning-modal-header>{salesBundle}-{subSalesBunde}</lightning-modal-header> -->
+    
+    <template if:true={interestFieldList}>
+        <template for:each={interestFieldList} for:item="ins" for:index="index">
+            <lightning-modal-header key={ins.id}>
+                <div class="modalHeadreCls">
+                    {ins.Sales_Bundle__c}-{ins.Sub_Sales_Bundle__c}
+                </div>
+            </lightning-modal-header>
+        </template>
+    </template>
+    <lightning-modal-body>
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="In-active">
+                <div>
+                    <div class="textCls">
+                        Select the options to configure pricing
+                        <lightning-button variant="brand" class="buttonCls" label="Mark as NA"  disabled={isButtonDisabled} ></lightning-button>
+                        <lightning-button variant="brand" class="slds-m-around_xx-small" label="Configure Pricing" disabled={isButtonDisabled}></lightning-button>
+                    </div>
+                    <table>
+                        <thead>
+                            <th>
+                                <lightning-input type="checkbox"></lightning-input>
+                            </th>
+                            <th>Options</th>
+                            <th>Specifications</th>
+                            <th>Payment Gateway</th>
+                            <th>Onus/Offus</th>
+                            <th>Risk Eligibility</th>
+                            <th>Merchant Interest</th>
+                        </thead>
+                        <tbody>
+                            <template if:true={inActiveInstrumentList}>
+                                <template for:each={inActiveInstrumentList} for:item="ins" for:index="index">
+                                    <tr key={ins.id}>
+                                        <td>
+                                            <lightning-input type="checkbox"></lightning-input>
+                                        </td>
+                                        <td>
+                                            <template if:true={ins.master_PR.Payment_Option__r}>
+                                                {ins.master_PR.Payment_Option__r.Name}
+                                            </template>
+                                            
+                                        </td>
+                                        <td>
+                                        <template if:true={ins.master_PR.Pricing_Specification__r}>
+                                            {ins.master_PR.Pricing_Specification__r.Name}
+                                        </template>
+                                        </td>
+                                        
+                                        <td>
+                                            <template if:true={ins.master_PR.Payment_Gateway__r}>
+                                                {ins.master_PR.Payment_Gateway__r.Name}
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <template if:true={ins.master_PR.ONUS_OFFUS__c}>
+                                                {ins.master_PR.ONUS_OFFUS__c}
+                                            </template>
+                                        </td>
+                                        <td>{ins.prodInt.Risk_Eligibility_Flag__c}</td>
+                                        <td>{ins.prodInt.Merchant_Interest_Flag__c}</td>
+                                        
+                                    </tr>
+                                </template>
+                            </template>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Active">
+                <div>
+                    <!-- <div class="textCls">
+                        Select the options to configure pricing
+                        <lightning-button variant="brand" class="buttonCls" label="Mark as NA"  disabled={isButtonDisabled} ></lightning-button>
+                        <lightning-button variant="brand" class="slds-m-around_xx-small" label="Configure Pricing" disabled={isButtonDisabled}></lightning-button>
+                    </div> -->
+                    <table>
+                        <thead>
+                            <th>Options</th>
+                            <th>Specifications</th>
+                            <th>Payment Gateway</th>
+                            <th>Onus/Offus</th>
+                            <th>Lifetime GMV</th> 
+                            <th>Last month GMV</th>
+                            <th>Last 3 month GMV</th>
+                            <th>Last 6 month GMV</th>
+                            <th>Last 12 month GMV</th>
+                            <th>Activation Date</th>
+                            <th>Transacting</th>
+                        </thead>
+                        <tbody>
+                            <template if:true={activeInstrumentList}>
+                                <template for:each={activeInstrumentList} for:item="ins" for:index="index">
+                                    <tr key={ins.id}>
+                                        <td>
+                                            <template if:true={ins.master_PR.Payment_Option__r}>
+                                                {ins.master_PR.Payment_Option__r.Name}
+                                            </template>
+                                            
+                                        </td>
+                                        <td>
+                                        <template if:true={ins.master_PR.Pricing_Specification__r}>
+                                            {ins.master_PR.Pricing_Specification__r.Name}
+                                        </template>
+                                        </td>
+                                        
+                                        <td>
+                                            <template if:true={ins.master_PR.Payment_Gateway__r}>
+                                                {ins.master_PR.Payment_Gateway__r.Name}
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <template if:true={ins.master_PR.ONUS_OFFUS__c}>
+                                                {ins.master_PR.ONUS_OFFUS__c}
+                                            </template>
+                                        </td>
+                                        <td>{ins.lifetime_GMV}</td>
+                                        <td>{ins.lastMonth_GMV}</td>
+                                        <td>{ins.last3Month_GMV}</td>
+                                        <td>{ins.last6Month_GMV}</td>
+                                        <td>{ins.last12Month_GMV}</td>
+                                        <td>{ins.activation_Date}</td>
+                                        <td>{ins.transacting}</td>
+                                    </tr>
+                                </template>
+                                
+                            </template>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Not Applicable">
+                <div>
+                    <!-- <div class="textCls">
+                        Select the options to configure pricing
+                        <lightning-button variant="brand" class="buttonCls" label="Mark as NA"  disabled={isButtonDisabled} ></lightning-button>
+                        <lightning-button variant="brand" class="slds-m-around_xx-small" label="Configure Pricing" disabled={isButtonDisabled}></lightning-button>
+                    </div> -->
+                    <table>
+                        <thead>
+                            <!-- <th>
+                                <lightning-input type="checkbox" onchange={handleCheckboxChange}></lightning-input>
+                            </th> -->
+                            <th>Options</th>
+                            <th>Specifications</th>
+                            <th>Payment Gateway</th>
+                            <th>Onus/Offus</th>
+                            <th>Risk Eligibility</th>
+                            <th>Merchant Interest</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- <td>
+                                    <lightning-input type="checkbox" onchange={handleCheckboxChange}></lightning-input>
+                                </td> -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </lightning-tab>
+        </lightning-tabset>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="OK" onclick={handleOkay}></lightning-button>
+    </lightning-modal-footer>
+    
+</template>

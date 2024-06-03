@@ -1,0 +1,27 @@
+<template>
+    <div class="error-message-container">
+        <template if:true={errorMessage}>
+            <lightning-card title="Offline Onboarding : Error Block" icon-name="standard:record">
+                <div class="slds-var-p-horizontal_medium">
+                    <p  class="errorHandling"><strong>{errorMessage}</strong></p>
+                    <p><strong>MID : {midField}</strong></p>
+                </div>
+            </lightning-card>
+        </template>
+        <!-- <lightning-card title="Offline Onboarding : Error Block" icon-name="standard:record">
+            <div class="slds-var-p-horizontal_medium">
+                <template if:true={errorMessage}>
+                    <p  class="errorHandling"><strong>{errorMessage}</strong></p>
+                    <p><strong>MID : {midField}</strong></p>
+                </template>
+                <template if:false={errorMessage}>
+                    <template if:true={midField}>
+                        <p  class="errorHandlingFalse"><strong>No error message found.</strong></p>
+                        <p><strong>MID : {midField}</strong></p>
+                    </template>
+                    
+                </template>
+            </div>
+        </lightning-card> -->
+    </div>
+</template>

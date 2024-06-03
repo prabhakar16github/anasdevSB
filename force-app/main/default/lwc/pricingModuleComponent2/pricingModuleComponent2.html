@@ -1,0 +1,257 @@
+<template>
+    <lightning-card>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+        </template>
+        <lightning-tabset class="tabNavigateBorder" active-tab-value="two">
+            <lightning-tab label="Live Commercial" value="one" onactive={handleLiveCommercialActive}>
+                <template if:true={showLiveCommercial}>
+                    <c-Live-Commercial-Component record-id={recordId}></c-Live-Commercial-Component>
+                </template>
+            </lightning-tab>
+            <lightning-tab label="Core Payment Commercials" value="two" onactive={handleAllCommercialsActive}>
+                <!--Screen First Starting-->
+                <template if:true={showFirstScreen}>
+                    <c-Existing-Commercials-Component record-id={recordId} 
+                        onselection={getPlanDetailsParent} onselectionnew={redirectToRespectiveScreen} onselectionedit={editCommercialParent}></c-Existing-Commercials-Component>
+                </template>
+                <!--Screen First Ending-->
+                <!--Screen Second Starting-->
+                <template if:true={showSecondScreen}>
+                    <div>
+                        <lightning-icon icon-name="standard:home" alternative-text="home" title="home" onclick={redirectToHomeOpenModal}></lightning-icon>
+                        <b class="slds-align_absolute-center slds-p-bottom_medium">Create Commercials</b>     
+                    </div>
+                    <c-Create-New-Commercial-Component onchildmethod={redirectToHomeOpenModal}
+                        onselection={handleThirdScreenParent}></c-Create-New-Commercial-Component>
+                </template>
+                <!--Screen Second Ending-->
+                <!--Screen Third Staring-->
+                <template if:true={showThirdScreen}>
+                    <div class="mainWrap">
+                        <div class="iconWrap">
+                            <lightning-icon icon-name="standard:home" alternative-text="home" title="home"
+                                onclick={redirectToHomeOpenModal}></lightning-icon>
+                        </div>
+                        <div style="width:50%">
+                            <lightning-input type="text" label="Name of the Commercial" onchange={handleCommercialName}
+                                value={commercialName} required="true" class="validate"
+                                disabled={disabledCommercialName}></lightning-input>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;">
+                       <lightning-progress-indicator current-step={currentStep} type="path">
+                            <lightning-progress-step label="Select Payment Option" value="1"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                            <lightning-progress-step label="Add Commercials" value="2"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                            <lightning-progress-step label="Review and Publish" value="3"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                        </lightning-progress-indicator>
+                    </div>
+                    <template if:true={showScreen3Step1}>
+                        <div class="tabContainerMain" style={showScreen3Step1Block}>
+                            <c-All-And-Selected-Payment-Options-Component list-payment-data={listPaymentData}
+                                map-t-d-r-convenience-data={mapTDRConvenienceData} list-fee-model={listFeeModel}
+                                list-transaction-type={listTransactionType}
+                                onselection={handleThirdScreenParentStep2}></c-All-And-Selected-Payment-Options-Component>
+                        </div>
+                    </template>
+                    <!--Screen Fourth Starting-->
+                    <template if:true={showScreen3Step2}>
+                        <div class="tabContainerMain" style={showScreen3Step2Block}>
+                            <div class="slds-grid slds-wrap tabTitleClass" style="width:100%;display:inline-block">
+                                <c-Enter-T-D-R-And-Convenience-Details-Component
+                                    selected-list-payment-data-temporary={selectedListPaymentData}
+                                    list-fee-model={listFeeModel} list-transaction-type={listTransactionType}
+                                    record-id={recordId} commercial-name={commercialName} commercial-id={commercialId}
+                                    selected-template={selectedTemplate}
+                                    onselection={handleFifthScreenParent} onselectionvalidate={validateCommercialName}></c-Enter-T-D-R-And-Convenience-Details-Component>
+                            </div>
+                        </div>
+                    </template>
+                    <!--Screen Fourth Ending-->
+                </template>
+                <!--Screen Fifth Starting-->
+                <template if:true={showScreen5}>
+                    <div class="mainWrap">
+                        <div class="iconWrap">
+                            <lightning-icon icon-name="standard:home" alternative-text="home" title="home"
+                                onclick={redirectToHomeOpenModal}></lightning-icon>
+                        </div>
+                        <div style="width:50%">
+                            <lightning-input type="text" label="Name of the Commercial" onchange={handleCommercialName}
+                                value={commercialName} required="true" class="validate"
+                                disabled={disabledCommercialName}></lightning-input>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <lightning-progress-indicator current-step={currentStep} type="path">
+                            <lightning-progress-step label="Select Payment Option" value="1"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                            <lightning-progress-step label="Add Commercials" value="2"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                            <lightning-progress-step label="Review and Publish" value="3"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                        </lightning-progress-indicator>
+                    </div>
+                    <c-goverence-component selected-list-payment-data={selectedListPaymentData} list-fixed-pricing-temporary={listFixedPricing}
+                        show-below-rack-rate-message={showBelowRackRateMessage} 
+                        below-rack-rate-message={belowRackRateMessage} commercial-id={commercialId} disabled-b-h-button={disabledBHButton}
+                        disabled-commercial-name={disabledCommercialName} onselection={handleSixthScreenParent}></c-goverence-component>
+                </template>
+                <!--Screen Fifth Ending-->
+                <!--Screen sixth Starting-->
+                <template if:true={showScreen6}>
+                    <div class="mainWrap">
+                        <div class="iconWrap">
+                            <lightning-icon icon-name="standard:home" alternative-text="home" title="home"
+                                onclick={redirectToHomeOpenModal}></lightning-icon>
+                        </div>
+                        <div style="width:50%">
+                            <lightning-input type="text" label="Name of the Commercial" onchange={handleCommercialName}
+                                value={commercialName} required="true" class="validate"
+                                disabled={disabledCommercialName}></lightning-input>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <lightning-progress-indicator current-step={currentStep} type="path">
+                            <lightning-progress-step label="Select Payment Option" value="1"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                            <lightning-progress-step label="Add Commercials" value="2"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                            <lightning-progress-step label="Review and Publish" value="3"
+                                onclick={showRespectiveScreen}></lightning-progress-step>
+                        </lightning-progress-indicator>
+                    </div>
+                    <c-publish-pricing-component selected-list-payment-data={selectedListPaymentData} list-fixed-pricing-temporary={listFixedPricing} 
+                        list-fallback-charges-temporary={listFallbackCharges}  list-platform-fee-temporary={listPlatformFee} list-fixed-pricing2-temporary={listFixedPricing2}
+                        available-interval={availableInterval} available-type={availableType} available-debit-model={availableDebitModel}
+                        selected-interval={selectedInterval} selected-type={selectedType} available-interval-f-p={availableIntervalFP} available-debit-model-f-p={availableDebitModelFP}
+                        selected-start-date={selectedStartDate} selected-end-date={selectedEndDate} selected-debit-model={selectedDebitModel}
+                        plan-choice-options={planChoiceOptions} template-name={templateName} commercial-id={commercialId} is-super-user={isSuperUser} record-id={recordId} onselection={handleChatterParent} hide-publish-commercial-button={hidePublishCommercialButton} onback={handleBackParent}></c-publish-pricing-component>
+                </template>
+                <!--Screen sixth Ending-->
+                <!--Screen Third Ending-->
+                <!--Redirect to home modal-->
+                <template if:true={showRedirectToHomeModal}>
+                    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+                        class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+                        <div class="slds-modal__container">
+                            <div class="slds-modal__header">
+                                <h1 id="modal-heading-09120" class="slds-modal__title slds-hyphenate">Are you sure?</h1>
+                            </div>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-61009">
+                                <p style="text-align:center;">If you proceed, you will lose all your entered data.</p>
+                                <br />
+                                <p style="text-align:center;">Are you sure you want to redirect to home?</p><br />
+                            </div>
+                            <div class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" aria-label="Cancel"
+                                    onclick={cancelRedirectToHomeModal}>Cancel</button>
+                                <button class="slds-button slds-button_brand" aria-label="Proceed"
+                                    onclick={redirectToHome}>Proceed</button>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+                </template>
+                <!--Redirect to home modal End-->
+            </lightning-tab>
+
+            <lightning-tab label="Audit Trail" value="three" onactive={handleAuditTrailActive}>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+                    <table id="Table7" class="slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <th style="width:16%;text-align:center;">Commercial Name</th>
+                                <th style="width:16%;text-align:center;">Field</th>
+                                <th style="width:17%;text-align:center;">Old Value</th>
+                                <th style="width:17%;text-align:center;">New Value</th>
+                                <th style="width:17%;text-align:center;">Created By</th>
+                                <th style="width:17%;text-align:center;">Created on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={listAuditTrailOverall} for:item="ph" for:index="index1">
+                                <tr key={ph.Id}>
+                                    <td style="width:16%;text-align:center;">{ph.pricingName}</td>
+                                    <td style="width:16%;text-align:center;">{ph.field}</td>
+                                    <td style="width:17%;text-align:center;">{ph.oldValue}</td>
+                                    <td style="width:17%;text-align:center;">{ph.newValue}</td>
+                                    <td style="width:17%;text-align:center;">{ph.createdBy}</td>
+                                    <td style="width:17%;text-align:center;">{ph.createdDate}</td>
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </div> 
+            </lightning-tab>
+
+            <lightning-tab label="Payment Stack Commercials" value="four" onactive={handleOtherProductsCommercial}>
+                <lightning-tabset class="tabNavigateBorder" active-tab-value="one">
+                    <lightning-tab label="Instant Settlement" value="one" onactive={handleInstantSettlementProduct}>
+                        <template if:true={showInstantSettlement}>
+                            <c-Instant-Settlement-Component record-id={recordId} product-name='Instant_Settlement'></c-Instant-Settlement-Component>    
+                        </template>        
+                    </lightning-tab>  
+                    <lightning-tab label="Offer Engine" value="two" onactive={handleOfferEngineProduct}>
+                        <template if:true={showOfferEngine}>
+                            <c-Offer-Engine-Component record-id={recordId} product-name='Offer_Engine'></c-Offer-Engine-Component>    
+                        </template>       
+                    </lightning-tab>
+                    <lightning-tab label="Checkout Express" value="three" onactive={handleCheckoutExpressProduct}>
+                        <template if:true={showCheckOut}>
+                            <c-Checkout-Express-Component record-id={recordId} product-name='Checkout_Express'></c-Checkout-Express-Component>    
+                        </template>       
+                    </lightning-tab>
+                    <!--<lightning-tab label="SDK" value="three" onactive={handleSDKProduct}>
+                        
+                    </lightning-tab> 
+                    <lightning-tab label="Token" value="four" onactive={handleTokenProduct}>
+                        
+                    </lightning-tab>  
+                    <lightning-tab label="UPI" value="five" onactive={handleUPIProduct}>
+                        
+                    </lightning-tab>
+                    <lightning-tab label="EMI" value="six" onactive={handleEMIProduct}>
+                        
+                    </lightning-tab> 
+                    <lightning-tab label="Wallets" value="seven" onactive={handleWalletsProduct}>
+                        
+                    </lightning-tab> -->
+                </lightning-tabset>    
+            </lightning-tab>
+            <lightning-tab label="Audit Trail for Stack Product" value="five" onactive={handleOtherAuditTrailActive}>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6">
+                    <table id="Table6" class="slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <th style="width:10%;text-align:center;">Revenue Model</th>
+                                <th style="width:10%;text-align:center;">Amount Slab</th>
+                                <th style="width:10%;text-align:center;">Field</th>
+                                <th style="width:10%;text-align:center;">Old Value</th>
+                                <th style="width:10%;text-align:center;">New Value</th>
+                                <th style="width:10%;text-align:center;">Created By</th>
+                                <th style="width:13%;text-align:center;">Created on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={listOtherAuditTrailOverall} for:item="ph" for:index="index1">
+                                <tr key={ph.Id}>
+                                    <td style="width:10%;text-align:center;">{ph.revenueModelName}</td>
+                                    <td style="width:10%;text-align:center;">{ph.amountSlab}</td>
+                                    <td style="width:10%;text-align:center;">{ph.field}</td>
+                                    <td style="width:10%;text-align:center;">{ph.oldValue}</td>
+                                    <td style="width:10%;text-align:center;">{ph.newValue}</td>
+                                    <td style="width:10%;text-align:center;">{ph.createdBy}</td>
+                                    <td style="width:13%;text-align:center;">{ph.createdDate}</td>
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </div>   
+            </lightning-tab>
+        </lightning-tabset>
+    </lightning-card>
+</template>

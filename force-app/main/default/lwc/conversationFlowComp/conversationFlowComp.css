@@ -1,0 +1,13 @@
+.documentSpan{
+    padding:2px; 
+    background-color: rgb(246, 241, 241);
+    transition: transform 0.3s;
+
+}
+
+
+.documentSpan :hover{
+    transform: scale(1.2);
+    cursor:pointer;
+
+}

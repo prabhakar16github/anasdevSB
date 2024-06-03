@@ -1,0 +1,38 @@
+/* .headerCls{
+    border : 1px solid grey;
+    border-collapse: collapse
+}
+.bodyCls{
+    border : 1px solid grey
+
+}
+tr, th {
+    border : 1px solid grey
+
+} */
+/* table, th, td {  
+    border: 1px solid black;
+    border-collapse: collapse;
+} */
+
+table, th, td {
+    border: 1px solid grey;
+    border-radius: 1px;
+}
+th {
+    background-color: #F2F2F2;
+    font: Inter;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20.8px;
+    text-align: center;
+
+}
+td {
+    background-color: #FBFBFB;
+    font: Inter;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20.8px;
+    text-align: center;
+}

@@ -1,0 +1,28 @@
+<template>
+    <template if:true={pricingListValues}>
+        &nbsp;&nbsp;Details
+        <div class="slds-box slds-box_small">
+            <template for:each={pricingListValues} for:item="item">
+                <tr key={item.id}>
+                    <td><b>Payee ID</b> <br/>{item.Opportunity__r.Prod_Merchant_Id__c}
+                        <br/><br/>
+                        <b>Legal Name</b> <br/>
+                        <textarea rows="2" cols="25" name="usrtxt" wrap="hard">
+                            {item.Opportunity__r.Legal_Name_Account__c}
+                        </textarea>
+                        <br/><br/>
+                        <b>URL</b> <br/>{item.Opportunity__r.Website__c}
+                        <br/><br/>
+                        <b>Category</b> <br/>{item.Opportunity__r.Business_Category__c}
+                        <br/><br/>
+                        <b>Sub-category</b> <br/>{item.Opportunity__r.SubCategory__c}
+                        <br/><br/>
+                        <b>TDR</b> <br/>{item.TDR_Flat_Fee__c}
+                        <br/><br/>
+                        <b>PAN No</b> <br/>{item.Opportunity__r.PAN_Number_Account__c}
+                    </td>
+                </tr>
+            </template>
+        </div>
+    </template>
+</template>

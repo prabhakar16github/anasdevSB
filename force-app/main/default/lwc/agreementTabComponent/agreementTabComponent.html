@@ -1,0 +1,104 @@
+<template>
+    <template if:true={firstScreenVal}>
+        <div>
+            <span class="ScreenOneLineMessage">Choose a product to create an agreement for</span> 
+        </div>
+        <div class="ScreenOneBtnCls">
+            <!--<div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                <span>
+                    <lightning-button variant="brand-outline" label="PAYMENT GATEWAY" class="slds-m-left_x-small button_1"></lightning-button>
+                </span>
+                </div>
+                <div class="slds-col">
+                <span>
+                    <lightning-button variant="brand-outline" label="PAYOUTS" class="slds-m-left_x-small button_2"></lightning-button>
+                </span>
+                </div>
+                </div>
+    
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                    <span>  
+                        <lightning-button variant="brand-outline" label="NEOBANKING" class="slds-m-left_x-small button_3"></lightning-button>
+                    </span>
+                    </div>
+                    <div class="slds-col">
+                    <span>
+                        <lightning-button variant="brand-outline" label="ANONYMOUS" class="slds-m-left_x-small button_4"></lightning-button>
+                    </span>
+                    </div>
+                    </div>-->
+        <div>
+            <lightning-button variant="brand-outline" label="PAYMENT GATEWAY" class="slds-m-left_x-small button_1" onclick={secondScreen}></lightning-button>
+            <lightning-button variant="brand-outline" label="PAYOUTS" class="slds-m-left_x-small button_2" onclick={secondScreen_2}></lightning-button>
+    
+        </div>
+        <div class="secondRowBtnCls">
+            <lightning-button variant="brand-outline" label="NEOBANKING" class="slds-m-left_x-small button_3" onclick={secondScreen_3}></lightning-button>
+            <lightning-button variant="brand-outline" label="ANONYMOUS" class="slds-m-left_x-small button_4"></lightning-button>
+    
+        </div>
+            
+        </div>
+        
+
+    </template>
+    <template if:true={secondScreenVal}>
+        <div class="ScreenOneLineMessage">
+            <span>How do you want to create the Payment Gateway Agreement?</span> 
+            <lightning-button class="backToScreenBtnCls" variant="base" label="&lt; Back Product Options" onclick={firstScreen}></lightning-button>
+        </div>
+        <!--<div class="backToScreenBtnCls">
+            
+
+        </div>-->
+        <div class="ScreenTwoBtnCls">
+            <lightning-radio-group name="radioGroup"
+                          
+                          options={options}
+                          value={value}
+                          type="radio"></lightning-radio-group>
+        </div>
+        
+
+    </template>
+    <template if:true={secondScreenVal_2}>
+        <div class="ScreenOneLineMessage">
+            <span>How do you want to create the Payouts?</span> 
+            <lightning-button class="backToScreenBtnCls_Payout" variant="base" label="&lt; Back Product Options" onclick={firstScreen}></lightning-button>
+        </div>
+        <div class="ScreenTwoBtnCls">
+            <lightning-radio-group name="radioGroup"
+                          
+                          options={options}
+                          value={value}
+                          type="radio"></lightning-radio-group>
+        </div>
+        <div>
+            <lightning-button variant="base" label="&lt; Back Product Options" onclick={firstScreen}></lightning-button>
+
+        </div>
+
+    </template>
+    <template if:true={secondScreenVal_3}>
+        <div class="ScreenOneLineMessage">
+            <span>How do you want to create the Neobanking?</span> 
+            <lightning-button class="backToScreenBtnCls_Neobanking" variant="base" label="&lt; Back Product Options" onclick={firstScreen}></lightning-button>
+        </div>
+        <div class="ScreenTwoBtnCls">
+            <lightning-radio-group name="radioGroup"
+                          
+                          options={options}
+                          value={value}
+                          type="radio"></lightning-radio-group>
+        </div>
+        <div>
+            
+
+        </div>
+
+    </template>
+    
+    
+</template>

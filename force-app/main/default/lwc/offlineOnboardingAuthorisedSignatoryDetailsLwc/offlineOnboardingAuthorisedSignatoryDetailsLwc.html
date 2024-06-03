@@ -1,0 +1,211 @@
+<template>
+    <div>
+        <div class="slds-section slds-m-top_medium slds-is-open">
+            <h3 class="slds-section__title slds-m-top_medium">
+            <button aria-controls="expando-unique-id" aria-expanded="false" class="toggleSectionCssWithoutData slds-button slds-section__title-action slds-m-top_medium" onclick={toggleAuthSignatorySection}>
+                <template if:true={toggleAuthSignatoryDetailsSectionClass}>
+                    <lightning-icon size="small" icon-name="utility:chevrondown" alternative-text="Approved" title="Approved"></lightning-icon>
+                </template>
+                <template if:false={toggleAuthSignatoryDetailsSectionClass}>
+                    <lightning-icon size="small" icon-name="utility:chevronright" alternative-text="Approved" title="Approved"></lightning-icon>
+                </template>
+                <span class="slds-truncate" title="Section Title">Authorized signatory details</span>
+            </button>
+            </h3>
+            <template if:true={toggleAuthSignatoryDetailsSectionClass}>
+                <div class="slds-section__content">
+                    <!--Authorized signatory DETAILS SECTION EDIT MODE START-->
+                    <template if:false={contactDetailsViewMode}>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                <strong>Authorised Signatory 1</strong>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory First Name" value={contactObjOne.FirstName} data-object="contactObjOne" data-fieldapi="FirstName" onchange={handleChangeContactField}></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory Last Name" value={contactObjOne.LastName} required data-object="contactObjOne" data-fieldapi="LastName" onchange={handleChangeContactField}></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory Email" value={contactObjOne.Email} onchange={handleChangeContactField} required data-object="contactObjOne" data-fieldapi="Email"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="mobile" label="Authorized Signatory Mobile" value={contactObjOne.MobilePhone} onchange={handleChangeContactField} required data-object="contactObjOne" data-fieldapi="MobilePhone"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory PAN" value={contactObjOne.PAN__c} onchange={handleChangeContactField} data-object="contactObjOne" data-fieldapi="PAN__c"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="date" label="Authorized Signatory DOB" value={contactObjOne.Birthdate} onchange={handleChangeContactField} data-object="contactObjOne" data-fieldapi="Birthdate"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                <strong>Authorised Signatory 2</strong>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory First Name" value={contactObjTwo.FirstName} data-object="contactObjTwo" data-fieldapi="FirstName" onchange={handleChangeContactField}></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory Last Name" value={contactObjTwo.LastName}  data-object="contactObjTwo" data-fieldapi="LastName" onchange={handleChangeContactField}></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory Email" value={contactObjTwo.Email} onchange={handleChangeContactField} data-object="contactObjTwo" data-fieldapi="Email"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="mobile" label="Authorized Signatory Mobile" value={contactObjTwo.MobilePhone} onchange={handleChangeContactField} data-object="contactObjTwo" data-fieldapi="MobilePhone"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="text" label="Authorized Signatory PAN" value={contactObjTwo.PAN__c} onchange={handleChangeContactField} data-object="contactObjTwo" data-fieldapi="PAN__c"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <lightning-input class="" type="date" label="Authorized Signatory DOB" value={contactObjTwo.Birthdate} onchange={handleChangeContactField} data-object="contactObjTwo" data-fieldapi="Birthdate"></lightning-input>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                <center>
+                                    <div>
+                                        <template if:true={isShowErrorMsgForAuthorisedSignatorySection}>
+                                            <div>
+                                                <h2 class="slds-text-color_error" style="font-size: 18px;">ERROR : Kindly Fill All Required fields.</h2>
+                                            </div>
+                                        </template>
+                                        <template if:true={errorMsg}>
+                                            <div>
+                                                <h2 class="slds-text-color_error" style="font-size: 18px;">{errorMsg}</h2>
+                                            </div>
+                                        </template>
+                                        <div>
+                                            <template if:true={isShowSpinner}>
+                                                <lightning-spinner alternative-text="Loading" variant="brand" size="large" style="position:fixed;"></lightning-spinner>
+                                            </template>
+                                            <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handale_SaveContact} class="slds-m-left_x-small"></lightning-button>
+                                            <template if:true={isShowViewButtonForAuthorisedSignatorySection}>
+                                                <lightning-button variant="brand" label="View Mode" title="Primary action" onclick={openViewModeForContactSection} class="slds-m-left_x-small"></lightning-button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </center>
+                            </div>
+                        </div>
+                    </template>
+                    <!--Authorized signatory DETAILS SECTION EDIT MODE END-->
+                    <!--Authorized signatory DETAILS SECTION View MODE START-->
+                    <template if:true={contactDetailsViewMode}>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                <strong>Authorised Signatory 1</strong>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Name</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjOne.FirstName}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Name</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjOne.LastName}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Email</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjOne.Email}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Mobile</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjOne.MobilePhone}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory PAN</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjOne.PAN__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory DOB</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjOne.Birthdate}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1">
+                                <strong>Authorised Signatory 2</strong>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Name</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjTwo.FirstName}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Name</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjTwo.LastName}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Email</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjTwo.Email}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory Mobile</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjTwo.MobilePhone}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory PAN</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjTwo.PAN__c}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-2">
+                                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                                    <span class="slds-form-element__label slds-float--left">Authorized Signatory DOB</span>
+                                    <div class="viewModeDivHeight slds-form-element__control">
+                                        {contactObjTwo.Birthdate}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-p-around_small lgc-bg slds-size_1-of-1" style="padding-top: 43px;">
+                                <center>
+                                    <div>
+                                        <div>
+                                            <lightning-button variant="brand" label="Edit" title="Primary action" onclick={editContactDetailsSection} class="slds-m-left_x-small"></lightning-button>
+                                        </div>
+                                    </div>
+                                </center>
+                            </div>
+                        </div>
+                    </template>
+                    <!--Authorized signatory DETAILS SECTION View MODE END-->
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,170 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="slds-size_12-of-12 SecondPageClass_SelectPaymentOptions">
+        <div>
+            <b class="slds-text-heading_medium">Commercials</b>
+        </div>
+        <div class="buttonWrap">
+            <!--<lightning-button variant="brand-outline" label="View Change Log" class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand-outline" label="Global Conditional Pricing" class="slds-m-left_x-small"></lightning-button>-->
+            <lightning-button icon-name="utility:new" variant="brand" label="Create New Commercial"
+                onclick={getPlanDetailsChild} class="slds-m-left_x-small" disabled={disableCreateNewCommercial}></lightning-button>
+        </div>
+    </div>
+    <template if:false={showCommercial}>
+        <div class="noDataBox">
+            <i><lightning-icon icon-name="utility:info_alt"></lightning-icon></i>
+            <p class="selectPaymentOptions">No new commercial setup for the merchant.</p>
+        </div>
+    </template>
+    <template if:true={showCommercial}>
+        <div class="noDataBox">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered listCommercialTable">
+                <thead>
+                    <tr>
+                        <th style="width:30%;padding-left:20px;">Name of the Commercial</th>
+                        <th style="width:20%;padding-left:20px;">Status</th>
+                        <th style="width:20%;padding-left:20px;">Source</th>
+                        <th style="width:20%;padding-left:20px;">Template Name</th>
+                        <th style="width:20%;padding-left:20px;">Created By</th>
+                        <th style="width:40%;padding-left:20px;">Created Date</th>
+                        <th style="width:40%;padding-left:20px;">Last Edited On</th>
+                        <th style="width:40%;padding-left:20px;">Last Published On</th>
+                        <th style="width:10%;padding-left:20px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="secondScreenTableCls">
+                    <template for:each={listExistingCommercial} for:item="commercial">
+                        <!--<tr key={commercial.Id} onclick={getPlanRecordsForCommercial} data-id={commercial.Id} data-key={commercial.name}>-->
+                        <tr key={commercial.Id}>
+                            <td style="width:30%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.name}</td>
+                            <td style="width:20%;text-align:center;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}><span style="padding-left:20px;padding-right:20px;" class={commercial.textColor}>{commercial.status}</span></td>
+                            <td style="width:20%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.source}</td>
+                            <td style="width:20%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.templateName}</td>
+                            <td style="width:20%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.createdBy}</td>
+                            <td style="width:40%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.createdDate}</td>
+                            <td style="width:40%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.lastEditedOn}</td>
+                            <td style="width:40%;padding-left:20px;" onclick={getPlanRecordsForCommercial}
+                                data-id={commercial.Id} data-key={commercial.name}>{commercial.lastPublishedOn}</td>
+                            <td style="width:10%;padding-left:20px;">
+                                <div>
+                                    <lightning-button-menu>
+                                        <lightning-menu-item label="Edit" onclick={handleEditCommercial}
+                                            data-id={commercial.Id} data-key={commercial.name}></lightning-menu-item>
+                                        <lightning-menu-item label="Audit Trail" onclick={handleAuditTrailCommercial}
+                                            data-id={commercial.Id} data-key={commercial.name}></lightning-menu-item>
+                                    </lightning-button-menu>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <!--Audit Trail Screen Staring-->
+    <template if:true={showAuditTrail}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Audit trail for {letCommercialName}</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+                
+                    <table id="Table7" class="slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr style="background-color:rgb(243, 243, 243)">
+                                <th style="width:16%;text-align:center;">Pricing Number</th>
+                                <th style="width:16%;text-align:center;">Field</th>
+                                <th style="width:17%;text-align:center;">Old Value</th>
+                                <th style="width:17%;text-align:center;">New Value</th>
+                                <th style="width:17%;text-align:center;">Created By</th>
+                                <th style="width:17%;text-align:center;">Created on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={listAuditTrail} for:item="ph" for:index="index1">
+                                <tr key={ph.Id} style={ph.backgroundColor}>
+                                    <td style="width:16%;text-align:center;">
+                                        <template if:true={ph.showLink}>
+                                            <a onclick={getPricingRecordId} data-id={ph.Id} data-key={index1}>{ph.pricingName}</a>    
+                                        </template>
+                                    </td>
+                                    <td style="width:16%;text-align:center;">{ph.field}</td>
+                                    <td style="width:17%;text-align:center;">{ph.oldValue}</td>
+                                    <td style="width:17%;text-align:center;">{ph.newValue}</td>
+                                    <td style="width:17%;text-align:center;">{ph.createdBy}</td>
+                                    <td style="width:17%;text-align:center;">{ph.createdDate}</td>
+                                </tr>
+                            </template>  
+                        </tbody>
+                    </table> 
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModalAuditTrail}>Cancel</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!--Audit Trail Screen Ending-->
+
+    <!--Pricing Record Screen Staring-->
+    <template if:true={showPricingData}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-0111212" class="slds-modal slds-fade-in-open" style="padding-left:30%;padding-right:30%;">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6021209">
+                    <table id="Table9" class="slds-table_bordered slds-table_col-bordered">
+                        <tbody>
+                            <tr>
+                                <td>&nbsp;&nbsp;Payment Mode</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.paymentModeName}</td>
+                            </tr>   
+                            <tr>
+                                <td>&nbsp;&nbsp;Payment Option</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.paymentOptionName}</td>
+                            </tr>  
+                            <tr>
+                                <td>&nbsp;&nbsp;Pricing Specification</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.paymentSpecficationName}</td>
+                            </tr>  
+                            <tr>
+                                <td>&nbsp;&nbsp;Payment Gateway</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.paymentGatewayName}</td>
+                            </tr>  
+                            <tr>
+                                <td>&nbsp;&nbsp;ONUS/OFFUS</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.onusOffus}</td>
+                            </tr>  
+                            <tr>
+                                <td>&nbsp;&nbsp;Transction Type</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.transactionType}</td>
+                            </tr>  
+                            <tr>
+                                <td>&nbsp;&nbsp;Fee Model</td>
+                                <td>&nbsp;&nbsp;{pricingRecord.feeModel}</td>
+                            </tr>  
+                        </tbody>
+                    </table> 
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModalPricing}>Cancel</button>
+                </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>
+    <!--Pricing Record Screen Ending-->
+
+    
+</template>
