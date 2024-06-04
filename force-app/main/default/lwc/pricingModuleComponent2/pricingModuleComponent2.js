@@ -159,6 +159,7 @@ export default class PricingModuleComponent extends LightningElement {
 
     //this method is called from the connected callback and redirect to home button
     onLoadFunction() {
+        alert('calling onload');
         this.showFirstScreen = true;
     }
 

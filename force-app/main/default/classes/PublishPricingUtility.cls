@@ -7,7 +7,7 @@
 */ 
 public class PublishPricingUtility {
     //query of pricing records
-    public static String query = 'SELECT Id,Temp_Id_TDR__c,Temp_Id_Conv__c,Opportunity__r.Prod_Merchant_Id__c,Fee_Model__c,Commercial2__c,Opportunity__c,Transaction_Type__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Amount__c,Master_Pricing_SF_Key__c,Valid_From__c,Convenience_Flat_Fee__c,Convenience__c,Rule_Id__c,Rule_Id_Conv__c,CreatedBy.Name,LastModifiedBy.Name,Version_Number__c FROM Pricing__c '; 
+    public static String query = 'SELECT Id,Temp_Id_Delete_TDR__c,Temp_Id_Delete_Conv__c ,Temp_Id_TDR__c,Temp_Id_Conv__c,Opportunity__r.Prod_Merchant_Id__c,Fee_Model__c,Commercial2__c,Opportunity__c,Transaction_Type__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Amount__c,Master_Pricing_SF_Key__c,Valid_From__c,Convenience_Flat_Fee__c,Convenience__c,Rule_Id__c,Rule_Id_Conv__c,CreatedBy.Name,LastModifiedBy.Name,Version_Number__c FROM Pricing__c '; 
     
     //Map of PayUPGId to SF_Treasury_Transformer__c
     public static Map<String,SF_Treasury_Transformer__c> mapPayuPGIdToTransformer = getMapPayuPGIdToTransformer();
@@ -22,7 +22,7 @@ public class PublishPricingUtility {
     }
     
     //Method called from processTheRequestMethod
-    public static RequestWrapperClass getBody(List<Pricing__c> listPricing,String action) {
+    public static RequestWrapperClass getBody(List<Pricing__c> listPricing,String action,Boolean isDeleteRequest) {
         DateTime currentDateTimeUTCFormat = PublishPricingUtility.getUTCDateTime(DateTime.now());
         String currentDateTimeUTCFormatString = currentDateTimeUTCFormat.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
         RequestWrapperClass requestWrapper = new RequestWrapperClass();
@@ -38,16 +38,18 @@ public class PublishPricingUtility {
                 availableTransactionType.add('TDR'); 
                 availableTransactionType.add('Convenience'); 
             }  
-            createJSONRequest(requestWrapper,pricing,availableTransactionType,currentDateTimeUTCFormatString); 
+            createJSONRequest(requestWrapper,pricing,availableTransactionType,currentDateTimeUTCFormatString,isDeleteRequest); 
         } 
         return requestWrapper;
     }
     
-    public static void createJSONRequest(RequestWrapperClass requestWrapper,Pricing__c pricing,List<String> availableTransactionType,String currentDateTimeUTCFormatString) {
+    public static void createJSONRequest(RequestWrapperClass requestWrapper,Pricing__c pricing,List<String> availableTransactionType,String currentDateTimeUTCFormatString,Boolean isDeleteRequest) {
         for(String transactionType : availableTransactionType) {
             PricingRuleConfigurationDtoList pricingRecordDetails = new PricingRuleConfigurationDtoList();
             if(transactionType == 'TDR') {
-                if(String.isNotBlank(pricing.Temp_Id_TDR__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(pricing.Temp_Id_TDR__c); 
+                if(isDeleteRequest && String.isNotBlank(pricing.Temp_Id_Delete_TDR__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(pricing.Temp_Id_Delete_TDR__c);
+                else if(!isDeleteRequest && String.isNotBlank(pricing.Temp_Id_TDR__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(pricing.Temp_Id_TDR__c); 
+                
                 if(String.isNotBlank(pricing.Rule_Id__c)) pricingRecordDetails.mappingId = Integer.valueOf(pricing.Rule_Id__c); 
                 pricingRecordDetails.amountSlab = pricing.TDR_Amount__c;
                 pricingRecordDetails.percentFee = pricing.TDR__c;
@@ -55,13 +57,16 @@ public class PublishPricingUtility {
                 pricingRecordDetails.revenueModel = 'TDR';
             }
             else if(transactionType == 'Convenience') {
-                if(String.isNotBlank(pricing.Temp_Id_Conv__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(pricing.Temp_Id_Conv__c);
+                if(isDeleteRequest && String.isNotBlank(pricing.Temp_Id_Delete_Conv__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(pricing.Temp_Id_Delete_Conv__c);
+                else if(!isDeleteRequest && String.isNotBlank(pricing.Temp_Id_Conv__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(pricing.Temp_Id_Conv__c);
+                
                 if(String.isNotBlank(pricing.Rule_Id_Conv__c)) pricingRecordDetails.mappingId = Integer.valueOf(pricing.Rule_Id_Conv__c);
                 pricingRecordDetails.amountSlab = pricing.Convenience_Amount__c;
                 pricingRecordDetails.percentFee = pricing.Convenience__c;
                 pricingRecordDetails.flatFee = pricing.Convenience_Flat_Fee__c;
                 pricingRecordDetails.revenueModel = 'Conv Fee';
             }
+            pricingRecordDetails.isActive = !isDeleteRequest;
             pricingRecordDetails.sfId = pricing.Id+'#'+transactionType;
             pricingRecordDetails.entityId =  Integer.valueOf(pricing.Opportunity__r.Prod_Merchant_Id__c);
             pricingRecordDetails.debitModel = pricing.Fee_Model__c;
@@ -95,8 +100,8 @@ public class PublishPricingUtility {
     }
     
     //Method called from batch class execute method
-    public static void processTheRequest(List<Pricing__c> listPricing,String action,String apiSettingName,String processName,Boolean checker) {
-        RequestWrapperClass requestWrapper = getBody(listPricing,action);
+    public static void processTheRequest(List<Pricing__c> listPricing,String action,String apiSettingName,String processName,Boolean checker,Boolean isDeleteRequest) {
+        RequestWrapperClass requestWrapper = getBody(listPricing,action,isDeleteRequest);
         String requestBody = JSON.serialize(requestWrapper);
         try{
             String commId = '';
@@ -110,7 +115,7 @@ public class PublishPricingUtility {
             publishDetail.Request_Id__c = requestWrapper.requestId;
             publishDetail.Request_Body__c = requestBody;
             publishDetail.Checker__c = checker;
-            
+            publishDetail.Delete_Request__c = isDeleteRequest;
             if(String.isNotBlank(requestBody)){
                 String access_token = PricingIntegrationUtility.getAccessToken('Get_Access_Token_SaveBulkRules');
                 if(access_token != NULL){

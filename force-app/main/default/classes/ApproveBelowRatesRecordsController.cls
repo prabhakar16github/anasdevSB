@@ -74,28 +74,30 @@ public class ApproveBelowRatesRecordsController {
 */
     public ApproveBelowRatesRecordsController() {
         String commercialId = ApexPages.currentPage().getParameters().get('commercialId');
-        listBelowRackRatesRecords = new List<Pricing__c>();
-        listBelowRackRatesRecords = [SELECT Id,Payment_Mode_Text__c,Payment_Option_Text__c,Specifcation__c,Payment_Gateway_Text__c ,TDR_Percentage_Reference__c,
-                                     TDR_Amount_Reference__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Percentage_Reference__c,Convenience_Amount_Reference__c,
-                                     Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c,BH_Status__c,Bank_Name__c,POR_Type_Name__c,Commercial2__r.Opportunity__c,
-                                     Payment_Gateway2__r.Type__c
-                                     FROM Pricing__c 
-                                     WHERE Commercial2__c = :commercialId 
-                                     AND Below_Rack_Rates__c = true 
-                                     AND Deleted__c = false
-                                     AND Invisible__c = false
-                                     AND Banking_Ops_Status__c = 'Pending with BH'];
-        
-        listAllRecords = new List<Pricing__c>();
-        listAllRecords = [SELECT Id,Payment_Mode_Text__c,Payment_Option_Text__c,Specifcation__c,Payment_Gateway_Text__c ,TDR_Percentage_Reference__c,
-                          TDR_Amount_Reference__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Percentage_Reference__c,Convenience_Amount_Reference__c,
-                          Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c,BH_Status__c,Bank_Name__c,POR_Type_Name__c,Commercial2__r.Opportunity__c,
-                          Payment_Gateway2__r.Type__c
-                          FROM Pricing__c 
-                          WHERE Commercial2__c = :commercialId 
-                          AND Deleted__c = false
-                          AND Invisible__c = false
-                          AND Banking_Ops_Status__c != 'Pending with BH'];
+        if(commercialId != NULL){
+            listBelowRackRatesRecords = new List<Pricing__c>();
+            listBelowRackRatesRecords = [SELECT Id,Payment_Mode_Text__c,Payment_Option_Text__c,Specifcation__c,Payment_Gateway_Text__c ,TDR_Percentage_Reference__c,
+                                         TDR_Amount_Reference__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Percentage_Reference__c,Convenience_Amount_Reference__c,
+                                         Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c,BH_Status__c,Bank_Name__c,POR_Type_Name__c,Commercial2__r.Opportunity__c,
+                                         Payment_Gateway2__r.Type__c
+                                         FROM Pricing__c 
+                                         WHERE Commercial2__c = :commercialId 
+                                         AND Below_Rack_Rates__c = true 
+                                         AND Deleted__c = false
+                                         AND Invisible__c = false
+                                         AND Banking_Ops_Status__c = 'Pending with BH'];
+            
+            listAllRecords = new List<Pricing__c>();
+            listAllRecords = [SELECT Id,Payment_Mode_Text__c,Payment_Option_Text__c,Specifcation__c,Payment_Gateway_Text__c ,TDR_Percentage_Reference__c,
+                              TDR_Amount_Reference__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Percentage_Reference__c,Convenience_Amount_Reference__c,
+                              Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c,BH_Status__c,Bank_Name__c,POR_Type_Name__c,Commercial2__r.Opportunity__c,
+                              Payment_Gateway2__r.Type__c
+                              FROM Pricing__c 
+                              WHERE Commercial2__c = :commercialId 
+                              AND Deleted__c = false
+                              AND Invisible__c = false
+                              AND Banking_Ops_Status__c != 'Pending with BH'];
+        }        
     }
     
     /*
@@ -125,7 +127,7 @@ public class ApproveBelowRatesRecordsController {
             update listBelowRackRatesRecords;
             if(setPricingIds.size() > 0) {
                 //Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(setPricingIds),100); 
-                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingIds),100); 
+                //Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingIds),100); 
             }
         }
     }
@@ -176,7 +178,7 @@ public class ApproveBelowRatesRecordsController {
             update pricing;
             if(setPricingId.size() > 0) {
                 //Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(setPricingId),100); 
-                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingId),100); 
+                //Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingId),100); 
                 
             }
         }
