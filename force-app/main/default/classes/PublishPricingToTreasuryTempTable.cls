@@ -43,17 +43,17 @@ public class PublishPricingToTreasuryTempTable implements Database.Batchable<sOb
     public Database.QueryLocator start(Database.BatchableContext bc) {
         String query = PublishPricingUtility.query;
         if(isDeleteRequest){
-            query += ' WHERE Id IN :pricingIds AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL) AND Deleted__c = false AND Invisible__c = false';
+            query += ' WHERE Id IN :pricingIds AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL) AND Deleted__c = true AND Invisible__c = false';
         }else{
             Set<String> statusValues = new Set<String>{'Approved','Approved with BH'};
                 String STATUS_PUBLISHED = 'Live';
             
             if(commId != NULL){
-                query += 'WHERE Commercial2__c = :commId ';
+                query += 'WHERE Commercial2__c = :commId AND Banking_Ops_Status__c IN :statusValues AND Need_To_Publish__c = true AND Invisible__c = false';
             }else if(pricingIds != NULL && !pricingIds.isEmpty()){
                 query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
             }
-            query += 'AND Banking_Ops_Status__c IN :statusValues AND Deleted__c = false AND Need_To_Publish__c = true AND Invisible__c = false';
+            //query += 'AND Banking_Ops_Status__c IN :statusValues AND Need_To_Publish__c = true AND Invisible__c = false';
         }
         
         return Database.getQueryLocator(query);

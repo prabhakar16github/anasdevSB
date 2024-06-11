@@ -43,7 +43,7 @@ public class PublishPricingToTreasuryTempTableApprove implements Database.Batcha
     public Database.QueryLocator start(Database.BatchableContext bc) {
         String query = PublishPricingUtility.query;
         if(this.isDeleteRequest){
-            query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = false AND Invisible__c = false';
+            query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = true AND Invisible__c = false';
         }else{
             //Set<String> statusValues = new Set<String>{'Pending with KAM','Pending with Banking ops','Pending with Bank','Pending with BH'};
             

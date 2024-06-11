@@ -69,7 +69,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
         String query = PublishPricingUtility.query;
         
         if(this.isDeleteRequest){
-            query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = false AND Invisible__c = false';
+            query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = true AND Invisible__c = false';
         }else{
             //Set<String> statusValues = new Set<String>{'Pending with KAM','Pending with Banking ops','Pending with Bank','Pending with BH'};
             String STATUS_PUBLISHED = 'Live';
@@ -81,7 +81,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
                 query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
             }
             //query += 'AND Banking_Ops_Status__c IN :statusValues';// AND Deleted__c = FALSE AND Need_To_Publish__c = TRUE AND Published__c = false';
-            query += 'AND Deleted__c = false AND Invisible__c = false';
+            query += 'AND Invisible__c = false';
         }
         
         
@@ -104,7 +104,8 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
     /****************************Finish Method*****************************************/
     public void finish(Database.BatchableContext BC){
         if(this.processName == 'SaveBulkRules-CheckerTrueActionRejectDelete') {
-            Set<String> setRuleIds = new Set<String>();
+            //Set<String> setRuleIds = new Set<String>();
+            Set<String> setPricingWithRuleId = new Set<String>();
             String commercialId = '';
             String opportunityId = '';
             Integer count = 0;
@@ -117,10 +118,11 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
                                             commercialId = price.Commercial2__c;
                                             count = 1;
                                         }
-                                        if(String.isNotBlank(price.Rule_Id__c)) setRuleIds.add(price.Rule_Id__c);
-                                        if(String.isNotBlank(price.Rule_Id_Conv__c)) setRuleIds.add(price.Rule_Id_Conv__c);
+                                        setPricingWithRuleId.add(price.Id);
+                                       // if(String.isNotBlank(price.Rule_Id__c)){} setRuleIds.add(price.Rule_Id__c);
+                                        //if(String.isNotBlank(price.Rule_Id_Conv__c)) setRuleIds.add(price.Rule_Id_Conv__c);
                                     }
-            if(setRuleIds.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
+            /*if(setRuleIds.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
                 String ruleIds = '[';
                 for(String ruleId : setRuleIds) {
                     ruleIds += '\"'+ruleId+'\",';
@@ -129,6 +131,9 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
                 ruleids += ']';
                 RemovePricingFromTreasuryNew.deletePricing(ruleIds,commercialId,opportunityId);		    
     
+            }*/
+            if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
+                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),100);   
             }
         }	    
     }
