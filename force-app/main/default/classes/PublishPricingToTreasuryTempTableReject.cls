@@ -69,7 +69,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
         String query = PublishPricingUtility.query;
         
         if(this.isDeleteRequest){
-            query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = false';
+            query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = false AND Invisible__c = false';
         }else{
             //Set<String> statusValues = new Set<String>{'Pending with KAM','Pending with Banking ops','Pending with Bank','Pending with BH'};
             String STATUS_PUBLISHED = 'Live';
@@ -81,7 +81,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
                 query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
             }
             //query += 'AND Banking_Ops_Status__c IN :statusValues';// AND Deleted__c = FALSE AND Need_To_Publish__c = TRUE AND Published__c = false';
-            query += 'AND Deleted__c = false';
+            query += 'AND Deleted__c = false AND Invisible__c = false';
         }
         
         

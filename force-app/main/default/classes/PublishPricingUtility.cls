@@ -7,7 +7,7 @@
 */ 
 public class PublishPricingUtility {
     //query of pricing records
-    public static String query = 'SELECT Id,Temp_Id_Delete_TDR__c,Temp_Id_Delete_Conv__c ,Temp_Id_TDR__c,Temp_Id_Conv__c,Opportunity__r.Prod_Merchant_Id__c,Fee_Model__c,Commercial2__c,Opportunity__c,Transaction_Type__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Amount__c,Master_Pricing_SF_Key__c,Valid_From__c,Convenience_Flat_Fee__c,Convenience__c,Rule_Id__c,Rule_Id_Conv__c,CreatedBy.Name,LastModifiedBy.Name,Version_Number__c FROM Pricing__c '; 
+    public static String query = 'SELECT Id,Source__c,Temp_Id_Delete_TDR__c,Temp_Id_Delete_Conv__c ,Temp_Id_TDR__c,Temp_Id_Conv__c,Opportunity__r.Prod_Merchant_Id__c,Fee_Model__c,Commercial2__c,Opportunity__c,Transaction_Type__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Amount__c,Master_Pricing_SF_Key__c,Valid_From__c,Convenience_Flat_Fee__c,Convenience__c,Rule_Id__c,Rule_Id_Conv__c,CreatedBy.Name,LastModifiedBy.Name,Version_Number__c FROM Pricing__c '; 
     
     //Map of PayUPGId to SF_Treasury_Transformer__c
     public static Map<String,SF_Treasury_Transformer__c> mapPayuPGIdToTransformer = getMapPayuPGIdToTransformer();
@@ -74,6 +74,7 @@ public class PublishPricingUtility {
             pricingRecordDetails.addedBy = pricing.CreatedBy.Name;
             pricingRecordDetails.updatedBy = pricing.LastModifiedBy.Name;
             pricingRecordDetails.versionNumber = Integer.valueOf(pricing.Version_Number__c);
+            pricingRecordDetails.source = pricing.Source__c;
             if(mapPayuPGIdToTransformer.containsKey(pricing.Master_Pricing_SF_Key__c)) {
                 SF_Treasury_Transformer__c sfTransformer = mapPayuPGIdToTransformer.get(pricing.Master_Pricing_SF_Key__c);
                 if(String.isNotBlank(sfTransformer.Payment_Mode__c)) pricingRecordDetails.attributes.add(getAttributes('mode',sfTransformer.Payment_Mode__c));		    
@@ -173,7 +174,7 @@ public class PublishPricingUtility {
         public Integer mappingId;                                        //Rule Id
         public String addedBy = '';                                      //Username of the user created the pricing record
         public String updatedBy = '';                                    //Username of the user edited the pricing record
-        public String source = 'Salesforce';                             //Default Salesforce
+        public String source = '';                             //Default Salesforce
         public Integer versionNumber;                                     //Version Number 
         public List<Attributes> attributes = new List<Attributes>();     //List to hold mode,sub payment mode,scheme,card type,onus,payment entity
     } 

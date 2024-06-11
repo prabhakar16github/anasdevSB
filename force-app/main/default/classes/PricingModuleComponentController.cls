@@ -475,6 +475,107 @@ public class PricingModuleComponentController {
                                                   }    
                 }
                 else if(String.isNotBlank(commercialId)) {
+                    /************/
+                    List<Pricing__c> existingPricingList = [SELECT Id,Payment_Mode__c,Payment_Option2__c,Payment_Option2__r.Name,Pricing_Specification__c,
+                    Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
+                    Fee_Model__c,Transaction_Type__c,TDR__c,TDR_Amount__c,TDR_Flat_Fee__c,Convenience__c,
+                    Convenience_Amount__c,Convenience_Flat_Fee__c,Rule_Id__c,Rule_Id_Conv__c,
+                    Temp_Id_TDR__c,Temp_Id_Conv__c,Version_Number__c, Banking_Ops_Status__c 
+                    FROM Pricing__c 
+                    WHERE Commercial2__c   = :commercialId AND Deleted__c = false];
+                        List<Pricing__c> pricingList = new List<Pricing__c>();
+                        GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData('732349740','Conv Fee,tdr');//oppRecord.Name
+                        if(!tranformData.transformedPricingWrapperPricingList.isEmpty()){
+                        for(GetApiTreasuryDataController.transformedPricingWrapper data : tranformData.transformedPricingWrapperPricingList){
+                        if(!existingPricingList.isEmpty() && existingPricingList !=Null){
+                        for(Pricing__c pricingExist : existingPricingList){
+                            if(pricingExist.Rule_Id__c !=Null && (pricingExist.Banking_Ops_Status__c =='Rejected' || pricingExist.Banking_Ops_Status__c =='Rejected with BH') 
+                                && pricingExist.Version_Number__c != Decimal.valueOf(data.versionNumber)){
+                                    if(data.revenueModel == 'TDR'){
+                                        pricingExist.TDR_Flat_Fee__c  = data.tdrFlatFee;
+                                        pricingExist.TDR_Amount__c = data.tdrAmount;
+                                        pricingExist.TDR__c   = Decimal.valueOf(data.TDR);
+                                        pricingExist.Transaction_Type__c = 'TDR';
+                                    }
+                                    if(data.revenueModel == 'Conv Fee'){
+                                        pricingExist.Convenience_Flat_Fee__c   = data.convenienceFlatFee;
+                                        pricingExist.Convenience_Amount__c  = data.convenienceAmount;
+                                        pricingExist.Convenience__c   =  Decimal.valueOf(data.convenienceFee);
+                                        pricingExist.Transaction_Type__c = 'Convenience';
+                                    }
+                                    pricingExist.Payment_Mode__c = data.paymentMode;
+                                    pricingExist.Payment_Option2__c = data.paymentOptions;
+                                    pricingExist.Pricing_Specification__c = data.specifications;
+                                    pricingExist.Payment_Gateway2__c = data.paymentGateway;
+                                    pricingExist.ONUS__c = data.onusOffus;
+                                    pricingExist.Fee_Model__c = data.debitModel;
+                                    pricingExist.Version_Number__c  = Decimal.valueOf(data.versionNumber);
+                                    pricingExist.Transaction_Type__c = 'TDR';
+                                    pricingExist.Banking_Ops_Status__c = 'Approved';
+                                    pricingList.add(pricingExist); 
+                            }
+                            if((pricingExist.Rule_Id__c !=Null || pricingExist.Rule_Id_Conv__c !=Null) && (pricingExist.Rule_Id__c==data.ruleId ||
+                                pricingExist.Rule_Id_Conv__c ==data.ruleId) && (pricingExist.Banking_Ops_Status__c =='Approved' ||
+                                pricingExist.Banking_Ops_Status__c =='Approved with BH') && pricingExist.Version_Number__c != Decimal.valueOf(data.versionNumber)){
+                                    if(data.revenueModel == 'TDR'){
+                                        pricingExist.TDR_Flat_Fee__c  = data.tdrFlatFee;
+                                        pricingExist.TDR_Amount__c = data.tdrAmount;
+                                        pricingExist.TDR__c   = Decimal.valueOf(data.TDR);
+                                        pricingExist.Transaction_Type__c = 'TDR';
+                                    }
+                                    if(data.revenueModel == 'Conv Fee'){
+                                        pricingExist.Convenience_Flat_Fee__c   = data.convenienceFlatFee;
+                                        pricingExist.Convenience_Amount__c  = data.convenienceAmount;
+                                        pricingExist.Convenience__c   =  Decimal.valueOf(data.convenienceFee);
+                                        pricingExist.Transaction_Type__c = 'Convenience';
+                                    }
+                                    pricingExist.Payment_Mode__c = data.paymentMode;
+                                    pricingExist.Payment_Option2__c = data.paymentOptions;
+                                    pricingExist.Pricing_Specification__c = data.specifications;
+                                    pricingExist.Payment_Gateway2__c = data.paymentGateway;
+                                    pricingExist.ONUS__c = data.onusOffus;
+                                    pricingExist.Fee_Model__c = data.debitModel;
+                                    pricingExist.Version_Number__c  =  Decimal.valueOf(data.versionNumber);
+                                    pricingList.add(pricingExist); 
+                                }
+                            } 
+                        }
+                        else{
+                                Pricing__c pricingData = new Pricing__c();
+                                if(data.revenueModel == 'TDR'){
+                                    pricingData.TDR_Flat_Fee__c  = data.tdrFlatFee;
+                                    pricingData.TDR_Amount__c = data.tdrAmount;
+                                    pricingData.TDR__c   = Decimal.valueOf(data.TDR);
+                                    pricingData.Transaction_Type__c = 'TDR';
+                                    pricingData.Rule_Id__c = data.ruleId;
+                                }
+                                if(data.revenueModel == 'Conv Fee'){
+                                    pricingData.Convenience_Flat_Fee__c   = data.convenienceFlatFee;
+                                    pricingData.Convenience_Amount__c  = data.convenienceAmount;
+                                    pricingData.Convenience__c   =  Decimal.valueOf(data.convenienceFee);
+                                    pricingData.Transaction_Type__c = 'Convenience';
+                                    pricingData.Rule_Id_Conv__c = data.ruleId;
+                                }
+                                pricingData.Payment_Mode__c = data.paymentMode;
+                                pricingData.Payment_Option2__c = data.paymentOptions;
+                                pricingData.Pricing_Specification__c = data.specifications;
+                                pricingData.Payment_Gateway2__c = data.paymentGateway;
+                                pricingData.Opportunity__c = data.recordId;
+                                pricingData.ONUS__c = data.onusOffus;
+                                pricingData.Commercial2__c = commercialId; 
+                                pricingData.Master_Pricing_Data__c = data.mpdId;
+                                pricingData.Fee_Model__c = data.debitModel;
+                                pricingData.Transaction_Type__c = 'TDR';
+                                pricingData.Banking_Ops_Status__c = 'Approved';
+                                pricingData.Version_Number__c  =  Decimal.valueOf(data.versionNumber);
+                                pricingList.add(pricingData);
+                            }
+                        }
+                        if(pricingList !=NULL && pricingList.size()>0){
+                            upsert pricingList;
+                        }
+                    }
+                    /***********/
                     for(Pricing__c pricing : [SELECT Id,Payment_Mode__c,Payment_Option2__c,Payment_Option2__r.Name,Pricing_Specification__c,
                                               Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
                                               Fee_Model__c,Transaction_Type__c,TDR__c,TDR_Amount__c,TDR_Flat_Fee__c,Convenience__c,
@@ -711,6 +812,7 @@ public class PricingModuleComponentController {
         //Addition to support the edit of the Commercial
         @AuraEnabled public String pricingId = '';
         //Added to make allow edit of the few fields on the enter tdr components - UI Changes New
+        @AuraEnabled public Boolean isSelectPaymentOption = false;// added by rohit 23rd may
         @AuraEnabled public Boolean restrictFlatFeeAndPercentageToBeEdited = false;
         @AuraEnabled public Boolean restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited = false;
         @AuraEnabled public String ruleStatus = 'D';
@@ -1351,6 +1453,23 @@ public class PricingModuleComponentController {
     public static CommercialWrapper existingCommercial(String recordId) {
         CommercialWrapper comWrpCls = new CommercialWrapper();
         try {
+             /*******Ticket 3.2 (SFI-1486)If Commercial does not exist in SF and we are clicking on Commercial Tab on Oportuntiy then we need
+            to call the treasury API and check If any pricing record exist in treasury and revenue model is TDR then 
+            we need to create  commercial in SF side  
+            ********/
+            List<Opportunity> oppList= [SELECT Id,Prod_MID__c,(SELECT Id FROM Commercial2__r) FROM Opportunity WHERE  Id=:recordId LIMIT 1 ];
+            if(oppList[0].Commercial2__r.isEmpty() && oppList[0].Commercial2__r.size()==0){
+                GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(oppList[0].Prod_MID__c,'TDR,Conv Fee');
+                if(tranformData.transformedPricingWrapperPricingList !=NULL && tranformData.transformedPricingWrapperPricingList.size()>0){
+                    Commercial2__c  comm = new Commercial2__c ();
+                    comm.Name =  System.label.Commercial2_Name+oppList[0].Prod_MID__c;
+                    comm.Source__c  = 'Treasury(System_Generated)';
+                    comm.Opportunity__c = recordId;
+                    comm.Status__c = 'Live';
+                    Insert comm;
+                }
+            }
+            /*******END******/
             for(Commercial2__c comm : [SELECT Id,Name,Status__c,CreatedDate,Source__c,CreatedBy.Name,Last_Edited_On__c,
                                        Last_Published_On__c FROM Commercial2__c WHERE Opportunity__c = :recordId]) {
                                            ExistingCommercialWrapper commWrp = new ExistingCommercialWrapper();
@@ -1364,7 +1483,13 @@ public class PricingModuleComponentController {
                                            else commWrp.textColor = 'colorPillsOptionsOrange';
                                            if(comm.Last_Edited_On__c != NULL) commWrp.lastEditedOn = comm.Last_Edited_On__c.format();
                                            if(comm.Last_Published_On__c != NULL) commWrp.lastPublishedOn = comm.Last_Published_On__c.format();
-                                           if(comm.Source__c == 'Scratch') commWrp.source = comm.Source__c;    
+                                           if(comm.Source__c == 'Scratch') commWrp.source = comm.Source__c;  
+                                           /*****Added by rohit SFI-1486******/
+                                           else if(comm.Source__c == 'Treasury(System_Generated)'){
+                                            commWrp.source = comm.Source__c; 
+                                            commWrp.templateName = ''; 
+                                            } 
+                                        /******/  
                                            else {
                                                commWrp.source = 'Template'; 
                                                commWrp.templateName = comm.Source__c;  	    
@@ -2281,7 +2406,8 @@ update commNotLive;
                                                                         //Call Class to delete records from Tresury
                                                                         String opportunityId = '';
                                                                         Integer count = 0;
-                                                                        Set<String> setRuleIds = new Set<String>();
+                                                                        Set<String> setPricingWithRuleId = new Set<String>();
+                                                                        //Set<String> setRuleIds = new Set<String>();
                                                                         Set<String> setPricingIds = new Set<String>();
                                                                         for(Pricing__c price: [SELECT Id,Rule_Id__c,Rule_Id_Conv__c,Commercial2__r.Opportunity__c,Commercial2__r.Merchant_MID__c,
                                                                                                Temp_Id_TDR__c,Temp_Id_Conv__c,Transaction_Type__c
@@ -2289,15 +2415,15 @@ update commNotLive;
                                                                                                WHERE Commercial2__c = :commercialId 
                                                                                                AND Commercial2__r.Status__c = 'Live'
                                                                                                AND Deleted__c = true
-											       AND Invisible__c = false
-											       AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL)]) {
+											       												AND Invisible__c = false]) {
                                                                                                    if(count == 0) {
                                                                                                        opportunityId = price.Commercial2__r.Opportunity__c;
                                                                                                        count = 1;
                                                                                                    }
                                                                                                    if(price.Transaction_Type__c == 'TDR') {
                                                                                                        if(String.isNotBlank(price.Rule_Id__c) && String.isBlank(price.Temp_Id_TDR__c)) {
-                                                                                                           setRuleIds.add(price.Rule_Id__c);    
+                                                                                                           //setRuleIds.add(price.Rule_Id__c);    
+                                                                                                           setPricingWithRuleId.add(price.Id);
                                                                                                        }
                                                                                                        else if(String.isNotBlank(price.Temp_Id_TDR__c)) {
                                                                                                            setPricingIds.add(price.Id);	    
@@ -2305,7 +2431,8 @@ update commNotLive;
                                                                                                    }
                                                                                                    else if(price.Transaction_Type__c == 'Convenience') {
                                                                                                        if(String.isNotBlank(price.Rule_Id_Conv__c) && String.isBlank(price.Temp_Id_Conv__c)) {
-                                                                                                           setRuleIds.add(price.Rule_Id_Conv__c);    
+                                                                                                           //setRuleIds.add(price.Rule_Id_Conv__c);  
+                                                                                                           setPricingWithRuleId.add(price.Id);
                                                                                                        }	
                                                                                                        else if(String.isNotBlank(price.Temp_Id_Conv__c)) {
                                                                                                            setPricingIds.add(price.Id);	    
@@ -2313,13 +2440,15 @@ update commNotLive;
                                                                                                    }
                                                                                                    else {
                                                                                                        if(String.isNotBlank(price.Rule_Id__c) && String.isBlank(price.Temp_Id_TDR__c)) {
-                                                                                                           setRuleIds.add(price.Rule_Id__c);    
+                                                                                                           //setRuleIds.add(price.Rule_Id__c);  
+                                                                                                           setPricingWithRuleId.add(price.Id);
                                                                                                        }
                                                                                                        else if(String.isNotBlank(price.Temp_Id_TDR__c)) {
                                                                                                            setPricingIds.add(price.Id);	    
                                                                                                        }
                                                                                                        if(String.isNotBlank(price.Rule_Id_Conv__c) && String.isBlank(price.Temp_Id_Conv__c)) {
-                                                                                                           setRuleIds.add(price.Rule_Id_Conv__c);    
+                                                                                                           //setRuleIds.add(price.Rule_Id_Conv__c);   
+                                                                                                           setPricingWithRuleId.add(price.Id);
                                                                                                        }
                                                                                                        else if(String.isNotBlank(price.Temp_Id_Conv__c)) {
                                                                                                            setPricingIds.add(price.Id);	    
@@ -2327,7 +2456,7 @@ update commNotLive;
                                                                                                    }
                                                                                                }
                                                                         //Delete data from Main table
-                                                                        if(setRuleIds.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
+                                                                        /*if(setRuleIds.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
                                                                             String ruleIds = '[';
                                                                             for(String ruleId : setRuleIds) {
                                                                                 ruleIds += '\"'+ruleId+'\",';
@@ -2335,11 +2464,14 @@ update commNotLive;
                                                                             ruleIds = ruleIds.removeEnd(',');
                                                                             ruleids += ']';
                                                                             callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);    
+                                                                        }*/
+                                                                        if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)){
+                                                                            Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),100);   
                                                                         }
                                                                         
                                                                         //Delete data from Main table
                                                                         if(setPricingIds.size() > 0) {
-                                                                            Database.executeBatch(new PublishPricingToTreasuryTempTableReject(setPricingIds,'SaveBulkRules-CheckerTrueActionRejectDelete'),100);   
+                                                                            Database.executeBatch(new PublishPricingToTreasuryTempTableReject(setPricingIds,'SaveBulkRules-CheckerTrueActionRejectDelete',false),100);   
                                                                         }
                                                                         
                                                                         // End : Call Class to delete records from Tresury
@@ -2399,7 +2531,7 @@ update commNotLive;
 */
     public static void callTreasuryToPushRecords(String commercialId) {
         //Database.executeBatch(new PublishPricingToTreasuryMainTable(commercialId),100); not needed
-        //Database.executeBatch(new PublishPricingToTreasuryTempTable(commercialId),100); commented temporary
+        Database.executeBatch(new PublishPricingToTreasuryTempTable(commercialId,'SaveBulkRules-CheckerFalseActionSave',false),50);
         if(Label.StopPlatformFeeFlowToTreasury.toLowerCase() == 'false') {
             callTreasuryForPlatform(commercialId);    
         }

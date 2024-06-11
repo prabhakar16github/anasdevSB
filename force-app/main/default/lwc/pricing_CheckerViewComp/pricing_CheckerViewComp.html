@@ -1,0 +1,17 @@
+<template>
+    <lightning-card>
+        
+        <lightning-tabset  active-tab-value="one">
+            <lightning-tab label="Add/Update Requests" value="one" onactive={handleAddUpdateRequests}>
+                <template if:true={showAddUpdateRequests}>
+                    <c-pricing-_-checker-add-update-request-comp opp-id={recordId}></c-pricing-_-checker-add-update-request-comp>
+                </template>
+            </lightning-tab>
+            <lightning-tab label="Removal Requests" value="two" onactive={handleRemoveRequests}>
+                <template if:true={showRemoveRequests}>
+                    <c-pricing-_-checker-remove-request-comp opp-id={recordId}></c-pricing-_-checker-remove-request-comp>
+                </template>
+            </lightning-tab>
+        </lightning-tabset>
+    </lightning-card>
+</template>

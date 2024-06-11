@@ -1,0 +1,148 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title">
+            <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action slds-text-title_bold">
+                <span class="slds-truncate" title="Section Title">TDR / Convenience Pricing</span>
+            </button>
+            
+        </h3>
+        <div class="slds-section__content ">
+            <div class="slds-text-align_center slds-m-around_x-small">
+                <lightning-button label="Approve" class="slds-m-around_x-small" icon-name="utility:check" variant="success"></lightning-button>
+                <lightning-button label="Reject" class="slds-m-around_x-small" icon-name="utility:close" variant="destructive"></lightning-button>
+            </div>
+            <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                <thead>
+                        <tr>
+                            <th></th>
+                            <th>Mode</th>
+                            <th>Option</th>
+                            <th>Specification</th>
+                            <th>Gateway</th>
+                            <th>ONUS/OFFUS</th>
+                            <th>Debit Model</th>
+                            <th>Fee Model</th>
+                            <th>TDR</th>
+                            <th>Convenience</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    <template for:each={pricingDetail.listPricing} for:item="pricing" for:index="indx">
+                        <tr key={pricing.recordId}>
+                            <td><lightning-input type="checkbox" checked = {pricing.isChecked}></lightning-input></td>
+                            <td>{pricing.paymentMode}</td>
+                            <td>{pricing.paymentOption}</td>
+                            <td>{pricing.pricingSpecification}</td>
+                            <td>{pricing.paymentGateway}</td>
+                            <td>{pricing.onusOffus}</td>
+                            <td>{pricing.debitModel}</td>
+                            <td>{pricing.feeModel}</td>
+                            <td>
+                                <template lwc:if={pricing.showTDR}>
+                                    {pricing.tdrAmount} | {pricing.tdrFlatFee} | {pricing.tdrPer}
+                                </template> 
+                            </td>
+                            <td>
+                                <template lwc:if={pricing.showConv}>
+                                    {pricing.convAmount} | {pricing.convFlatFee} | {pricing.convPer}
+                                </template>
+                            </td>
+                        </tr>      
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title">
+            <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action slds-text-title_bold">
+                <span class="slds-truncate" title="Section Title">Fixed Pricing</span>
+            </button>
+            
+        </h3>
+        <div class="slds-section__content" >
+            <template lwc:if ={fixedPricingDetail.showList}>
+                <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                            <tr>
+                            <th>Fee Type</th>
+                            <th>Debit Model</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Payment Frequency</th>
+                            <th>Amount</th>
+                            <th>Flat Fee</th>
+                            <th>Percentage</th>
+                            
+                        </tr>
+                        </thead>
+                    <tbody>
+                        <template for:each={fixedPricingDetail.listFixedPricing} for:item="fixed" for:index="indx">
+                            <tr key={fixed.recordId}>
+                                <td>{fixed.feeType}</td>
+                                <td>{fixed.debitModel}</td>
+                                <td>{fixed.startDate}</td>
+                                <td>{fixed.endDate}</td>
+                                <td>{fixed.paymentFrequency}</td>
+                                <td>{fixed.amount}</td>
+                                <td>{fixed.flatFee}</td>
+                                <td>{fixed.percentage}</td>
+                            </tr>      
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template lwc:else>
+                <div class="slds-box slds-text-color_destructive">No Fixed Pricing Record Found</div>
+            </template>
+        </div>
+    </div>
+    
+    <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title">
+            <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action slds-text-title_bold">
+                <span class="slds-truncate" title="Section Title">Platform Fee</span>
+            </button>
+            
+        </h3>
+        <div class="slds-section__content">
+            <template lwc:if ={platformFeeDetail.showList}>
+                <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                            <tr>
+                                <th>Fee Type</th>
+                                <th>Debit Model</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Payment Frequency</th>
+                                <th>Amount</th>
+                                <th>Flat Fee</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                        <template for:each={platformFeeDetail.listPlatformPricing} for:item="platformFee" for:index="indx">
+                            <tr key={platformFee.recordId}>
+                                <td>{platformFee.feeType}</td>
+                                <td>{platformFee.debitModel}</td>
+                                <td>{platformFee.startDate}</td>
+                                <td>{platformFee.endDate}</td>
+                                <td>{platformFee.paymentFrequency}</td>
+                                <td>{platformFee.amount}</td>
+                                <td>{platformFee.flatFee}</td>
+                                <td>{platformFee.percentage}</td>
+                            </tr>      
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template lwc:else>
+                <div class="slds-box slds-text-color_destructive">No Platform Fee Record Found</div>
+            </template>
+        </div>
+    </div>
+</template>
