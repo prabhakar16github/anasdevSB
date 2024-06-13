@@ -133,7 +133,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
     
             }*/
             if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
-                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),100);   
+                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),50);   
             }
         }	    
     }

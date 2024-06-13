@@ -4,10 +4,15 @@
 * Description         : Trigger for the Pricing Object
 * Version.            : 1  
 */
-trigger PricingTrigger on Pricing__c (after insert,after update) {
+trigger PricingTrigger on Pricing__c (before update,after insert,after update) {
     Trigger_Switch__c trgSwtchObj = Trigger_Switch__c.getValues('Pricing');
     if(trgSwtchObj != null && trgSwtchObj.Active__c){    
         if(Trigger.isAfter && Trigger.isUpdate)PricingTriggerHandler.afterUpdate(Trigger.new,Trigger.oldMap);
     	if(Trigger.isAfter && Trigger.isInsert)PricingTriggerHandler.afterInsertHandler(Trigger.new);
+
+        /** Added to update belowRack Rate = false,if Source != 'Salesforce',  Added by Prabhakar */
+        if(Trigger.isBefore && Trigger.isUpdate){
+            PricingTriggerHandler.beforeUpdateHandler(Trigger.new,Trigger.oldMap);
+        }
     }
 }
