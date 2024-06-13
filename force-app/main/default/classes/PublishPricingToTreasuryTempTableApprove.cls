@@ -41,6 +41,10 @@ public class PublishPricingToTreasuryTempTableApprove implements Database.Batcha
     
     /****************************Start Method*****************************************/
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        System.debug('>>>>>>PublishPricingToTreasuryTempTableApprove.pricingIdSet>>>'+this.pricingIds);
+        System.debug('>>>>>>PublishPricingToTreasuryTempTableApprove.processName>>>'+this.processName);
+        System.debug('>>>>>>PublishPricingToTreasuryTempTableApprove.isDeleteRequest>>>'+this.isDeleteRequest);
+
         String query = PublishPricingUtility.query;
         if(this.isDeleteRequest){
             query += 'WHERE Id IN :pricingIds AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL) AND Deleted__c = true AND Invisible__c = false';

@@ -66,6 +66,10 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
     
     /****************************Start Method*****************************************/
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        System.debug('>>>>>>PublishPricingToTreasuryTempTableReject.pricingIdSet>>>'+this.pricingIds);
+        System.debug('>>>>>>PublishPricingToTreasuryTempTableReject.processName>>>'+this.processName);
+        System.debug('>>>>>>PublishPricingToTreasuryTempTableReject.isDeleteRequest>>>'+this.isDeleteRequest);
+
         String query = PublishPricingUtility.query;
         
         if(this.isDeleteRequest){
@@ -91,7 +95,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
     
     /****************************Execute Method*****************************************/
     public void execute(Database.BatchableContext BC, List<Pricing__c> listPricing){
-        //for(Pricing__c pricing : listPricing) setPricingIds.add(pricing.Id);
+        for(Pricing__c pricing : listPricing) setPricingIds.add(pricing.Id);
         if(this.isDeleteRequest){
             PublishPricingUtility.processTheRequest(listPricing,'reject','API_Callout_SaveBulkRulesCT',this.processName,true,true);
         }else{
@@ -133,6 +137,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
     
             }*/
             if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
+                System.debug('>>>>>>calling PublishPricingToTreasuryTempTable from PublishPricingToTreasuryTempTableReject finish>>>>'+setPricingWithRuleId);
                 Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),50);   
             }
         }	    

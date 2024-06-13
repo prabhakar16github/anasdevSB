@@ -22,7 +22,11 @@ global class BulkPostResponseAPI {
                                                                                      AND Sync_Status__c = 'Processing' AND Type__c = 'TDR'];
                         if(listPublishPricingDetails != NULL && listPublishPricingDetails.size() > 0) {
                             Boolean deleteContext = false;
+                            Boolean checkerRejectDeleteRequest = false;
+                            Boolean checkerApproveDeleteRequest = false;
                             if(listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionRejectDelete') deleteContext = true;
+                            else if(listPublishPricingDetails[0].Process__c == 'DeleteBulkRules-CheckerTrueActionReject') checkerRejectDeleteRequest = true;
+                            else if(listPublishPricingDetails[0].Process__c == 'DeleteBulkRules-CheckerTrueActionApproveDelete') checkerApproveDeleteRequest = true;
                             Boolean checker = listPublishPricingDetails[0].Checker__c; 
                             Boolean deleteRequest = listPublishPricingDetails[0].Delete_Request__c;
                             listPublishPricingDetails[0].Sync_Status__c = 'Completed';
@@ -40,10 +44,20 @@ global class BulkPostResponseAPI {
                                     else mapIdToPricing.put(pricing.Id,pricing);
                                     pricing.Published__c = true;
                                     pricing.Need_to_Publish__c = false;
-                                    if(deleteContext) pricing.Deleted__c = true;
+                                    if(deleteContext){
+                                        pricing.Deleted__c = true;
+                                        
+                                    } 
+                                    else if(checkerRejectDeleteRequest){
+                                        pricing.Deleted__c = false;
+                                    }
+                                    
+                                    
                                    	pricing.Version_Number__c = Integer.valueOf(mapInner2KeyToValue.get('versionNumber'));
                                     
                                     if((String)mapInner2KeyToValue.get('revenueModel') == 'TDR') {
+                                        
+
                                         if(checker) {
                                             if(String.isNotBlank(String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')))) {
                                             	pricing.Rule_Id__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId'));    
@@ -58,6 +72,9 @@ global class BulkPostResponseAPI {
                                                 pricing.Temp_Id_TDR__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')); 
                                             }
                                             
+                                        }
+                                        if(checkerApproveDeleteRequest){
+                                            pricing.Rule_Id__c = '';
                                         }
                                     }   
                                     else if((String)mapInner2KeyToValue.get('revenueModel') == 'Conv Fee') {
@@ -76,6 +93,10 @@ global class BulkPostResponseAPI {
                                                 pricing.Temp_Id_Conv__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId'));   
                                             }
                                         } 
+
+                                        if(checkerApproveDeleteRequest){
+                                            pricing.Rule_Id_Conv__c = '';
+                                        }
                                     }
                                 }
                             }  

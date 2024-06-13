@@ -41,6 +41,9 @@ public class PublishPricingToTreasuryTempTable implements Database.Batchable<sOb
     
     /****************************Start Method*****************************************/
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        System.debug('>>>>>>PublishPricingToTreasuryTempTable.pricingIdSet>>>'+this.pricingIds);
+        System.debug('>>>>>>PublishPricingToTreasuryTempTable.processName>>>'+this.processName);
+        System.debug('>>>>>>PublishPricingToTreasuryTempTable.isDeleteRequest>>>'+this.isDeleteRequest);
         String query = PublishPricingUtility.query;
         if(isDeleteRequest){
             query += ' WHERE Id IN :pricingIds AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL) AND Deleted__c = true AND Invisible__c = false';

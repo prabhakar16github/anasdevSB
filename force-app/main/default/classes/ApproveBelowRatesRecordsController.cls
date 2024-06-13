@@ -127,7 +127,8 @@ public class ApproveBelowRatesRecordsController {
             update listBelowRackRatesRecords;
             if(setPricingIds.size() > 0) {
                 //Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(setPricingIds),100); 
-                //Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingIds),100); 
+                /** Update to flow the data to temp table, if commercial status is live and approved from BH */
+                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingIds,'SaveBulkRules-CheckerFalseActionSave',false),50); 
             }
         }
     }
@@ -177,8 +178,8 @@ public class ApproveBelowRatesRecordsController {
             pricing.BH_Status__c = 'Approved with BH'; 	
             update pricing;
             if(setPricingId.size() > 0) {
-                //Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(setPricingId),100); 
-                //Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingId),100); 
+                /** Update to flow the data to temp table, if commercial status is live and approved from BH */
+                Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingId,'SaveBulkRules-CheckerFalseActionSave',false),50); 
                 
             }
         }

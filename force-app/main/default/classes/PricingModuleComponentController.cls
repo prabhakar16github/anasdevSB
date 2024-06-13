@@ -2561,7 +2561,9 @@ update commNotLive;
                                                                                                WHERE Commercial2__c = :commercialId 
                                                                                                AND Commercial2__r.Status__c = 'Live'
                                                                                                AND Deleted__c = true
-											       												AND Invisible__c = false]) {
+											       											   AND Invisible__c = false
+                                                                                               AND Temp_Id_Delete_TDR__c = NULL 
+                                                                                               AND Temp_Id_Delete_Conv__c = NULL]) {
                                                                                                     System.debug('>>>>>>priceId>>>>'+price.Id);
                                                                                                    if(count == 0) {
                                                                                                        opportunityId = price.Commercial2__r.Opportunity__c;
@@ -2614,11 +2616,13 @@ update commNotLive;
                                                                         }*/
                                                                         System.debug('>>>>>>setPricingWithRuleId>>>>>'+setPricingWithRuleId);
                                                                         if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)){
+                                                                            System.debug('>>>>>setPricingWithRuleId>>>>>'+setPricingWithRuleId);
                                                                             Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),50);   
                                                                         }
                                                                         System.debug('>>>>>>setPricingIds>>>>>'+setPricingIds);
                                                                         //Delete data from Main table
                                                                         if(setPricingIds.size() > 0) {
+                                                                            System.debug('>>>>>setPricingIds>>>>>'+setPricingIds);
                                                                             Database.executeBatch(new PublishPricingToTreasuryTempTableReject(setPricingIds,'SaveBulkRules-CheckerTrueActionRejectDelete',false),50);   
                                                                         }
                                                                         
@@ -2679,6 +2683,7 @@ update commNotLive;
 */
     public static void callTreasuryToPushRecords(String commercialId) {
         //Database.executeBatch(new PublishPricingToTreasuryMainTable(commercialId),100); not needed
+        System.debug('>>>>>commercialId>>>>>'+commercialId);
         Database.executeBatch(new PublishPricingToTreasuryTempTable(commercialId,'SaveBulkRules-CheckerFalseActionSave',false),50);
         if(Label.StopPlatformFeeFlowToTreasury.toLowerCase() == 'false') {
             callTreasuryForPlatform(commercialId);    
