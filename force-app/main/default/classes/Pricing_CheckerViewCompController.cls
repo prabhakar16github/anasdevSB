@@ -16,7 +16,7 @@ public with sharing class Pricing_CheckerViewCompController {
                 for(Pricing__c price : [SELECT Id,Fee_Model__c,Transaction_Type__c,Payment_Mode_Text__c,
                 Payment_Option_Text__c,Payment_Gateway_Text__c,Pricing_Specification__r.Name,
                 ONUS__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Amount__c,
-                Convenience_Flat_Fee__c,Convenience__c
+                Convenience_Flat_Fee__c,Convenience__c,Rule_Id__c,Rule_Id_Conv__c
                 FROM Pricing__c
                 WHERE Commercial2__c = :commercialList[0].Id 
                 AND (Temp_Id_TDR__c != NULL OR Temp_Id_Conv__c != NULL)]){
@@ -48,6 +48,9 @@ public with sharing class Pricing_CheckerViewCompController {
                         pricingWrap.convFlatFee = price.Convenience_Flat_Fee__c != NULL ? String.valueOf(price.Convenience_Flat_Fee__c) : '';
                         pricingWrap.showTDR = true;
                         pricingWrap.showConv = true;
+                    }
+                    if(String.isNotBlank(price.Rule_Id__c) || String.isNotBlank(price.Rule_Id_Conv__c)){
+                        pricingWrap.requestType = 'Update';
                     }
                     
                     dataWrap.listPricing.add(pricingWrap);
@@ -265,6 +268,8 @@ public with sharing class Pricing_CheckerViewCompController {
         @AuraEnabled public String convFlatFee = '';
         @AuraEnabled public Boolean showTDR = false;
         @AuraEnabled public Boolean showConv = false;
+        @AuraEnabled public String requestType = 'Add';
+
     }
     public class FixedAndPlatformFeeWrapper{
         @AuraEnabled public String recordId = '';

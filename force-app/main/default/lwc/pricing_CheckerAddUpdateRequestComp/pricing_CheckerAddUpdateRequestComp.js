@@ -25,11 +25,15 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
     disableButton = true;
     editAllowed = true;
     selectedRecordIds = [];
+
+    selectAllData = false;
     
     connectedCallback(){
         this.getInitData();
         
     }
+
+
     
     getInitData(){
         
@@ -56,7 +60,26 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
             console.error(error);
         });
     }
-    
+    handleSelectAllData(event){
+        
+        this.selectAllData = event.detail.checked;
+        
+        this.pricingDetail.listPricing.forEach(item => {
+            item.isChecked = this.selectAllData;
+            if(item.isChecked && !this.selectedRecordIds.includes(item.recordId)){
+                this.selectedRecordIds.push(item.recordId);
+            }
+        });
+        this.disableButton = !this.selectAllData;
+        if(!this.selectAllData){
+            this.selectedRecordIds = [] ;
+        }
+        this.editAllowed = false;
+        this.editAllowed = true;
+
+        alert(this.selectedRecordIds.length);
+    }
+
     handleIsChecked(event){
         var isChecked = event.detail.checked;
         
@@ -71,6 +94,13 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
             if(this.selectedRecordIds.length == 0){
                 this.disableButton = true;
             }
+        }
+        alert('>>1>>'+this.selectedRecordIds.length);
+        alert('>>2>>'+this.pricingDetail.listPricing.length);
+        if(this.selectedRecordIds.length == this.pricingDetail.listPricing.length){
+            this.selectAllData = true;
+        }else{
+            this.selectAllData = false;
         }
     }
     
