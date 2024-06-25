@@ -1,0 +1,13 @@
+<apex:page >
+    <form action="/action_page.php" method="get">
+    <label for="Nationality">Choose your Nationality from the list:</label>
+    <input list="Nationality" name="Nationality" id="Nationality"/>
+    <datalist id="Nationality">
+        <option value="India"/>
+        <option value="Aland Island"/>
+        <option value="Albanian"/>
+        <option value="Chinese"/>
+        <option value="Libyan"/>
+    </datalist>
+    </form>
+</apex:page>

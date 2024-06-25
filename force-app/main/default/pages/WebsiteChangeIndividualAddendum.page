@@ -1,0 +1,104 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" contentType="{!strContentType}" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" renderAs="{!strRenderAs}" cache="true">
+    <!-- contentType="application/msword#LtdLiabilityPartnership.doc" cache="true" -->
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>PayU</title>
+            <style>
+                body {
+                padding: 0px;
+                margin: 0;
+                font-size: 14px; line-height:20px;
+                color: #000;
+                text-align:justify;
+                }
+                table td p{
+                padding:0px;
+                }
+            </style>
+        </head>
+        
+        <body>
+            <table cellpadding="0" cellspacing="0" border="0" width="600" align="center" style="border:1px solid #000000;">
+                <tr>
+                    <td style="padding:10px; padding-bottom:0px; ">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td width="70%" align="left" valign="middle" style="font-size:14px; color:#000;">To,
+                                </td>
+                                <td width="30%" align="right" style="text-align:right;">
+                                    <span>Date: </span>  <apex:outputText value="{0,date,dd-MM-yyyy}"> <apex:param value="{!TODAY()}" /> </apex:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td valign="left" style="padding-top:0px; padding:10px; font-size: 14px; line-height:20px; text-align:justify;">
+                       <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td width="50%" align="left" valign="middle" style="font-size:14px; color:#000;">
+                                    <b>PayU Payments Private Limited</b><br/>
+                                    9th Floor, Bestech Business Tower, Sohna Road,<br/>
+                                    Sector – 48, Gurgaon – 122002<br/>
+                                    Haryana<br/><br/>
+                                    Dear Sir,<br/><br/>
+                                    <u><b>Subject: Change of Merchant Website</b></u><br/>
+                                    <p>
+                                        I {!accObj.Legal_Name__c} (“Merchant”), an individual, entered into a Service Agreement dated &nbsp;<apex:outputText value="{0,date,dd-MM-yyyy}"> <apex:param value="{!TODAY()}" /> </apex:outputText> (“Service Agreement”) with PayU Payments Private Limited (“PayU”) in accordance to which PayU provides me with aggregate online payment gateway solutions and services through its ‘PayU’ platform (“PayU Services”) for my Website domain: {!oppObj.New_Website_Url__c}                              
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </td>
+                </tr>
+                
+                
+                <tr>
+                    <td>
+                        <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                            <tr>
+                                <td class="" >Old Website Domain</td>
+                                <td class="">{!oppObj.website__c}</td>
+                            </tr>
+                            
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                            <tr>
+                                <td class="" >New Website Domain</td>
+                                <td class=""> {!oppObj.New_Website_Url__c} </td>
+                            </tr>
+                            
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">I, request PayU to register and provide the PayU Services with respect to the new website domain herein mentioned above and discontinue all PayU Services with respect to Old website domain. I hereby confirm that the above mentioned website domain is owned and controlled by {!accObj.Legal_Name__c}</td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">I, understand that PayU may require certain documents in order to provide PayU Services with respect to the new website domain and agree to provide the same as and when requested by PayU. I further understand that the change of the website domain to the Service Agreement and registration of the same will be subject to the approval by PayU. In addition, I acknowledge PayU will have to integrate the new website domain to PayU’ s Software Application and this may take up to 5 Business Days from receipt of this letter and all such documents requested by PayU.</td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">I, recognize that the submission of this letter will constitute as an amendment to the Service Agreement and the PayU Services provided on the new website will be governed by the terms and conditions of the Services Agreement. I further confirm that the settlement account for the new website domain remains the same as was for the old website domain.</td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">I hereby confirm that there has been no change in the legal name, registered office and/or constitution of {!accObj.Legal_Name__c} and/or the Authorized Signatory since the last application submitted to PayU.</td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">Best Regards,</td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">    ___________________________</td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;"><b>Name:</b></td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;"><b>Designation:</b><br/></td></tr>
+                <tr><td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;"><b>(Authorized Signatory)</b></td></tr>
+                    
+                
+                
+                
+                
+                
+            </table>
+        </body>
+        
+    </html>
+</apex:page>

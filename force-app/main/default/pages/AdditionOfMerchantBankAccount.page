@@ -1,0 +1,121 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false"  showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+   <html lang="en"><!--  renderAs="PDF" -->
+      <head>
+         <meta charset="UTF-8" />
+         <title>Addition of Merchant Bank Account</title>
+          <style  type="text/css">
+              @page {
+              size: a4;
+              
+              @top-center {
+              content: "";
+              }
+              @bottom-center {
+              content: "Page " counter(page) " of " counter(pages);
+              }
+              }
+              .page-break {
+              display:block;
+              page-break-after:always;
+              }
+              body {
+              font-family: Arial;
+              font-size: 14px;
+              line-height: 20px;
+              text-align:justify;
+              padding-left:30px;
+              padding-right:30px;
+              }              
+          </style>
+      </head>
+      <body>
+         <div class="container">
+            <p id="dt" align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>  
+             <p style="text-align:left;"> <strong>PayU Payments Private Limited</strong><br/>
+          9th Floor, Bestech Business Tower,<br/>
+       Sector 48, Sohna Road, Gurgaon, <br/>
+               Haryana, Pin - 122002 
+            </p>
+            <p>Dear Sir,</p>
+            <p><strong><u>Subject: Addition of Merchant Bank Account.</u></strong></p>
+            <p>We, {!accObj.Legal_Name__c} a <em><strong>({!accObj.Business_Entity__r.Name}) </strong></em>entered into a service agreement/ an agreement vide an account opening form dated&nbsp; <apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> (“Service Agreement”) with PayU Payments Private Limited (“PayU”) in accordance to which PayU provides us with aggregate online payment gateway solutions and services through its ‘PayU’ platform (“PayU Services”) for our website domain name: {!oppObj.Website__c}</p>
+            <p>We would like to amend our Merchant Bank Account (as defined in the Service Agreement), in which the Customer Charge minus the TDR (“Settlement Amount”) payable to us is settled by PayU under the terms of Service Agreement.</p>
+            
+            <table border="1" cellspacing="0" cellpadding="10" width="70%"  align="center" style="border-collapse: collapse">
+               <tr>
+                   <td colspan="2" align="center"><strong><u>OLD MERCHANT BANK ACCOUNT DETAILS</u></strong><br/>
+                     <strong><u>(Purpose)</u></strong>
+                  </td>
+               </tr>
+               <tr>
+                  <td width="50%"><strong><u>Particulars</u></strong></td>
+                  <td width="50%"><strong><u>Details</u></strong></td>
+               </tr>
+               <tr>     
+                  <td>Bank Name</td>
+                  <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Bank_Name__c != null, lstBankAccDetailParent[0].Bank_Name__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>Bank Account No.</td>
+                  <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Account_Number__c != null, lstBankAccDetailParent[0].Account_Number__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>Branch Address</td>
+                  <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Branch_Address__c != null, lstBankAccDetailParent[0].Branch_Address__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>IFSC Code</td>
+                  <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].IFSC_Code__c != null, lstBankAccDetailParent[0].IFSC_Code__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>Account Holder Name</td>
+                  <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Account_Holder_Name__c != null, lstBankAccDetailParent[0].Account_Holder_Name__c, null)}</td>
+               </tr>
+            </table>
+             <br/><br/>
+            <table border="1" cellspacing="0" cellpadding="10" width="70%"  align="center" style="border-collapse: collapse">
+               <tr>
+                  <td colspan="2" align="center"><strong><u>NEW MERCHANT BANK ACCOUNT DETAILS</u></strong><br/>
+                     <strong><u>(Purpose)</u></strong>
+                  </td>
+               </tr>
+               <tr>
+                  <td width="50%"><strong><u>Particulars</u></strong></td>
+                  <td width="50%"><strong><u>Details</u></strong></td>
+               </tr>
+               <tr>     
+                  <td>Bank Name</td>
+                  <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Bank_Name__c != null, lstBankAccDetail[0].Bank_Name__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>Bank Account No.</td>
+                  <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Account_Number__c != null, lstBankAccDetail[0].Account_Number__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>Branch Address</td>
+                  <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Branch_Address__c != null, lstBankAccDetail[0].Branch_Address__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>IFSC Code</td>
+                  <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].IFSC_Code__c != null, lstBankAccDetail[0].IFSC_Code__c, null)}</td>
+               </tr>
+               <tr>
+                  <td>Account Holder Name</td>
+                  <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Account_Holder_Name__c != null, lstBankAccDetail[0].Account_Holder_Name__c, null)}</td>
+               </tr>
+            </table><br/><br/>
+            <p>We understand that PayU may require certain documents in order to provide PayU Services with respect to changing the Merchant Account. We agree to provide the same as and when requested by PayU.</p>
+            <p>We further understand that the change in the Merchant Account details will take effect only after the requisite change has been made in the records of PayU, Acquiring Banks and the Nodal Bank and we understand that this may take up to 5 Business Days from receipt of this letter and all such documents requested by PayU.</p>
+            <p>We request PayU to make the requisite change in the Service Agreement. We further direct and authorize PayU to receive and settle the Settlement Amount payable to us, in the new Merchant Account. </p>
+            <p>We acknowledge that the submission of this letter will constitute as an amendment to the Service Agreement and any Settlement Amount settled to ournew Merchant Account will be governed by the terms and conditions of the Services Agreement. </p>
+            <p>We hereby confirm that there has been no change in the legal name, registered office and/or constitution of {!accObj.Legal_Name__c} and/or the Authorized Signatory is the same since the last application submitted to PayU.</p>
+            <br/><br/>
+            <p style="width: 200px; border-bottom: 2px solid black; height: 80px; margin-bottom: 0;">Best Regards,</p>
+            <p style="text-align:left;">
+                <strong>(Authorized Signatory)</strong><br/>
+             	<strong>Name:</strong><br/>
+            	<strong>Designation:</strong> </p>
+         </div>
+      </body>
+   </html>
+</apex:page>

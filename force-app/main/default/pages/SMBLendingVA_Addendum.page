@@ -1,0 +1,214 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" contentType="{!strContentType}" standardStylesheets="false" cache="true" renderAs="PDF" showHeader="false" applyBodyTag="false" applyHtmlTag="false">
+ <html> 
+           
+ 
+        <head>
+ 
+            <title>Addendum SMB lending VA</title>
+            
+ 
+            <style>
+ 
+                @page {
+ 
+                size: a4;
+ 
+               
+ 
+                @top-center {
+ 
+                content: "";
+ 
+                }
+                
+                 <!--@bottom-center {
+ 
+content: "Page " counter(page) " of " counter(pages);
+ 
+}-->
+ 
+                }
+ 
+                .page-break {
+ 
+                display:block;
+ 
+                page-break-after:always;
+ 
+                }
+ 
+                body {
+ 
+                font-family: Arial;
+ 
+                font-size: 14px;
+ 
+                line-height: 20px;
+ 
+                text-align:justify;
+ 
+                padding-left:30px;
+ 
+                padding-right:30px;
+ 
+                }
+ 
+                .table td{border:1px #000 solid!important;}
+ 
+                .footer {
+ 
+                position: fixed;
+ 
+                left: 0;
+ 
+                bottom: 0;
+ 
+                width: 100%;
+ 
+                height:1%;
+ 
+                background-color:white ;
+ 
+                color: red;
+ 
+                text-align: center;
+ 
+                }
+                
+                h1 {text-align: center;
+                font-size: 14px;}
+ 
+               
+ 
+                
+ 
+            </style>
+ 
+        </head>
+     
+     
+       <body>
+           
+          
+           
+          <p style="text-align: center;"><strong>Form of Instruction cum Authorization for Payment</strong></p>
+
+<p><strong>&nbsp;</strong></p>
+           <p><strong>Date : <apex:outputText value="{0, date, d MMMM','  yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong></p>
+           <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                            
+                            
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>To:</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>PayU Payments Private Limited </p>
+                                    <p>9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana - 122002 (<strong>“Payment Aggregator”</strong>)</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>Copy To:</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>PayU Payments Private Limited </p>
+                                    <p>Empresa Building, Office No. 102, First Floor, Second Road, Khar West, Mumbai – 400052</p>
+
+                                </td>
+                            </tr>
+                            
+           </table>
+           <td style="padding-top:5px; font-size: 14px; line-height:20px;">
+                        <b style="Border-bottom:1px #000 solid;">Subject: Authorization letter and payment instructions.</b>
+           </td>
+           <p>Dear Sir / Madam,</p>
+           <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td valign="top">1.</td>
+                        <td>I/We, refer to the master service agreement/ service agreement entered into between me/us and the Payment Aggregator, as amended and supplemented from time to time (the “Service Agreement”) and the ‘Form of Instruction cum Authorization for Payment’ letter dated {!oppObj.Letter_Dated__c} (“Authorization Letter”) submitted by us in relation to the borrowing arrangement that we have entered into with the Lender, for which I/we have entered into various facility documents including without limitation, the Sanction Letter and Loan Agreement.</td> 
+                    </tr>
+                    <tr>
+                        <td valign="top">2.</td>
+                        <td>As part of this arrangement, I/We hereby irrevocably and unconditionally instruct and authorize the Payment Aggregator to remit/transfer the Settlement Amount (as defined in the Service Agreement) available with Payment Aggregator into the following Designated Account of the Lender and/or any other account communicated by Lender to the Payment Aggregator as designated account from time to time.</td> 
+                    </tr>
+           </table><br/><br/>
+           <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:5px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                           <tr>
+                                <td width="27%" class="">
+                                    <p>Account Name</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>PAYU FINANCE INDIA PRIVATE LIMITED </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>Account Number</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>{!oppObj.Account_Number__c}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>BANK Name</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>AXIS BANK</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>IFSC Code</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>UTIB0CCH274</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>Branch</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>CENTRALISED COLLECTION HUB</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="27%" class="">
+                                    <p>Location</p>
+                                </td>
+                                <td width="70%" class="">
+                                    <p>5TH FLOOR, GIGAPLEX, AIROLI KNOWLEDGE PARK, AIROLI</p>
+                                </td>
+                            </tr>
+           </table>
+           <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td valign="top">3.</td>
+                        <td>I/We acknowledge and understand that change in Designated Account will not change any rights and obligations that we have under the Service Agreement, Authorization Letter and the Loan Agreement and we agree to comply with and be bound by all obligations and the authorizations provided by me/us under the Agreement, Authorization Letter, Sanction Letter and the Loan Agreement.</td> 
+                    </tr>
+                    <tr>
+                        <td valign="top">4.</td>
+                        <td>I/We understand and agree that, I/we shall not hold Payment Aggregator liable in any manner whatsoever for the abovementioned designation of bank account and I/we and my/our assigns hereby releases and absolves PayU from all or any liability or any claims, losses, damages, costs or expenses (including attorney’s fees) in connection with the settlement of the Settlement Amount to the aforesaid Designated Account.</td> 
+                    </tr>
+                    <tr>
+                        <td valign="top">5.</td>
+                        <td>Notwithstanding anything contained in this letter, I/We and Lender agree that the Payment Aggregator shall have no liability in any manner whatsoever for any claims or disputes or actions as may be initiated by Lender, and/or me/ us with respect to any issues, claims, disputes, damages arising out of the borrowing arrangement described above and all such claims, disputes, damages shall be solely borne by me/ us or the Lender as may be applicable; and</td> 
+                    </tr>
+                    <tr>
+                        <td valign="top">6.</td>
+                        <td>For avoidance of doubt, this additional authorization letter is supplemental to the Authorization Letter already submitted to the Payment Aggregator and the only variance is only in relation to change in the Designated Account of the Lender and authorization for carrying out settlements in the new designated bank account of the Lender. This additional authorization letter shall be read in conjunction with the Authorization Letter already shared with the Payment Aggregator.</td> 
+                    </tr>
+                    <tr>
+                        <td valign="top">7.</td>
+                        <td>Capitalized words and expressions used and not defined in this Letter shall have the same meaning as respectively assigned to them in the Agreement, Authorization Letter, Sanction Letter and the Loan Agreement.</td> 
+                    </tr>
+           </table>
+           <p>{!accObj.PAN_Holder_Name__c}</p>
+           <p>(Proprietor)</p>
+           <p> ________________</p>
+           
+       </body>       
+    </html>
+</apex:page>

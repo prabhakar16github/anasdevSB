@@ -1,0 +1,654 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" contentType="{!strContentType}" standardStylesheets="false" renderAs="{!strRenderAs}" cache="true">
+    <!-- contentType="application/msword#LtdLiabilityPartnership.doc" cache="true" -->
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>PayU</title>
+            <style>
+                body {
+                padding: 0px;
+                margin: 0;
+                font-size: 14px; line-height:20px;
+                color: #000;
+                text-align:justify;
+                }
+                table td p{
+                padding:0px;
+                }
+            </style>
+        </head>
+        
+        <body>
+            <table cellpadding="0" cellspacing="0" border="0" width="600" align="center" style="border:1px solid #000000;">
+                <tr>
+                    <td style="padding:10px; padding-bottom:0px; ">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td width="70%" align="left" valign="middle" style="font-size:20px; color:#000;">Merchant Integration Services
+                                    <br/>
+                                    <label for="" style="font-size:16px;">E-Stamp: </label>{!eStampNo}
+                                </td>
+                                <td width="30%" align="right" style="text-align:right;">
+                                    <div class="merchantLogo" alt="" border="0" style="width:105px; float:right; "><apex:image url="{!$Resource.OnePayu_Logo}" width="100" height="30"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td valign="middle" style="padding-top:0px; padding:10px; font-size: 14px; line-height:20px; text-align:justify;">
+                        Please note that this form contains the details about your account and commercials for the services provided by PayU Payments Private Limited to you. Please sign this document and return to PayU along with specified documents for processing.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="font-size:12px; background: #000; font-size:12px; line-height:8px; height:5px; border-bottom: 1px #000 solid; color:#fff;" colspan="2">
+                                    Business Details
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width:50%;">Business/Trading Name </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!accObj.Merchant_Trading_Name__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width:50%;">Legal Name </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!accObj.Legal_Name__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width:50%;">Business Filing Status/Legal Status </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!accObj.Business_Entity__r.Name} </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width:50%;">PAN Details </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!accObj.PAN_Number__c} </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width:50%;">Website URL </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!Opportunity.Website__c} </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width:50%;">Android URL </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!Opportunity.Android_URL__c} </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">IOS URL </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!Opportunity.iOS_URL__c} </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">Registered Address </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: 
+                                    <apex:outputText value="{!IF(regAddress.Address_Line__c!=null && regAddress.Address_Line__c!='', regAddress.Address_Line__c + ', <br/>', null)}" escape="false" />
+                                    <apex:outputText value="{!IF(regAddress.City__c!=null && regAddress.City__c!='', regAddress.City__c + ', <br/>', null)}" escape="false" />
+                                    <apex:outputText value="{!IF(regAddress.State__c!=null && regAddress.State__c!='', regAddress.State__c + ', <br/>', null)}" escape="false" />
+                                    <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Country__c!='', regAddress.Country__c, null)}" escape="false" />
+                                    <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Country__c!='', ' - ', IF(regAddress.Pincode__c!=null && regAddress.Pincode__c!='', null, ' - '))}" escape="false" />
+                                    <apex:outputText value="{!IF(regAddress.Pincode__c!=null && regAddress.Pincode__c!='', regAddress.Pincode__c, null)}" escape="false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">Operating Address </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">:
+                                    <apex:outputText value="{!IF(opAddress.Address_Line__c!=null && opAddress.Address_Line__c!='', opAddress.Address_Line__c + ', <br/>', null)}" escape="false" />
+                                    <apex:outputText value="{!IF(opAddress.City__c!=null && opAddress.City__c!='', opAddress.City__c + ', <br/>', null)}" escape="false" />
+                                    <apex:outputText value="{!IF(opAddress.State__c!=null && opAddress.State__c!='', opAddress.State__c + ', <br/>', null)}" escape="false" />
+                                    <apex:outputText value="{!IF(opAddress.Country__c!=null && opAddress.Country__c!='', opAddress.Country__c, null)}" escape="false" />
+                                    <apex:outputText value="{!IF(opAddress.Country__c!=null && opAddress.Country__c!='', ' - ', IF(opAddress.Pincode__c!=null && opAddress.Pincode__c!='', null, ' - '))}" escape="false" />
+                                    <apex:outputText value="{!IF(opAddress.Pincode__c!=null && opAddress.Pincode__c!='', opAddress.Pincode__c, null)}" escape="false" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; line-height: 8px; height:5px; color:#fff; " colspan="2">
+                                    Contact Details '96 Business
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Contact Name </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!Opportunity.First_Name__c} {!Opportunity.Last_Name__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Email Address </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!Opportunity.Email__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Mobile Number </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!Opportunity.Mobile__c} </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px; page-break-inside:avoid; page-break-after:auto;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px; " colspan="2">
+                                    Products and Services
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; width: 50%">Business Category</td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!accObj.Business_Category__r.Name}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px;" colspan="2">
+                                    PayU Products Opted
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; width: 50%">PayU Products Opted</td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: PayU</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/> <br/>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff;  line-height: 8px; height:5px;" colspan="2">
+                                    Bank Account Details
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Pay To Name</td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Account_Holder_Name__c != null, lstBankAccDetail[0].Account_Holder_Name__c, null)}</td>
+                            </tr> 
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Bank Name </td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Bank_Name__c != null, lstBankAccDetail[0].Bank_Name__c, null)}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Account Number</td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Account_Number__c != null, lstBankAccDetail[0].Account_Number__c, null)}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">IFSC Code</td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].IFSC_Code__c != null, lstBankAccDetail[0].IFSC_Code__c, null)}</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px; width: 50%">Branch Address</td>
+                                <td style="border-top: 1px #000 solid; padding:10px 0px;">: {!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Branch_Address__c != null, lstBankAccDetail[0].Branch_Address__c, null)}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px 10px 0px 10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px;" colspan="2">
+                                    Commercial Details
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top: 1px #000 solid; width: 50%">Merchant shall pay to PayU India
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                            <tr>
+                                <td width="11%" class="graybg" style="background: #f2f2f2; height:18px;">S.NO.</td>
+                                <td class="graybg" style="background: #f2f2f2;">PARTICULARS</td>
+                                <td class="graybg" style="background: #f2f2f2;">SERVICE FEE</td>
+                            </tr>
+                            <tr>
+                                <td class="">A.</td>
+                                <td width="69%" class="">Annual Maintenance Charge (AMC)*</td>
+                                <td width="20%" class="">Waived Off</td>
+                            </tr>
+                            <tr>
+                                <td class="">B.</td>
+                                <td class=""><div>Security Deposit</div><div>(interest free refundable)</div></td>
+                                <td class="">Waived Off</td>
+                                
+                            </tr>
+                            <tr>
+                                <td class="">C.</td>
+                                <td class=""><div>System Integration Fee </div>
+                                    <div> (One time payable upfront at the time of Signing of the Services Agreement .)</div></td>
+                                <td class="">Waived Off</td>
+                            </tr>
+                            
+                        </table>
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>
+                        <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-inside:avoid; page-break-after:auto" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                            <tr>
+                                <td width="11%" class="graybg" style="background: #f2f2f2;">S.NO.</td>
+                                <td class="graybg" style="background: #f2f2f2;">Mode</td>
+                                <td class="graybg" style="background: #f2f2f2;">New customer rate</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="">1</td>
+                                <td width="40%" class="">Credit card</td>
+                                <td width="25%" class="">2.00%</td>
+                            </tr>
+                            <tr>
+                                <td class="">2</td>
+                                <td width="40%" class="">Debit card (&lt; 2000 INR) Master &amp; Visa</td>
+                                <td width="25%" class="">0.65%</td>
+                            </tr>
+                            <tr>
+                                <td class="">3</td>
+                                <td width="40%" class="">Debit card (>2000 INR) Master &amp; Visa</td>
+                                <td width="25%" class="">1.15%</td>
+                            </tr>
+                            <tr>
+                                <td class="">4</td>
+                                <td width="40%" class="">Debit card- Rupay</td>
+                                <td width="25%" class="">0.25%</td>
+                            </tr>
+                            <tr>
+                                <td class="">5</td>
+                                <td width="40%" class="">Net banking (HDFC &amp; ICICI)</td>
+                                <td width="25%" class="">1.75%</td>
+                            </tr>
+                            <tr>
+                                <td class="">6</td>
+                                <td width="40%" class="">Net banking (AXIS &amp; SBI)</td>
+                                <td width="25%" class="">1.75%</td>
+                            </tr>
+                            <tr>
+                                <td class="">7</td>
+                                <td width="40%" class="">Net banking (OTHERS)</td>
+                                <td width="25%" class="">1.75%</td>
+                            </tr>
+                            <tr>
+                                <td class="">8</td>
+                                <td width="40%" class="">UPI (&lt; 2000 INR)</td>
+                                <td width="25%" class="">0.40%</td>
+                            </tr>
+                            <tr>
+                                <td class="">9</td>
+                                <td width="40%" class="">UPI (>2000 INR)</td>
+                                <td width="25%" class="">0.40%</td>
+                            </tr>
+                            <tr>
+                                <td class="">10</td>
+                                <td width="40%" class="">Wallet</td>
+                                <td width="25%" class="">1.85%</td>
+                            </tr>
+                            <tr>
+                                <td class="">11</td>
+                                <td width="40%" class="">Amex</td>
+                                <td width="25%" class="">3.00%</td>
+                            </tr>                            
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="padding:20px; font-size: 14px; line-height:20px;text-align:justify;">The Merchant understands that the Discounted Rate is being offered by PayU at its sole discretion. PayU may, by sending a dashboard notification to the Merchant or communication through any other mode, start charging the Original Rate for the Transactions processed under the Agreement.</td>
+                </tr>
+                
+                
+                <tr>
+                    <td>
+                        <br/>
+                        <br/>
+                        
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px; " colspan="2">
+                                    Terms and Conditions
+                                    
+                                </td>
+                            </tr>               
+                            
+                            <tr>                       
+                                <td>
+                                    <ul style="margin: 0px 0px 0px 10px;padding: 0px;">
+                                        <!--<li style="text-align:justify;">  All fees are exclusive of Service Tax and any other taxes/ levies, if any.</li>
+
+<li style="text-align:justify;">   Any waiver of AMC* shall be only for the first year commencing from Effective Date.</li>
+
+<li style="text-align:justify;">  The above rates are for Payment Instruments provided by PayU to Merchant are subject to approval from the Acquiring Bank.</li>
+
+<li style="text-align:justify;">  The Transaction Fees are inclusive of transaction processing fee, convenience fee, fee for value added services, etc, subject to any additional fee charged separately.</li>
+
+<li style="text-align:justify;">  All compensation/consideration payments are in relation to Services received / to be received.</li>-->
+                                        <li style="text-align:justify;"> Any waiver of AMC shall be only for the first year commencing from the Effective Date.</li>
+                                        <li style="text-align:justify;"> Whenever PayU offers a new bank gateway or a new payment option, the terms and commercials for such payment gateway or payment option, shall be communicated by PayU to the Merchant through email or dashboard notification. </li>
+                                        <li style="text-align:justify;"> It is clarified that the Merchant shall bear and be liable for the payment of all relevant taxes including without limitation GST in relation to the Customer Charge under this Agreement. </li>
+                                        <li style="text-align:justify;"> Service Fee is inclusive of technology fee, bank charges and /or fee for any other value added services as may be specifically agreed to be provided by PayU. </li>
+                                        <li style="text-align:justify;"> The Service Fee is exclusive of all applicable taxes, including without limitation, GST; and</li>
+                                        <li style="text-align:justify;"> The Service Fee charged by PayU on Rupay Debit Cards and UPI are reflective of non-levy of MDR by the Acquiring Banks and only represents the amount payable by the Merchant to PayU for providing PayU Services.</li>
+                                    </ul>
+                                </td>  
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px; " colspan="2">
+                                    Declaration by applicant
+                                    
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td style="width: 100%; padding:10px; font-size: 14px; line-height:20px; text-align:justify;">
+                                    
+                                    <p >  We request PayU to set up the organization named above as a PayU Merchant/Seller. We understand that the acceptance of this application is subject to approval by PayU. We understand and agree that PayU has the right to reject this application for any reason whatsoever. </p>
+                                    
+                                    <p> We certify that all information provided by us hereinabove is true and correct.</p>
+                                    
+                                    <p> We acknowledge and accept that we have reviewed, read, understood and agree to abide by the PayU Agreement as defined and detailed in Annexure A. We accept all rights, obligations, responsibilities and liabilities that may arise due to us becoming a PayU Merchant/Seller including but not limited to rights, obligations, responsibilities and liabilities under this Account Opening Form and the Online Terms and Conditions. We have also gone through the schedule of commercials and there related terms and condition hereinabove and accept the same.</p>
+                                    
+                                    <p> We understand and agree that PayU reserves the right to add/modify/amend/change any of the terms and conditions at any time without further notice to us. It is our responsibility to review the Online Terms and Condition at regular intervals and comply with the same.</p>
+                                    
+                                    <p> We further understand that if we require any clarifications with respect to the PayU Agreement (including this Form), we may contact our PayU sales representative/account manager and they will connect us to the concerned PayU department.</p>
+                                    
+                                </td>  
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td width="50%">
+                                    <p style="margin-bottom: 10px; font-size: 12px; font-weight: bold;">Signature</p>
+                                    <div style="border:1px #000 solid; height: 80px;"></div>
+                                    
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;">Full Name : </p>
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;">Designation : </p>
+                                </td>
+                                
+                                
+                                <td width="50%" valign="top">
+                                    <p style="margin-bottom: 10px; font-size: 12px; font-weight: bold;">Organisation Stamp (if required)</p>
+                                    <div style="border:1px #000 solid; height: 80px;"></div>
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;">Date : </p>
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </td>
+                </tr>  
+                
+                
+                <tr>
+                    <td>
+                        <br/>
+                        <br/>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px;" colspan="2">
+                                    Approval - To be filled by PayU India officials only
+                                    
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td width="50%">
+                                    <p style="margin-bottom: 10px; font-size: 12px; font-weight: bold;">Signature For and behalf of PayU India</p>
+                                    <div style="border:1px #000 solid; height: 80px;"></div>
+                                    
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;">Full Name : </p>
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;">Designation : </p>
+                                </td>
+                                
+                                
+                                <td width="50%" valign="top">
+                                    <p style="margin-bottom: 10px; font-size: 12px; font-weight: bold;">Organisation Stamp</p>
+                                    <div style="border:1px #000 solid; height: 80px;"></div>
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;">Date : </p>
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </td>
+                </tr>  
+                
+                
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px;" colspan="2">
+                                    Date of Agreement
+                                    
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td width="50%">
+                                    
+                                    <p style="border-bottom: 1px #000 solid; margin-bottom: 10px;"><span>Date:- </span>  <apex:outputText value="{0,date,yyyy-MM-dd}"> <apex:param value="{!TODAY()}" /> </apex:outputText></p>
+                                </td>
+                                
+                                <td></td>
+                                
+                            </tr>
+                            
+                        </table>
+                    </td>
+                </tr>  
+                
+                
+                
+                <tr>
+                    <td>
+                        <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                            <tr>
+                                <td style="background: #000; font-size:12px; border-bottom: 1px #000 solid; color:#fff; line-height: 8px; height:5px; " colspan="2">
+                                    Annexure A
+                                </td>
+                            </tr>
+                            
+                            
+                            <tr>
+                                
+                                <td style="width: 100%; padding:10px; font-size: 14px; line-height:20px; text-align:justify;">
+                                    
+                                    <p>1.  PayU has agreed to provide and the Merchant has agreed to avail aggregate payment gateway solutions with respect to the Merchant Site ('PayU Services') in accordance with this Form, the terms and conditions detailed hereunder and the terms and conditions available online at https://www.payu.in/tnc ('collectively PayU Agreement').</p>
+                                    
+                                    <p>2. The Merchant understands that the PayU Agreement constitutes an agreement between the Parties with respect to availing PayU Services. The Merchant acknowledges and agrees that the PayU Agreement is duly stamped and is legal binding upon the Merchant and PayU. The stamp duty has been paid by PayU. </p>
+                                    
+                                    <p>3. The Merchant explicitly acknowledges and agrees that the Merchant has read, reviewed and understood the PayU Agreement.</p>
+                                    
+                                    <p>4. Except where the context otherwise requires or where explicitly defined, the capitalized terms in the PayU Agreement shall have the meaning ascribed to it in the PayU Biz Terms and Conditions and PayUMoney Terms and Conditions, respectively.</p>
+                                    
+                                    <p> 5. Scope of PayU Services:
+                                        
+                                        <ul style="margin:0px; padding:0px;">
+                                            <li style="list-style-type: none;">a. The Merchant has established the Merchant Site to sell the Products and/or collect payments online from the Customers.</li>
+                                            
+                                            <li style="list-style-type: none;">b.PayU will act as an intermediary by creating a link between the Merchant Site and the respective Acquiring Banks Services by means of its Software Applications and the PayU Platform; thereby enabling the Customers to make payment of Customer Charge on the Merchant Site through Acquiring Bank's Services using various Payment Options ("Internet Payment Gateway").</li>
+                                            
+                                            <li style="list-style-type: none;">c.In order to serve in this role, PayU has entered into agreements with various Acquiring Banks to enable use of Payment Systems operated by such Acquiring Banks in order to process payments using Acquiring Bank Services.</li>
+                                            
+                                            <li style="list-style-type: none;">c.Once the payment instruction is Authenticated and Authorized through the Acquiring Bank Services, the Acquiring Bank will transfer such approved Customer Charge from the Customer Bank Account to the Nodal Account.</li>
+                                            
+                                            <li style="list-style-type: none;">d.The Merchant directs and authorizes PayU to receive, hold, disburse and settle the Customer Charge in accordance with and subject to the provisions of the PayU Terms and Conditions.</li>
+                                    </ul>
+                                </p>
+                            
+                            <p>6. Term: The Agreement shall be in force from the date of acceptance of this Form by PayU and shall remain in force until terminated by either Party in accordance with the provisions of the PayU Agreement.</p>
+                            
+                            <p>7. The Merchant undertakes that the Merchant has disclosed the exact business category/business sub-category for which the Merchant will be using the PayU Services. In order to use the PayU Services for any other purpose, the Merchant understands and acknowledges that it shall notify PayU in writing of such change and such change will be subject to approval by PayU. PayU may terminate this Agreement forthwith, in the event the Merchant breaches this clause.</p>
+                            
+                            <!--<p>8. In consideration for PayU Services, the Merchant agrees to pay PayU, Fees as detailed in the Fee Schedule above. The Transaction Fee ('TDR') shall be deducted by PayU from the Customer Charge payable to the Merchant in respect of each completed Transaction. PayU reserves the right to revise the Fee periodically, and PayU will intimate the Merchant of any such change within reasonable time.</p>
+-->
+                            <p>8. In consideration for PayU Services, the Merchant agrees to pay PayU, Fees as detailed in the Fee Schedule above. The Service Fees shall be deducted by PayU from the Customer Charge payable to the Merchant in respect of each completed Transaction. PayU reserves the right to revise the Fee periodically, and PayU will intimate the Merchant of any such change within reasonable time.</p>
+                            <p>9. Subject to any other Clause of the PayU Agreement, PayU shall endeavour to instruct the Nodal Bank to transmit the Settlement Amount from the Nodal Account to the Merchant's Bank Account within the time period prescribed by Reserve Bank of India.</p>
+                            
+                            <p>
+                                10.
+                                PayU hereby declares, assures, undertakes and covenants as under:
+                                
+                                <ul style="margin:0px; padding:0px;">
+                                    <li style="list-style-type: none;">a.PayU is certified Payment Card Industry Data Security Standard ('PCI DSS').</li>
+                                    
+                                    <li style="list-style-type: none;">b.PayU shall comply with all Applicable Laws in offering the PayU Services.</li>
+                                    
+                                    <li style="list-style-type: none;">c.In the event that Merchant complaints or is dissatisfied with PayU Services, PayU shall make reasonable efforts to resolve the same.</li>
+                                    
+                                    <li style="list-style-type: none;">d.PayU shall attend to complaints/queries raised by Merchants with respect to PayU Services during business hours on Business Days.</li>
+                                    
+                                    <li style="list-style-type: none;">e.PayU shall endeavor to provide technical assistance to Merchants during business hours and Business Days.</li>
+                            </ul>
+                        </p>
+                        
+                        <p>11. The Merchant shall in writing inform PayU of all changes in its constitution, directors/partners/trustees, or change in the registered or corporate addresses of each office, within seven (7) Business Days of such change having taken place; listing out the names and details of the personnel in charge of the management and affairs of the Merchant. Such intimation shall be provided on the Merchant's letterhead signed by the authorized signatory of the Merchant.</p>
+                        
+                        <p>12. In the event that PayU was providing PayU Services for the website currently defined as Merchant Site, under a different arrangement / ownership / branding, prior to this Agreement, the Merchant hereby agrees to indemnify and hold harmless PayU and/ or the Acquiring Banks for any losses, costs, damages, penalties, Chargebacks, refund overdraft, or credit problems suffered or incurred for the services provided to the said website under the erstwhile agreement. It is hereby clarified that the Parties may mutually agree in writing to waive off the applicability of this clause. Further it is clarified that this clause will not be applicable in the event PayU was not providing PayU Services to the Merchant Site, prior to this Agreement.</p>
+                        
+                        <p>13. The Merchant acknowledges that if PayU was providing PayU Services to the Merchant Site under a different arrangement / ownership / branding, prior to this Agreement, the merchant understands that PayU will start settling the funds to the Merchant’s bank account only after the Merchant gets registered with PayU’s Acquiring Banks and Nodal Banks and the same has been confirmed to the Merchant by PayU. For the transactions prior to the said event shall be continued to be settled in accordance with the previous agreement for the said website.</p>
+                        
+                        <p>14. The PayU Agreement may be terminated by either Party by giving 30 (thirty) days prior written notice to the other Party. However, PayU shall terminate the PayU Agreement forthwith, if the Merchant fails to perform its obligations under or is in breach of any terms of the PayU Agreement.</p>
+                        
+                        <p>15. Except as provided in the PayU Agreement, no other rights are granted to the Merchant or to any third party by PayU with respect to PayU Services availed by the Merchant. PayU shall not be liable to the Merchant in any manner whatsoever, except as provided in the PayU Agreement.</p>
+                        
+                        <p>16. We understand and agree that PayU reserves the right to change any of the PayU Biz Terms and Conditions and PayUMoney Terms and Conditions without further notice to the Merchant. It is the responsibility of the Merchant to review the PayU Agreement at regular intervals and comply with the same.</p>
+                        
+                        <p>17. The Merchant assures and guarantees to PayU that the Merchant complies with all government laws, rules, and regulations applicable to its business and supports the eradication of corruption. Consistent with the Anti-bribery/Anti-corruption, and Anti-money laundering, the Merchant has had a long-standing commitment to compliance with the minimum requirements adopted by the US/OFAC, UK, UN and the EU in regards to anti-bribery and anti-corruption, anti-money laundering <b>("Anti-Financial Crimes Laws")</b> of all of the countries and territories in which the Company does business. Merchant acknowledges and agrees that the Merchant undertakes to be compliant and shall continue to abide to the relevant Anti-Financial Crimes Laws set out in<b> Schedule B</b> hereto.</p>
+                    </td>  
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="600" align="center" style="border:none; ">
+    <tr>
+        <td>
+            <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px; text-align: center;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                
+                
+                <tr>
+                    <td width="33%" valign="top">
+                        <p style="font-size: 12px;"> <b>Registered Address</b> </p>
+                        <p>2nd Floor, P &amp; G Plaza Cardinal Gracious Road, Chakala, Andheri (East) Mumbai, Mumbai City, Maharashtra, Pin-400099 </p>
+                        
+                    </td>
+                                        
+                </tr>
+                
+            </table>
+        </td>
+        
+    </tr>  
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="600" align="center" style="border:1px solid #000000;">
+    <tr>
+        <td style="padding-top:0px; font-size: 14px; line-height:20px; text-align:center;">
+            <b>SCHEDULE B</b>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-top:0px; font-size: 14px; line-height:20px; text-align:center;">
+            <b>CONFIRMATION ON ANTI-BRIBERY AND ANTI-CORRUPTION, ANTI-MONEY</b>
+        </td>
+    </tr>
+    
+    <tr>
+        <td style="padding-top:0px; font-size: 14px; line-height:20px; text-align:center;">
+            <b>LAUNDERING AND EXPORT CONTROLS ("Anti-financial Crimes Laws Confirmation")</b>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 100%; padding:10px; font-size: 14px; line-height:20px; text-align:justify;">
+            <p>
+                <b>Statement and Purpose:</b> The Merchant and its group companies are committed to operating its businesses conforming to the highest moral and ethical standards. The Merchant has a stringent code of conduct and confirms hereby that is committed to acting professionally, fairly and with integrity in all its business transactions and relationships wherever it operates. The Merchant undertakes to comply and implement in its processes all legal requirements  relevant to counter ‘bribery and corruption’, ‘money laundering’ and ‘restricted export-import transactions’ applicable in the conduct of its business, the minimum requirements adopted by the US/OFAC, UK, UN and the EU in regards to anti-bribery and anti-corruption, anti-money laundering/ combating the financing of terrorism and other applicable export control laws and regulations including but not limited to any restrictions on the export or import dealings with the ‘Sanctioned Persons’<sup>1</sup> <b> (“Anti-Financial Crimes Laws”).</b></p>
+            
+            <p>
+                <b>This Anti-Financial Crimes Laws Confirmation constitutes a minimum standard.</b> The Merchant undertakes to be compliant and shall continue to abide to the relevant Anti-Financial Crimes Laws: By signing the main services agreement, Merchant acknowledges and agrees that it:
+                
+                <p>
+                    1. will comply with all applicable laws, regulations and sanctions relating to anti-bribery, anti-corruption, anti-money laundering and export controls including but not limited to the minimum requirements of the Anti-Financial Crimes Laws.
+            </p>
+            <p>
+                
+                2. is prohibited from dealing with any acts which may be deemed as money laundering under any applicable law, regulations or restrictions.
+            </p>
+            <p>
+                3. will prohibit the entering into agreements with any person who has been identified in the sanctions list maintained by different state authorities or organisations.
+            </p>
+            <p>
+                4. has implemented an internal compliance programme, to ensure compliance with and detect violations of all applicable Anti-Financial Crimes Laws.
+            </p>
+            <p>
+                5. in the event the Merchant does not honor these commitments, the Merchant agrees that this will be considered as a material breach of the Agreement. Therefore, PayU may immediately terminate the Agreement.
+            </p>
+            
+        </p>
+</td>
+
+</tr>
+<tr>
+<td style="width: 100%; padding:10px; font-size: 10px; line-height:20px; text-align:justify;">
+    <p>
+          <sup>1</sup>'Sanction Persons' refer to those persons who are identified in the sanctions list maintained by the US (OFAC), UN and EU.  
+    </p>
+    
+    </td>
+</tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="600" align="center" style="border:none; ">
+    <tr>
+        <td>
+            <table style="width: 100%; padding:10px; font-size: 14px; line-height:20px; text-align: center;" class="tabData" cellpadding="10" cellspacing="0" border="0">
+                
+                
+                <tr>
+                    <td width="33%" valign="top">
+                        <p style="font-size: 12px;">  <b>Corporate Address </b></p>
+                        <p>PayU Payments Private Limited 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002
+                        </p>
+                    </td>
+                      <!-- <td valign="bottom" style="padding-bottom:20px;">
+                        www.payumoney.com
+                    </td>  -->               
+                </tr>
+                
+            </table>
+        </td>
+        
+    </tr>  
+</table>
+
+</body>
+
+</html>
+</apex:page>

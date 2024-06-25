@@ -1,0 +1,11 @@
+<apex:page standardController="Lead" extensions="COCalloutToGetMIDController">
+    <apex:form >
+        <apex:pageMessages />
+
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Get MID Details" action="{!executeBatch}" rerender="messages" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

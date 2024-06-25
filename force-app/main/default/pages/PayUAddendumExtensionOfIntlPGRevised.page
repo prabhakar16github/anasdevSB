@@ -1,0 +1,170 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>PayU Addendum_Extension of Intl PG - Revised</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+                .center-text{align:center;}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <!--<h3 align="center">ADDENDUM</h3>-->
+                <p align="center">
+                    <STRONG>ADDENDUM</STRONG>
+                </p>
+                <p>This addendum <strong>("Addendum")</strong> is executed at Gurgaon on this <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> ("Addendum Effective Date")</strong> by and between:</p>
+                <p><strong>PayU Payments Private Limited,</strong> a company incorporated under the Companies Act, 1956 having its registered office at 32, Viraj Building, SV Road, above HDFC Bank, Khar West, Mumbai, Maharashtra, Pin - 400052  and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002 India, (hereinafter referred to as <strong>"PayU"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns) of one part;</p>
+                <p align="center">AND</p>
+                <p>
+                    <strong>{!accObj.Legal_Name__c}</strong> a <strong>{!accObj.Business_Entity__r.Name}</strong> having its registered office at 
+                    <strong>
+                        <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                    </strong> 
+                    (hereinafter referred to as <strong>"Merchant"</strong> which expression shall, unless repugnant to the context thereof, include its successors and permitted assigns) of the other part;
+                </p>
+                <p>PayU and the Merchant are hereinafter collectively referred to as "Parties" and individually as "Party".</p>
+                <p><strong>Whereas:</strong></p>
+                <ol type="A">
+                    <li>The Merchant has entered into an agreement dated &nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> (<strong>"Service Agreement"</strong>) with PayU for the Merchant's website having the domain name: {!oppObj.Website__c}, in accordance to which PayU provides the Merchant with electronic payment and collection services.</li>
+                    <li>Further to mutual discussions, now the Parties have mutually agreed to revise the Service Fee payable under the Service Agreement, on the same terms and conditions. </li>
+                </ol>
+                <p>In consideration of the mutual covenants contained herein and for other good, valuable and binding consideration, the receipt and sufficiency of which are hereby acknowledged, the Parties agree to the following amendments:</p>
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-left: 0px"><strong>I.</strong></td>
+                        <td><strong>Scope of Services</strong></td>
+                    </tr>
+                </table>
+                <p>PayU and the Merchant have entered into the Service Agreement dated 3-Nov-2017, for the provision of the PayU Services (as defined under the Service Agreement) by PayU to the Merchant. As a part of the PayU Services, PayU has vide this Addendum, agreed to provide the Merchant with the "International Payment Gateway" which shall mean acceptance of international Valid Cards which enables Customers to pay in their currencies that is offered by PayU and payment to Merchant is done in Indian Rupees as more specifically detailed in this Addendum hereto, is hereby included in the Agreement.</p>
+                <p>The Merchant additionally represents the following:</p>
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td valign="top">(i)</td>
+                        <td>The Merchant understands that International Payment Gateway shall be provided solely at PayU's discretion. The Merchant shall be subject to PayU's, the Acquiring Banks' and Nodal Bank's approval which will be based on additional due diligence and other criteria's (including verification  of Terms and conditions &amp; Privacy Policy on the website of the Merchant) as may be applicable from time to time leading to completion of the registration process. The Merchant further understands and acknowledges that PayU, the Acquiring Banks and Nodal Bank have the right to withdraw their approval/consent at any time prior to or after commencement of the International Payment Gateway services.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(ii)</td>
+                        <td>The Merchant shall be solely responsible for undertaking additional verifications of the Customers who exceed the limits prescribed under applicable laws including but not limited to guidelines issued by any regulators, as may be applicable from time to time, such as know your customer requirements.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(iii)</td>
+                        <td>The Merchant hereby undertakes that it shall provide all assistance with respect to additional documents of the Merchant including but not limited to Income Tax Return ( ITR) with audited balance sheet OR Merchant's Bank account statement for the years alongwith any undertaking that may be requested by PayU, payment gateway facilitators and /or Acquiring Banks from time to time. </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(iv)</td>
+                        <td>The Merchant hereby agrees and acknowledges that PayU shall have the right to share the Customer database to any third party in accordance with applicable law, as maybe determined by PayU in its sole discretion.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(v)</td>
+                        <td>The Merchant understands that PayU, Acquiring Banks and/or Card Association may suspend, with hold, reject authorization and also set limit or restrict transaction size, amount and/or monthly volume of Transaction placed by the Customer using International Payment Gateway for any reason including but not limited to risk management, suspicion of fraudulent, illegal or doubtful Transactions, selling of banned items, use of compromised Valid Cards, use of blacklisted/banned cards or in accordance with the RBI, Acquiring Banks, Issuing Institution and/or Card Association rules, guidelines, regulations, etc and any other laws, rules, regulations, guidelines in force in India, etc. </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(vi)</td>
+                        <td>The Merchant hereby agrees and acknowledges that PayU may from time to time, require the Merchant to deposit with PayU an interest free refundable security deposit ("Security Deposit") (which may be subject to escalation at the discretion of PayU) to be held as reserve in order to secure the damage/ loss attributable to the Merchant under this Addendum. The Merchant shall ensure that it pays PayU all pending amounts within 10 (ten) days of receiving the demand notice and shall at all times keep PayU indemnified in this respect. This clause survives the termination of this Addendum.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(vii)</td>
+                        <td>The Merchant shall ensure that there are proper encryption, robust security and risk mitigation measures to mitigate frauds, misuse of international credit cards &amp; illicit finance threats, including money laundering, any hacking into information of the Customers and any other risk factors pertaining to payment transactions contemplated under this Agreement. In the event the Merchant fails to comply with the provisions of this clause, the Merchant shall indemnify the Parties herein for any loss, damages incurred by such Party and/or any claims made against the Parties by any other third Party due to non-compliance with the provisions of this clause.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">(viii)</td>
+                        <td>The Merchant agrees and acknowledges that the Acquiring Banks and /or PayU shall have the right to forthwith terminate this Addendum and/or the performance of the International Payment Gateway services at its sole discretion, without any liability whatsoever.</td>
+                    </tr>
+                    
+                </table>
+                
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-left: 0px"><strong>II.</strong></td>
+                        <td><strong>Fee</strong></td>
+                    </tr>
+                </table>
+                <p>In consideration of the International Payment Gateway the Merchant shall pay to PayU:</p>
+                <table  align="center" width="100%"  border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td>International Card</td>
+                        <td align="center"><strong>Anti-Fraud Module Charge</strong></td>
+                    </tr>
+                </table>
+                <ul>
+                    <li><strong>TDR is inclusive of transaction processing charges, technology service provider (TSP) fees and/ or any other value added services provided by PayU</strong></li>
+                </ul>
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-left: 0px"><strong>III.</strong></td>
+                        <td><strong>General Terms </strong></td>
+                    </tr>
+                </table>
+                <p>The provisions of this Addendum shall become effective from the <strong>Addendum Effective Date</strong>.</p>
+                <p>This Addendum shall be read in conjunction with the Service Agreement and be enforced as if the provisions of this Addendum were incorporated therein by way of an addition.</p>
+                <p>To the extent of any inconsistency between the terms of this Addendum, the Service Agreement, the provisions of this Addendum shall prevail. </p>
+                <p>Unless otherwise defined herein, capitalized terms used herein shall have the meanings ascribed to them in the Service Agreement</p>
+                <p>Save for changes/ additions specified herein this Addendum, all the other terms and conditions of the Service Agreement shall remain unchanged and in full force and effect.</p>
+                <p>IN WITNESS WHEREOF the Parties hereto have executed this Addendum through their authorized signatories on the day, month and year first herein mentioned above: </p>
+                
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong><u>On Behalf of {!accObj.Legal_Name__c}</u></strong></td>
+                        <td width="50%" align="left"><strong><u>On Behalf of PayU Payments Private Limited </u></strong></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td> ______________________________</td>
+                        <td> ______________________________</td>
+                    </tr>
+                    <tr>
+                        <td>Authorized Signatory</td>
+                        <td>Authorized Signatory</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>Name:</td>
+                    </tr>
+                    <tr>
+                        <td>Designation:</td>
+                        <td>Designation:</td>
+                    </tr>
+                </table> 
+            </div>            
+        </body>
+    </html>
+</apex:page>

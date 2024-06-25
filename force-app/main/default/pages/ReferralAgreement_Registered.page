@@ -1,0 +1,1902 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html lang="en">
+        <head>
+            <title>
+                Referral Agreement
+            </title>
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
+            <style type="text/css">          
+                @page {
+                size: a4;
+                margin:20mm;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-right {
+                content:counter(page);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }          
+                
+                body {
+                font-family: 'Open Sans', sans-serif!important;
+                font-size: 13px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:0px;
+                padding-right:0px;
+                color:#000!important;
+                font-weight:normal!important;
+                }
+                
+                .table td 
+                {
+                border:1px #d5d5d5 solid!important;
+                color:#3a3a3a;
+                font-weight:normal!important;
+                font-size:13px;
+                }
+                
+                p{text-align: justify;}
+
+                .cstm-tbl th{
+                    background-color:#dad2e9;
+                    border:1px #ccc solid!important;
+                    color:#000;
+                    font-size:13px;
+                }
+                .cstm-table-2 th{
+                    background-color:#557fc2;
+                    color:#000;
+                    border:1px #ccc solid!important;
+                    font-size:13px;
+                }
+                .cstm-table-2 td{
+                    border-color:#ccc!important;
+                }
+                .cnt-tbl-bor,
+                 .cnt-tbl-bor td{
+                    border-top:none!important;
+                    border-right:none!important;
+                }
+                .cnt-tbl-bor td > div{
+                    padding:4px 10px;
+                }
+                h1, h2, h3, p{
+                    font-weight:normal!important;
+                }
+                .pdleft-large{
+                    padding-left:15px;
+                }
+                .pdng-top-n{
+                    padding-top:10px;
+                }
+                
+            </style>
+        </head>
+        <body>
+            <div class="container" style="text-align:left;">
+                e-Stamp Certification No. - {!eStampNo}<br />
+                <br />
+                <h3 style="text-align:center; font-size:13px; font-weight:bold;">
+                    <strong>REFERRAL AGREEMENT</strong>
+                </h3>
+                <p>
+                    This Referral Agreement <strong>("Agreement")</strong> is
+                    made at New Delhi on <strong>{!TEXT(DAY(TODAY())) +
+                    dt[DAY(TODAY())]}</strong> day of
+                    <strong>{!mnth[MONTH(TODAY())]}, {!YEAR(TODAY())}</strong>
+                    (hereinafter referred to as <strong>"Effective
+                    Date"</strong>) by and between:
+                </p>
+                <p>
+                    <strong>{!accObj.Legal_Name__c}</strong>, a company
+                    incorporated under the Companies Act, 2013, having its
+                    registered office at
+                    <strong>{!IF(regAddress.Address_Line__c!=null,
+                        regAddress.Address_Line__c, null)},
+                        {!IF(regAddress.Pincode__c!=null, regAddress.Pincode__c,
+                        null)}</strong> (hereinafter referred to as <strong>"The
+                    Referrer"</strong>, which expression shall, unless
+                    repugnant to the context thereof, include its
+                    successors-in-interest and permitted assigns);
+                </p>
+                <p>
+                    <strong>AND</strong>
+                </p>
+                <p>
+                    <strong>PayU Payments Private Limited,</strong> a company
+                    incorporated under the Companies Act, 1956 having its
+                    registered office at 32, Viraj Building, SV Road, above
+                    HDFC Bank, Khar West, Mumbai, Maharashtra, Pin - 400052
+                    corporate office at 9th Floor, Bestech Business Tower,
+                    Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122004
+                    (hereinafter referred to as <strong>"PayU"</strong>, which
+                    expression shall, unless repugnant to the context thereof,
+                    include its successors-in-interest and permitted assigns);
+                </p>
+                <p>
+                    (PayU and the Referrer are hereinafter collectively
+                    referred to as <strong>"Parties"</strong> and individually
+                    as <strong>"Party"</strong>.)
+                </p>
+                <p>
+                    AND WHEREAS
+                </p>
+                <ol style="list-style-type: upper-alpha;">
+                    <li style="text-align:justify;">PayU provides inter alia aggregate payment gateway
+                        solutions <strong>("PayU Services")</strong> to various
+                        individuals or legal entities selling goods and services or
+                        collecting money for a specified purpose, over the
+                        internet. PayU facilitates such individuals and legal
+                        entities in accepting online payments initiated by their
+                        customers on their website or mobile application directed
+                        to the PayU's website or through PayU's IVR system, using
+                        valid cards, net banking and various other acceptable modes
+                        of payment mechanism provided by PayU.
+                    </li>
+                    <li style="text-align:justify;">The Referrer has agreed to refer to PayU, customers of
+                        the Referrer who are desirous of availing the PayU Services
+                        (hereinafter referred to as <strong>"Prospective
+                        Merchants"</strong>).
+                    </li>
+                    <li style="text-align:justify;">The Parties wish to record the terms agreed between
+                        them with respect to the referral arrangement between them
+                        in the manner appearing hereinafter.
+                    </li>
+                </ol>
+                <p style="text-align: justify; padding-left:0px;">
+                    <strong>NOW THEREFORE, IN CONSIDERATION OF THE MUTUAL
+                        COVENANTS, TERMS AND CONDITIONS AND UNDERSTANDINGS SET
+                        FORTH IN THIS AGREEMENT AND OTHER GOOD AND VALUABLE
+                        CONSIDERATION (THE RECEIPT AND ADEQUACY OF WHICH ARE HEREBY
+                        MUTUALLY ACKNOWLEDGED), THE PARTIES WITH THE INTENT TO BE
+                        LEGALLY BOUND HEREBY AGREE AS FOLLOWS:</strong>
+                </p>
+                <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; text-align:justify;">
+                    <tr>
+                        <td style="color:#000; font-weight:bold;">
+                            1
+                        </td>
+                        <td style="color:#000; font-weight:bold;">
+                            DEFINITIONS AND INTERPRETATION:
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="color:#000; font-weight:bold;">
+                            1.1.
+                        </td>
+                        <td>
+                            In this Agreement, except where the context otherwise
+                            requires, the following words and expressions shall
+                            have the following meanings.
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Agreement"</strong> means this Referral
+                                        Agreement and the same may be amended,
+                                        supplemented or modified from time to time in
+                                        accordance with terms and conditions hereof.;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Business Day"</strong> means a day
+                                        (other than a Saturday or Sunday or any public
+                                        holiday in accordance with the Negotiable
+                                        Instruments Act, 1881) on which scheduled
+                                        commercial banks are open for business in India;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (c)
+                                    </td>
+                                    <td style="text-align:justify;" class="pdleft-large pdng-top-n">
+                                        <strong>"Confidential Information"</strong> shall
+                                        mean any material, document, applications, idea,
+                                        data, details, software, systems, statements
+                                        business/customer data base or other information
+                                        and trade secrets, research and development,
+                                        processes, tangible and intangible information
+                                        relating to the disclosing Party, its products
+                                        and services or its respective business affairs
+                                        etc., which is not in the public domain and
+                                        whether or not is marked as confidential or is by
+                                        its nature confidential and is disclosed by the
+                                        disclosing Party or their representatives to the
+                                        receiving Party for the purpose of this
+                                        Agreement. Such Information may be in any form
+                                        including but not limited to oral, written or
+                                        printed information Provided that confidential
+                                        information disclosed orally or those produced by
+                                        electronic media or through any other intangible
+                                        means shall be deemed confidential if it is
+                                        reduced in writing identifying it as being
+                                        confidential within 30 days of disclosure.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (d)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Effective Date"</strong> means the date
+                                        of execution of this Agreement;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (e)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"PayU Services"</strong> shall have the
+                                        meaning ascribed to them in Recital A.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (f)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Prospective Merchants"</strong> shall
+                                        have the meaning ascribed to the term in Recital
+                                        B.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (g)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Qualified Referral"</strong> shall have
+                                        the meaning prescribed in Clause 4.2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (h)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Referral Fee"</strong> means the fee to
+                                        be paid by PayU to the Referrer for each
+                                        Qualified Referral with respect to PayU Services;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (i)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n">
+                                        <strong>"Referral Portal"</strong> shall mean the portal which enables the Referrer to refer Prospective Merchants to PayU. The Referrer will be able to access the portal through the Referrer account details provided by PayU to the Referrer.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            1.2
+                        </td>
+                        <td class="pdng-top-n">
+                            In this Agreement:
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(a)</strong>
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Except where the context requires otherwise,
+                                        references to Clauses, Schedules and Annexures
+                                        are to Clauses of, Schedules to and Annexures to
+                                        this Agreement.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(b)</strong>
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Words denoting the singular number include the
+                                        plural number and vice versa, words denoting the
+                                        masculine gender include the feminine gender and
+                                        words denoting persons include companies.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(c)</strong>
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Headings are inserted for convenience only and
+                                        shall not affect the construction of this
+                                        Agreement.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(d)</strong>
+                                    </td>
+                                    <td class="pdleft-large">
+                                        In case of any ambiguity or discrepancy between
+                                        the Clauses and the Annexures to this Agreement,
+                                        the Clauses shall prevail.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                       <strong> (e)</strong>
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Any reference to any agreement, deed, instrument,
+                                        licence, code or other document of any
+                                        description shall be construed, at the particular
+                                        time, as a reference to that agreement, deed,
+                                        instrument, licence code or other document as the
+                                        same may then have been amended, varied,
+                                        supplemented, modified, suspended or novated.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pdng-top-n">
+                            <strong>2.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>TERM:</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            2.1
+                        </td>
+                        <td class="pdleft-large">
+                            This Agreement shall be in force from Effective Date
+                            and shall remain in force until terminated by either
+                            Party in accordance with the provisions of this
+                            Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <strong>3.</strong>
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            <strong>SCOPE</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            3.1
+                        </td>
+                        <td class="pdleft-large">
+                            The Referrer, in accordance with the terms and conditions of this Agreement agrees on a non-exclusive basis to refer and introduce Prospective Merchants to PayU through the Referral Portal.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px;">
+                            3.2
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            The Referrer shall upload the relevant details of the Prospective Merchants on the Referral Portal which may be required by PayU to evaluate the scope for providing the services to the Prospective Merchants.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px; color:#4678c2;">
+                            3.3
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            The Referrer undertakes and agrees that it shall conduct a due diligence of all the Prospective Merchants in accordance with the Know Your Customers (“KYC”) rules and regulations set out by Reserve Bank of India and shall upload such documents on the Referral Portal for the Prospective Merchants referred by the Referrer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px;">
+                            3.4
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            The Referrer shall ensure that the information uploaded on the Referral Portal are accurate and genuine.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px; color:#4678c2;">
+                            3.5
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            The Referrer hereby acknowledges, confirms and agrees that PayU shall be at liberty to carry out all necessary due diligence as per its risk management procedure before on-boarding any Prospective Merchant as merchant.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign = "top" style="padding-top:10px; color:#468c2;">
+                            3.6
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            The Referrer acknowledges, confirms and agrees that the shared Prospective Merchants who have provided all the necessary and supporting KYC and/or any other on-boarding documents as may be prescribed by PayU (from time to time) to the satisfaction of PayU and has successfully executed the Merchant Agreement with PayU and such Prospective Merchant has been approved by acquiring banks and the nodal bank.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign = "top" style="padding-top:10px; color:#468c2;">
+                            3.7
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            The Agreement expressly contains all the duties of the Referrer and PayU. No implied duties or obligations shall be read or deemed to be read into the Agreement against the Referrer and PayU.  Apart from this Agreement, the Referrer and PayU shall not be bound by the provisions of any agreement, arrangement or understanding between the Referrer and Prospective Merchant.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign = "top" style="padding-top:10px; color:#468c2;">
+                            3.8
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            It has been agreed by and between the Parties that, this Agreement is independent to any other understanding, agreement, contract entered in to or will be entered into between PayU and the Referrer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pdng-top-n">
+                            <strong>4.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>CONSIDERATION</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px;">
+                            4.1
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            In consideration for each Qualified Referral, PayU agrees to pay the Referrer such Referral Fees, subject to the eligibility criteria, as detailed in Annexure A, for a period of 4 (four) years from the date of on-boarding and execution of service agreement with the Prospective Merchant for providing PayU Services.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px;">
+                            4.2
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            A Prospective Merchant shall be considered as a
+                            Qualified Referral only after (i) a legal service
+                            agreement has been executed between the Prospective
+                            Merchant and PayU and the Prospective Merchant has been
+                            approved by acquiring banks and the nodal bank; (ii)
+                            the integration has been completed successfully; and
+                            (iii) the PayU Services are available to be used by the
+                            Prospective Merchant and their customers and any
+                            applicable fee/charges has been paid by the Prospective
+                            Merchant.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:10px;">
+                            4.3
+                        </td>
+                        <td style="padding-top:10px;" class="pdleft-large">
+                            All fees as stated in Annexure A shall be inclusive of
+                            all applicable taxes. Further PayU shall deduct the Tax
+                            Deductible at Source (TDS) from the fee stated in
+                            Annexure A and pay the remaining amount to the
+                            Referrer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pdng-top-n">
+                            <strong>5.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>OBLIGATIONS OF THE REFERRER</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            5.1
+                        </td>
+                        <td class="pdleft-large">
+                            The Referrer hereby agrees that it shall:
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        use its best endeavors to advertise and promote
+                                        PayU Services to Prospective Merchants;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        observe all directions and instructions given to
+                                        it by PayU in relation to the promotion and
+                                        advertisement of PayU Services;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (c)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        promote PayU Services in accordance with the
+                                        terms of this Agreement and any other direction
+                                        or instruction supplied by PayU from time to time
+                                        in writing;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (d)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        not offer PayU Services at a rate lower than the
+                                        rate specified in Annexure - A.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (e)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        not grant any discounts to Prospective Merchants
+                                        with respect to PayU Services. Such discounts can
+                                        be granted only with the prior written approval
+                                        of PayU.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (f)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        ensure that any information supplied to PayU
+                                        pertaining to the Prospective Merchant should be
+                                        accurate and PayU may rely on such information
+                                        while entering into an Agreement with a
+                                        Prospective Merchant;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (g)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        market PayU as preferred payment partner to
+                                        Prospective Merchant on a non-exclusive basis; or
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (h)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        ensure that there is no misrepresentation,
+                                        exaggeration or inaccurate information provided,
+                                        to the Prospective Merchants about PayU or with
+                                        respect to PayU Services by the Referrer.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            5.2
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            The Referrer acknowledges, undertakes and confirms that the credentials/ information/ or any other data of Prospective Merchant (“Prospective Merchant Information”) shall be shared by PayU with the Referrer under the terms of this Agreement. The Referrer shall be solely responsible to protect and maintain the integrity of the Prospective Merchant Information. Any loss incurred to PayU due to any breach by the Referrer (including its employees, contractors, agents etc.) of the obligations set out under this clause shall be borne solely by the Referrer and the Referrer agrees to indemnify, defend and hold harmless PayU from any claims, actions, damages or losses arising out or in relation thereto. Such obligation upon Referrer shall survive after the termination or expiry of this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            5.3
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            The Referrer shall not have any responsibility or liability for PayU Services subject to Clause 5.1.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            5.4
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            The Referrer shall not without PayU's prior written
+                            consent:
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        issue any advertisement in relation to PayU or
+                                        its Affiliates; or
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        provide information of any kind relating to PayU
+                                        or its Affiliates to any government or regulatory
+                                        body or the press or any third party by way of
+                                        interviews, press releases, submissions,
+                                        statements or otherwise; or
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (c)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        respond on behalf of PayU or its Affiliates to
+                                        any enquiries or requests for information
+                                        received from government or regulatory body or
+                                        the press or from Prospective Merchants or any
+                                        third party relating to PayU or its Affiliates.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pdng-top-n">
+                            <strong>6.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>OBLIGATIONS OF PAYU</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            6.1
+                        </td>
+                        <td class="pdleft-large">
+                            PayU shall assist the Referrer in promoting PayU
+                            Services by providing necessary and relevant
+                            information and advice. To this end, PayU shall supply
+                            to the Referrer such documentation, materials and
+                            information relating to PayU Services, as may be
+                            necessary from time to time.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            6.2
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            PayU agrees that it shall:
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Provide information with respect to the PayU
+                                        Services to Prospective Merchant;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Explain the PayU Services to Prospective
+                                        Merchant;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (c)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Co-ordinate for technical integration of the
+                                        Qualified Referral’s systems and processes with
+                                        PayU Services.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pdng-top-n">
+                            <strong>7.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>REPRESENTATIONS BY THE PARTIES</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            7.1
+                        </td>
+                        <td class="pdleft-large">
+                            Each of the Parties represents warrants and undertakes
+                            that:
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        It is duly organized and validly existing under
+                                        the laws of the jurisdiction in which it is
+                                        established;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        It has the requisite power and authority to
+                                        execute, deliver and perform this Agreement and
+                                        that this Agreement has been duly and validly
+                                        authorized, executed and delivered by it;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (c)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        Its obligations hereunder constitute legal,
+                                        valid, binding and enforceable obligations; and
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (d)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        The execution and delivery of this Agreement does
+                                        not breach its organizational documents or any
+                                        law, provisions of any contract or order of court
+                                        applicable to it and do not require any
+                                        applicable governmental approval; and
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (e)
+                                    </td>
+                                    <td class="pdleft-large">
+                                        The person executing this Agreement is duly
+                                        authorized to execute the Agreement for and on
+                                        behalf of the respective Party and shall have the
+                                        authority to bind the respective Party
+                                        accordingly.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pdng-top-n">
+                            <strong>8.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>CONFIDENTIALITY</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            8.1
+                        </td>
+                        <td class="pdleft-large">
+                            The receiving Party agrees and undertakes to keep
+                            confidential at all times the Confidential Information
+                            provided by the disclosing Party relating to
+                            Prospective Merchant, details of this Agreement and all
+                            materials, structures and other related documents
+                            pertaining to the PayU Services provided and shared
+                            with the receiving Party in connection with this
+                            Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            8.2
+                        </td>
+                        <td class="pdleft-large">
+                            The receiving Party shall use the Confidential
+                            Information only in accordance with this Agreement and
+                            for the services to be provided by it under this
+                            Agreement and not disclose any of the Confidential
+                            Information to any third party without the disclosing
+                            Party’s prior written consent.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            8.3
+                        </td>
+                        <td class="pdleft-large">
+                            Upon the request of the disclosing Party, the receiving
+                            Party will within 7 days of receipt of such request,
+                            return or destroy all Confidential Information and any
+                            notes, correspondence, analyses, documents or other
+                            records containing Confidential Information, including
+                            all copies thereof, then in the possession of the
+                            receiving Party or its representatives and shall
+                            certify the fact of having destroyed the Confidential
+                            Information in writing to the disclosing Party. Such
+                            return, however, does not abrogate the continuing
+                            obligations of the receiving Party under this
+                            Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            8.4
+                        </td>
+                        <td class="pdleft-large">
+                            If receiving Party becomes legally compelled to
+                            disclose any Confidential Information of disclosing
+                            Party, receiving Party will provide disclosing Party
+                            prompt written notice, if legally permissible, and will
+                            use its commercially reasonable efforts to assist
+                            disclosing Party in seeking a protective order or
+                            another appropriate remedy. If disclosing Party waives
+                            receiving Party’s compliance with this Agreement or
+                            fails to obtain a protective order or other appropriate
+                            remedy, the receiving Party will furnish only that
+                            portion of the Confidential Information that is legally
+                            required to be disclosed; provided that any
+                            Confidential Information so disclosed shall maintain
+                            its confidentiality protection for all purposes other
+                            than such legally compelled disclosure.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  class="pdng-top-n">
+                            <strong>9.</strong>
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>INTELLECTUAL PROPERTY RIGHTS</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            9.1
+                        </td>
+                        <td class="pdleft-large">
+                            During the term of this Agreement, each Party grants to
+                            the other Party a limited, non-exclusive,
+                            non-transferable, revocable right to display its marks
+                            and logos solely to market and promote the relationship
+                            contemplated by this Agreement. Either Party may revoke
+                            the foregoing license at any time by giving the other
+                            Party written notice. Unless revoked sooner in
+                            accordance with the immediately preceding sentence, the
+                            foregoing license terminates automatically upon the
+                            effective date of the expiration or termination of this
+                            Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            9.2
+                        </td>
+                        <td class="pdleft-large">
+                            Each party acknowledges and agrees that: (a) it will
+                            use the other Party’s marks and logos in a lawful
+                            manner and only as permitted hereunder; (b) it will use
+                            the other Party’s marks and logos in strict compliance
+                            with all formats, guidelines, standards and other
+                            requirements prescribed by such other Party; (c) the
+                            other Party’s marks and logos are and shall remain the
+                            sole property of such other Party (or its licensors);
+                            and (d) nothing in this Agreement confers in it any
+                            right of ownership in any marks or logos of the other
+                            Party and all use thereof inures to the benefit of such
+                            other party (or its licensors).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:15px;">
+                            <strong>10.</strong>
+                        </td>
+                        <td style="padding-top:15px;" class="pdleft-large">
+                            <strong>INDEMNITY AND LIMITATION OF LIABILITY</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            10.1
+                        </td>
+                        <td class="pdleft-large">
+                            The Referrer agrees to keep PayU safe and harmless at
+                            all points of time and agrees and undertakes to
+                            indemnify PayU for any loss, damage, costs, charges or
+                            expenses incurred or suffered and against any claims,
+                            suits, actions, proceedings instituted or likely to be
+                            instituted against PayU as a result of breach by the
+                            Referrer of the provisions of this Agreement or arising
+                            out of gross negligence or willful default of the
+                            Referrer or arising as a result of misrepresentation,
+                            omission of any material fact or any misleading or
+                            incorrect information furnished by the Referrer to PayU
+                            or the Prospective Merchant or claims brought by the
+                            Prospective Merchant against PayU under this Agreement.
+                            The Referrer also agrees to indemnify PayU for breach
+                            of any of its obligations, declarations, undertakings
+                            and covenants under this Agreement. Notwithstanding
+                            anything stated under this Agreement, aggregate
+                            liability of PayU from any cause whatsoever shall not
+                            in any event exceed sum equivalent to the one month’s
+                            aggregate Referral Fee paid by PayU to the Referrer for
+                            the business sourced under this Agreement from the date
+                            of occurrence of such liability. PayU shall not be
+                            liable to the Referrer for any special, incidental,
+                            indirect or consequential damages.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            10.2
+                        </td>
+                        <td class="pdleft-large">
+                            These indemnification provisions shall survive any
+                            termination or expiry of this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:15px;">
+                            <strong>11.</strong>
+                        </td>
+                        <td style="padding-top:15px;" class="pdleft-large">
+                            <strong>TERMINATION</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            11.1
+                        </td>
+                        <td class="pdleft-large">
+                            This Agreement may be terminated by either Party by
+                            giving 30 (thirty) days prior written notice to the
+                            other Party.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            11.2
+                        </td>
+                        <td class="pdleft-large">
+                            Either Party may terminate this Agreement forthwith in
+                            the event:
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        (a)
+                                    </td>
+                                    <td style="padding-left:5px;">
+                                        the Party discovers at any stage that the other
+                                        Party is in violation of any law or regulation;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (b)
+                                    </td>
+                                    <td style="padding-left:5px;">
+                                        the other Party is adjudicated as bankrupt, or if
+                                        a receiver or as a trustee is appointed for it or
+                                        for a substantial portion of its assets, or if
+                                        any assignment for the benefit of its creditors
+                                        is made and such adjudication appointment or
+                                        assignment is not set aside within 90 (ninety)
+                                        Business Days;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (c)
+                                    </td>
+                                    <td style="padding-left:5px;">
+                                        the other Party goes into liquidation either
+                                        voluntarily or compulsorily;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        (d)
+                                    </td>
+                                    <td style="padding-left:5px;">
+                                        the other Party is prohibited by any regulatory
+                                        or statutory restriction from continuing to
+                                        provide services under this Agreement.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            11.3
+                        </td>
+                        <td class="pdleft-large">
+                            PayU may terminate this Agreement forthwith, if the
+                            Referrer fails to perform its obligations hereunder or
+                            is in breach of any terms and conditions of this
+                            Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            11.4
+                        </td>
+                        <td class="pdleft-large">
+                            Any terms, rights or obligations intended by their
+                            nature to survive termination of this Agreement, shall
+                            so survive.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            11.5
+                        </td>
+                        <td class="pdleft-large">
+                            The Merchant understands that the termination of this
+                            Agreement shall not affect PayU’s relationship with the
+                            Qualified Referrals.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:15px;">
+                            <strong>12.</strong>
+                        </td>
+                        <td style="padding-top:15px;" class="pdleft-large">
+                            <strong>RELATIONSHIP BETWEEN THE PARTIES</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            12.1
+                        </td>
+                        <td class="pdleft-large">
+                            The relationship between PayU and the Referrer is on
+                            principal-to-principal basis. Nothing contained herein
+                            shall be deemed to create any association, partnership,
+                            joint venture or relationship of principal and agent or
+                            master and servant, or employer and employee between
+                            the Parties hereto or any affiliates or subsidiaries
+                            thereof or to provide either Party with the right,
+                            power or authority, whether express or implied to
+                            create any such duty or obligation on behalf of the
+                            other Party.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:15px;">
+                            <strong>13.</strong>
+                        </td>
+                        <td style="padding-top:15px;" class="pdleft-large">
+                            <strong>GENERAL PROVISIONS</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.1
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Assignments:</strong> PayU may assign, in whole
+                            or in part, the benefits or obligations of this
+                            Agreement by providing a thirty (30) days prior
+                            intimation of such assignment to the Referrer, which
+                            shall be binding on the Parties to this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.2
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Force Majeure:</strong> Neither Party shall be
+                            liable for its failure to perform under this Agreement
+                            as a result of any event of force majeure events like
+                            acts of god, fire, wars, sabotage, civil unrest, labour
+                            unrest, action of Statutory Authorities or local or
+                            Central Governments, change in Laws, Rules and
+                            Regulations, affecting its performance.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.3
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Governing Law, Settlement of Disputes and
+                                Jurisdiction:</strong> This Agreement (and any dispute
+                            or claim relating to it, its enforceability or its
+                            termination) is to be governed by and construed in
+                            accordance with the laws of India. Each of the Parties
+                            agrees that, if any dispute(s) or difference(s) shall
+                            arise between the Parties in connection with or arising
+                            out of this Agreement, the Parties shall attempt, for a
+                            period of 30 (thirty) days from the receipt of a notice
+                            from the other Party of the existence of a dispute(s),
+                            to settle such dispute(s) by mutual discussions between
+                            the Parties. If the said dispute(s) cannot be settled
+                            by mutual discussions within the thirty-day period
+                            provided above, either Party may refer the matter to a
+                            sole arbitrator to be mutually appointed in accordance
+                            with the <em>Arbitration and Conciliation Act,
+                            1996.</em> The arbitration proceedings shall be held
+                            under the provisions of the <em>Arbitration and
+                            Conciliation Act, 1996.</em> The arbitration
+                            proceedings shall be held in English language at New
+                            Delhi. The courts at New Delhi shall have the exclusive
+                            jurisdiction over any disputes relating to the subject
+                            matter of this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.4
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Waiver:</strong> Unless otherwise expressly
+                            stated in this Agreement, the failure to exercise or
+                            delay in exercising a right or remedy under this
+                            Agreement shall not constitute a waiver of the right or
+                            remedy or a waiver of any other rights or remedies, and
+                            no single or partial exercise of any right or remedy
+                            under this Agreement shall prevent any further exercise
+                            of the right or remedy or the exercise of any other
+                            right or remedy.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.5
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Survival of Provisions:</strong> The terms and
+                            provisions of this Agreement that by their nature and
+                            content are intended to survive the performance hereof
+                            by any or all Parties hereto shall so survive the
+                            completion and termination of this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.6
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Severability:</strong> If any provision of this
+                            Agreement is or becomes, in whole or in part, invalid
+                            or unenforceable but would be valid or enforceable if
+                            some part of that provision was deleted, that provision
+                            shall apply with such deletions as may be necessary to
+                            make it valid. If any Court/Tribunal of competent
+                            jurisdiction holds any of the provisions of this
+                            Agreement unlawful or otherwise ineffective, the
+                            remainder of this Agreement shall remain in full force
+                            and the unlawful or otherwise ineffective provision
+                            shall be substituted by a new provision reflecting the
+                            intent of the provision so substituted.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.7
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Non-Exclusivity:</strong> It is agreed and
+                            clarified that this Agreement is on a non-exclusive
+                            basis and the Parties are at liberty to enter into
+                            similar Agreements with others.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.8
+                        </td>
+                        <td class="pdleft-large pdng-top-n">
+                            <strong>Entire Agreement:</strong> This Agreement
+                            constitutes the entire Agreement and understanding
+                            between the Parties, and supersedes any previous
+                            agreement or understanding or promise between the
+                            Parties, relating to the subject matter of this
+                            Agreement. All Schedules, Recitals and Annexure to this
+                            Agreement shall be an integral part of this Agreement
+                            and will be in full force and effect as though they
+                            were expressly set out in the body of this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            13.9
+                        </td>
+                        <td style="text-align:left;" class="pdleft-large pdng-top-n">
+                            <strong>Notices:</strong> All notices, requests,
+                            demands, waivers and other communications required or
+                            permitted to be given under the Agreement shall be in
+                            writing through certified or registered mail, courier,
+                            email, facsimile or telegram to be sent to the
+                            following addresses:
+                            <p style="text-align:left;">
+                                <strong>For PayU:</strong><br />
+                                Attn: Legal Department (PayU India)<br />
+                                PayU Payments Private Limited,<br />
+                                9th Floor, Bestech Business Tower,<br />
+                                Sector 48, Sohna Road, Gurgaon,<br />
+                                Haryana, Pin - 122004
+                            </p>
+                            <p style="text-align:left;">
+                                <strong>For Referrer:<br />
+                                    {!accObj.Legal_Name__c}<br />
+                                    {!IF(regAddress.Address_Line__c!=null,
+                                    regAddress.Address_Line__c, null)},<br />
+                                    {!IF(regAddress.Pincode__c!=null,
+                                    regAddress.Pincode__c, null)}
+                                    <br /></strong><br />
+                            </p>
+                            <p style="text-align:justify;">                  
+                                Or, in each case, at such other address as may be
+                                specified in writing to the other Parties in
+                                accordance with the requirements of this Clause. All
+                                such notices, requests, demands, waivers and other
+                                communications shall be deemed duly given (i) if by
+                                personal delivery, on the day after such delivery,
+                                (ii) if by certified or registered mail, on the10th
+                                (tenth) day after the mailing thereof, (iii) if by
+                                courier service or similar service, on the day
+                                delivered, or (iv) if by email, facsimile or
+                                telegram, on the day following the day on which such
+                                email, facsimile or telegram was sent, provided that
+                                a copy is also sent by registered mail and, in the
+                                case of a facsimile, electronic confirmation of
+                                receipt is received.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            13.10
+                        </td>
+                        <td style="text-align:left;" class="pdleft-large">
+                            <strong>Amendment:</strong> This Agreement shall not be
+                            varied, amended or modified by any of the Parties in
+                            any manner whatsoever unless such variation, amendment
+                            or modification is mutually discussed and agreed to in
+                            writing and duly executed by both the Parties.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            13.11
+                        </td>
+                        <td class="pdleft-large">
+                            <strong>Counterparts:</strong> This Agreement may be
+                            executed in two or more counterparts, each of which,
+                            when executed and delivered, is an original, but all
+                            the counterparts taken together shall constitute one
+                            document.
+                        </td>
+                    </tr>
+                </table>
+
+
+
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse; font-weight: bold;page-break-before:always;">
+
+                    <tr>
+                        <td>
+                              <h4 style="text-align:center; font-weight:normal; font-size:20px; margin:0px; padding:0px;">
+                            ANNEXURE A
+                            </h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           <div style="font-size:16px; font-weight:bold;">
+                            Part I: Terms for Prospective Merchants for availing
+                            PayU Services for PayU product - PayUbiz</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                               <div style="font-size:16px; color:#666666; font-weight:bold; font-style:italic;">
+                                A.  Minimum Transaction Discount Rate (TDR) to be
+                                quoted to the Prospective Merchants for availing
+                                PayU Services</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-weight: bold; text-align:justify; ">
+                                <tr>
+                                    <td style="text-align:left;" colspan="2">
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="font-weight:bold; -fs-table-paginate: paginate;" class="table cstm-tbl">
+                                        <tbody>
+                                            <tr>
+                                                <th width="50%" style="padding:5px 10px;border-bottom:none!important;">
+                                                    Particulars
+                                                </th>
+                                                <th width="50%" style="padding:5px 10px; border-bottom:none!important;">
+                                                    Base Rate/ TDR/ Fees* (Exclusive of Applicable Taxes)
+                                                </th>
+                                            </tr>
+
+                                            
+                                                <tr>
+                                                    <td width="50%" style="padding:5px 10px; border-bottom:none!important;">
+                                                        Set Up Cost
+                                                    </td>
+                                                    <td width="50%" style="padding:5px 10px; border-bottom:none!important;">
+                                                       30.0%
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" width="100%">
+                                                        <table width="100%" cellspacing="0" cellpadding="0" class="cnt-tbl-bor">
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>1)TDR (%) on Net Banking*</div></td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.80%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.90%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>2)TDR (%) on Credit Card*</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants</div>  
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.20%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.90%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>3)TDR (%) on Debit Card*</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants</div> 
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.00%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.25%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>4)TDR (%) on Amex*</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants</div> 
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>3.00%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>3.00%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>5)TDR (%) on Diner*</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, </div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>3.00%</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Government merchants, Utilities and Insurance merchants </div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">&nbsp;</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>3.00%</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>6)TDR (%) on UPI*</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.00%</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>1.25%</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>7)TDR (%) on EMI*</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>NA</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>NA</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">
+                                                                    <div>8)TDR (%) on Others*</div>
+                                                                     </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants</div> 
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>NA</div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="border-left:none!important;" valign="top" width="33.3%">&nbsp;</td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>Prospective Merchants dealing in other sector(s)</div>
+                                                                </td>
+                                                                <td width="33.3%" valign="top">
+                                                                    <div>NA</div>
+                                                                </td>
+                                                            </tr>
+
+                                                        </table>
+                                                    </td>
+                                                </tr> 
+                                            </tbody>
+                                        </table>
+
+                                        <p style="margin:0px; padding:0px; font-size:13px;">
+                                            *GST as may be applicable shall be charged
+                                            extra
+                                        </p>
+                                        <p style="margin:0px; padding:0px; font-size:13px;">* A higher rate of TDR for Debit Card transactions cannot be charged for PayU Product – PayUbiz</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+
+                <tr>
+                    <td>
+                        <table  width="100%">
+                             <tr>
+                                                    <td colspan="2" valign="top">
+                                                        <div style="font-size:16px; color:#666666; font-weight:bold; font-style:italic;">
+                                                        B. Consideration to be paid to the Referrer for PayU Services for PayU product -
+                                                        PayUBiz
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                                        <ul style="margin:0px; padding:0px 0px 0px 20px;  vertical-align:top;">
+                                                            <li>&nbsp;</li>
+                                                        </ul>
+                                                    </td>
+                                                    <td style="font-size:13px; font-weight:normal;">
+                                                        1. Referral Fee shall be anything charged over and above the Base Rate (Transaction Discount Rate) and 30.0% of the Set Up Cost received from each Qualified Referral
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                                    <ul style="margin:0px; padding:0px 0px 0px 20px;  vertical-align:top;">
+                                                            <li>&nbsp;</li>
+                                                        </ul>
+                                                    </td>
+                                                    <td style="text-align:justify; font-size:13px; font-weight:normal;">
+                                                        2. In case of a Qualified Referral PayU shall share with the Referrer an MIS for TDR revenue
+                                                        share on quarterly basis. Basis the MIS, the Referrer shall raise an invoice to PayU on a quarterly
+                                                        basis. PayU shall pay the Referrer the Referral Fee due to it within 30 days on receipt of such undisputed invoice, provided that the invoice is in accordance with the MIS.
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                                        <ul style="margin:0px; padding:0px 0px 0px 20px;  vertical-align:top;">
+                                                            <li>&nbsp;</li>
+                                                        </ul>
+                                                    </td>
+                                                    <td style="text-align:justify; font-size:13px; font-weight:normal;">
+                                                        3. The Referral Fee shall be subject to the deduction of TDS.
+                                                    </td>
+                                                </tr>
+                                                <!--<tr>
+                                                    <td valign="top" style="font-size:13px; font-weight:normal;" >
+                                                        <ul style="margin:0px; padding:0px 0px 0px 20px;  vertical-align:top;">
+                                                            <li>&nbsp;</li>
+                                                        </ul>
+                                                    </td>
+                                                    <td style="font-size:13px; font-weight:normal;">
+                                                        4. The Referrer shall also be entitled to INR 500.0 (one-time payment) for each Qualified Referral whose Net settlement value reaches INR 10000.0.
+                                                    </td>
+                                                </tr>-->
+                        </table>
+                    </td>
+                </tr>
+
+                </table>
+                <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; page-break-before:always;">
+                       <tr>
+                           <td valign="top" colspan="2" style="padding-top:0px;">
+                               <div style="font-size:16px; font-weight:bold;">
+                                Part II: Terms for Prospective Merchants for
+                                availing PayUMoney Services
+                               </div>
+                           </td>
+                       </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top:10px;">
+                            <div style="font-size:16px; color:#666666; font-weight:bold;">
+                                A.&nbsp; &nbsp;Minimum Transaction Discount Rate (TDR) to be
+                                quoted to the Prospective Merchants for availing
+                                PayUMoney Services</div>
+                        </td>
+                    </tr>
+                </table>
+                <table align="center" width="100%" cellpadding="0"
+                       cellspacing="0" border="0" style="border-collapse: collapse; margin-top:20px;-fs-table-paginate: paginate;" class="table cstm-table-2">
+                    <tr>
+                        <th width="50%" style="padding:5px 10px;">
+                           Particulars
+                        </th>
+                        <th  width="50%" style="padding:5px 10px;">
+                           Base Rate/ TDR/ Fees* (Exclusive of Applicable Taxes)
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="50%" style="padding:5px 10px;">
+                            Set Up Cost 
+                        </td>
+                        <td width="50%" style="padding:5px 10px;">
+                            30.0%
+                        </td>
+                    </tr>
+                        <tr>
+                            <td colspan="2" width="100%">
+                                <table width="100%" cellspacing="0" cellpadding="0" class="cnt-tbl-bor">
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>1)TDR (%) on Net Banking*</div></td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.80%</div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.90%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>2)TDR (%) on Credit Card*</div>
+                                             </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.20%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.90%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>3)TDR (%) on Debit Card*</div> </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.00%</div>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.25%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>4)TDR (%) on Amex*</div> </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>3.00%</div>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>3.00%</div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>5)TDR (%) on Diner*</div> 
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>3.00%</div>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>3.00%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>&nbsp;</div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>6)TDR (%) on UPI*</div> 
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.00%</div>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>1.25%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>7)TDR (%) on EMI*</div> 
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>NA</div>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>NA</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            <div>8)TDR (%) on Others*</div> 
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in: Education sector, Government merchants, Utilities and Insurance merchants </div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>NA</div>
+                                        </td>
+                                    </tr> 
+
+                                    <tr>
+                                        <td style="border-left:none!important;" valign="top" width="33.3%">
+                                            &nbsp;</td>
+                                        <td width="33.3%" valign="top">
+                                            <div>Prospective Merchants dealing in other sector(s)</div>
+                                        </td>
+                                        <td width="33.3%" valign="top">
+                                            <div>NA</div>
+                                        </td>
+                                    </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                </table>
+
+
+                <table align="center" width="100%" cellpadding="0"
+                       cellspacing="0" border="0" style=
+                       "border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align:left;">
+                            <p style="text-align:left; padding:0px margin:0px;">
+                                *GST as may be applicable shall be charged
+                                extra<br />
+                                * Debit Card charge includes value added services
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <table cellpadding="0" cellspacing="0" border="0" style=
+                       "border-collapse: collapse;">
+                    <tr>
+                        <td colspan="2">
+                            <div style="font-size:16px; color:#666666; font-weight:bold; padding-top:30px; padding-bottom:20px;">
+                                B.&nbsp;&nbsp;Consideration to be paid to the Referrer for
+                                PayU Services for PayU product - PayUmoney</div>
+                            </td>
+                        </tr>
+                        <tr>
+                        <td colspan="2">
+                            <table width="100%">
+                                <tr>
+                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                        <ul style="margin:0px; padding:0px 0px 0px 20px; vertical-align:top;">
+                                            <li>&nbsp;</li>
+                                        </ul>
+                                    </td>
+                                     <td style="font-size:13px; font-weight:normal;">
+                                        1. Referral Fee shall be anything charged over and above the Base Rate (Transaction Discount Rate) and 30.0% of the Set Up Cost received from each Qualified Referral.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                        <ul style="margin:0px; padding:0px 0px 0px 20px;  vertical-align:top;">
+                                            <li>&nbsp;</li>
+                                        </ul>
+                                    </td>
+                                    <td style="font-size:13px; font-weight:normal;">
+                                        2. In case of a Qualified Referral PayU shall share with the Referrer an MIS for TDR revenue share on quarterly basis. Basis the MIS, the Referrer shall raise an invoice to PayU on a quarterly basis. PayU shall pay the Referrer the Referral Fee due to it within 30 days on receipt of such undisputed invoice, provided that the invoice is in accordance with the MIS.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                        <ul style="margin:0px; padding:0px 0px 0px 20px;  vertical-align:top;">
+                                            <li>&nbsp;</li>
+                                        </ul>
+                                    </td>
+                                   <td style="font-size:13px; font-weight:normal;">
+                                        3. The Referral Fee shall be subject to the deduction of TDS.
+                                    </td>
+                                </tr>
+                                <!--<tr>
+                                    <td valign="top" style="font-size:13px; font-weight:normal;">
+                                        <ul style="margin:0px;padding:0px 0px 0px 20px; vertical-align:top;">
+                                            <li>&nbsp;</li>
+                                        </ul>
+                                    </td>
+                                    <td style="font-size:13px; font-weight:normal;">
+                                        4. The Referrer shall also be entitled to INR 500.0 (one-time payment) for each Qualified Referral whose Net settlement value reaches INR 10000.0.
+                                    </td>
+                                </tr>-->
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </body>
+    </html>
+</apex:page>

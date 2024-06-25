@@ -1,0 +1,123 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>Renewal Agreement Sample</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+                .center-text{align:center;}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <!--<h4 align="center"><u>RENEWAL AGREEMENT ADDENDUM</u></h4>-->
+                <p align="center">
+                    <STRONG><u>RENEWAL AGREEMENT ADDENDUM</u></STRONG>
+                </p>
+                <p>This Addendum is executed at Gurgaon on 
+                    <strong>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText>
+                    </strong> 
+                    by and between:
+                </p>
+                <p><strong>PayU Payments Private Limited</strong> (formerly known as <strong>ibibo Web Private Limited</strong>), a company incorporated under the Companies Act, 1956 having its registered office at 32, Viraj Building, SV Road, above HDFC Bank, Khar West, Mumbai, Maharashtra, Pin - 400052  and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002 (hereinafter referred to as <strong>"PayU"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns);</p>
+                <p>AND</p>
+                <p><strong>{!accObj.Legal_Name__c}</strong> a <strong>{!accObj.Business_Entity__r.Name}</strong> (Entity) having its office at 
+                    <strong>
+                        <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                    </strong> 
+                    (hereinafter referred to as <strong>"Merchant"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns);</p>
+                <p>PayU and the Merchant are hereinafter collectively referred to as <strong>"Parties"</strong> and individually as <strong>"Party"</strong>. </p>
+                <p><strong>Recitals</strong></p>
+                <ol type="A" style="line-height: 24px;">
+                    <li>Whereas, the Parties had entered into a service agreement dated 
+                        <strong>
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> ("Service Agreement")
+                        </strong> in accordance to which PayU provides the Merchant with aggregate online payment gateway solutions and services through its 'PayU' platform for their website domain name: <strong>{!oppObj.Website__c}</strong></li>
+                    <li>Whereas, the Service Agreement had a term of three (3) years and is set to expire on <strong><apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!oneYearLaterDate}" /></apex:outputText></strong>. Parties are now desirous of renewing the Agreement.</li>
+                </ol>
+                <h4>NOW THIS ADDENDUM WITNESSETH AS FOLLOWS:</h4>
+                <ol style="line-height: 24px;">
+                    <li>The Parties hereby mutually agree to renew the term of the Service Agreement commencing from 
+                        <strong>
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> 
+                        </strong> and it shall remain in force until terminated by either Party in accordance with the provisions of the Service Agreement.</li>
+                    <li>The definition of the term ‘PayU Site’ as mentioned in Clause 1.16 in the Service Agreement has been amended and shall read as: 
+                    <ul><li><strong>1.16</strong>    "PayU Site" shall mean the websites provided by PayU by means of which PayU provides aggregate Internet     Payment Gateway services to Merchant.</li></ul></li>
+                    <li>The following covenant shall be added to the  Clause 5.1 of the Service Agreement as Sub-Clause (r):</li>
+                    <p><i>(r) In the event that the Merchant opts for PayU Services Product PayUMoney and/or EMI services, the Merchant agrees and understands that the Merchant and its Customers shall be bound by the PayUMoney terms and conditions at https://www.payumoney.com/termsandconditions.html and the applicable EMI terms and conditions. The Merchant shall ensure that the Customer complies with the PayUMoney terms and conditions.</i></p>
+                    <li>This Addendum shall be read in conjunction with the Service Agreement and be enforced as if the provisions of this Addendum were incorporated therein by way of addition.</li>
+                    <li>To the extent of any inconsistency between the terms of this Addendum and the Service Agreement, the provisions of this Addendum shall prevail.</li>
+                    <li>Terms not defined in this Addendum shall have the meaning ascribed to them in the Service agreement.</li>
+                    <li>Save for changes/additions specified herein above, all the other terms and conditions of the Service Agreement shall remain unchanged and in full force and effect.</li>
+                </ol>
+                <p>IN WITNESS WHEREOF the Parties hereto have executed this Addendum through their Authorized Signatories on the day, month and year first herein mentioned above:</p>
+                <br/>
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong><u>ON BEHALF OF {!accObj.Legal_Name__c}</u></strong></td>
+                        <td width="50%" align="left"><strong><u>ON BEHALF OF PAYU PAYMENTS PRIVATE LIMITED</u></strong></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td> ______________________________</td>
+                        <td> ______________________________</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Authorized Signatory</strong></td>
+                        <td><strong>Authorized Signatory</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Name:</strong></td>
+                        <td><strong>Name:</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Designation:</strong></td>
+                        <td><strong>Designation:</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </body>
+    </html>
+</apex:page>

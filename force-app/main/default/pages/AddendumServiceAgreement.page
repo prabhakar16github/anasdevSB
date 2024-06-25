@@ -1,0 +1,138 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>        
+        <head>
+            <title>Addendum</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <!--<h3  class="center-text"><u style="align:center!important;">ADDENDUM</u></h3>-->
+                <p align="center">
+                    <STRONG><u>ADDENDUM</u></STRONG>
+                </p>
+                <p>This addendum agreement
+                    <STRONG>("Addendum")</STRONG> is made at New Delhi on<strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> ("Effective Date") by and between:</p>
+                <p><strong>{!accObj.Legal_Name__c}</strong> a ({!accObj.Business_Entity__r.Name}) having its registered office at &nbsp;
+                    <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                    (hereinafter referred to as <strong>"Merchant"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns);</p>
+                <p><strong>AND</strong></p>
+                <p><strong>PayU Payments Private Limited,</strong> a company incorporated under the Companies Act, 1956 having its registered office at 2nd Floor, P&amp;G Plaza Cardinal Gracious Road, Chakala, Andheri (East) Mumbai, Mumbai City, Maharashtra, Pin-400099 and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002 (hereinafter referred to as <strong>"PayU"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and assigns);</p>
+                <p>(PayU and the Merchant are hereinafter collectively referred to as <strong>"Parties"</strong> and individually as <strong>"Party"</strong>.) </p>
+                <p><strong>WHEREAS:</strong></p>
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td valign="top">A.</td>
+                        <td>The Parties had entered into a service agreement dated<strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> including any other supplemental/amendatory agreements/addendums executed between the Parties from time to time (hereinafter referred to as "Service Agreement”) wherein PayU is providing aggregate payment gateway services to the Merchant on the terms as defined under the Service Agreement.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">B.</td>
+                        <td>The Parties are now desirous of amending the provisions of the Service Agreement as per the below mentioned term and conditions.</td>
+                    </tr>
+                </table>
+                <p style="text-align: justify;"><strong>NOW THEREFORE, IN CONSIDERATION OF THE MUTUAL COVENANTS, TERMS AND CONDITIONS AND UNDERSTANDINGS SET FORTH IN THIS ADDENDUM AND OTHER GOOD AND VALUABLE CONSIDERATION (THE RECEIPT AND ADEQUACY OF WHICH ARE HEREBY MUTUALLY ACKNOWLEDGED), THE PARTIES WITH THE INTENT TO BE LEGALLY BOUND HEREBY AGREE AS FOLLOWS:</strong></p>
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td valign = "top">1.</td>
+                        <td>The Parties, from the Effective Date of this Addendum, mutually agrees for addition of Sub- Clause of Clause 14.1 in the Service Agreement, which shall be read as follows:-<br/><br/>
+                        “The Merchant hereby agrees and authorises PayU to share the Merchant’s credentials along with the Transaction information (“Merchant Information”) to the referral partner. The Merchant unconditionally and irrevocably acknowledges and agrees that the Merchant Information shared by PayU to the referral partner is at Merchant’s sole risk and discretion, and PayU shall not be liable for any unauthorized use or access of such information by any third party including the referral partner.”
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">2.</td>
+                        <td>The provisions of this Addendum shall become effective from the Effective Date.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">3.</td>
+                        <td>This Addendum shall be read in conjunction with the Service Agreement and be enforced as if the provisions of this Addendum were incorporated therein by way of an amendment/ addition.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">4.</td>
+                        <td>Capitalized words and expressions used and not defined in this Addendum but defined in the Service Agreement shall have the same meaning as respectively assigned to them in the Service Agreement.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">5.</td>
+                        <td>The Service Agreement is amended only to the extent specifically set forth herein. All other terms and conditions in the Agreement shall remain in full force and effect and shall not be superseded by this Addendum in the event of a conflict between the terms and conditions of this Addendum and those contained in the Service Agreement, the terms and conditions of this Addendum shall prevail.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">6.</td>
+                        <td>This Addendum shall be governed by the same provisions on notices, confidentiality, governing law, jurisdiction and arbitration as provisioned under the Service Agreement.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">7.</td>
+                        <td>This Addendum is co-terminus with the Service Agreement. In the event the Service Agreement is terminated, this Addendum shall terminate on its own.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">8.</td>
+                        <td>This Addendum may be executed in two counterparts, each of which taken together shall constitute a single instrument.</td>
+                    </tr>
+                    
+                </table>
+                <p><strong>IN WITNESS WHEREOF</strong> the Parties hereto have executed this Addendum through their Authorized Signatories on the day, month and year first herein mentioned above: </p><br/>
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong><u>On Behalf of the {!accObj.Legal_Name__c}</u></strong></td>
+                        <td width="50%" align="left"><strong><u>On Behalf of PayU Payments Private Limited </u></strong></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td> ______________________________</td>
+                        <td> ______________________________</td>
+                    </tr>
+                    <tr>
+                        <td>Authorized Signatory</td>
+                        <td>Authorized Signatory</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>Name:</td>
+                    </tr>
+                    <tr>
+                        <td>Designation:</td>
+                        <td>Designation:</td>
+                    </tr>
+                </table><br/>
+            </div>
+        </body>        
+    </html>
+</apex:page>

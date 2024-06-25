@@ -1,0 +1,34 @@
+<apex:page lightningStylesheets="true" standardController="MCare_Dashboard_Case__c" recordSetVar="mcareList" extensions="McareDashboardBulkActionCtrl">
+    <!--<apex:form >
+        <apex:pageBlock title="Mark Risk Hold for Bulk " mode="edit">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Save" action="{!save}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="4">
+            	<apex:pageBlockSectionItem >
+                	<apex:inputField value="{!MCare_Dashboard_Case__c.Status__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                	<apex:inputField value="{!MCare_Dashboard_Case__c.Risk_Hold_Reason__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                	<apex:inputField value="{!MCare_Dashboard_Case__c.Comments__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockTable value="{!selected}" var="mcare">
+                <apex:column headerValue="Name" value="{!mcare.name}"/>
+                <apex:column headerValue="Status" value="{!mcare.Status__c}"/>
+                    
+                <apex:column headerValue="Risk Hold Reason" value="{!mcare.Risk_Hold_Reason__c}"/>
+                    
+                
+                <apex:column headerValue="Risk Hold Reason" value="{!mcare.Comments__c}"/>
+                    
+                
+            </apex:pageBlockTable>      
+        </apex:pageBlock>
+    </apex:form>-->
+    </apex:page>

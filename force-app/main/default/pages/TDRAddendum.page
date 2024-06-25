@@ -1,0 +1,78 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>TDR Addendum</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+                .center-text{align:center;}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <p id="dt" align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>  
+                <p style="text-align:left;">
+                    ({!accObj.Legal_Name__c})<br/>
+                    <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/><br/>
+                </p>
+                <p>Dear Sir,</p>
+                <p><strong><u>Subject: Addition/ Revision of Transaction Discount Rate.</u></strong></p>
+                <P><strong>{!accObj.Legal_Name__c}</strong> ("Merchant") a <strong><i>({!accObj.Business_Entity__r.Name})</i></strong> entered into an agreement/ agreement vide an account opening form dated <strong><apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> ("Service Agreement")</strong> with PayU Payments Private Limited ("PayU") in accordance to which PayU provides Merchant with aggregate online payment gateway solutions and services through its PayU platform ("PayU Services") for its website with domain name: <strong> {!oppObj.Website__c}</strong></P>
+                <p>This letter is to inform the Merchant that in order for PayU to enable transactions from <i>Credit Card/ Debit Card/ Net Banking</i> in accordance with the terms of the Service Agreement, the following TDR shall be payable by Merchant to PayU for provision of PayU Services.</p>
+                <p>The TDR applicable for additional services is as set out below:</p>
+                <table width="100%" cellpadding="0" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%">&nbsp;Particulars</td>
+                        <td width="50%" align="center">Fees (Exclusive of Applicable Taxes)</td>
+                    </tr>
+                    <tr>
+                        <td><i>&nbsp;Credit Card/ Debit Card/ Net Banking</i></td>
+                        <td></td>
+                    </tr>
+                </table><br/>
+                <ul>
+                    <li>TDR is inclusive of transaction processing charges, technology service provider (TSP) fees and/ or any other value added services provided by PayU</li>
+                </ul>
+                <p>The revised TDR shall be applicable with immediate effect from the date of this letter. All other terms and conditions of the Service Agreement shall remain same and binding upon the Parties.</p>
+                <p>The issuance of this letter will constitute as an amendment to the Service Agreement.</p><br/>
+                <table width="70%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%">Best Regards,</td>
+                        <td width="50%" align="left">Acknowledged by <strong>{!accObj.Legal_Name__c}</strong></td>
+                    </tr>
+                </table><br/>
+                <p style="text-align:left;">__________________
+                    <br/>Name:
+                    <br/>Designation:
+                    <br/>(Authorized Signatory)
+                </p>                
+            </div>
+        </body>
+    </html>
+</apex:page>

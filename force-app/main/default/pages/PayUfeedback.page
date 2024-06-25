@@ -1,0 +1,31 @@
+<apex:page showHeader="false" sidebar="false">
+    
+    <!-- This loads the JavaScript file needed to use Lightning Components for Visualforce-->
+    
+    <apex:includeLightning />
+    
+    <div id="lightning" style="background-color: #f5f5f5;padding-bottom: 20%;"/>
+    <div id="LoadingvfDIV" style="margin-top:20%;">
+        <center>
+            <apex:outputPanel >
+                <img src="/img/loading32.gif" width="25" height="25" />
+                <apex:outputLabel value="Loading..."/>
+            </apex:outputPanel>
+        </center>
+    </div>
+    
+    <script>
+    $Lightning.use("c:PayUfeedback_App", function() {
+        $Lightning.createComponent("c:PayUfeedback",
+                                   {
+                                       recordId : '{!$CurrentPage.parameters.id}'
+                                   },
+                                   "lightning",
+                                   function(component) {
+                                       var loadingDivElt = document.getElementById("LoadingvfDIV");
+                                       loadingDivElt.style.display = 'none' ;
+                                   }
+                                  );
+    });
+    </script>
+</apex:page>

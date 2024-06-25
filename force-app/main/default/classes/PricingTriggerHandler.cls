@@ -166,10 +166,10 @@ public class PricingTriggerHandler {
                || pricing.Convenience__c != triggerOldMap.get(pricing.Id).Convenience__c
                || pricing.Convenience_Amount__c != triggerOldMap.get(pricing.Id).Convenience_Amount__c 
                || pricing.Convenience_Flat_Fee__c != triggerOldMap.get(pricing.Id).Convenience_Flat_Fee__c) {
-                   Pricing__c pricingDummy = new Pricing__c();
+                   /* Pricing__c pricingDummy = new Pricing__c();
                    pricingDummy.Id = pricing.Id;
                    pricingDummy.Need_to_Publish__c = true;
-                   listPricingToUpdate.add(pricingDummy);
+                   listPricingToUpdate.add(pricingDummy); */
                    //*******SFI-1728 By Rohit*****/
                    if(mapOfDefaultMetadata.containsKey(pricing.Master_Pricing_SF_Key__c )){
                        defaultPricingList.add(pricing);

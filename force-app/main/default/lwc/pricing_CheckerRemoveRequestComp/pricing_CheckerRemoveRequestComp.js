@@ -19,6 +19,8 @@ export default class Pricing_CheckerRemoveRequestComp extends LightningElement {
     editAllowed = true;
     selectedRecordIds = [];
     
+    selectAllData = false;
+    
     connectedCallback(){
         this.getInitData();
         
@@ -42,21 +44,58 @@ export default class Pricing_CheckerRemoveRequestComp extends LightningElement {
             console.error(error);
         });
     }
+
+    handleSelectAllData(event){
+        this.selectAllData = event.detail.checked;
+        this.selectedRecordIds = [];
+
+        
+        var tempArr = [];
+        this.pricingDetail.listPricing.forEach(item => {
+            item.isChecked = this.selectAllData;
+            
+            if(item.isChecked){
+                this.selectedRecordIds.push(item.recordId);
+            }else{
+                this.selectedRecordIds = [...this.selectedRecordIds].filter(recordId => {
+                    return recordId != item.recordId;
+                });
+            }
+            tempArr.push(item);
+        });
+
+        this.pricingDetail.listPricing = tempArr;
+        this.disableButton = !this.selectAllData;
+    }
     
     handleIsChecked(event){
         var isChecked = event.detail.checked;
-        
+        var recordId = event.target.dataset.id;
         if(isChecked){
-            this.selectedRecordIds.push(event.target.dataset.id);
+            this.selectedRecordIds.push(recordId);
             this.disableButton = false;
         }else{
             this.selectedRecordIds = this.selectedRecordIds.filter(item => {
-                return item != event.target.dataset.id;
+                return item != recordId;
             });
-            
+            var tempArr = [];
+            this.pricingDetail.listPricing.forEach(listItem => {
+                if(listItem.recordId == recordId){
+                    listItem.isChecked = false;
+                }
+                tempArr.push(listItem);
+            });
+            this.pricingDetail.listPricing = tempArr;
+
             if(this.selectedRecordIds.length == 0){
                 this.disableButton = true;
             }
+        }
+        
+        if(this.selectedRecordIds.length == this.pricingDetail.listPricing.length){
+            this.selectAllData = true;
+        }else{
+            this.selectAllData = false;
         }
     }
     

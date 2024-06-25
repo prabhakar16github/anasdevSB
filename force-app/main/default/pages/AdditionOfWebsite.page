@@ -1,0 +1,74 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false"  showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <meta charset="UTF-8" />
+            <title>Addition of Merchant Bank Account</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <p align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>
+                <p style="text-align:left;"><strong>PayU Payments Private Limited</strong><br/>
+                    9th Floor, Bestech Business Tower, Sector 48, <br/>
+                    Sohna Road, Gurgaon, Haryana, Pin - 122002  <br/>
+                </p>
+                
+                
+                <p>Dear Sir,</p>
+                <p><strong><u>Subject: Addition of Website</u></strong></p>
+                <p>We, {!accObj.Legal_Name__c} a <em><strong>{!accObj.Business_Entity__r.Name}</strong></em> entered into a service agreement/ an agreement vide an account opening form dated &nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> (“Services Agreement”) with PayU Payments Private Limited (“PayU”) in accordance to which PayU provides {!accObj.Legal_Name__c} with aggregate online payment gateway solutions and services through its PayU platform (“PayU Services”) for its website with domain: {!IF(oppParentObj.Id != null && oppParentObj.Website__c != null, oppParentObj.Website__c, null)}</p>
+                
+                <p> We are now desirous of also using the said PayU Services for our other website (“Additional Website”) herein below:</p>
+                <br/>
+                <table border="1" cellspacing="0" cellpadding="10" width="100%"  align="center" style="border-collapse: collapse">
+                    
+                    <tr>
+                        <td width="30%">Additional Website Domain.</td>
+                        <td width="70%">{!oppObj.Website__c}</td>
+                    </tr>
+                    
+                </table>
+                
+                <br/><br/>
+                <p>We request PayU to also provide PayU Services with respect to the Additional Website mentioned above.</p>
+                <p>We hereby confirm that the above mentioned website domain is owned and controlled by {!accObj.Legal_Name__c}</p>
+                <p>We understand that PayU may require certain documents in order to provide PayU Services with respect to the Additional Website above and agree to provide the same as and when requested by PayU. </p>
+                <p>We understand and acknowledge that the inclusion of the Additional Website to the Services Agreement will be subject to the approval by PayU. In addition, we acknowledge PayU will have to integrate the Additional Website to PayU&rsquo; s Software Application and this may take up to 5 (five) Business Days from receipt of this letter and all such documents requested by PayU.</p>
+                <p>We request PayU to make the requisite change in the Services Agreement. We further direct and authorize PayU to receive and settle the Settlement Amount to the existing Merchant Account w.r.t. the Transactions under the Additional Website. </p>
+                <p>We acknowledge that the submission of this letter will constitute as an amendment to the Services Agreement and any Settlement Amount settled to our Merchant Account will be governed by the terms and conditions of the Services Agreement. </p>
+                <p>We hereby confirm that there has been no change in the legal name, registered office and/or constitution of {!accObj.Legal_Name__c} and/or the Authorized Signatory is the same since the last application submitted to PayU.</p>
+                <p>We recognize that the submission of this letter will constitute as an amendment to the Services Agreement.</p>
+                <br/><br/>
+                <p style="width: 200px; border-bottom: 2px solid black; height: 80px; margin-bottom: 0;">Best Regards,</p>
+                <p style="text-align:left;">
+                    <strong>Name:</strong><br/>
+                    <strong>Designation:</strong> <br/>
+                    <strong>(Authorized Signatory)</strong>
+                </p>
+            </div>
+        </body>
+    </html>    
+</apex:page>

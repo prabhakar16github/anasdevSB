@@ -1,0 +1,126 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>        
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>TWID_Addendum</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-left {
+                font-size: 8px;
+                content: "DISCLAIMER: By accepting this  Addendum you understand that you are binding the Merchant with the terms and conditions stated hereinabove and you hereby also confirm that you are authorized by the Merchant to accept and bind the Merchant with the terms and conditions under this  Addendum.";
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <p>
+                    Dear Sir,
+                </p>
+                <p>
+                    <STRONG><u>Subject: Addition of Payment Mode – Pay By Rewards (Twid Pay).</u></STRONG>
+                </p>
+                
+                <table>
+                    <p>
+                        {!accObj.Legal_Name__c} has/have entered into an agreement with PayU Payments Private Limited (“PayU”) in accordance to which PayU provides Merchant with aggregate online payment gateway solutions and services through its PayU platform (“PayU Services”) for its website.
+                    </p>
+                    <tr>
+                        <td>This letter is to inform the Merchant that in order for PayU to enable transactions from Twid Pay in accordance with the terms of the Service Agreement, the following revised Service Fee shall be payable by Merchant to PayU for provision of PayU Services.</td>
+                    </tr>
+                    <br/>
+                    <tr>
+                        <td>The Service Fee applicable for additional services is as set out below:</td>
+                    </tr>
+                    <br/>
+                </table>
+                <table align="center" width="90%" cellpadding="3" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><p align="center">Particulars</p></td>
+                        <td width="50%"><p align="center">Service Fees (Exclusive of Applicable Taxes)</p></td>
+                        <!--<td width="50%">Fees* (Exclusive of Applicable Taxes)</td>-->
+                    </tr>
+                    <tr>
+                        <td><p align="center">Pay by Rewards – Twid Pay</p></td>
+                        <td><p align="center"><STRONG>3.5%</STRONG></p></td>
+                    </tr>
+                 </table>
+                <br/>
+                    <tr>
+                        <td valign="top"><strong>•</strong></td>
+                        <td>Service Fee is inclusive of technology fee, bank charges and /or fee for any other value added services as may be specifically agreed to be provided by PayU;</td>
+                    </tr>
+                     <tr>
+                        <td valign="top"><strong>•</strong></td>
+                        <td>Service Fee is exclusive of all applicable taxes, including without limitation, GST; and</td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><strong>•</strong></td>
+                        <td>Service Fee charged by PayU on Rupay debit cards and UPI QR Code, BHIM UPI QR Code, UPI are reflective of non-levy of merchant discount rate by the Acquiring Banks and only represents the amount payable by the Merchant to PayU for providing PayU Services.</td>
+                    </tr>
+                <br/>
+                <tr>
+                        <td>The provisions of this Addendum shall become effective from <apex:outputText value="{0, date, d MMMM','  yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText>. All other terms and conditions of the Service Agreement shall remain same and binding upon the Parties.</td>
+                        
+                </tr>
+                <br/>
+                <tr>
+                <td>The issuance of this letter will constitute as an amendment to the Service Agreement.</td>
+                </tr>
+                <br/>
+                <td>Best Regards,</td>
+                <br/>
+                <tr>
+                        <td width="50%">Acknowledged by {!accObj.Legal_Name__c}</td>
+                </tr>
+                
+                <tr>
+                        <td width="50%">Name:</td>
+                </tr>
+                <tr>
+                        <td width="50%">Designation: </td>
+                </tr>
+                <tr>
+                        <td width="50%">(Authorized Signatory)</td>
+                </tr>
+                <br/><br/><br/><br/><br/><br/><br/><br/>
+                
+                <p align="center">
+                    <STRONG><u>Annexure A</u></STRONG>
+                </p>
+                <div align="center">
+                <apex:image url="{!$Resource.TwidImage_first}" width="400"/>
+                </div>
+                <br/><br/><br/><br/><br/><br/>
+                
+                <p align="center">
+                    <STRONG><u>Flow (examples):</u></STRONG>
+                </p>
+                <br/><br/>
+                <div align="center">
+                <apex:image url="{!$Resource.TwidImage_4}" width="500" height="250"/><br/><br/>
+                <apex:image url="{!$Resource.TwidImage_5}" width="500" height="250"/><br/><br/>
+                </div>
+             </div>
+        </body>        
+    </html>
+</apex:page>

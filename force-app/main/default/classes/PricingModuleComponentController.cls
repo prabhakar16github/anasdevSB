@@ -478,8 +478,8 @@ public class PricingModuleComponentController {
                     commList = [SELECT Id,Opportunity__r.Prod_MID__c,
                                 (SELECT Id,Amount__c,Debit_Model__c,End_Date__c,Fee_Type__c,
                                  Flat_Fee__c,Payment_Frequency__c,Percentage__c,Start_Date__c,Rule_Id__c,
-                                 Version_Number__c,Source__c FROM Fixed_Pricings__r),
-                                (SELECT Id,Amount__c,Rule_Id__c,Flat_Fee__c,Percentage__c,Type__c,
+                                 Version_Number__c,Source__c,Added_By__c FROM Fixed_Pricings__r),
+                                (SELECT Id,Amount__c,Rule_Id__c,Flat_Fee__c,Percentage__c,Type__c,Added_By__c,
                                  Interval__c,Start_Date__c,Source__c,Version_Number__c,End_Date__c,Debit_Model__c FROM Platform_Fees__r)
                                 FROM Commercial2__c WHERE Id=:commercialId LIMIT 1];
                     GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(commList[0].Opportunity__r.Prod_MID__c,'Conv Fee,tdr,SETUP_FEE,Platform fees');
@@ -517,6 +517,7 @@ get the data nad insert other wise updating the existing recrods*******/
                                         fixedPricing.Source__c = fixedDataTreasury.source !=null ? fixedDataTreasury.source :null;
                                         fixedPricing.Flat_Fee__c = fixedDataTreasury.flatfee !=null ? fixedDataTreasury.flatfee :null;
                                         fixedPricing.Start_Date__c =fixedDataTreasury.startDate !=null ? Date.valueOf(fixedDataTreasury.startDate) :null;
+                                        fixedPricing.Added_By__c = fixedDataTreasury.addedBy !=Null ? fixedDataTreasury.addedBy : Null;
                                         fixedPricing.End_Date__c = fixedDataTreasury.endDate !=null ? Date.valueOf(fixedDataTreasury.endDate) :null;
                                         fixedPricingList.add(fixedPricing);
                                     }
@@ -527,6 +528,7 @@ get the data nad insert other wise updating the existing recrods*******/
                                     fixedPricing.Version_Number__c = fixedDataTreasury.versionNumber;
                                     fixedPricing.Payment_Frequency__c = fixedDataTreasury.paymentFrequency !=null ? fixedDataTreasury.paymentFrequency:null;
                                     fixedPricing.Published__c = True;
+                                    fixedPricing.Added_By__c = fixedDataTreasury.addedBy !=Null ? fixedDataTreasury.addedBy : Null;
                                     fixedPricing.Rule_Id__c = fixedDataTreasury.ruleId;
                                     fixedPricing.Commercial__c = commercialId;
                                     fixedPricing.Source__c = fixedDataTreasury.source !=null ? fixedDataTreasury.source :null;
@@ -559,6 +561,7 @@ using get api treasury we will get the data if data available then  insert other
                                         platformFee.Flat_Fee__c = platformData.flatfee !=null ? platformData.flatfee : null;
                                         platformFee.Percentage__c = platformData.percentage !=null ? platformData.percentage : null;
                                         platformFee.Start_Date__c = platformData.startDate !=null ? Date.valueOf(platformData.startDate) : null;
+                                        platformFee.Added_By__c = platformData.addedBy !=Null ? platformData.addedBy : Null;
                                         platformFee.End_Date__c = platformData.endDate != null ? Date.valueOf(platformData.endDate) :null;
                                         platformFeeList.add(platformFee);
                                     }
@@ -578,6 +581,7 @@ using get api treasury we will get the data if data available then  insert other
                                     platformFee.Percentage__c = platformData.percentage !=null ? platformData.percentage : null;
                                     platformFee.Start_Date__c = platformData.startDate !=null ? Date.valueOf(platformData.startDate) : null;
                                     platformFee.End_Date__c = platformData.endDate != null ? Date.valueOf(platformData.endDate) :null;
+                                    platformFee.Added_By__c = platformData.addedBy !=Null ? platformData.addedBy : Null;
                                     platformFeeList.add(platformFee);
                                 }
                             }
@@ -592,7 +596,7 @@ using get api treasury we will get the data if data available then  insert other
                                                             Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
                                                             Fee_Model__c,Transaction_Type__c,TDR__c,TDR_Amount__c,TDR_Flat_Fee__c,Convenience__c,
                                                             Convenience_Amount__c,Convenience_Flat_Fee__c,Rule_Id__c,Rule_Id_Conv__c,
-                                                            Temp_Id_TDR__c,Temp_Id_Conv__c,Version_Number__c, Banking_Ops_Status__c, 
+                                                            Temp_Id_TDR__c,Temp_Id_Conv__c,Version_Number__c, Banking_Ops_Status__c,Added_By__c,
                                                             Is_Active__c  FROM Pricing__c WHERE Commercial2__c =: commercialId AND (Deleted__c = false OR 
                                                                                                                                     (Deleted__c = true AND (Temp_Id_TDR__c = '' OR Temp_Id_Conv__c = '') ))]){
                                                                                                                                         if(pricingRecord.Rule_Id__c != NULL)
@@ -604,9 +608,8 @@ using get api treasury we will get the data if data available then  insert other
                             Map<Id,Pricing__c> mapOfpricingToUPdate = new Map<Id,Pricing__c>();
                             List<Pricing__c> newPricingRecordList = new List<Pricing__c>();
                             for(GetApiTreasuryDataController.transformedPricingWrapper tranformDataTreasury : tranformData.transformedPricingWrapperPricingList){
-                                Pricing__c pricingExist;
                                 if(mapOfExistingPricingData.containsKey(tranformDataTreasury.pricingRuleConfigId)){
-                                    pricingExist  = mapOfExistingPricingData.get(tranformDataTreasury.pricingRuleConfigId);
+                                    Pricing__c pricingExist  = mapOfExistingPricingData.get(tranformDataTreasury.pricingRuleConfigId);
                                     if(pricingExist !=NULL){
                                         if(tranformDataTreasury.revenueModel == 'TDR'){
                                             pricingExist.TDR_Flat_Fee__c  = tranformDataTreasury.tdrFlatFee !=null ? tranformDataTreasury.tdrFlatFee : null;
@@ -620,26 +623,31 @@ using get api treasury we will get the data if data available then  insert other
                                         }
                                         pricingExist.ONUS__c = tranformDataTreasury.onusOffus !=null ?  tranformDataTreasury.onusOffus :null;
                                         pricingExist.Fee_Model__c = tranformDataTreasury.debitModel !=null ? tranformDataTreasury.debitModel : null;
-                                        pricingExist.Version_Number__c  = Decimal.valueOf(tranformDataTreasury.versionNumber);
                                         pricingExist.Published__c = True;
+                                        pricingExist.Need_to_Publish__c = false;
                                         pricingExist.Source__c = tranformDataTreasury.source;
                                         pricingExist.Valid_From__c = tranformDataTreasury.validFrom !=null ? tranformDataTreasury.validFrom : null;
                                         pricingExist.ValidTill__c = tranformDataTreasury.validTill !=null ? tranformDataTreasury.validTill : null;
                                         pricingExist.FromTime__c = tranformDataTreasury.fromTime !=null ? tranformDataTreasury.fromTime : null;
                                         pricingExist.TillTime__c = tranformDataTreasury.tillTime !=null ? tranformDataTreasury.tillTime : null;
+                                        pricingExist.Added_By__c  = tranformDataTreasury.addedBy !=null ? tranformDataTreasury.addedBy : null;
                                     }
-                                    if((pricingExist.Banking_Ops_Status__c =='Rejected' || pricingExist.Banking_Ops_Status__c =='Rejected with BH') 
+                                    
+                                    if(String.isNotBlank(pricingExist.Banking_Ops_Status__c) && pricingExist.Banking_Ops_Status__c.contains('Rejected')
                                        && (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)){
-                                           pricingExist.Banking_Ops_Status__c = 'Approved';
+                                           pricingExist.Banking_Ops_Status__c = 'Checker Approved';
+                                           pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
                                            mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
                                        }
-                                    else if((pricingExist.Banking_Ops_Status__c =='Approved' || pricingExist.Banking_Ops_Status__c =='Approved with BH') &&
-                                            pricingExist.Version_Number__c != Decimal.valueOf(tranformDataTreasury.versionNumber)){
-                                                mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
-                                            }
+                                    if(String.isNotBlank(pricingExist.Banking_Ops_Status__c)  && pricingExist.Banking_Ops_Status__c.contains('Approved') &&
+                                     pricingExist.Version_Number__c <  Integer.valueOf(tranformDataTreasury.versionNumber) &&
+                                    (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)){
+                                        		pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
+                                                mapOfpricingToUPdate.put(pricingExist.Id,pricingExist);
+                                    }
                                 }
                                 else{
-                                    pricingExist = new Pricing__c();
+                                    Pricing__c pricingExist = new Pricing__c();
                                     if(tranformDataTreasury.revenueModel == 'TDR'){
                                         pricingExist.TDR_Flat_Fee__c  = tranformDataTreasury.tdrFlatFee !=null ? tranformDataTreasury.tdrFlatFee : null;
                                         pricingExist.TDR_Amount__c = tranformDataTreasury.tdrAmount !=null ?  tranformDataTreasury.tdrAmount :null;
@@ -659,6 +667,7 @@ using get api treasury we will get the data if data available then  insert other
                                     pricingExist.Pricing_Specification__c = tranformDataTreasury.specifications !=null ? tranformDataTreasury.specifications :null;
                                     pricingExist.Payment_Gateway2__c = tranformDataTreasury.paymentGateway !=null ? tranformDataTreasury.paymentGateway :null;
                                     pricingExist.Published__c = True;
+                                    pricingExist.Need_to_Publish__c = false;
                                     pricingExist.Opportunity__c = tranformDataTreasury.recordId;
                                     pricingExist.ONUS__c = tranformDataTreasury.onusOffus !=null ?  tranformDataTreasury.onusOffus :null;
                                     pricingExist.Commercial2__c = commercialId; 
@@ -668,9 +677,10 @@ using get api treasury we will get the data if data available then  insert other
                                     pricingExist.FromTime__c = tranformDataTreasury.fromTime !=null ? tranformDataTreasury.fromTime : null;
                                     pricingExist.TillTime__c = tranformDataTreasury.tillTime !=null ? tranformDataTreasury.tillTime : null; 
                                     pricingExist.Fee_Model__c = tranformDataTreasury.debitModel !=null ? tranformDataTreasury.debitModel : null;
-                                    pricingExist.Banking_Ops_Status__c = 'Approved';
-                                    pricingExist.Version_Number__c  = Decimal.valueOf(tranformDataTreasury.versionNumber);
+                                    pricingExist.Banking_Ops_Status__c = 'Checker Approved';
+                                    pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
                                     pricingExist.Source__c = tranformDataTreasury.source;
+                                    pricingExist.Added_By__c  = tranformDataTreasury.addedBy !=null ? tranformDataTreasury.addedBy : null;
                                     newPricingRecordList.add(pricingExist);
                                 }
                             }
@@ -690,7 +700,7 @@ using get api treasury we will get the data if data available then  insert other
                                     pulishPricingDetails.Response_Body__c = tranformData.publishDetails.responseBody;
                                     pulishPricingDetails.Request_Body__c =  tranformData.publishDetails.requestBody ;
                                     pulishPricingDetails.Request_Count__c = tranformData.publishDetails.requestCount ;
-                                    Insert pulishPricingDetails;  
+                                    //Insert pulishPricingDetails;  
                                 }
                             }
                         }
@@ -699,7 +709,7 @@ using get api treasury we will get the data if data available then  insert other
                     for(Pricing__c pricing : [SELECT Id,Payment_Mode__c,Payment_Option2__c,Payment_Option2__r.Name,Pricing_Specification__c,
                                               Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
                                               Fee_Model__c,Transaction_Type__c,TDR__c,TDR_Amount__c,TDR_Flat_Fee__c,Convenience__c,
-                                              Convenience_Amount__c,Convenience_Flat_Fee__c,Rule_Id__c,Rule_Id_Conv__c,
+                                              Convenience_Amount__c,Convenience_Flat_Fee__c,Rule_Id__c,Rule_Id_Conv__c,Banking_Ops_Status__c,
                                               Temp_Id_TDR__c,Temp_Id_Conv__c
                                               FROM Pricing__c 
                                               WHERE Commercial2__c	 = :commercialId AND Deleted__c = false AND Invisible__c = false ORDER BY TDR_Amount__c,Convenience_Amount__c]) {
@@ -962,6 +972,9 @@ using get api treasury we will get the data if data available then  insert other
         data.convenienceFlatFee = pricing.Convenience_Flat_Fee__c;
         //Addition of the pricingId to support the edit of the commercial
         data.pricingId = pricing.Id;
+
+        
+
         //Added to make allow edit of the few fields on the enter tdr components - UI Changes New
         if(pricing.Transaction_Type__c == 'TDR' || pricing.Transaction_Type__c == 'TDR + Convenience') {
             if(String.isNotBlank(pricing.Rule_Id__c) && String.isBlank(pricing.Temp_Id_TDR__c)) {
@@ -1003,6 +1016,14 @@ using get api treasury we will get the data if data available then  insert other
                 }
             }    
         }
+
+        /** Added to restrict the record for update in case of pending status. Added by Prabhakar */
+        if(String.isNotBlank(pricing.Banking_Ops_Status__c) && pricing.Banking_Ops_Status__c.contains('Pending')){
+            data.restrictFlatFeeAndPercentageToBeEdited = true;
+            data.restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited = true;
+        }
+        /** */
+        
         return data;
     }
     
@@ -1052,7 +1073,11 @@ using get api treasury we will get the data if data available then  insert other
             Set<Id> setAllPricingIds = new Set<Id>();
             Set<Id> setPricingIdsNeedsToBeRetain = new Set<Id>();
             Map<Id,Pricing__c> mapIdToPricing;
-            if(String.isNotBlank(commercialId)) mapIdToPricing = new Map<Id,Pricing__c>([SELECT Id,Banking_Ops_Status__c,TDR__c,TDR_Flat_Fee__c,Convenience__c,Convenience_Flat_Fee__c FROM Pricing__c WHERE Commercial2__c = :commercialId AND Invisible__c = false AND Deleted__c = false]); 
+            if(String.isNotBlank(commercialId)) mapIdToPricing = new Map<Id,Pricing__c>([SELECT Id,TDR_Amount__c,Convenience_Amount__c,Transaction_Type__c,Fee_Model__c,
+                                                                                        Banking_Ops_Status__c,TDR__c,TDR_Flat_Fee__c,Convenience__c,Convenience_Flat_Fee__c 
+                                                                                        FROM Pricing__c WHERE Commercial2__c = :commercialId 
+                                                                                        AND Invisible__c = false 
+                                                                                        AND Deleted__c = false]); 
             if(mapIdToPricing != NULL && mapIdToPricing.keySet().size() > 0) setAllPricingIds =  mapIdToPricing.keySet();
             String source = 'Scratch';
             if(String.isNotBlank(selectedTemplate)) {
@@ -1260,16 +1285,15 @@ WHERE Opportunity__c = :recordId
 AND Deleted__c = false 
 AND Invisible__c = false]); */
             /** */
+
             
             for(SelectedPaymentData spd : listSelectedPaymentData) {
                 for(SelectedPaymentOptions spo : spd.selectedPaymentOptionsList) {
                     for(SelectedPaymentDataSingleRecord spdsr : spo.selectedPaymentIndividualList) {
-                        /** added to bypass records which is added from get API response, Added by Prabhakar */
-                        /* if(pricingIdMap != NULL && pricingIdMap.keySet().size() > 0 && pricingIdMap.containsKey(spdsr.pricingId) && pricingIdMap.get(spdsr.pricingId).Source__c != 'Salesforce' && pricingIdMap.get(spdsr.pricingId).Need_To_Publish__c == false){
-setPricingIdsNeedsToBeRetain.add(spdsr.pricingId);
-continue;
-} */
-                        /** */
+                        if(String.isNotBlank(spdsr.pricingId) && mapIdToPricing.containsKey(spdsr.pricingId) && isFieldChange(mapIdToPricing.get(spdsr.pricingId),spdsr)){
+                            setPricingIdsNeedsToBeRetain.add(spdsr.pricingId);
+                            continue;
+                        }
                         String identifier = spd.paymentModeId+'#'+spdsr.selectedPaymentOptionId+'#'+mapIdentifierToPricingSpecificationId.get(spdsr.selectedSpecification)+'#'+mapIdentifierToPaymentGatewayId.get(spdsr.selectedPaymentGatewayName).Id+'#'+spdsr.selectedOnusOffus;
                         Boolean belowRackRate = false;
                         if(mapIdentifierToMasterPricingDataId.containsKey(identifier)) {
@@ -1278,9 +1302,12 @@ continue;
                                 pricing.Id = spdsr.pricingId;
                                 setPricingIdsNeedsToBeRetain.add(spdsr.pricingId);
                             }
-                            else {
+                            /** Commented by Prabhakar  */
+                            /* else {
                                 pricing.Need_to_Publish__c = true;
-                            }
+                            } */
+                            pricing.Added_By__c = UserInfo.getName();
+                            pricing.Need_to_Publish__c = true;
                             pricing.Opportunity__c = recordId;
                             pricing.Commercial2__c = commercialId;
                             pricing.Payment_Mode__c = spd.paymentModeId;
@@ -1474,15 +1501,15 @@ continue;
                 }
             }
             
-            if(String.isNotBlank(commercialId) && setAllPricingIds.size() > 0 && setPricingIdsNeedsToBeRetain.size() > 0) {
+            if(String.isNotBlank(commercialId) && setAllPricingIds.size() > 0) {
                 List<Pricing__c> listPricingRecordToUpdateDelete = new List<Pricing__c>();
-                if(setAllPricingIds.removeAll(setPricingIdsNeedsToBeRetain)) {
+                if(setAllPricingIds.removeAll(setPricingIdsNeedsToBeRetain) || setPricingIdsNeedsToBeRetain.isEmpty()) {
                     for(Id pricingId : setAllPricingIds) {
                         Pricing__c pricing = new Pricing__c();
                         pricing.Id = pricingId;
                         pricing.Deleted__c = true;
                         pricing.Need_to_Publish__c = false;
-                        
+                        pricing.Added_By__c = UserInfo.getName();
                         //pricing.BH_Status__c = 
                         listPricingRecordToUpdateDelete.add(pricing);
                     }
@@ -1502,6 +1529,22 @@ continue;
         }
         return wrpCls;
     }
+
+    /** Private method the check that previous value and current values are same or different */
+    @TestVisible
+    private static Boolean isFieldChange(Pricing__c price,SelectedPaymentDataSingleRecord spdsr){
+        if(price.Fee_Model__c != spdsr.selectedFeeModel 
+        || price.Transaction_Type__c != spdsr.selectedTransactionType
+        || price.TDR_Amount__c !=  Decimal.valueOf(spdsr.tdrAmount)
+        || price.TDR_Flat_Fee__c !=  Decimal.valueOf(spdsr.tdrFee) 
+        || price.TDR__c != Decimal.valueOf(spdsr.tdrPercentage)
+        || price.Convenience_Amount__c != Decimal.valueOf(spdsr.convenienceAmount) 
+        || price.Convenience_Flat_Fee__c != Decimal.valueOf(spdsr.convenienceFee) 
+        || price.Convenience__c != Decimal.valueOf(spdsr.conveniencePercentage) ){
+            return false;
+        }
+        return true;
+    }/** END */
     
     //Wrapper Class for the Save Pricing
     public class SavePricingWrapper {
@@ -1568,7 +1611,7 @@ continue;
         @AuraEnabled public Boolean showRejectionReasonDelete = false;
         @AuraEnabled public String rejectionReason = '';
         @AuraEnabled public String rejectionReasonDelete = '';
-
+        @AuraEnabled public Boolean showAP = false;
     }
     
     /*
@@ -1600,7 +1643,7 @@ we need to create  commercial in SF side
 ********/
             List<Opportunity> oppList= [SELECT Id,Prod_MID__c,(SELECT Id FROM Commercial2__r) FROM Opportunity WHERE  Id=:recordId LIMIT 1 ];
             if(oppList[0].Commercial2__r.isEmpty() && oppList[0].Commercial2__r.size()==0){
-                GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(oppList[0].Prod_MID__c,'TDR,Conv Fee');
+                GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(oppList[0].Prod_MID__c,'TDR,Conv Fee,Platform fees');
                 if(tranformData.transformedPricingWrapperPricingList !=NULL && tranformData.transformedPricingWrapperPricingList.size()>0){
                     Commercial2__c  comm = new Commercial2__c ();
                     comm.Name =  System.label.Commercial2_Name+oppList[0].Prod_MID__c;
@@ -1608,6 +1651,12 @@ we need to create  commercial in SF side
                     comm.Opportunity__c = recordId;
                     comm.Status__c = 'Live';
                     Insert comm;
+                }
+                if(tranformData.platformWrapperList.size()==0){
+                    Platform_Fee__c pf = new Platform_Fee__c();
+                    pf.Amount__c = 0;
+                    pf.Commercial__c = commercialId;
+                    insert pf;
                 }
             }
             /*******END******/
@@ -1948,6 +1997,10 @@ we need to create  commercial in SF side
                                           else {
                                               spdsr.className = 'colorPillsOptions';     
                                           }
+
+                                          if(pricing.Banking_Ops_Status__c == 'Approved' || pricing.Banking_Ops_Status__c == 'Approved with BH'){
+                                            spdsr.showAP = true;
+                                          }
                                       }
                                       
                                       if(pricing.Below_Rack_Rates__c) spdsr.status += ' (below rack rate)';
@@ -2021,7 +2074,7 @@ we need to create  commercial in SF side
         try {
             for(Pricing__c pricing : [SELECT Id,Payment_Mode_Text__c,Payment_Option_Text__c,Specifcation__c,Payment_Gateway_Text__c ,TDR_Percentage_Reference__c,
                                       TDR_Amount_Reference__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Percentage_Reference__c,Convenience_Amount_Reference__c,
-                                      Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c FROM Pricing__c WHERE Commercial2__c = :commercialId AND Below_Rack_Rates__c = true AND Banking_Ops_Status__c = NULL AND Deleted__c = false AND Invisible__c = false]) {
+                                      Banking_Ops_Status__c,Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c FROM Pricing__c WHERE Commercial2__c = :commercialId AND Below_Rack_Rates__c = true AND Banking_Ops_Status__c = NULL AND Deleted__c = false AND Invisible__c = false]) {
                                           BelowRackRateRecord record = new BelowRackRateRecord();
                                           wrpCls.listPricingIds.add(pricing.Id);
                                           record.pricingRecordId = pricing.Id;
@@ -2247,7 +2300,7 @@ we need to create  commercial in SF side
             if(listPricingToUpdate.size() > 0) {
                 update listPricingToUpdate; 
             }
-            List<Pricing__c> listPricing = [SELECT Id FROM Pricing__c WHERE Id IN :listPricingIds AND Below_Rack_Rates__c = true AND Deleted__c = false AND Invisible__c = false];
+            List<Pricing__c> listPricing = [SELECT Id,Banking_Ops_Status__c FROM Pricing__c WHERE Id IN :listPricingIds AND Below_Rack_Rates__c = true AND Deleted__c = false AND Invisible__c = false];
             if(listPricing != NULL && listPricing.size() > 0) {
                 wrpCls.showBelowRackRateMessage = true;
                 wrpCls.belowRackRateMessage = 'There are '+listPricing.size()+' pricing records which are below rack rates.';
@@ -2330,6 +2383,9 @@ we need to create  commercial in SF side
     @AuraEnabled
     public static String sendToBHEmail(String commercialId,String body,String subject,List<String> listPricingIds,String bhAddress) {
         try {
+            
+            String bas64EncodedId = EncodingUtil.base64Encode(Blob.valueOf(commercialId));
+            
             List<Pricing__c> listPricingToUpdate = new List<Pricing__c>();
             for(Id pricingId : listPricingIds) {
                 Pricing__c pricing = new Pricing__c();
@@ -2348,10 +2404,12 @@ we need to create  commercial in SF side
             listToAddress.add(bhAddress);
             email.setToAddresses(listToAddress);
             email.setSubject(subject);
-            body = body.replace('ClickHere',String.valueOf('<a href="'+Label.BH_Site_URL+commercialId+'">Click here to view records</a>'));
+            body = body.replace('ClickHere',String.valueOf('<a href="'+Label.BH_Site_URL+bas64EncodedId+'">Click here to view records</a>'));
             //String htmlBody = body + '<br/><a href="'+Label.BH_Site_URL+commercialId+'">Click here to view records</a>';
             String htmlBody = body;
             email.setHtmlBody(htmlBody);
+            email.setSaveAsActivity(true);
+            email.whatid = commercialId;
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
             return 'SUCCESS';    
         }
@@ -2563,7 +2621,7 @@ update commNotLive;
                                                                         //Set<String> setRuleIds = new Set<String>();
                                                                         Set<String> setPricingIds = new Set<String>();
                                                                         for(Pricing__c price: [SELECT Id,Rule_Id__c,Rule_Id_Conv__c,Commercial2__r.Opportunity__c,Commercial2__r.Merchant_MID__c,
-                                                                                               Temp_Id_TDR__c,Temp_Id_Conv__c,Transaction_Type__c
+                                                                                               Temp_Id_TDR__c,Temp_Id_Conv__c,Transaction_Type__c,Banking_Ops_Status__c
                                                                                                FROM Pricing__c 
                                                                                                WHERE Commercial2__c = :commercialId 
                                                                                                AND Commercial2__r.Status__c = 'Live'
@@ -2571,7 +2629,7 @@ update commNotLive;
                                                                                                AND Invisible__c = false
                                                                                                AND Temp_Id_Delete_TDR__c = NULL 
                                                                                                AND Temp_Id_Delete_Conv__c = NULL]) {
-                                                                                                   System.debug('>>>>>>priceId>>>>'+price.Id);
+                                                                                                   
                                                                                                    if(count == 0) {
                                                                                                        opportunityId = price.Commercial2__r.Opportunity__c;
                                                                                                        count = 1;
@@ -3554,7 +3612,7 @@ else template.AMC_Interval__c = null;
     @AuraEnabled(cacheable=true)
     public static PricingWrapperDialog getPricingData(String pricingId) {
         PricingWrapperDialog pricingWrapper = new PricingWrapperDialog();
-        for(Pricing__c price : [SELECT Payment_Mode__r.Name,Payment_Option2__r.Name,Pricing_Specification__r.Name,
+        for(Pricing__c price : [SELECT Payment_Mode__r.Name,Payment_Option2__r.Name,Pricing_Specification__r.Name,Banking_Ops_Status__c,
                                 Payment_Gateway2__r.Name,ONUS__C,Transaction_Type__c,Fee_Model__c 
                                 FROM Pricing__c WHERE Id =:pricingId AND Invisible__c = false]) {
                                     pricingWrapper.paymentModeName = price.Payment_Mode__r.Name;    
@@ -3681,7 +3739,7 @@ else template.AMC_Interval__c = null;
     public static PageReference getPricingRecordForParticularComm() {
         commercialId = ApexPages.currentPage().getParameters().get('id');
         List<Pricing__c> pricingList = [SELECT Id,Payment_Option2__r.Name,Opportunity__r.Prod_MID__c ,Opportunity__r.Merchant_Name__c ,Commercial2__r.Name,Opportunity__r.Owner.Name, Opportunity__r.Merchant_Business_Type__c , Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
-                                        Payment_Mode__r.Name,ONUS__c,TDR_Amount__c,TDR_Flat_Fee__c,Flat_Percentage__c ,TDR__c,Convenience_Amount__c,
+                                        Payment_Mode__r.Name,ONUS__c,TDR_Amount__c,TDR_Flat_Fee__c,Flat_Percentage__c ,TDR__c,Convenience_Amount__c,Banking_Ops_Status__c,
                                         Convenience_Flat_Fee__c,Convenience__c ,Type__c FROM Pricing__c WHERE Commercial2__c=:commercialId AND Invisible__c = false];
         
         

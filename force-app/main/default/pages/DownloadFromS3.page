@@ -1,0 +1,27 @@
+<apex:page sidebar="false" showHeader="false" >
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.34.min.js"></script> 
+    
+    <script type="text/javascript">
+        var s3Information = {!$Label.S3Information};
+    AWS.config.update({
+        accessKeyId: s3Information.access_key,
+        secretAccessKey: s3Information.secret_key,
+        region: s3Information.region 
+    });
+    
+    var s23 = new AWS.S3({signatureVersion: 'v4', params: {Bucket: s3Information.bucket, CreateBucketConfiguration: {LocationConstraint: s3Information.region}}});
+    var url = '{!$CurrentPage.parameters.relatedId}';
+    var key = '';
+    
+    if(url.includes('payu.in')){            
+        var urlParts = url.lastIndexOf('payu.in');
+        key = url.substring(urlParts + 8, url.length);
+    }else{
+        key = url;
+    }
+    var params = {Bucket: s3Information.bucket, Key: key};
+    s23.getSignedUrl('getObject', params, function (err, url) {                          
+        window.open(url,"_self");
+    });
+    </script>
+</apex:page>

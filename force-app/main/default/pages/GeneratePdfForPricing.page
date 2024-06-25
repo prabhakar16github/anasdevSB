@@ -1,0 +1,37 @@
+<apex:page controller="PricingModuleComponentController" applyBodyTag="false" readOnly="True" action="{!getPricingRecordForParticularComm}"  contentType="application/pdf#ABC.pdf"    renderAs="pdf">
+    <head>
+        <style>
+            @page { margin: 0.00in;size:280mm 297mm; }
+            
+        </style>
+    </head>
+                
+                <apex:pageBlock > 
+                    <apex:pageBlockSection collapsible="false" columns="1">
+                        <div align="center">
+                            
+                            <apex:pageblockTable value="{!listPricingRecords}" var="a"  border="1px"  style="border-collapse: collapse;overflow-x: auto; width:100%;ont-family: sans-serif;font-size:8pt; size:landscape;">
+                                <apex:column headerValue="PAYMENT MODE"  value="{!a.Payment_Mode__r.Name}"/>
+                                <apex:column headerValue="PAYMENT OPTION"  value="{!a.Payment_Option2__r.Name}"/>
+                                <apex:column headerValue="SPECIFICATIONS" value="{!a.Pricing_Specification__r.Name}"/>
+                                <apex:column headerValue="PAYMENT GATEWAY" value="{!a.Payment_Gateway2__r.Name}"/>
+                                <apex:column headerValue="ONUS/OFFUS" value="{!a.ONUS__c}"/>
+                                <apex:column headerValue="TDR AMOUNT" value="{!a.TDR_Amount__c}"/> 
+                                <apex:column headerValue="TDR FLAT FEE" value="{!a.TDR_Flat_Fee__c}"/>
+                                <apex:column headerValue="TDR %" value="{!a.TDR__c}"/> 
+                                <apex:column headerValue="CONVENIENCE AMOUNT" value="{!a.Convenience_Amount__c}"/>
+                                <apex:column headerValue="CONVENIENCE FLAT FEE" value="{!a.Convenience_Flat_Fee__c}"/>
+                                <apex:column headerValue="CONVENIENCE %" value="{!a.Convenience__c}"/>
+                                <apex:column headerValue="GATEWAY TYPE" value="{!a.Type__c}"/>
+                                <apex:column headerValue="MID" value="{!a.Opportunity__r.Prod_MID__c}"/>
+                                <apex:column headerValue="MERCHANT NAME" value="{!a.Opportunity__r.Merchant_Name__c}"/>
+                                <apex:column headerValue="MERCHANT BUSINESS TYPE" value="{!a.Opportunity__r.Merchant_Business_Type__c}"/>
+                                <apex:column headerValue="COMMERCIAL NAME" value="{!a.Commercial2__r.Name}"/>
+                                <apex:column headerValue="OWNER" value="{!a.Opportunity__r.Owner.Name}"/>
+                            </apex:pageblockTable> 
+                            
+                        </div>  
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+          
+</apex:page>

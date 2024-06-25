@@ -1,0 +1,1460 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" contentType="{!strContentType}" renderAs="{!strRenderAs}" cache="true"> <!-- contentType="application/msword#LtdLiabilityPartnership.doc" cache="true" -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>PayU</title>
+    <style type="text/css">
+        .container{
+            width: 1080px;
+            margin: 0 auto;
+            font-family: 'Arial';
+            font-size: 14px;
+            line-height: 20px;
+            text-align: justify;
+        }
+        .text_center{
+            text-align: center;
+        }
+        ol, ul{
+            padding: 0 ;
+            margin: 0 0 0 18px;
+        }
+        ol li,ul li{
+            margin-bottom: 10px;
+        }
+        table td{
+            vertical-align: top;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    
+    e-Stamp Certification No. - {!eStampNo}
+    <br/><br/>
+    
+        <h1 class="text_center">SERVICE AGREEMENT</h1>
+
+        <p>This Service Agreement (“Agreement”) is made at New Delhi on &nbsp; <apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!todayDate}" /> </apex:outputText> (“Effective Date”) by and between:</p>
+        <p>{!accObj.Legal_Name__c}, sole proprietorship, having its registered office at 
+        <strong>
+        <apex:outputText value="{!IF(regAddress.Address_Line__c!=null && regAddress.Address_Line__c!='', regAddress.Address_Line__c + ', ', null)}"/>
+        <apex:outputText value="{!IF(regAddress.City__c!=null && regAddress.City__c!='', regAddress.City__c + ', ', null)}"/>
+        <apex:outputText value="{!IF(regAddress.State__c!=null && regAddress.State__c!='', regAddress.State__c + ', ', null)}"/>
+        <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Country__c!='', regAddress.Country__c, null)}"/>
+        <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Pincode__c!=null, ' - ', null)}"/>
+        <apex:outputText value="{!IF(regAddress.Pincode__c!=null && regAddress.Pincode__c!='', regAddress.Pincode__c, null)}"/>
+        </strong>
+        (hereinafter referred to as “Merchant”, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns);</p>
+        
+        <h4>AND</h4>
+
+        <p><strong>PayU Payments Private Limited</strong>, a company incorporated under the Companies Act, 1956 having its registered office at 32, Viraj Building, SV Road, above HDFC Bank, Khar West, Mumbai, Maharashtra, Pin – 400052  and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002 (hereinafter referred to as <strong>“PayU”</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns);</p>
+
+        <p>(PayU and the Merchant are hereinafter collectively referred to as <strong>“Parties”</strong> and individually as <strong>“Party”</strong>.) </p>
+
+        <h4>WHEREAS:</h4>
+
+        <ol type="A">
+            <li>PayU provides inter alia aggregate payment gateway solutions <strong>("PayU Services")</strong> to various businesses/organizations selling goods and services or collecting money for a specified purpose, over the internet. PayU has developed a software application <strong>(“Software Application”)</strong> and hosting PayU Sites by way of which PayU provides a single payment gateway solution to such businesses/organizations and facilitates them in accepting online payments initiated by their customers on their website or mobile application directed to the PayU Site or through PayU’s IVR System, using credit/debit cards, net banking and various other acceptable modes of Payment Mechanism options provided by PayU.</li>
+            <li>
+                The Merchant is desirous of availing PayU Services in order to accept payments of Customer Charge through the internet and/or through IVR System from Customers, for Products purchased by them on the Merchant Site and receive aggregate final payment of Settlement Amounts in the Merchant Bank Account.
+            </li>
+            <li>
+                PayU has agreed to provide the PayU Services and Merchant has agreed to obtain the same on terms and conditions hereinafter contained in this Agreement.
+            </li>
+        </ol>
+
+      <h4>NOW THEREFORE, IN CONSIDERATION OF THE MUTUAL COVENANTS, TERMS AND CONDITIONS AND UNDERSTANDINGS SET FORTH IN THIS AGREEMENT AND OTHER GOOD AND VALUABLE CONSIDERATION (THE RECEIPT AND ADEQUACY OF WHICH ARE HEREBY MUTUALLY ACKNOWLEDGED), THE PARTIES WITH THE INTENT TO BE LEGALLY BOUND HEREBY AGREE AS FOLLOWS:</h4>
+    
+        <table>
+            <tr>
+                <td><strong>1.</strong></td>
+                <td><strong>DEFINITIONS AND INTERPRETATION:</strong></td>
+            </tr>
+            <tr>
+                <td>1.1</td>
+                <td>In this Agreement, except where the context otherwise requires, the following words and expressions shall have the following meanings.</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>(a)</td>
+                            <td><strong>“Acquiring Banks”</strong> shall mean various banks, financial institutions, Card Associations, payment system providers who are defined and licenced under the <em>Payment and Settlement Systems Act, 2007</em> and other software providers who are in the business of providing information technology services, including but not limited to, internet based electronic commerce, internet payment gateway and electronic software distribution services.</td>
+                        </tr>
+                        <tr>
+                            <td>(b)</td>
+                            <td><strong>“Acquiring Bank Services”</strong> shall mean the payment gateway system and services provided by the Acquiring Banks such as to (i) route internet based Valid Card transactions; (ii) offer various facilities through the internet, including Net Banking facilities; (iii) provide Authentication and Authorization from Card Associations or other third party clearing houses; and (iv) provide settlement facilities in respect of payment instructions initiated by the customers.</td>
+                        </tr>
+                        <tr>
+                            <td>(c)</td>
+                            <td><strong>"Agreement"</strong> shall mean this Service Agreement, all schedules, appendices, annexures and exhibits attached to it or incorporated in it by reference.</td>
+                        </tr>
+                        <tr>
+                            <td>(d)</td>
+                            <td><strong>“Annual Maintenance Charge”</strong> shall mean the charges set out in <strong>Part I of Schedule ‘A’</strong> (Consideration).</td>
+                        </tr>
+                        <tr>
+                            <td>(e)</td>
+                            <td><strong>"Authentication"</strong> shall mean the process by which the Customer’s identification is authenticated by the Acquiring Banks.</td>
+                        </tr>
+                        <tr>
+                            <td>(f)</td>
+                            <td><strong>"Authorization"</strong> shall mean the process by which the Issuing Institution and/or the relevant Card Association electronically or otherwise convey the approval of the charge (i.e. if the Customer has a Valid Card and/or the required credit limit/ debit limit to pay the Customer Charge requested) on a Transaction being undertaken by a Customer on the Merchant Site.</td>
+                        </tr>
+                        <tr>
+                            <td>(g)</td>
+                            <td><strong>“Business Days”</strong> shall mean any day on which Acquiring Banks are open for business in India, other than Saturday, Sunday and any days declared by PayU India and/or Acquiring Bank as a Holidays</td>
+                        </tr>
+                        <tr>
+                            <td>(h)</td>
+                            <td><strong>"Card Association(s)"</strong> shall mean any of Visa, MasterCard, Visa Electron, Maestro, Diners, American Express or any other card association as may be specified by PayU from time to time.</td>
+                        </tr>
+                        <tr>
+                            <td>(i)</td>
+                            <td><strong>“Card Association Rules”</strong> shall mean the written rules, regulations, releases, guidelines, processes, interpretations and other requirements (whether contractual or otherwise) imposed or adopted by any Card Association.</td>
+                        </tr>
+                        <tr>
+                            <td>(j)</td>
+                            <td><strong>“Chargeback”</strong> shall mean the approved and settled card or net banking Transactions which are at any time refused, debited or reversed from the Merchant Bank Account or from the Merchant’s Settlement Amount in the Nodal Account (shall also include similar debits to PayU bank accounts, if any) by the Acquiring Bank for any reason whatsoever, together with the bank fees, penalties and other charges incidental thereto.</td>
+                        </tr>
+                        <tr>
+                            <td>(k)</td>
+                            <td><strong>“Completion of Transaction”</strong> shall mean PayU Completion of Transaction and/or PayUMoney completion of transaction depending upon the PayU Services Product opted for or if PayU demands Proof of Delivery.</td>
+                        </tr>
+                        <tr>
+                            <td>(l)</td>
+                            <td><strong>“Confidential Information”</strong> shall mean any and all written, oral or other tangible or intangible form of information, discoveries, ideas, concepts, know-how (whether patentable or copyrightable or not), research, development, designs, drawings, blueprints, diagrams, models, samples, flow charts, data, computer programs, disks, diskettes, tapes, algorithms, software programs, marketing plans or techniques, technical, financial, or business information” trade secrets which includes but is not restricted to any portion or scientific or technical or proprietary information, design, process, procedure, formula or improvement which is not generally available to the public as delivered by either Party (“Disclosing Party” to the other Party (“Receiving Party”) within the framework of this Agreement or resulting therefrom. Provided that confidential information disclosed orally or those produced by electronic media or through any other intangible means shall be deemed confidential if it is identified as being confidential if it is reduced in writing within (30) thirty days of the date of disclosure. Such writing shall specify the date, time, place, persons involved and the substance of the confidential information so disclosed.</td>
+                        </tr>
+                      <tr>
+                          <td>(m)</td>
+                          <td><strong>"Customer"</strong> shall mean an individual or legal entity, who/which purchases Products, offered by the Merchant on the Merchant’s Website or Mobile Application or through IVR System directed to the Internet Payment Gateway using a Valid Card or Net Banking account or any other acceptable modes of Payment Mechanism, provided by PayU.</td>
+                      </tr>
+                      <tr>
+                        <td>(n)</td>
+                        <td><strong>“Customer Bank Account”</strong> shall mean a bank account or credit/ prepaid/ cash card account of the Customer with Issuing Institution.</td>
+                      </tr>
+                      <tr>
+                        <td>(o)</td>
+                        <td>&ldquo;<strong>Customer Charge</strong>&rdquo; shall mean the sale price of the Products purchased by the Customer plus the shipping charge (if any) and all other taxes, duties, costs, charges and expenses in respect of the Products/payment that are to be paid by the Customer. </td>
+                      </tr>
+                      <tr>
+                        <td>(p)</td>
+                        <td>&ldquo;<strong>Delivery</strong>&rdquo; shall mean (i) in respect of a good, delivery of the good by a courier /parcel service appointed by the Merchant or its vendors, to the Customer within Delivery Due Date at the address specified by the Customer in this behalf; or (ii) in respect of a service, delivery or performance of provisions of service within the Delivery Due Date.</td>
+                      </tr>
+                      <tr>
+                        <td>(q)</td>
+                        <td>&ldquo;<strong>Delivery Due Date</strong>&rdquo; shall mean the date/period displayed on the Website or otherwise notified to the Customer on or before which the Merchant shall deliver the Products to the Customer(s).</td>
+                      </tr>
+                      <tr>
+                        <td>(r)</td>
+                        <td>&ldquo;<strong>GST</strong>&rdquo; shall mean applicable Goods and Services Tax (including any statutory modifications(s) or re-enactment(s) thereof, for the time being in force, and the rules enacted thereunder). </td>
+                      </tr>
+                      <tr>
+                        <td>(s)</td>
+                        <td>&ldquo;<strong>Internet Payment Gateway</strong>&rdquo; shall have the meaning ascribed to it in Clause 3.3.</td>
+                      </tr>
+                      <tr>
+                        <td>(t)</td>
+                        <td>&quot;<strong>Issuing Institution</strong>&quot; shall mean a bank or financial institution or other legal entity, with which the Customer has an Net  Banking account and/or which has issued the Valid Card to the Customers (explanation: except for debit card or credit card Transactions, the Issuing Institution of the Customer and the respective Acquiring Bank will be the same).</td>
+                      </tr>
+                      <tr>
+                        <td>(u)</td>
+                        <td>&ldquo;<strong>IVR System</strong>&rdquo; shall mean interactive voice response&nbsp;technology that allows the Customer to interact with the Merchant&rsquo;s PayU hosted IVR platform through a telephone by way of telecommunication signal tone inputs on the keypad and make payments of Customer Charge through IVR dialogue.</td>
+                      </tr>
+                      <tr>
+                        <td>(v)</td>
+                        <td>&ldquo;<strong>Merchant PayU Account</strong>&rdquo; shall mean the merchant account maintained with PayU in order to provide the PayU Services to the Merchant.</td>
+                      </tr>
+                      <tr>
+                        <td>(w)</td>
+                        <td>&quot;<strong>Merchant Bank Account</strong>&quot; shall mean the bank account maintained by Merchant which it nominates for settlement of its  Settlement Amount and the details of which are provide in <strong>Part II of Schedule A (Consideration)</strong>.</td>
+                      </tr>
+                      <tr>
+                        <td>(x)</td>
+                        <td>&ldquo;<strong>Merchant Site</strong>&rdquo; shall mean the active website bearing the domain name <strong>{!accObj.Website}</strong> and/or the mobile application, the contents of which are controlled, operated and owned by the Merchant and established for the purposes of enabling the Customers to view Products and carry out Transactions for purchase of Products, offered on the website or mobile application; and/or the IVR System hosted by PayU for the Merchant through which the Customer can make payments for Products purchased from the Merchant.</td>
+                      </tr>
+                      <tr>
+                        <td>(y)</td>
+                        <td>&ldquo;<strong>Net Banking Account</strong>&rdquo; shall mean the facility and internet account provided by the Issuing Institution to Customers holding a bank account or digital wallet account with the Issuing Institutions specified by PayU from time to time. Provided that the bank account is not listed in current warning or restricted bank account bulletins or notices.</td>
+                      </tr>
+                      <tr>
+                        <td>(z)</td>
+                        <td>&ldquo;<strong>Nodal Account</strong>&rdquo; shall mean an inoperative account held by PayU with any of the banks for the purpose of pooling the monies collected from Customers on behalf of the Merchant and facilitating the transfer of these funds in final settlement to the Merchant (after deducting TDR), pursuant to RBI notification DPSS.CO.PD.No.1102/ 02.14.08/2009-10, dated 24/11/2009 or any other RBI notifications/guidelines amended from time to time.</td>
+                      </tr>
+                      <tr>
+                        <td>(aa)</td>
+                        <td><strong>&ldquo;Nodal Bank</strong>&rdquo; shall mean the bank(s) designated by PayU for the purpose of pooling the funds collected from Customers on behalf of the Merchant and facilitating the transfer of these funds in final settlement to the Merchant (after deducting TDR), pursuant to RBI notification DPSS.CO.PD.No.1102/ 02.14.08/2009-10, dated 24/11/2009 or any other RBI notifications/guidelines amended from time to time.</td>
+                      </tr>
+                      <tr>
+                        <td>(bb)</td>
+                        <td><strong>&ldquo;One Click Checkout&rdquo; </strong>shall mean<strong> </strong>the facility provided to the Customers to save its Valid Card details on the PayU server to&nbsp;purchase the Products from the Merchant Site with a&nbsp;single click.</td>
+                      </tr>
+                      <tr>
+                        <td>(cc)</td>
+                        <td><strong>&ldquo;Outstanding Amount&rdquo; </strong>shall mean the amount payable by the Merchant to PayU, Acquiring Banks and/or Customers for any losses, costs, damages, penalties, Chargebacks, refund overdraft or credit problems suffered or incurred by the Customers, PayU and/or Acquiring Banks; any fees and other payments owed to PayU by the Merchant; and any claims or proceedings filed against PayU and/or Acquiring Banks by the Customers or any third Party.</td>
+                      </tr>
+                      <tr>
+                        <td>(dd)</td>
+                        <td>&ldquo;<strong>Payment Mechanism</strong>&rdquo; shall mean the mechanism of making payment by utilizing the internet facilities of various Acquiring Banks, Card Associations, card payment systems and through such other modes and mechanisms of payment and delivery as may be notified by PayU from time to time.</td>
+                      </tr>
+                      <tr>
+                        <td>(ee)</td>
+                        <td>&ldquo;<strong>PayU Services</strong>&rdquo; shall have the meaning ascribed to it in Recital A provided through PayU Services Products. </td>
+                      </tr>
+                      <tr>
+                        <td>(ff)</td>
+                        <td>&ldquo;<strong>PayU Services Product</strong>&rdquo; shall mean the PayU and/or PayU Money product by means of which PayU provides PayU Services. The Merchant will be provided with the PayU Services Product opted for in <strong>Schedule B</strong>. </td>
+                      </tr>
+                      <tr>
+                        <td>(gg)</td>
+                        <td>&ldquo;<strong>PayU Site</strong>&rdquo; shall mean the websites provided by PayU Payments Private Limited (i.e secure.payu.in and/or payumoney.com depending upon the PayU Services Product opted for by the Merchant and as mentioned in Schedule B of this Agreement) by means of which PayU provides aggregative Internet Payment Gateway services/ PayU Services to the Merchant and the Customers.</td>
+                      </tr>
+                      <tr>
+                        <td>(hh)</td>
+                        <td>&quot;<strong>Products</strong>&quot; shall mean goods and/or services offered for sale by the Merchant on the Merchant Site.</td>
+                      </tr>
+                      <tr>
+                        <td>(ii)</td>
+                        <td>&ldquo;<strong>Proof of Delivery</strong>&rdquo; shall mean sufficient legitimate records evidencing Delivery of the Product to the Customer (i.e. Courier Company&rsquo;s delivery confirmation and delivery confirmation by the Customer).</td>
+                      </tr>
+                      <tr>
+                        <td>(jj)</td>
+                        <td>&quot;<strong>RBI</strong>&quot; shall mean the Reserve Bank of India.</td>
+                      </tr>
+                      <tr>
+                        <td>(kk)</td>
+                        <td>&ldquo;<strong>Reserve</strong>&rdquo; shall mean the interest free, refundable funds provided and replenished by the Merchant to PayU from time to time.</td>
+                      </tr>
+                      <tr>
+                        <td>(ll)</td>
+                        <td>&ldquo;<strong>Settlement Amount</strong>&rdquo; shall mean Customer Charge minus the TDR and any other charges/fees payable by the Merchant to PayU under this Agreement.</td>
+                      </tr>
+                      <tr>
+                        <td>(mm)</td>
+                        <td><strong>&ldquo;Software Application&rdquo; </strong>shall have the meaning ascribed to it in Recital A.</td>
+                      </tr>
+                      <tr>
+                        <td>(nn)</td>
+                        <td><strong>&ldquo;Transaction</strong>&quot; shall mean every payments request/order placed by the Customer on the Merchant Site for purchasing Products from the Merchant.</td>
+                      </tr>
+                      <tr>
+                        <td>(oo)</td>
+                        <td>&ldquo;<strong>Transaction Discount Rate</strong>&rdquo; or &ldquo;<strong>TDR</strong>&rdquo; shall mean the rates as specified in <strong>Part I of Schedule A.</strong></td>
+                      </tr>
+                      <tr>
+                        <td>(pp)</td>
+                        <td>&quot;<strong>Valid Card</strong>&quot; shall mean any unexpired credit card or debit card which is issued by an Issuing Institution designated to issue a Visa, MasterCard, Visa Electron or a Maestro or cash card, pre-paid card or other card as may be specified by PayU from time to time. Provided that the card is not listed in current warning or restricted card bulletins or notices and bears the signature of the person in whose name the card is issued.</td>
+                      </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="10"></td>
+            </tr>
+        <tr>
+            <td>1.2</td>
+            <td>In this Agreement:</td>
+          </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <table>
+                        <tr>
+                                <td>(a)</td>
+                                <td>Except where the context requires otherwise, references to Clauses, Schedules and Annexures are to Clauses of, Schedules to and Annexures to this Agreement.</td>
+                        </tr>
+                        <tr>
+                              <td>(b)</td>
+                              <td>Words denoting the singular number include the plural number and vice versa, words denoting the masculine gender include the feminine gender and words denoting persons include companies.</td>
+                        </tr>
+                        <tr>
+                          <td>(c)</td>
+                          <td>Headings are inserted for convenience only and shall not affect the construction of this Agreement.</td>
+                        </tr>
+                        <tr>
+                          <td>(d)</td>
+                          <td>In case of any ambiguity or discrepancy between the Clauses and the Annexures to this Agreement, the Clauses shall prevail.</td>
+                        </tr>
+                        <tr>
+                          <td>(e)</td>
+                          <td>Any reference to any agreement, deed, instrument, licence, code or other document of any description shall be construed, at the particular time, as a reference to that agreement, deed, instrument, licence code or other document as the same may then have been amended, varied, supplemented, modified, suspended or novated.</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="10"></td>
+            </tr>
+        <tr>
+            <td>
+                <strong>2.</strong>
+            </td>
+            <td><strong>TERM</strong></td>
+        </tr>
+            <tr>
+                <td>2.1</td>
+                <td>This Agreement shall be in force from Effective Date and shall remain in force until terminated by either Party in accordance with the provisions of this Agreement.</td>
+            </tr>
+            <tr>
+                <td height="10"></td>
+            </tr>
+        <tr>
+            <td><strong>3.</strong></td>
+            <td><strong>SCOPE OF PAYU SERVICES</strong></td>
+          </tr>
+            <tr>
+                <td>3.1</td>
+                <td>PayU has developed a Software Application and established PayU Sites.</td>
+            </tr>
+            <tr>
+                <td>3.2</td>
+            <td>The Merchant has established Merchant Site to sell the Products and/or collect payments online from the Customers.</td>
+          </tr>
+            <tr>
+                <td>3.3</td>
+                <td>PayU will act as an intermediary by creating a link between the Merchant Site and the respective Acquiring Banks by means of the Software Application and PayU Site, for enabling the Customers to make payment of Customer Charge on the Merchant Site for Transactions carried through the Payment Mechanisms using Acquiring Bank&rsquo;s Services. (&ldquo;<strong>Internet Payment Gateway</strong>&quot;). </td>
+            </tr>
+            <tr>
+                <td>3.4</td>
+                <td>In order to serve in this role, PayU has entered into agreements with various Acquiring Banks to enable use of internet payment gateways/Payment Mechanisms developed by them and process payments using Acquiring Bank Services. </td>
+            </tr>
+            <tr>
+                <td>3.5</td>
+                <td>Once the payment instruction is Authenticated and Authorized by the respective Acquiring Bank in respect of a Transaction, the Acquiring Bank will transfer such approved Customer Charge from the Customer Bank Account to the Nodal Account. </td>
+            </tr>
+            <tr>
+                <td>3.6</td>
+                <td>The Merchant hereby directs and authorizes PayU to receive, hold, disburse and settle the Customer Charge in accordance with and subject to the provisions of this Agreement. </td>
+            </tr>   
+            <tr>
+                <td>3.7</td>
+                <td>Except as provided in this Agreement and Schedules hereto, no right is granted to the Merchant or to any third party.</td>
+            </tr>
+    <tr>
+            <td height="10"></td>
+          </tr>
+        <tr>
+            <td><strong>4.</strong></td>
+            <td><strong>APPROVAL AND REGISTRATION TO AVAIL PAYU SERIVCES/ACQUIRNG BANK SERVICES</strong></td>
+          </tr>
+          <tr>
+                <td>4.1</td>
+                <td>The Merchant shall disclose the exact business category/business sub-category for which the Merchant will be using the PayU Services in Schedule B of this Agreement and shall only avail the PayU Services through its designated Merchant Site. In order to use the PayU Services for any other purpose, the Merchant understands and acknowledges that it shall notify PayU in writing of such change and such change will be subject to approval by PayU. </td>
+          </tr>
+          <tr>
+              <td>4.2</td>
+              <td>The Merchant understands that in order to avail the PayU Services and Acquiring Bank Services, the Merchant must be approved by and registered with PayU, the Acquiring Banks and Nodal Bank. Any undertaking with respect to the PayU Services under this Agreement shall be subject to PayU&rsquo;s, the Acquiring Banks&rsquo; and Nodal Bank&rsquo;s approval and completion of the registration process. The Merchant shall provide PayU with all such documents as required by PayU to register the Merchant with PayU, the Acquiring Banks and Nodal Bank. The Merchant further understands and acknowledges that PayU, the Acquiring Banks and Nodal Bank have the right to withdraw their approval/consent at any time prior to or after commencement of the PayU Services.
+              </td>
+          </tr>
+            <tr>
+                <td height="10"></td>
+            </tr>
+        <tr>
+            <td><strong>5.</strong></td>
+            <td><strong>CONNECTIVITY AND INTEGRITY OF HOTLINK</strong></td>
+          </tr>
+        <tr>
+                <td>5.1</td>
+                <td>Both Parties shall work together to link the Software Application with the Merchant Site software, for the purpose of connecting the Merchant Site with the Internet Payment Gateway as exemplified in Clause 3 above. The Merchant agrees to be responsible at its own costs and for providing and maintaining all necessary equipment, software and facilities at its end so as to connect the Merchant Site software to the Software Application. Each Party shall cooperate with the other Party and render assistance to it for connecting the respective software systems of the Parties.</td>
+          </tr>
+        <tr>
+            <td>5.2</td>
+            <td>For security during transmission of data in the course of providing services to the Customers, both Parties shall mutually work upon developing and implementing various mechanisms.</td>
+        </tr>
+        <tr>
+          <td>5.3</td>
+          <td>The Merchant shall take all such precautions and measures as may be directed by PayU to ensure that there is no breach of security and the integrity of the link between the Merchant Site and the Internet Payment Gateway (&quot;<strong>Hotlink</strong>&quot;) is maintained. The Merchant shall ensure that all Customers upon accessing the Hotlink are properly directed to the Internet Payment Gateway. The Merchant shall ensure that there are proper encryption and robust security measures to prevent any hacking into the information of the Customers and other data. In addition to the above, the Merchant shall also comply with security practices and procedures as prescribed in the Information Technology Act, 2000 and the rules made thereunder and/or the RBI rules and Regulations. Any loss incurred to the Merchant, PayU or the Acquiring Bank as a result of the Hotlink being breached due to improper security on the part of the Merchant, its employees, contractors, agents, etc and/or on the Merchant Site, shall be borne solely by the Merchant and the Merchant agrees to indemnify, defend and hold harmless PayU and the Acquiring Banks from any claims, actions, damages or losses arising out or in relation thereto.</td>
+        </tr>
+        <tr>
+          <td>5.4</td>
+          <td>Without prejudice to the generality of the aforesaid, Merchant shall routinely and at such time intervals as may be specified by PayU and/or the Acquiring Banks check the integrity of the Hotlink and provide such reports (&ldquo;<strong>MIS</strong>&rdquo;) as may be required by PayU and/or Acquiring Banks from time to time.</td>
+        </tr>
+            <tr><td height="10"></td></tr>
+        <tr>
+            <td><strong>6.</strong></td>
+            <td><strong>AUTHORIZATION AND AUTHENTICATION OF TRANSACTION</strong></td>
+          </tr>
+        <tr>
+                <td>6.1</td>
+                <td>The Acquiring Bank will authenticate, authorize, and process the payment instructions given by the Customers on the Merchant Site in respect of the Transactions upon fulfillment of valid criteria as set forth by the Acquiring Banks and the Card Associations from time to time and accordingly transfer such approved Customer Charge from the Customer Bank Account to the Nodal Account.</td>
+          </tr>
+        <tr>
+          <td>6.2</td>
+          <td>The Merchant understands that PayU, Acquiring Banks and/or Card Association may reject authorization of Transaction placed by the Customer for any reason including but not limited to risk management, suspicion of fraudulent, illegal or doubtful Transactions, selling of banned items, use of compromised Valid Cards, use of blacklisted/banned cards or in accordance with the RBI, Acquiring Banks, Issuing Institution and/or Card Association rules, guidelines, regulations, etc and any other laws, rules, regulations, guidelines in force in India, etc.</td>
+        </tr>
+        <tr>
+          <td>6.3</td>
+          <td>The Merchant acknowledges that as a risk management tool, PayU and/or the Acquiring Banks reserve the right to limit or restrict transaction size, amount and/or monthly volume at any time. For the purpose of clarity such limitations or restrictions may be imposed for the following reasons including but not limited to limits/restrictions on the number of purchases which may be charged on an individual Valid Card or net banking account during any time period, rejection of Payment in respect of Customer Orders from Customers with a prior history of questionable charges, unusual monetary value of Transaction, etc. Further, as a security measure, PayU may at its sole discretion block any card number, account numbers, group of cards or Transactions from any specific blocked or blacklisted customer cards, accounts, specific, group of IP addresses, devices, geographic locations and / or any such risk mitigation measures it wishes to undertake.
+          </td>
+        </tr>
+        <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+                <td><strong>7.</strong></td>
+                <td><strong>PAYMENT TO PAYU</strong></td>
+          </tr>
+          <tr>
+              <td>7.1</td>
+              <td>In consideration for PayU Services, the Merchant agrees to pay PayU, Transaction Discount Rate as detailed <strong>Part I of Schedule A. </strong>The TDR<strong> </strong>shall be deducted by PayU from the Customer Charge payable to the Merchant in respect of each completed Transaction. PayU reserves the right to revise the TDR periodically, and PayU will intimate the Merchant of any such change within reasonable time.</td>
+          </tr>
+          <tr>
+            <td>7.2</td>
+            <td>The Merchant shall also pay to PayU (i) a non-refundable one time set up fee, and (ii) Annual Maintenance Charge payable in advance every year as detailed in <strong>Part I of Schedule A</strong>. PayU shall have a right to deduct such set-up fee and Annual Maintenance Charges from the Settlement Amount payable to the Merchant.</td>
+          </tr>
+          <tr>
+            <td>7.3</td>
+            <td>PayU undertakes to comply with all the compliances mandated under the GST as may be applicable on PayU as and when the same are implemented by the relevant government authority including timely deposit of GST to the government and maintaining appropriate compliance rating.</td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>8.</strong></td>
+            <td><strong>TERMS OF PAYMENT TO MERCHANT </strong></td>
+          </tr>
+          <tr>
+            <td>8.1</td>
+            <td>Subject to any other Clause of this Agreement, PayU shall endeavor to instruct the Nodal Bank to transmit the Settlement Amount from the Nodal Account to the Merchant&rsquo;s Bank Account within the time period prescribed by RBI commencing from date of Completion of Transaction.</td>
+          </tr>
+          <tr>
+            <td>8.2</td>
+            <td>In the event that the Merchant opts for PayU Services using PayU Services Product: PayU (as mentioned in Schedule B), the Merchant understand that the Transaction shall be completed only upon receipt of the Customer Charge in the Nodal Account from the Acquiring Banks and reconciliation of the same by the Acquiring Banks, PayU and the Nodal Bank (&ldquo;<strong>PayU Completion of Transaction</strong>&rdquo;)</td>
+          </tr>
+          <tr>
+            <td>8.3</td>
+            <td>In the event that the Merchant opts for PayU Services using PayU Services Product: PayUMoney (as mentioned in Schedule B) or PayU demands Proof of Delivery for any Transaction(s), the Merchant understands that the Transaction shall be completed only upon submission of Proof of Delivery (in the manner prescribed by PayU) by the Merchant to PayU and the confirmation of the same by the respective Customer. In the event that the Customer does not confirm delivery within 3 (three) days from the date on which the Merchant provides Proof of Delivery, it shall be considered as deemed confirmation and the Transaction shall be deemed to be completed. (&ldquo;<strong>PayUMoney Completion of Transaction</strong>&rdquo;)</td>
+          </tr>
+          <tr>
+            <td>8.4</td>
+            <td>The Merchant further acknowledges that transmission of the Settlement Amount to the Merchant Bank Account shall be subject to reconciliation of the Customer Charge by the Acquiring Banks, PayU and the Nodal Bank after actual receipt of Customer Charge in the Nodal Account. </td>
+          </tr>
+          <tr>
+            <td>8.5</td>
+            <td>The Merchant hereby agrees that all payments with respect to refunds and Chargebacks shall be the sole responsibility of the Merchant and PayU shall not be liable for any claims, disputes, penalties which may arise in connection with such refunds or Chargebacks to the Merchant or the Customer. The Merchant agrees to indemnify PayU in respect of any claims, disputes, penalties, costs and expenses arising directly or indirectly in relation to refunds or Chargebacks for all Transactions initiated and instructed through the Merchant Site.</td>
+          </tr>
+          <tr>
+            <td>8.6</td>
+            <td>Notwithstanding anything contained anywhere in this Agreement, the Merchant hereby fully confirms and agrees that PayU, Acquiring Bank and Nodal Bank  reserve the right to reject payments with respect to any Customer Charge for reasons including but not limited to unlawful, unenforceable, doubtful or erroneous Transaction, Chargeback, refund, fraud, suspicious activities, card Authentication and Authorization issues, overpayment made due to mathematical errors or otherwise, penalties incurred, Transaction related issues, issues related to Delivery, Customer Charge or Product, if the Transaction was not made in accordance with the requirements of PayU and/or the Acquiring Banks and/or Card Association. </td>
+          </tr>
+          <tr>
+            <td>8.7</td>
+            <td>In the event of rejection of payment with respect to Customer Charge, Chargeback, refunds or other Outstanding Amounts due to PayU, Acquiring Bank and/or the Customer by the Merchant, PayU and/or the Acquiring Bank reserve the right to reverse the credit given to the Merchant Bank Account or set-off the payment amount rejected, Chargeback or refunded or the Outstanding Amount against Settlement Amount payable to the Merchant. PayU and/or Acquiring Banks may also deduct the payment amount due from future Settlement Amounts payable to the Merchant with respect to subsequent Transactions.</td>
+          </tr>
+          <tr>
+            <td>8.8</td>
+            <td>If PayU and/or the Acquiring Banks determine that the Merchant is incurring an excessive amount of Chargebacks, PayU may establish controls or conditions governing the Transactions contemplated under this Agreement, including without limitation, by (a) establishing new processing fees, (b) by requesting a Reserve in an amount reasonably determined by PayU to cover anticipated Chargebacks, (c) delaying payouts, and (d) terminating or suspending the PayU Services.</td>
+          </tr>
+          <tr>
+            <td>8.9</td>
+            <td>All Settlement Amount due to the Merchant under this Agreement may be suspended or delayed till such time as PayU, the Acquiring Banks and/or nodal bank deems fit, if (a) the Merchant or its Customer or a third party commits any fraud or violates any law or legal requirement; (b) PayU and/or the Acquiring Banks have reasons to believe that a fraud has been committed against the Customers, PayU, Acquiring Banks or any third party by the Merchant,  its Customers, or any other third party; or has reason to believe that the Merchant or the Customer has in connivance with any other person done any fraud or assisted in the same; or any transaction has been fraudulently initiated; (c) the Merchant has excessive pending Chargebacks or poses high Chargeback and/or refund Risk; (d) continuous non-delivery or delayed delivery of Products to Customers; or (e) for any other reasonable reasons.<strong></strong></td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>9.</strong></td>
+              <td><strong>RESERVE</strong></td>
+          </tr>
+          <tr>
+            <td>9.1</td>
+            <td>The Merchant agrees to provide PayU with Reserve of such amounts as may be requested by PayU from time to time to secure the performance of the Merchant&rsquo;s obligations under this Agreement for reason, including without limitation, high Chargeback risk, credit risk, refund overdraft risk, non-delivery issues, selling of banned items, non-payment of maintenance fees or other amount payable to PayU or any other indications of performance problems related to Merchant&rsquo;s use of the PayU Services. If the Merchant fails to provide PayU with Reserve within seven (7) days of receipt of notice for the same, PayU reserves the right to suspend and/or terminate the Settlement Amount payable to the Merchant or the PayU Services without further notice. PayU may use this Reserve to set-off including but not limited to any Outstanding Amounts payable by the Merchant to PayU, Acquiring Banks and/or Customers.</td>
+          </tr>
+          <tr>
+            <td>9.2</td>
+            <td>In case the Settlement Amount payable to the Merchant and/or the Reserve (if any) is not sufficient to cover the Merchant&rsquo;s Outstanding Amount, then the Merchant shall pay PayU and/or the Acquiring Banks the remaining amount due immediately upon request. PayU shall be entitled to charge daily interest on such Outstanding Amount from the date of request until the date of payment in full, at the rate of 1.5% per month.&nbsp; Provided that the above right of PayU to appropriate the Reserve and set-off the Outstanding Amount in the above manner shall be in addition to and reserving fully the right of PayU to recover all such losses, costs and damages etc from Merchant by any other means, which may be available to PayU under the law. In addition, Merchant agree to pay all costs and expenses, including without limitation attorneys' fees and other legal expenses, incurred by or on behalf of us in connection with the outstanding amount and the collection of same from the Merchant.</td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>10.</strong></td>
+            <td><strong>DELIVERY </strong>
+              </td>
+          </tr>
+          <tr>
+            <td>10.1</td>
+            <td>The Merchant shall dispatch/render the Products to the Customer only upon transaction confirmation from PayU to the Merchant.  The Merchant acknowledges that PayU shall give confirmation only upon receipt of transaction confirmation in respect of the Transaction from the Acquiring Bank. PayU shall not be responsible for any Transactions that have not been confirmed with PayU by the Acquiring Banks.            </td>
+          </tr>
+          <tr>
+            <td>10.2</td>
+            <td>The Merchant shall ensure that it maintains Proof of Delivery with respect to each Transaction initiated through the Merchant Site for a period of at least one (1) year from the date of Delivery. Proof of Delivery shall be open for inspection by PayU and/or the Acquiring Banks at all times during working hours on Business Days. Notwithstanding any other Clause of this Agreement, the Merchant understands that PayU and/or the Acquiring Bank and/or Nodal Bank reserve the right to call for Proof of Delivery, at any time, before and/or after settlement of Settlement Amount to the Merchant’s Bank Account with respect to any Transaction. PayU and/or the Acquiring Banks have the right to reverse Customer Charge amount to the Customers and/or reject the Customer Charge to Merchant, if Proof of Delivery is not provided in accordance to this Agreement.</td>
+          </tr>
+          <tr>
+            <td>10.3</td>
+            <td>The Merchant shall deliver the Product within the Delivery Due Dates specified at the time of making the transaction on the Merchant Site. If the Merchant is unable to deliver the whole or any part of the Transaction within the Delivery Due Date, the Merchant shall forthwith inform the Customer and take immediate action to refund the Customer Charge in whole or in part as per the Customers instructions.</td>
+          </tr>
+          <tr>
+            <td>10.4</td>
+            <td>All risks associated with the Delivery by the Merchant shall be solely that of the Merchant and not PayU. Any and all disputes regarding quality, merchantability, non-Delivery, delay in Delivery or otherwise shall be resolved directly between the Merchant and the Customer without making PayU and/or the respective Acquiring Bank a party to such disputes.</td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>11.</strong></td>
+            <td><strong>REFUND AND RETURN POLICY</strong></td>
+          </tr>
+          <tr>
+            <td>11.1</td>
+            <td>The Merchant agree to process returns of, and provide refunds and adjustments for, Products sold and/or payment collected through its Merchant Site in accordance with this Agreement, the Acquiring Banks instructions and Card Association Rules. The Merchant understands that all refunds must be routed through the same Acquiring Bank payment gateway through which the Transaction was made. In the event that the Merchant initiates refunds through any other mode, the Merchant shall be fully liable for all Chargebacks raised in respect of the Transaction refunded. The Merchant shall ensure that PayU at all times have sufficient funds of the Merchant to process refunds initiated. PayU shall not be liable to process any refund initiated in the event of insufficient funds.</td>
+          </tr>
+          <tr>
+            <td>11.2</td>
+            <td>The Merchant understands that no refund shall be processed by PayU after a period of 180 days from the date of the Transaction.</td>
+          </tr>
+          <tr>
+            <td>11.3</td>
+            <td>The Merchant shall (a) maintain a fair return, cancellation or adjustment policy in accordance with type of business; (b) disclose its return or cancellation policy to Customers at the time of purchase, (c) not give cash refunds to a Customer in connection with a card sale, unless required by law, and (d) not accept cash or any other item of value for preparing a card sale refund.</td>
+          </tr>
+          <tr>
+            <td>11.4</td>
+            <td>The amount of the refund/adjustment must include any associated taxes required to be refunded and cannot exceed the amount shown as the total on the original sales data except by the exact amount required to reimburse the customer for postage (if any) that the Customer paid to return Product. The Merchant understands that if the refund policy prohibits returns or is unsatisfactory to the Customers, the Merchant may still receive a Chargeback relating to the Disputed Transaction.</td>
+          </tr>
+          <tr>
+            <td>11.5</td>
+            <td>It is hereby agreed and acknowledged by the Parties that the TDR charged by PayU in respect of a Transaction that has been confirmed shall not be refunded or repaid by PayU to the Merchant or any other person irrespective of the Customer Charge being rejected, chargeback, refunded or disputed. </td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>12.</strong></td>
+            <td><strong>CUSTOMER SUPPORT</strong></td>
+          </tr>
+          <tr>
+            <td>12.1</td>
+            <td>The Merchant is solely responsible for all Customer service issues relating to the Transaction, Products sold on its Merchant Site including but not limited to Customer Charge, order fulfillment, order cancellation, returns, refunds and adjustments, rebates, functionality and warranty, technical support and feedback concerning experiences with its personnels, policies or processes. In performing Customer service, the Merchant will always present itself as a separate entity from PayU.<strong> </strong></td>
+          </tr>
+          <tr>
+            <td>12.2</td>
+            <td>The Merchant shall provide Customer support within 36 (thirty six) hours during all Business Days. Such support shall include appropriate notice to Customers of means of contacting the Merchant including e-mail address and telephone number, in the event the Customer has questions/queries regarding the nature or quality of the Product and the procedures for resolving disputes. </td>
+          </tr>
+          <tr>
+            <td>12.3</td>
+            <td>Under no circumstances shall PayU be responsible for customer support to the Customer or any third party.<strong> </strong></td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>13.</strong></td>
+            <td><strong>INSPECTION</strong>         </td>
+          </tr>
+          <tr>
+            <td>13.1</td>
+            <td>Except as required by law, the Merchant shall be solely responsible for (a) compiling and retaining permanent records of all Transactions and other data and (b) reconciling all Transaction information that is associated with its Customers.</td>
+          </tr>
+          <tr>
+            <td>13.2</td>
+            <td>The Merchant shall maintain records of such periodical checks in such manner as may be specified by PayU and/or Acquiring Banks. PayU and/or Acquiring Banks shall be entitled to check and audit records and statements of the Merchant to ensure compliance with the Merchant&rsquo;s obligations under this Agreement at such intervals or times as PayU and/or Acquiring Bank may deem fit.  </td>
+          </tr>
+          <tr>
+            <td>13.3</td>
+            <td>The Merchant shall also permit the authorised representatives of PayU and/or the Acquiring Banks to carry out physical inspections of the place(s) of business or other facilities of the Merchant to verify if the Merchant is in compliance with its obligations hereunder. </td>
+          </tr>
+          <tr>
+            <td>13.4</td>
+            <td>If the Merchant refuses such inspection or provides inaccurate, untrue, or incomplete information, or fails to comply with the terms and conditions of this Agreement, PayU reserves the right to suspend or terminate the PayU Services forthwith.<strong> </strong></td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>14.</strong></td>
+            <td><strong>COVENANTS OF THE MERCHANT:</strong></td>
+          </tr>
+          <tr>
+            <td>14.1</td>
+            <td>The Merchant hereby declares, assures, undertakes and covenants as under:</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td>
+                <table>
+                    <tr>
+                        <td>(a)</td>
+                        <td>The Merchant shall duly fulfill all Transactions placed on the Merchant Site in accordance with the terms and conditions on the Merchant Site and instructions of the Customer. The Merchant undertakes to ensure that the Delivery is done as per specifications of the Customer on or before the Delivery Due Date.</td>
+                    </tr>
+                    <tr>
+                      <td>(b)</td>
+                      <td>The Merchant will not offer out of stock Products for sale. The Merchant shall be solely liable for quality and efficiency and merchantability of the Products. Further the rates displayed on the Merchant Site shall include all applicable taxes.</td>
+                  </tr>
+                    <tr>
+                      <td>(c)</td>
+                      <td>The Merchant shall comply with all applicable laws, rules and regulations in offering the Products or collecting Payments on its Merchant Site. The Merchant shall ensure that all requisite approvals, licenses and registrations, etc. in accordance with all laws, rules, regulations, guidelines in force in India from time to time, have been obtained and are kept in full force and effect to enable the Merchant to offer the Products for sale. The Merchant shall not conduct any business through the PayU Services or offer Products thereof in violation of any law or legal requirement of any applicable jurisdiction and shall keep PayU fully indemnified for all times to come in this regard.                   </td>
+                  </tr>
+                    <tr>
+                      <td>(d)</td>
+                      <td>The Merchant shall not offer any Products, which are illegal or offensive or banned as per the list provided in <strong>Schedule C</strong> and/or are not in compliance with applicable laws, rules and regulations whether central, state, local or international of all jurisdiction from where the Customers avail the Products. In addition, the Merchant shall comply with and shall ensure compliance by the Customers with all applicable guidelines, rules, regulations issued by RBI and guidelines set by PayU, Acquiring Banks and/or Card Associations. The Merchant agrees and understands that PayU reserves the right to suspend Settlement Amount and/or PayU Services to the Merchant until such time that the Merchant does not discontinue selling such banned/illegal Products or does not conform to all applicable laws and regulations in force from time to time. In addition, PayU reserves the right to terminate this Agreement without further notice in the case of breach of this Clause.                    </td>
+                  </tr>
+                    <tr>
+                      <td>(e)</td>
+                      <td>The Merchant shall ensure that appropriate cancellation policy, refund policy, privacy policies, disclosures/disclaimers, terms of use pertaining to the Merchant Site, the terms of the Products provided by the Merchant and terms of paying the Customer Charge are displayed conspicuously on the Merchant Site in accordance with the terms of this Agreement (collectively &ldquo;<strong>Merchant Terms and Conditions</strong>&rdquo;) . The Merchant shall prior to accepting any instructions from the Customers ensure that the Customers are duly registered on the Merchant Site and the Customers accepts all the Merchant Terms and Conditions.  PayU reserves the right to inspect the Merchant Terms and Conditions at any times.                      </td>
+                  </tr>
+                    <tr>
+                      <td>(f)</td>
+                      <td>In the event that the Merchant provides One Click Checkout option to its Customers and the Customer opt for One Click Checkout, the Merchant understands that PayU shall store the Valid Card data of the Customers on its server.</td>
+                  </tr>
+                    <tr>
+                      <td>(g)</td>
+                      <td>In the event that the Merchant has obtained a PCI DSS certification and opts for a One Click Checkout API, the Merchant shall be responsible to ensure that all Customer Valid Card data shared with the Merchant is kept safe and not shared with any third party without the consent of PayU and the Customer. The Merchant shall ensure that there is no unauthorized use or disclosure of such data or any hacking of the same. The Merchant accepts all liabilities with respect to such Customer Valid Card data and shall keep PayU indemnified in case of any breach of this Clause. In addition, in the event that the Merchant calls the One Click Checkout API for the wrong Customers Valid Card data or the Customer&rsquo;s account with the Merchant is compromised, the Merchant shall be fully liable for all transactions processed and PayU shall have no liability towards the Customers or the Merchant. Further, the Merchant shall also have in place a privacy policy for handling or dealing with the Customer&rsquo;s personal information including all Customer Valid Card data, and such policy should be available to the Customers and be published on the Merchant Site.                    </td>
+                  </tr>
+                    <tr>
+                      <td>(h)</td>
+                      <td>The Merchant shall have the marketable and legal right and title to sell Products offered by it to the Customers by using PayU Services.                    </td>
+                  </tr>
+                    <tr>
+                      <td>(i)</td>
+                      <td>In the event any Customer complaints or is dissatisfied with any Product, the Merchant shall take such measures as may be required to resolve the same at its sole cost and expenses.                   </td>
+                  </tr>
+                    <tr>
+                      <td>(j)</td>
+                      <td>The Merchant shall ensure that the best service standards in the industry are adopted and shall ensure Delivery of all Products paid for on the Merchant Site to Customers in accordance with the highest standards.                    </td>
+                  </tr>
+                    <tr>
+                      <td>(k)</td>
+                      <td>The Merchant agrees to put up such notices, disclaimers or warranties as may be required by PayU and/or the Acquiring Bank and the Merchant shall comply with such request forthwith.                   </td>
+                  </tr>
+                    <tr>
+                      <td>(l)</td>
+                      <td>The Merchant shall be solely responsible for the accuracy of all information and/or validity of the prices and any other charges and/or other information relating to the Products, which are offered on its Merchant Site. </td>
+                  </tr>
+                    <tr>
+                      <td>(m)</td>
+                      <td>In the event that the Merchant provides EMI options to the Customers, the Merchant shall endeavour to deliver the Product after the approval of the EMI option from the Issuing Institution providing the EMI option through PayU. PayU shall not be liable to the Merchant or the Customer for any dispute arising with respect to rejection of EMI option to a Customer after a Transaction has been confirmed, irrespective of the Settlement Amount being in the Nodal Bank or already transferred to the Merchant Bank Account. The Customer shall raise such dispute directly with the Issuing Institution.                   </td>
+                  </tr>
+                    <tr>
+                      <td>(n)</td>
+                      <td>The Merchant hereby agrees that it shall bear and be responsible for the payment of all relevant taxes, surcharge, levies etc. (including withholding taxes) in relation to the Customer Charge and PayU Services provided under this Agreement.                    </td>
+                  </tr>
+                    <tr>
+                      <td>(o)</td>
+                      <td>As the Merchant will be using the Acquiring Banks Services and Card Association Services, the Merchant shall comply with all applicable rules, guidelines, instructions, requests and actions, etc made by the Acquiring Banks and/or Card Associations from time to time. The Acquiring Banks has the right to reverse/reject settlement, suspend and/or terminate Acquiring Banks Services/PayU Services, make inspections or inquiries in relation to the Transaction, etc. The Merchant understands that the Acquiring Banks and Card Association Rules form a part of this Agreement. In the event that Merchant&rsquo;s non-compliance of Acquiring Banks and/or Card Association Rules, results in any fines, penalties or other amounts being levied on or demanded of PayU by an Acquiring Bank and/or Card Association, then without prejudice to PayU&rsquo;s other rights hereunder, the Merchant shall forthwith indemnify PayU in an amount equal to the fines, penalties or other amount so levied or demanded. If the Merchant fails to comply with its obligations towards the Acquiring Banks and/or Card Associations, PayU may suspend settlement or suspend/terminate the PayU Services forthwith.                     </td>
+                  </tr>
+                    <tr>
+                      <td>(p)</td>
+                      <td>In the event that the Merchant opts for PayU Services Product PayUMoney, the Merchant agrees and understands that the Merchant and its Customers shall be bound by the PayUMoney terms and conditions at  <a href="https://www.payumoney.com/termsandconditions.html">https://www.payumoney.com/termsandconditions.html</a>. The Merchant shall ensure that the Merchant and all its Customers comply with the PayUMoney terms and conditions.                      </td>
+                  </tr>
+                    <tr>
+                      <td>(q)</td>
+                      <td>The Merchant shall not require the Customer to provide the Merchant with any details of the accounts held by it with Issuing Institution. The Merchant shall not input any data on behalf of the Customers on the Merchant Site or the Acquiring Bank, failing which it will be considered as breach of trust of PayU and/or of the Acquiring Bank.                     </td>
+                  </tr>
+                    <tr>
+                      <td>(r)</td>
+                      <td>The Merchant shall ensure to keep confidential, all information submitted by the Customers on the Merchant Site. The Customer shall not be required or asked to disclose any confidential or personal data, which may be prejudicial to interests of the Customer. The Merchant shall use the Customer data only for the purpose of completing the Transaction for which it was furnished, and shall not sell or otherwise furnish such information to any third party. The Merchant shall be liable to comply with existing data privacy regulations from time to time.                    </td>
+                  </tr>
+                    <tr>
+                      <td>(s)</td>
+                      <td>The Merchant shall in writing inform PayU of all changes in its constitution, directors/partners/trustees, or change in the current addresses of each office, within seven (7) Business Days of such change having taken place listing out the names and details of the personnel in charge of the management and affairs of the Merchant. Such intimation shall be provided on the Merchant&rsquo;s letterhead signed by the authorized signatory of the Merchant.                     </td>
+                  </tr>
+                    <tr>
+                      <td>(t)</td>
+                      <td>The Merchant shall not engage in activities that harm the business and/or brand of PayU, the Acquiring Banks and/or card associations.                      </td>
+                  </tr>
+                    <tr>
+                      <td>(u)</td>
+                      <td>The Merchant must indicate its acceptance of all the respective Acquiring Banks and/or Card Associations, whose Payment Mechanism is being used by the Merchant, whenever it communicates the payment methods it accepts to its Customers without prejudice to anyone of the Acquiring Banks and/or Card Associations. In the event that the Merchant decides to display the logos of the Acquiring Banks and/or Card Associations whose Payment Mechanism it is providing as a Valid Card payment option to its Customers on the Merchant Site and/or other marketing materials, the Merchant must ensure that it prominently displays the logos of all the respective Acquiring Banks and/or Card Associations (being used to process Valid Cards) in the same manner and without prejudice to any one of them and in accordance with the guidelines and/or direction provided by the respective Acquiring Banks and/or Card Associations. In addition, the Merchant shall not promote, dissuade or impose restrictions/conditions on any one Valid Card Payment Mechanism and/or Card Association over the other. Exceptions being limited time bound tactical marketing programs with one or more Acquiring Banks and/or Card Associations.</td>
+                  </tr>
+                    <tr>
+                      <td>(v)</td>
+                      <td>The Merchant shall be responsible to resolve all cardholder/customer account holder disputes and provide whatever assistance necessary to assist the Acquiring Banks, Card Associations and PayU deal with all cardholder/Customer Account holder disputes at its own cost.                     </td>
+                  </tr>
+                    <tr>
+                      <td>(w)</td>
+                      <td>The Merchant authorises PayU to share Transaction data and Customer information with the respective Acquiring Banks and Card Associations.                      </td>
+                  </tr>
+                    <tr>
+                      <td>(x)</td>
+                      <td>The Merchant shall maintain and run the Merchant Site as a part of its business and shall ensure that the Merchant Site does not contain libelous, defamatory, obscene, pornographic or profane material or any instructions that may cause harm to PayU, the Acquiring Banks, Card Associations and/or any other third party.                      </td>
+                  </tr>
+                    <tr>
+                      <td>(y)</td>
+                      <td>The Merchant agrees that PayU reserves a right to suspend the payment and/or PayU Services provided herein, forthwith, in event the Merchant fails to observe the terms and conditions herein.                      </td>
+                  </tr>
+                </table>
+              </td>
+          </tr>
+          <tr>
+            <td height="10"></td>
+          </tr>
+          <tr>
+            <td><strong>15.</strong></td>
+            <td><strong>REPRESENTATIONS BY THE PARTIES</strong></td>
+          </tr>
+          <tr>
+            <td>15.1</td>
+            <td>Each of the Parties represents warrants and undertakes that:<strong></strong></td>
+          </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <table>
+                        <tr>
+                        <td>(a)</td>
+                        <td>It is duly organized and validly existing under the laws of the jurisdiction in which it is established;</td>
+                      </tr>
+                        <tr>
+                          <td>(b)</td>
+                          <td><ol>
+                            <li>It has the requisite power and authority to execute, deliver and perform this Agreement and that this Agreement has been duly and validly authorized, executed and delivered by it; </li>
+                          </ol></td>
+                      </tr>
+                        <tr>
+                          <td>(c)</td>
+                          <td>Its obligations hereunder constitute legal, valid, binding and enforceable obligations; and</td>
+                      </tr>
+                        <tr>
+                          <td>(d)</td>
+                          <td>The execution and delivery of this Agreement and the consummation of the Transactions contemplated herein do not breach its organizational documents or any law, provisions of any contract or order of court applicable to it and do not require any applicable governmental approval; and</td>
+                      </tr>
+                        <tr>
+                          <td>(e)</td>
+                          <td>The person executing this Agreement is duly authorized to execute the Agreement for and on behalf of the respective Party and shall have the authority to bind the respective Party accordingly.</td>
+                      </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+          </tr>
+            <tr>
+              <td><strong>16</strong></td>
+              <td><strong>USE OF INTELLECTUAL PROPERTY RIGHTS AND PROTECTION OF SOFTWARE APPLICATION</strong></td>
+          </tr>
+            <tr>
+              <td>16.1</td>
+              <td>The Merchant hereby grants to PayU the right to use, display and reproduce its name, brand name, logo, wordmark, trademark, service marks (&ldquo;<strong>Marks</strong>&rdquo;) on a non-exclusive, royalty-free basis, solely in connection with the sales, marketing and advertising PayU Services provided to the Merchant to the public. The Merchant hereby release PayU from all liability relating to the publication or use of the Marks for such purpose. The Merchant hereby confirms that the Merchant has the requisite right to use the said Marks and to grant permission to use as stated herein. The Merchant shall retain all intellectual property rights in such marks.</td>
+          </tr>
+            <tr>
+              <td>16.2</td>
+              <td>The Merchant shall prominently display on its website and/or in other online marketing materials, a statement/logo/marks/image provided by PayU relating to PayU Services and that of the respective Acquiring Banks providing the Payment Mechanism. The Merchant must only use the logos/marks/images provided by PayU and no other. </td>
+          </tr>
+            <tr>
+              <td>16.3</td>
+              <td>Nothing contained herein shall authorize the Parties to use, apply, invade or in any manner exploit or infringe the intellectual property rights of the other Parties without prior written consent of the other Party, and the usage shall be in compliance with this Agreement and such approval and policies as may be notified from time to time. In addition, the Parties undertake not to infringe the intellectual property rights of any third party. </td>
+          </tr>
+            <tr>
+              <td>16.4</td>
+              <td>The Merchant undertakes not to infringe the intellectual property rights of Acquiring Banks and/or PayU respectively, whether directly or indirectly through any third party in the Acquiring Banks Services and software and/or PayU Services and Software Application. The Merchant warrants that it shall only use the PayU&rsquo;s Software Application and the Acquiring Banks software for the purposes of this Agreement. The Merchant,  its employees, contractors, agents or any other person empowered by the Merchant shall not use the PayU Software Application and/or Acquiring Banks software in any form whatsoever, so as to:</td>
+          </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <table>
+                        <tr>
+                          <td>(a)</td>
+                            <td>design, realize, distribute or market a similar or equivalent software program; </td>
+                        </tr>
+                        <tr>
+                          <td>(b)</td>
+                          <td>adapt, modify, transform or rearrange the Software Application or the Acquiring Banks software for any reason whatsoever, including for the purpose, among other things, of creating a new software program or a derivative software program; </td>
+                      </tr>
+                        <tr>
+                          <td>(c)</td>
+                          <td>allow unauthorized use of or access to the Software Application and/or Acquiring Banks software;</td>
+                      </tr>
+                        <tr>
+                          <td>(d)</td>
+                          <td>disassemble, reverse engineer, decompile, decode or attempt to decode the Software Application and/or Acquiring Banks software; </td>
+                      </tr>
+                        <tr>
+                          <td>(e)</td>
+                          <td>allow the Software Application and/or Acquiring Banks software to be disassembled, reverse engineered, decompiled or decoded; and/or</td>
+                      </tr>
+                        <tr>
+                          <td>(f)</td>
+                          <td>in any way override or break down any protection system integrated into the Software Application and/or Acquiring Banks software. </td>
+                      </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+              <td>16.5</td>
+              <td>The Merchant fully understands that due to use of the Customer of the Internet Payment Gateway through PayU Site, PayU may create or generate database in respect of such Customers. All rights and ownership with respect to such database shall vest with PayU.</td>
+          </tr>
+            <tr>
+              <td height="10"></td>
+          </tr>
+            <tr>
+              <td><strong>17</strong></td>
+              <td><strong>CONFIDENTIALITY</strong></td>
+          </tr>
+            <tr>
+              <td>17.1</td>
+              <td>The Parties agree to maintain the confidentiality of the Confidential Information and to protect all portions of the other Party's Confidential Information by preventing any unauthorized disclosure, copying, use, distribution, or transfer of possession of such information.  Dissemination of Confidential Information by each Party shall be limited to those employees with the need to such access for the advancement of the goals anticipated under this Agreement. </td>
+          </tr>
+            <tr>
+              <td>17.2</td>
+              <td>The Parties shall at no time disclose or allow its officers, directors, employees, representatives or subcontractors  to disclose  the other Party's Confidential Information to any third party without the prior written consent of the other Party. The Parties agree to protect the Confidential Information of the other with the same standard of care and procedures used by themselves to protect their own Confidential Information of similar importance but at all times using at least a reasonable degree of care.</td>
+          </tr>
+            <tr>
+              <td>17.3</td>
+              <td>The obligations set out in this Clause shall not apply to Confidential Information that:</td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                    <table>
+                    <tr>
+                        <td>(a)</td>
+                        <td> is or becomes publicly known other than through breach of this Clause 17; </td>
+                        </tr>
+                    <tr>
+                      <td>(b)</td>
+                      <td>is in possession of the receiving Party prior to disclosure by the other Party;</td>
+                      </tr>
+                    <tr>
+                      <td>(c)</td>
+                      <td>is independently developed by the receiving Party;</td>
+                      </tr>
+                    <tr>
+                      <td>(d)</td>
+                      <td>needs to be disclosed to professional advisers or in accordance with the order of a competent court or administrative authority; </td>
+                      </tr>
+                    <tr>
+                      <td>(e)</td>
+                      <td>is thereafter rightfully furnished to such receiving Party by a third party without restriction by that third party on disclosure; or</td>
+                      </tr>
+                    <tr>
+                      <td>(f)</td>
+                      <td>is required by law, judicial court, recognized stock exchange, government department or agency or other regulatory authority, provided that sufficient notice is given of any such requirement, by the receiving Party to the disclosing Party, in order that the disclosing Party may seek for an appropriate protective order or exemption from such requirement, prior to any disclosure being made by the receiving Party and/or its Affiliates.</td>
+                      </tr>
+                  </table>
+                </td>
+          </tr>
+            <tr>
+              <td>17.4</td>
+              <td>Such obligation of confidentiality shall continue for a period of 1 (one) year after the termination or expiry of this Agreement. </td>
+          </tr>
+            <tr>
+              <td height="10"></td>
+          </tr>
+            <tr>
+              <td><strong>18</strong></td>
+              <td><strong>RELATIONSHIP BETWEEN THE PARTIES</strong></td>
+          </tr>
+            <tr>
+              <td>18.1</td>
+              <td>The relationship between PayU and the Merchant is on principal-to-principal basis.<strong> </strong>Nothing contained herein shall be deemed to create any association, partnership, joint venture or relationship of principal and agent or master and servant, or employer and employee between the Parties hereto or any affiliates or subsidiaries thereof or to provide either Party with the right, power or authority, whether express or implied to create any such duty or obligation on behalf of the other Party. </td>
+          </tr>
+            <tr>
+              <td>18.2</td>
+              <td>PayU has no connection or interest of whatsoever nature in the business of the Merchant or the Products offered/ marketed on the Merchant Site. PayU does not in any manner take part in the business of the Merchant, directly or indirectly. PayU shall only provide PayU Services to the Merchant in relation to the Merchants, the Customers and the Acquiring Bank, as an independent entity and under the terms and conditions of this Agreement.  For the PayU Services provided by PayU, it shall be paid an agreed service fee (TDR) by the Merchant as stipulated in this Agreement and PayU is nowhere connected or concerned about the revenues of the Merchant or the Acquiring Banks. </td>
+          </tr>
+            <tr>
+              <td>18.3</td>
+              <td>PayU has no relationship with the Customers and all actions under this Agreement which may affect the Customers are instructed by the Merchant. The Merchant alone shall be responsible to the Customers and neither PayU nor the Acquiring Bank or anybody connected to PayU or Acquiring Bank shall have any responsibility or liability towards the Customers and the Merchant shall keep PayU and Acquiring Bank fully indemnified for all times to come  in this respect<strong>.  </strong></td>
+          </tr>
+            <tr>
+              <td>18.4</td>
+              <td>PayU is neither concerned nor required to monitor in any manner the use of the payment modes by the Customers for procuring / availing the Products of the Merchant. The Customers should be required to use the payment modes at their sole option and risks. The Merchant shall be required to notify this responsibility to all its Customers under the instructions provided by PayU. </td>
+          </tr>
+            <tr>
+              <td height="10">&nbsp;</td>
+          </tr>
+            <tr>
+              <td><strong>19</strong></td>
+              <td><strong>INDEMNITY</strong> </td>
+          </tr>
+            <tr>
+              <td>19.1</td>
+              <td>The Merchant hereby undertakes and agrees to indemnify, defend and hold harmless PayU and/or the Acquiring Banks including their officers, directors and agents from and against all actions, proceedings, claims (including third party claims), liabilities (including statutory liability), penalties, demands and costs (including without limitation, legal costs), awards, damages, losses and/or expenses however arising directly or indirectly, including but not limited to, as a result of:</td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                    <table>
+                    <tr>
+                        <td>(a)</td>
+                        <td>breach or non-performance by the Merchant of any of its undertakings, warranties, covenants, declarations or obligations under this Agreement; </td>
+                        </tr>
+                    <tr>
+                      <td>(b)</td>
+                      <td>breach of confidentiality and intellectual property rights obligations by the Merchant;                     </td>
+                      </tr>
+                    <tr>
+                      <td>(c)</td>
+                      <td>any claim or proceeding brought by the Customer or any third party against PayU and/or the Acquiring Banks in respect of any Products or Services offered by the Merchant;                      </td>
+                      </tr>
+                    <tr>
+                      <td>(d)</td>
+                      <td>any claim or proceeding brought by the Customer or any third party against PayU and/or the Acquiring Banks in respect of PayU Services;                     </td>
+                      </tr>
+                    <tr>
+                      <td>(e)</td>
+                      <td>any act, deed, negligence, omission, misrepresentation, default, misconduct, non-performance or fraud by the Merchant, its employees, contractors, agents,  Customers or any third party;                   </td>
+                      </tr>
+                    <tr>
+                      <td>(f)</td>
+                      <td>any hacking or lapse in security of the Merchant Site or the Customer data;                     </td>
+                      </tr>
+                    <tr>
+                      <td>(g)</td>
+                      <td>Chargebacks or refunds relating to the Transactions contemplated under this Agreement;                      </td>
+                      </tr>
+                    <tr>
+                      <td>(h)</td>
+                      <td>breach of law, rules regulations, legal requirements (including RBI regulations, Card Association Rules, Acquiring Bank rules) in force in India and/or in any place from where the Customers is making the Transaction and/or where the Product is or to be Delivered and/or where the respective Issuing Institution is incorporated/registered/established; or                   </td>
+                      </tr>
+                    <tr>
+                      <td>(i)</td>
+                      <td>any fines, penalties or interest imposed directly or indirectly on PayU on account of Merchant&rsquo;s or Transactions conducted through Merchant Site under these Terms and Conditions.                    </td>
+                      </tr>
+                  </table>
+                </td>
+          </tr>
+            <tr>
+              <td>19.2</td>
+              <td>The indemnities under this Clause are in addition to and without prejudice to the indemnities given elsewhere in this Agreement.</td>
+          </tr>
+            <tr>
+              <td>19.3</td>
+              <td>The indemnities provided herein shall survive the termination of this Agreement.</td>
+          </tr>
+            <tr>
+              <td height="10">&nbsp;</td>
+          </tr>
+            <tr>
+              <td><strong>20</strong></td>
+              <td><strong>LIMITATION OF LIABILITY</strong></td>
+          </tr>
+            <tr>
+              <td>20.1</td>
+              <td>Notwithstanding anything stated under this Agreement, the aggregate liability of PayU to the Merchant from any cause whatsoever shall not in any event exceed the sum equivalent to the preceding one month&rsquo;s aggregate TDR margin<strong> </strong>earned by PayU under this agreement from the date of occurrence of such liability. Provided that PayU shall not be liable to the Merchant for any special, incidental, indirect or consequential damages, damages from loss of profits or business opportunities even if the Merchant shall have been advised in advance of the possibility of such loss, cost or damages. In no event shall PayU be liable to the Customers or any third party. In no event shall the Nodal Bank or the Acquiring Bank be liable to the Merchant in any way under this Agreement. </td>
+          </tr>
+            <tr><td height="10"></td></tr>
+            <tr>
+              <td><strong>21</strong></td>
+              <td><strong>DISCLAIMER</strong></td>
+          </tr>
+            <tr>
+              <td>21.1</td>
+              <td>PayU will make all reasonable efforts to provide uninterrupted service subject to down time and regular maintenance. However, notwithstanding anything in this Agreement, the Merchant acknowledges that PayU Site, PayU Services and the Acquiring Bank&rsquo;s Services may not be uninterrupted or error free or free from any virus or other malicious, destructive or corrupting code, program or macro and PayU and the Acquiring Banks disclaim all warranties, express or implied, written or oral, including but not limited to warranties of merchantability and fitness of the services for a particular purpose. The Merchant also acknowledges that the arrangement between one or more Acquiring Banks and PayU may terminate at any time and services of such Acquiring Banks may be withdrawn. Although PayU adopts security measures it considers appropriate for the offer of the PayU Service, it does not assure or guarantee that no person will overcome or subvert the security measures and gain unauthorized access to the PayU Service or the Merchant/Customer data. PayU shall not be responsible or liable if any unauthorized person hacks into or gains access to the PayU Service or to the Merchant&rsquo;s PayU Account. In event of incorrect settlement in the Merchant&rsquo;s Account due to error on the part of PayU or the Bank, PayU shall have the right to reverse the extra funds from the Merchant Bank Account. In addition, the Merchant shall be fully liable to return the extra funds settled within 7 (seven) days of intimation by PayU. Subject to the other clauses of this Agreement, in the event that the Settlement Amounts to be transferred to the Merchant have not been transferred, PayU shall endeavor to settle the relevant Settlement Amount to the Merchant&rsquo;s account within 7 (seven) days of notification from the Merchant. In addition PayU shall not be liable to the Merchant for any loss or damage whatsoever or howsoever caused or arising, directly or indirectly, including without limitation, as a result of loss of data; interruption or stoppage to the Customer&rsquo;s access to and/or use of the Merchant Site, PayU Services and/or the Payment Mechanism, interruption or stoppage of PayU Site, hacking or unauthorized access to the PayU Services, Software Application and Internet Payment Gateway, non-availability of connectivity between the Merchant Site and PayU Site, etc. Any material/information downloaded or otherwise obtained through the use of the PayU Services is done at the Merchant&rsquo;s own discretion and risk and the Merchant will be solely responsible for any damage to its computer system or loss of data that results from the download of any such material. No advice or information, whether oral or written, obtained by the Merchant from PayU or through or from the use of PayU Services shall create any warranty. PayU shall have no liability in this respect.</td>
+          </tr>
+            <tr>
+              <td>21.2</td>
+              <td>PayU's sole obligation and the Merchant&rsquo;s sole and exclusive remedy in the event of interruption in PayU Site, or loss of use and/or access to PayU Site, the Acquiring banks Services and the Payment Mechanism and services, shall be to use all reasonable endeavors to restore the Services and/or access to the Payment Mechanism as soon as reasonably possible.</td>
+          </tr>
+            <tr>
+              <td>21.3</td>
+              <td>PayU or Acquiring Bank obligations under this Agreement are subject to following limitations:</td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                <table>
+                    <tr>
+                        <td>(a)</td>
+                        <td>messages that originate from the server of the Merchant or the server of a third party designated by Merchant (e.g., a host) shall be deemed to be authorized by the Merchant, and PayU shall not be liable for processing such messages;</td>
+                    </tr>
+                    <tr>
+                      <td>(b)</td>
+                      <td>messages that originate from the cardholder are deemed to be authorized by the cardholder and PayU shall not be required to check its veracity and PayU shall not be liable for processing such messages;                   </td>
+                  </tr>
+                    <tr>
+                      <td>(c)</td>
+                      <td>PayU or the Acquiring Bank are not responsible for the security of data residing on the server of the Merchant or a third party designated by the Merchant (e.g., a host) or on the server of a cardholder or a third party designated by a Merchant/cardholder (e.g., a host); and                       </td>
+                  </tr>
+                    <tr>
+                      <td>(d)</td>
+                      <td>PayU and/or the Acquiring Banks shall have no liability for any failure or delay in performing its obligations under this facility if such failure or delay: (i) is caused by the Merchant's acts or omissions; (ii) results from actions taken by PayU or the Acquiring Banks in a reasonable good faith to avoid violating a law, rule or regulation of any governmental authority or to prevent fraud on cardholders/accounts; or (iii) is caused by circumstances beyond PayU control, including but not limited to vandalism, hacking, theft, phone service disruptions, Internet disruptions, loss of data, extreme or severe weather conditions or any other causes in the nature of  Force Majeure event.                   </td>
+                  </tr>
+                  </table>
+                </td>
+          </tr>
+            <tr>
+              <td height="10"></td>
+          </tr>
+            <tr>
+              <td><strong>22</strong></td>
+              <td><strong>TERMINATION</strong></td>
+          </tr>
+            <tr>
+              <td>22.1</td>
+              <td>This Agreement may be terminated by either Party by giving 30 (thirty) days prior written notice to the other Party. </td>
+          </tr>
+            <tr>
+              <td>22.2</td>
+              <td>Either Party may terminate this Agreement forthwith in the event: </td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                <table>
+                  <tr>
+                    <td>(a)</td>
+                      <td>the Party discovers at any stage that the other Party is in violation of any law or regulation;</td>
+                    </tr>
+                  <tr>
+                    <td>(b)</td>
+                    <td>the other Party is adjudicated as bankrupt, or if a receiver or as a trustee is appointed for it or for a substantial portion of its assets, or if any assignment for the benefit of its creditors is made and such adjudication appointment or assignment is not set aside within 90 (ninety) Business Days;</td>
+                  </tr>
+                  <tr>
+                    <td>(c)</td>
+                    <td>the other Party goes into liquidation either voluntarily or compulsorily;</td>
+                  </tr>
+                  <tr>
+                    <td>(d)</td>
+                    <td>the other Party is prohibited by any regulatory or statutory restriction from continuing to provide services under this Agreement. </td>
+                  </tr>
+                  </table>
+                </td>
+          </tr>
+            <tr>
+              <td>22.3</td>
+              <td>PayU shall terminate this Agreement forthwith, if the Merchant fails to perform its obligations hereunder or is in breach of any terms and conditions of this Agreement.</td>
+          </tr>
+            <tr>
+              <td>22.4</td>
+              <td>The termination under this Clause is in addition to and without prejudice to the termination rights given to the Parties under any other Clause in this Agreement.</td>
+          </tr>
+            <tr>
+              <td height="10"></td>
+          </tr>
+            <tr>
+              <td><strong>23</strong></td>
+              <td><strong>CONSEQUENCES OF TERMINATION</strong></td>
+          </tr>
+            <tr>
+              <td>23.1</td>
+              <td>The termination of this Agreement shall not affect the rights or liabilities of either Party incurred prior to such termination. In addition, any act performed during the term of this Agreement which may result in a dispute post termination or any provision expressed to survive this Agreement or to be effective on termination or the obligations set out in this Clause shall remain in full force and effect notwithstanding termination. Subject to other Clauses of this Agreement, both Parties shall undertake to settle all outstanding charges within 30 (thirty) days of the termination taking effect. </td>
+          </tr>
+            <tr>
+              <td>23.2</td>
+              <td>Where any payments claimed by PayU exceeds the Settlement Amount due to the Merchant the difference thereof shall be a debt due from the Merchant to PayU and be forthwith recoverable by appropriate legal action, as deemed fit by PayU. Without prejudice to PayU&rsquo;s rights and remedies, in the event that the Merchant does not make any payments to PayU by its due date or on demand as required under this Agreement, PayU shall be entitled to charge daily compounded interest on such overdue amount from the due date until the date of Settlement Amount in full, at the rate of 2.5% per month. This section shall not preclude PayU from recourse to any other remedies available to it under any statute or otherwise, at law or in equity.</td>
+          </tr>
+            <tr>
+              <td>23.3</td>
+              <td>All materials, documentation, instruction manuals, guidelines, letters and writings and other materials issued by PayU from time to time in respect of this Agreement, whether in respect of the utilization of the Internet Payment Gateway or otherwise shall be returned by the Merchant to PayU upon termination. </td>
+          </tr>
+            <tr>
+              <td>23.4</td>
+              <td>The Merchant agrees and confirms that the Merchant shall remain solely liable after the termination of this Agreement for all Chargebacks, refunds, penalties, loss, damages or&nbsp; cost incurred by PayU, Acquiring Banks, Card Associations and/or Customers and for all claims and proceedings arising against PayU and/or Acquiring Banks with respect to this Agreement. At the time of termination, PayU may retain such amount from the Reserve (if any) and Settlement Amount payable to the Merchant (including Settlement Amounts withheld) as may be determined by PayU to cover chargeback risk, refund risk or any potential loss, damages, penalties, cost that may be incurred by PayU, Acquiring Banks, Card Associations and/or Customers for a period of 210 Business Days. Subject to this Clause and any other Clause of this Agreement, all settlement to the Merchant after notice of termination shall be done post termination.&nbsp;In the event that such retained amount is not sufficient to cover all Outstanding Amounts of the Merchant post termination, the Merchant shall ensure that it pays PayU all pending amounts within 10 (ten) days of receiving the demand notice and shall at all times keep PayU indemnified in this respect. This Clause survives the termination of this Agreement.</td>
+          </tr>
+            <tr>
+              <td height="10"></td>
+          </tr>
+            <tr>
+              <td><strong>24</strong></td>
+              <td><strong>GENERAL PROVISIONS </strong></td>
+          </tr>
+            <tr>
+              <td>24.1</td>
+              <td><strong>Assignments: </strong>PayU may assign, in whole or in part, the benefits or obligations of this Agreement by providing a thirty (30) days prior intimation of such assignment to the Merchant, which shall be binding on the Parties to this Agreement.             </td>
+          </tr>
+            <tr>
+              <td>24.2</td>
+              <td><strong>Force Majeure: </strong>PayU shall not be liable for its failure to perform under this Agreement as a result of any event of force majeure events like acts of god, fire, wars, sabotage, civil unrest, labour unrest, action of Statutory Authorities or local or Central Governments, change in Laws, Rules and Regulations, affecting the performance of PayU or the Acquiring Banks.            </td>
+          </tr>
+            <tr>
+              <td>24.3</td>
+              <td><strong>Governing Law, Settlement of Disputes and Jurisdiction:</strong> This Agreement (and any dispute or claim relating to it, its enforceability or its termination) is to be governed by and construed in accordance with the laws of India. Each of the Parties agrees that, if any dispute(s) or difference(s) shall arise between the Parties in connection with or arising out of this Agreement, the Parties shall attempt, for a period of 30 (thirty) days from the receipt of a notice from the other Party of the existence of a dispute(s), to settle such dispute(s) by mutual discussions between the Parties. If the said dispute(s) cannot be settled by mutual discussions within the thirty-day period provided above, either Party may approach the courts at Mumbai which shall have the exclusive jurisdiction over any disputes relating to the subject matter of this Agreement.              </td>
+          </tr>
+            <tr>
+              <td>24.4</td>
+              <td><strong>Waiver: </strong>Unless otherwise expressly stated in this Agreement, the failure to exercise or delay in exercising a right or remedy under this Agreement shall not constitute a waiver of the right or remedy or a waiver of any other rights or remedies, and no single or partial exercise of any right or remedy under this Agreement shall prevent any further exercise of the right or remedy or the exercise of any other right or remedy.             </td>
+          </tr>
+            <tr>
+              <td>24.5</td>
+              <td><strong>Survival of Provisions: </strong>The terms and provisions of  this  Agreement that  by  their  nature and  content  are  intended  to survive  the performance hereof by any or  all  Parties hereto shall so survive the completion and  termination of this Agreement.            </td>
+          </tr>
+            <tr>
+              <td>24.6</td>
+              <td><strong>Severability: </strong>If any provision of this Agreement is or becomes, in whole or in part, invalid or unenforceable but would be valid or enforceable if some part of that provision was deleted, that provision shall apply with such deletions as may be necessary to make it valid. If any Court/Tribunal of competent jurisdiction holds any of the provisions of this Agreement unlawful or otherwise ineffective, the remainder of this Agreement shall remain in full force and the unlawful or otherwise ineffective provision shall be substituted by a new provision reflecting the intent of the provision so substituted.            </td>
+          </tr>
+            <tr>
+              <td>24.7</td>
+              <td><strong>Non-Exclusivity: </strong>It is agreed and clarified that this Agreement is on a non-exclusive basis and the Parties are at liberty to enter into similar Agreements with others.           </td>
+          </tr>
+            <tr>
+              <td>24.8</td>
+              <td><strong>Entire Agreement: </strong>This Agreement constitutes the entire Agreement and understanding between the Parties, and supersedes any previous agreement or understanding or promise between the Parties, relating to the subject matter of this Agreement. All Schedules, Recitals and Annexure to this Agreement shall be an integral part of this Agreement and will be in full force and effect as though they were expressly set out in the body of this Agreement.</td>
+          </tr>
+            <tr>
+              <td>24.9</td>
+              <td><strong>Notices: </strong>All notices, requests, demands, waivers and other communications required or permitted to be given under the Agreement shall be in writing through certified or registered mail, courier, email, facsimile or telegram  to be sent to the following addresses:            </td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><p><strong>For PayU: <br/>
+                </strong>Attn: Legal Department (PayU India)<br/>
+                PayU Payments Private Limited<br/>
+                9th Floor, Bestech Business Tower, <br/>
+                Sector 48, Sohna Road, Gurgaon, <br/>
+              Haryana, Pin - 122002<strong></strong></p></td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><p><strong>For {!accObj.Legal_Name__c}:</strong><br/>
+                <strong>Attn: Legal Department</strong><br/>
+                <strong>
+                <apex:outputText value="{!IF(opAddress.Address_Line__c!=null && opAddress.Address_Line__c!='', opAddress.Address_Line__c + ', <br/>', null)}" escape="false"/>
+                <apex:outputText value="{!IF(opAddress.City__c!=null && opAddress.City__c!='', opAddress.City__c + ', <br/>', null)}" escape="false"/>
+                <apex:outputText value="{!IF(opAddress.State__c!=null && opAddress.State__c!='', opAddress.State__c + ', <br/>', null)}" escape="false"/>
+                <apex:outputText value="{!IF(opAddress.Country__c!=null && opAddress.Country__c!='', opAddress.Country__c, null)}" escape="false"/>
+                <apex:outputText value="{!IF(opAddress.Country__c!=null && opAddress.Country__c!='', ' - ', IF(opAddress.Pincode__c!=null && opAddress.Pincode__c!='', null, ' - '))}" escape="false"/>
+                <apex:outputText value="{!IF(opAddress.Pincode__c!=null && opAddress.Pincode__c!='', opAddress.Pincode__c, null)}" escape="false"/>
+                </strong><br/>
+                <strong>Email ID: {!IF(conSecondaryCon != null, conSecondaryCon.Email, null)}</strong><br/>
+                <strong>Contact Number: {!IF(conSecondaryCon.MobilePhone != null, conSecondaryCon.MobilePhone, null)} {!IF(AND(conSecondaryCon.MobilePhone != null,conSecondaryCon.Phone != null), ' / ' , null)} {!IF(conSecondaryCon.Phone != null, conSecondaryCon.Phone, null)}</strong></p>
+                </td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><p>Or, in each case, at such other address as may be specified in writing to the other Parties in accordance with the requirements of this Clause. All such notices, requests, demands, waivers and other communications shall be deemed duly given (i) if by personal delivery, on the day after such delivery, (ii) if by certified or registered mail, on the10th (tenth) day after the mailing thereof, (iii) if by courier service or similar service, on the day delivered, or (iv) if by email, facsimile or telegram, on the day following the day on which such email, facsimile or telegram was sent, provided that a copy is also sent by registered mail and, in the case of a facsimile, electronic confirmation of receipt is received. </p></td>
+          </tr>
+            <tr>
+              <td>24.10</td>
+              <td><strong>Amendment: </strong>This Agreement shall not be varied, amended or modified by any of the Parties in any manner whatsoever unless such variation, amendment or modification is mutually discussed  and agreed to in writing and duly executed by both the Parties.<strong></strong>               <ol>
+              </ol></td>
+          </tr>
+            <tr>
+              <td>24.11</td>
+              <td><strong>Counterparts: </strong>This Agreement may be executed in two or more counterparts, each of which, when executed and delivered, is an original, but all the counterparts taken together shall constitute one document.           </td>
+          </tr>
+            <tr>
+              <td height="100">&nbsp;</td>
+              <td>&nbsp;</td>
+          </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><p><strong>IN WITNESS WHEREOF</strong> the Parties hereto have executed this Agreement through their Authorized Signatories on the day, month and year first herein mentioned above: </p></td>
+          </tr>
+        </table>
+        <table align="center">
+            <tr>
+              <td><strong>
+                  <u>On Behalf of the  {!accObj.Legal_Name__c}</u>
+                
+              </strong></td>
+                <td width="100"></td>
+                <td><strong><u>On Behalf of PayU Payments Private Limited</u></strong></td>
+            </tr>
+            <tr>
+              <td><p style="height: 100px; border-bottom:1px dashed #333; margin-bottom: 0"></p>Authorized Signatory</td>
+                <td></td>
+              <td><p style="height: 100px; border-bottom:1px dashed #333; margin-bottom: 0"></p>Authorized Signatory</td>
+          </tr>
+            <tr>
+              <td><p align="left">Name: {!IF(conAuthSign != null, conAuthSign.Name, null)}</p>
+                                  Designation:{!IF(conAuthSign != null, conAuthSign.Designation__c, null)}</td>
+                <td></td>
+              <td><p align="left">Name:</p>
+Designation:</td>
+          </tr>
+        </table>
+        
+        <br/>
+        <br/>
+        <h3 class="text_center">SCHEDULE A CONSIDERATION</h3>
+        <table width="100%">
+          <tr>
+            <td><strong>Pricing Plan:</strong></td>
+          </tr>
+          <tr>
+            <td><table width="100%">
+                <td><table border="0" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse">
+                  <tr>
+                    <td colspan="5" style="border: 1px solid black"><strong>Title: TEST PLAN</strong></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="border: 1px solid black"><strong>Particulars</strong></td>
+                    <td width="30%" colspan="2" style="border: 1px solid black"><strong>Fees* (Exclusive of Applicable Taxes)</strong></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="border: 1px solid black">A) System Integration Fee (One time payable upfront at the time of Signing of the Services Agreement.)* </td>
+                    <td colspan="2" style="border: 1px solid black; font-size: 11px; vertical-align: top"> INR {!decSetupAmount}/- </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="border: 1px solid black">B) Annual Maintenance Charges (AMC)* </td>
+                    <td colspan="2" style="border: 1px solid black; font-size: 11px; vertical-align: top"> INR {!decAMCAmount}/- </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="border: 1px solid black">C) Security Deposit </td>
+                    <td colspan="2" style="border: 1px solid black; font-size: 11px; vertical-align: top"> INR {!decSecurityDeposit}/- </td>
+                  </tr>
+                  <tr >
+                    <td colspan="5" style="border: 1px solid black;">D) <strong>Transaction Discount Rate* (Per Transaction)</strong></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;" width="30%"><strong>Payment Gateway</strong></td>
+                    <td style="border: 1px solid black;" width="20%"><strong>Mode</strong></td>
+                    <td style="border: 1px solid black;" width="20%"><strong>Schemes</strong></td>
+                    <td style="border: 1px solid black;" width="15%"><strong>Rate (%)</strong></td>
+                    <td style="border: 1px solid black;" width="15%"><strong>Rate (Flate)</strong></td>
+                  </tr>
+                  
+                  <apex:outputPanel rendered="{!(listTDRs!=null && listTDRs.size>0)}">
+                      <apex:repeat value="{!listTDRs}" var="eachTDRs">
+                          <tr>
+                            <!--<td style="border: 1px solid black;">{!eachTDRs.Payment_Gateway__r.Payment_Gateway_Master__r.Name}</td>
+                            <td style="border: 1px solid black;">{!eachTDRs.Payment_Mode__r.Name}</td>
+                            <td style="border: 1px solid black;">{!eachTDRs.Scheme__c}</td>
+                            <td style="border: 1px solid black;">{!eachTDRs.Rate__c}%</td>
+                            <td style="border: 1px solid black;">INR {!eachTDRs.RateFlat__c}%</td>-->
+                          </tr>
+                      </apex:repeat>
+                  </apex:outputPanel>
+                  
+                  </table></td>
+                            </table>
+              <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse">
+              </table></td>
+          </tr>
+      </table>
+      
+        <p><strong>Terms and Conditions:</strong></p>
+              <ul>
+                <li>All compensation/consideration payments are in relation to Services received / to be received.</li>
+                <li>*The fees are exclusive of GST and any other applicable taxes/ levies, if any.</li>
+                <li>Any waiver of AMC shall be only for the first year commencing from Effective Date. </li>
+                <li>The above rates are for all banks available with PayU subject to approval from the respective bank.</li>
+                <li>Whenever PayU offers a new bank gateway, the commercials shall be mutually agreed in writing by an addendum or by way of e-mail exchange between the Authorized Signatories marked to amendment@payu.in</li>
+                <li>Merchant shall bear and be responsible and liable for the payment of all relevant taxes including GST in relation to the Customer Charge made by its Customer under this Agreement.</li>
+                <li>TDR is inclusive of transaction processing charges, technology service provider (TSP) fees and/ or any other value added services provided by PayU </li>
+            </ul>
+            <br/>
+            
+        
+        <!-- new-->
+        <table width="100%">
+        <tr>
+            <td>
+                <strong>Part II</strong><br/>
+                <strong>Mode of payment to Merchant:</strong><br/><br/>
+
+                <table width="100%" border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse; ">
+                    <tr>
+                        <td><strong>Particulars</strong></td>
+                        <td><strong>Details</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Bank Name </td>
+                      <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Bank_Name__c != null, lstBankAccDetail[0].Bank_Name__c, null)}</td>
+                  </tr>
+                <tr>
+                    <td>Bank Account No.</td>
+                    <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Account_Number__c != null, lstBankAccDetail[0].Account_Number__c, null)}</td>
+                    </tr>
+                    <tr>
+                    <td>Branch Address</td>
+                        <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Branch_Address__c != null, lstBankAccDetail[0].Branch_Address__c, null)}</td>
+                    </tr>
+                    <tr>
+                    <td>IFSC Code</td>
+                        <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].IFSC_Code__c != null, lstBankAccDetail[0].IFSC_Code__c, null)}</td>
+                    </tr>
+                    <tr>
+                    <td>Account Holder Name</td>
+                        <td>{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Account_Holder_Name__c != null, lstBankAccDetail[0].Account_Holder_Name__c, null)}</td>
+                        
+                    </tr>       
+        </table>
+            </td>
+            </tr>
+    </table>
+        
+        <br/>
+        <br/>
+        <h3 class="text_center">SCHEDULE B
+BUSINESS CATEGORY AND PURPOSE</h3><br/>
+        
+        <table width="100%">
+            <tr>
+                <td>
+                    <strong>PayU Services Product opted for: PayU</strong><br/><br/>
+                </td>
+            </tr>
+            <tr>
+            <td>
+                <strong>Business Category:  {!accObj.Business_Category__r.Name}</strong><br/><br/>
+            </td>
+            </tr>
+            <tr>
+            <td>
+                <strong>Business Sub – Category:  {!accObj.Sub_Category__r.Name}</strong><br/><br/>
+            </td>
+            </tr>
+        </table>
+
+        <br/>
+        <br/>
+        <h3 class="text_center">SCHEDULE C</h3>
+        <p>Banned list of Products referred to in this Agreement is as mentioned herein below:-</p>
+            <table width="100%">
+            <tr>
+                <td>1)</td>
+                <td>Securities including shares, bonds, debentures, share tips etc. and/or any other financial instruments/assets of any description.</td>
+            </tr>
+            <tr>
+                <td>2)</td>
+                <td>Living, dead creatures and/or the whole or any part of any animal which has been kept or preserved by any means   Endangered species, which includes plants, animals or other organisms (including product derivatives) in danger of extinction.  E.g Elephant Tusks, Rhino Horns, etc.</td>
+            </tr>
+            <tr>
+                <td>3)</td>
+                <td>Weapons which includes firearms, ammunition, knives, brass knuckles, gun parts, and other armaments.</td>
+            </tr>
+            <tr>
+                <td>4)</td>
+                <td>Tobacco and cigarettes which includes cigarettes, cigars, chewing tobacco, and related products.</td>
+            </tr>
+            <tr>
+                <td>5)</td>
+                <td>Alcohol which includes alcohol or alcoholic beverages such as beer, liquor, wine, or champagne.</td>
+            </tr>
+            <tr>
+                <td>6)</td>
+                <td>Drugs and drug paraphernalia which include illegal drugs and drug accessories, including herbal drugs like salvia and magic mushrooms. Psychotropic (mood altering) substances, narcotics, intoxicants of any description, medicines, palliative/curative substances. Prescription drugs or herbal drugs or any kind of online pharmacies which includes drugs or other products requiring a prescription by a licensed medical Practitioner. Herbal and Ayurvedic products.</td>
+            </tr>
+            <tr>
+                <td>7)</td>
+                <td>Religious items, including books, artifacts, etc. of any description or any other such item which is likely to affect the religious sentiments of any person.</td>
+            </tr>
+            <tr>
+                <td>8)</td>
+                <td>"Antiquities" and "Art Treasures".</td>
+            </tr>
+            <tr>
+                <td>9)</td>
+                <td>Adult goods and services and other sexually suggestive materials (including literature, imagery and other media); escort or prostitution services; Website access and/or Website memberships of pornography or illegal sites.</td>
+            </tr>
+            <tr>
+                <td>10)</td>
+                <td>Body parts which includes organs or other body parts.</td>
+            </tr>
+            <tr>
+                <td>11)</td>
+                <td>Child pornography which includes pornographic materials involving minors.</td>
+            </tr>
+            <tr>
+                <td>12)</td>
+                <td>Copyrighted media which includes unauthorized copies of books, music, movies, and other licensed or protected materials. Digital download/PDF (eBook, software) e.g.: Music/Movies: content downloaded from the internet and burned on CDs and sold as genuine.</td>
+            </tr>
+            <tr>
+                <td>13)</td>
+                <td>Copyrighted software which includes unauthorized copies of software, video games and other licensed or protected materials, including OEM or bundled Software. E.g.: Downloaded software copied/ burned on a marketable CD and sold as authentic/ trial versions of software downloaded and sold as genuine. Bundled software is software distributed with another product such as a piece of computer hardware or other electronic devices or a group of software packages which are sold together and are released/ authorized by Manufacturers Only. </td>
+            </tr>
+            <tr>
+                <td>14)</td>
+                <td>Counterfeit and unauthorized goods which includes replicas or imitations of designer goods; items without a celebrity endorsement that would normally require such an association; fake autographs, counterfeit stamps, and other potentially unauthorized goods.</td>
+            </tr>
+            <tr>
+                <td>15)</td>
+                <td>Endangered species which includes plants, animals or other organisms (including derivatives) in danger of extinction.</td>
+            </tr>
+            <tr>
+                <td>16)</td>
+                <td>Gaming/gambling which includes lottery tickets, contests, sports bets, memberships/ enrollment in online gambling sites, and related content.</td>
+            </tr>
+            <tr>
+                <td>17)</td>
+                <td>Hacking and cracking materials which includes manuals, how-to-do guides, information, or equipment enabling illegal access to software, servers, websites, or other protected property.</td>
+            </tr>
+            <tr>
+                <td>18)</td>
+                <td>Illegal goods which includes materials, products, or information promoting illegal goods or enabling illegal acts.</td>
+            </tr>
+            <tr>
+                <td>19)</td>
+                <td>Offensive goods which includes literature, products or other materials that:<br/><br/>
+                    <ol type="a">
+                        <li>Defame or slander any person or groups of people based on race, ethnicity, national origin, religion, sex, or other factors.</li>
+                        <li>Encourage or incite violent acts.</li>
+                        <li>Promote intolerance or hatred.</li>
+                        <li>Offensive goods, crime which includes crime scene photos or items, such as personal belongings, associated with criminals.</li>
+                    </ol>
+                </td>
+            </tr>
+            <tr>
+                <td>20)</td>
+                <td>Pyrotechnic devices, combustibles, corrosives and hazardous materials which includes explosives, fireworks and related goods; toxic, flammable, and radioactive materials and substances.</td>
+            </tr>
+            <tr>
+                <td>21)</td>
+                <td>Regulated goods which includes air bags; batteries containing mercury; Freon or similar substances/refrigerants; chemical/industrial solvents; government uniforms; car titles; license plates; police badges and law enforcement equipment; lock-picking devices; pesticides; postage meters; recalled items; slot machines; surveillance equipment; goods regulated by government or other agency specifications.</td>
+            </tr>
+            <tr>
+                <td>22)</td>
+                <td>Wholesale currency which includes discounted currencies or currency exchanges.</td>
+            </tr>
+            <tr>
+                <td>23)</td>
+                <td>Any product or service which is not in compliance with all applicable laws and regulations of India or international, whether federal, state, local.</td>
+            </tr>
+            <tr>
+                <td>24)</td>
+                <td>Businesses or websites that operate within the scope of laws which are not absolutely clear or are ambiguous in nature (e.g. Web-based telephony, Websites supplying medicines or controlled substances, websites that promise online match-making).</td>
+            </tr>
+            <tr>
+                <td>25)</td>
+                <td>Businesses banned/kept strict vigil on, by law (e.g. Betting &amp; Gambling/lotteries/sweepstakes &amp; games of chance).</td>
+            </tr>
+            <tr>
+                <td>26)</td>
+                <td>SIM cards.</td>
+            </tr>
+            <tr>
+                <td>27)</td>
+                <td>Selling of medical packages.</td>
+            </tr>
+            <tr>
+                <td>28)</td>
+                <td>Unauthorized Wallet services.</td>
+            </tr>
+            <tr>
+                <td>29)</td>
+                <td>Sites booking online appointments, websites selling VIA Call Centers.</td>
+            </tr>
+            <tr>
+                <td>30)</td>
+                <td>Technical Support Eg: Web Hosting, SEO, Web designing, and allied services.</td>
+            </tr>
+            <tr>
+                <td>31)</td>
+                <td>Pyramid/Referral Schemes Eg: A pyramid scheme/ referral scheme is an unsustainable business model that involves promising participants payment or services, primarily for enrolling other people into the scheme, rather than supplying any real investment or sale of products or services to the public.</td>
+            </tr>
+            <tr>
+                <td>32)</td>
+                <td>Marketing – Bulk Emails, Bulk SMS’s. Eg: mails/messages sent via mail servers and/or Bulk SMS service providers.</td>
+            </tr>
+            <tr>
+                <td>33)</td>
+                <td>Spy Camera’s and Likewise.</td>
+            </tr>
+            <tr>
+                <td>34)</td>
+                <td>Protein Supplements, Height increaser, Weight Loss/Gain, Impotency, Hair Loss/Hair Fall , Memory Enhancement, etc.</td>
+            </tr>
+            <tr>
+                <td>35)</td>
+                <td>Counseling and consulting services/market research - Online Consulting – Of any Kind.</td>
+            </tr>
+            <tr>
+                <td>36)</td>
+                <td>Recruitment classifieds/job portals. work-at-home jobs/information.</td>
+            </tr><tr>
+                <td>37)</td>
+                <td>Rental services for goods.</td>
+            </tr><tr>
+                <td>38)</td>
+                <td>Government IDs or documents which includes fake IDs, passports, diplomas, and noble titles.</td>
+            </tr>
+            <tr>
+                <td>39)</td>
+                <td>Drop-shipped merchandise. Eg: Drop shipping is a supply chain management technique in which the retailer does not keep goods in stock, but instead transfers customer orders and shipment details to either the manufacturer or a wholesaler, who then ships the goods directly to the customer.</td>
+            </tr>
+            <tr>
+                <td>40)</td>
+                <td>Portfolio design. Eg: Financial services like Mutual Funds, Stocks, IPOs, etc.</td>
+            </tr>
+        </table>
+        
+    </div>
+</body>
+</html>
+</apex:page>

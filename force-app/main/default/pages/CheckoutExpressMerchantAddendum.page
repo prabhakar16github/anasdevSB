@@ -1,0 +1,595 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" contentType="{!strContentType}" renderAs="PDF" cache="true"> <!-- contentType="application/msword#LtdLiabilityPartnership.doc" cache="true" -->
+
+    <html lang="en">
+        <head>
+            <title>
+                ADDENDUM 
+                
+            </title>
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
+            <style type="text/css">          
+                @page {
+                size: a4;
+                margin:20mm;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-right {
+                content:counter(page);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }          
+                
+                body {
+                font-family: 'Open Sans', sans-serif!important;
+                font-size: 13px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:0px;
+                padding-right:0px;
+                color:#000!important;
+                font-weight:normal!important;
+                }
+                
+                .table td 
+                {
+                border:1px #d5d5d5 solid!important;
+                color:#3a3a3a;
+                font-weight:normal!important;
+                font-size:13px;
+                }
+                
+                p{text-align: justify;}
+                
+                .cstm-tbl th{
+                
+                border:1px #ccc solid!important;
+                color:#000;
+                font-size:13px;
+                }
+                .cstm-table-2 th{
+                background-color:#557fc2;
+                color:#000;
+                border:1px #ccc solid!important;
+                font-size:13px;
+                }
+                .cstm-table-2 td{
+                border-color:#ccc!important;
+                }
+                .cnt-tbl-bor,
+                .cnt-tbl-bor td{
+                border-top:none!important;
+                border-right:none!important;
+                }
+                .cnt-tbl-bor td > div{
+                padding:4px 10px;
+                }
+                h1, h2, h3, p{
+                font-weight:normal!important;
+                }
+                .pdleft-large{
+                padding-left:15px;
+                }
+                .pdng-top-n{
+                padding-top:10px;
+                }
+                
+            </style>
+        </head>
+        <body>
+           
+                <h3 style="text-align:center; font-size:13px; font-weight:bold;">
+                    <strong>ADDENDUM </strong>
+                </h3>
+                <p>
+                    This addendum <strong>("Addendum")</strong> is entered into on  <apex:outputText value="{0, date, d MMMM','  yyyy}"> <apex:param value="{!TODAY()}" /> </apex:outputText>
+                    <strong>"Execution Date "</strong>) at New Delhi by and between:
+                </p>
+                <p>
+                    <strong>{!accObj.Legal_Name__c}</strong>,  a company incorporated and registered under the Companies Act, [1956/2013] having its registered
+                    office at <strong>{!IF(regAddress.Address_Line__c!=null,
+                    regAddress.Address_Line__c, null)},
+                    {!IF(regAddress.Pincode__c!=null, regAddress.Pincode__c,
+                    null)}</strong>  India (hereinafter referred to as <strong>“ Merchant ”</strong>,which expression, unless repugnant to the context,
+                    includes its successors-in-interest and assigns).
+                </p>
+                <p>
+                    <strong>AND</strong>
+                </p>
+                <p>
+                    <strong>PayU Payments Private Limited,</strong> a company incorporated and registered under the
+                    Companies Act, 1956 having its registered office at 801, 8th Floor, Empressa Building, 2nd Road, Khar
+                    West Mumbai, Mumbai - 400052, Maharashtra, India and corporate office at 9th Floor, Bestech
+                    Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana - 122003 (hereinafter referred to as  <strong>" PayU "</strong> which expression shall, unless it be repugnant to the context, include its successors-in-interest and
+                    permitted assigns).
+                </p>
+                <p>
+                    Merchant and PayU are hereinafter individually referred to as the <strong>"Party"</strong> and collectively as the <strong>"Parties"</strong>.
+                </p>
+                <p>
+                    <strong>WHEREAS</strong>
+                </p>
+                <ol style="list-style-type: upper-alpha;">
+                    <li style="text-align:justify;">Merchant and PayU have entered into a service agreement dated <apex:outputText value="{0, date, d MMMM','  yyyy}"> <apex:param value="{!TODAY()}" /> </apex:outputText> , as may be amended from
+                        time to time (the <strong>("Agreement")</strong>, wherein PayU provides the Merchant with aggregate online
+                        payment gateway solutions and services through its PayU platform on Merchant’s website
+                        and/or mobile applications <strong>(“PayU Services”)</strong>.<br/>
+                    </li>
+                    <li style="text-align:justify;">PayU has agreed to provide a product/service to the Merchant, either itself or through PayU
+                        Group (as defined hereinafter), as a value-added service to PayU Services that will enable a
+                        seamless checkout experience by offering customers/ users the option to store and retrieve their
+                        phone number and addresses stored with PayU, thereby enabling Merchants to achieve higher
+                        transaction success rates Group  <strong> (“Product”)</strong>).<br/>
+                    </li>
+                    <li style="text-align:justify;">Based on the mutual representations and warranties, the Parties have agreed to make necessary amendments in the Agreement in accordance with the terms and conditions mutually agreed and contained herein.<br/>
+                        
+                    </li>
+                </ol>
+                <p style="text-align: justify; padding-left:0px;">
+                    <strong>NOW THEREFORE, </strong>it is agreed between the Parties as follows:
+                </p>
+                <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; text-align:justify;">
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                           <strong>1.</strong> 
+                        </td>
+                        <td class="pdng-top-n">
+                            The Merchant agrees to avail the Product from PayU on the terms and conditions set out below:
+                        </td><br/>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="color:#000; font-weight:bold;">
+                          <strong>I.</strong>  
+                        </td>
+                        <td>
+                            <strong>SCOPE AND FEE </strong>
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top" class="pdng-top-n" >
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Product aims to provide the Merchant with a seamless checkout experience for its
+                                        users by offering the users the option to store and retrieve their phone number and
+                                        addresses stored with PayU Group.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        For the purpose of this Addendum,<strong>“PayU Group”</strong>  shall mean PayU, PayU India
+                                        Innovations Private Limited, and/or any other Affiliates of PayU.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (c)
+                                    </td>
+                                    <td  class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        In consideration for providing the Product, PayU shall charge the fee as per the rate stated in Annexure 1 of this Addendum, which shall be exclusive of all applicable taxes including GST. The fee charged by PayU may be revised by PayU from time to time by intimating the Merchant. The Merchant shall be liable to pay interest @ 18% per annum on the delayed invoice amount, in case of delay in payment. Taxes shall be paid by the Merchant in addition to the fee charged by PayU.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr><br/><br/><br/>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                           <strong>II.</strong> 
+                        </td>
+                        <td class="pdng-top-n">
+                            <strong>PAYU’S COVENANTS AND OBLIGATIONS </strong>  
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(a)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        PayU shall comply with all applicable laws with respect to providing the Product to the Merchant. 
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(b)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        PayU shall, at its own costs, undertake all investments and arrange infrastructure facilities including repair and upgradation thereof, required for rendering the Product. 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(c)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        PayU shall carry out its responsibilities in accordance with recognized professional standards and ethics and shall not hold itself out as an agent of the Merchant, in any manner whatsoever.
+                                        
+                                    </td><br/>
+                                </tr>
+                                
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="color:#000; font-weight:bold;">
+                          <strong> III.</strong>  
+                        </td>
+                        <td>
+                            <strong>CLIENT’S COVENANTS AND OBLIGATIONS </strong>
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        Merchant shall comply with the applicable laws, the terms of the Agreement and this Addendum. For the sake of clarity, the Client further understands that it may from time to time ask be required to obtain a specific consent from the user in the manner prescribed by the Applicable Laws for the data heads and purpose as mentioned in Annexure 2. The Client agrees to obtain such consent in the manner prescribed per the Applicable Laws and provide the necessary proof to PayU.                               
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        Merchant understands that in order for PayU to provide the Product to the Merchant, it is essential for the Merchant to seek the consent of the user to share the user’s information collected by or available with the Merchant with third parties for further processing, including for generation of insights and for marketing. The Merchant hereby acknowledges and confirms that the Merchant has obtained such consent or has such rights, in accordance with Applicable Laws, from the user to process the information of the user in the aforesaid manner. Pursuant thereto, the Merchant hereby agrees to transfer/share the customer related information with PayU, PayU Group, and/or PayU Group’s business partners (as the case may be), and/or allow/permit PayU, and/or PayU Group (as may be applicable) to obtain/process/retrieve the customer and transaction related information from Merchant and share it with PayU Group and PayU Group’s business partners for further processing, including for generation of insights and for marketing, to enable PayU, PayU Group, and/or PayU Group’s business partners (as the case may be) to process it in accordance with the Applicable Laws and their respective privacy policies to provide the Product to the Merchant.                                 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (c)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Merchant hereby understands, agrees and acknowledges that the information and data under this Addendum shall be received, collected, processed, shared and stored by PayU in accordance with PayU’s privacy policy, respective privacy policies of PayU Group and the Applicable laws, including for the purpose of enhancement of the Product for better user experience.                                 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (d)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Merchant agrees and understands that Product and any information in relation thereto shared by PayU and/or PayU Group under this Agreement, shall not be shared by the Merchant with a third party except after seeking an explicit consent from PayU and in accordance with Applicable Laws.
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (e)
+                                    </td>
+                                    <td  class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Merchant hereby further agrees to share the feedback of the Product for the purpose
+                                        of enhancing the products and services being provided by PayU and for marketing
+                                        purposes.                                   
+                                    </td><br/>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" style="color:#000; font-weight:bold;">
+                            <strong>IV.</strong>
+                        </td>
+                        <td>
+                            <strong>PRODUCT DISCLAIMERS </strong>
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (a)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        Except as specifically provided to the contrary in this agreement, the Merchant agrees that PayU and/or PayU Group has not made any representations or warranties to the Merchant concerning the specific quality of Product provided under this Agreement. 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (b)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Merchant acknowledges and understands that the Product is based on inter alia the information of users collected by PayU, PayU Group and/or PayU Group’s business partners, including while providing PayU Services and PayU is processing the available information in accordance with Applicable Laws and respective privacy policies to provide the Product to the Merchant. In the event the user withdraws its consent for processing of its information available with the Merchant, PayU, PayU Group and/or PayU Group’s business partners (as may be applicable), PayU will not be able to provide the Product to the Merchant and PayU and/or PayU Group shall bear no liability for the same.                               
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (c)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Merchant agrees that the Product is provided on an ‘as is’ basis and PayU and/or PayU Group further disclaims, without limitation, any warranty or guarantee of merchantability or fitness of the Products for a particular purpose, arising from course of performance, course of dealing, or from usages of trade of the Product.                               
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (d)
+                                    </td>
+                                    <td class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        The Merchant hereby acknowledges and confirms that the Product being provided by PayU and/or PayU Group would not be used as the sole basis for any business decision. PayU and/or PayU Group shall not be liable for any claim or any reason whatsoever arising out of the Merchant’s use of the Product.                                   
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td valign="top" class="pdng-top-n">
+                                        (e)
+                                    </td>
+                                    <td  class="pdleft-large pdng-top-n" style="padding-left: 10px;">
+                                        PayU shall not be liable for (i) any inaccuracy, incompleteness or other error in the Products (ii) any failure of the Products to achieve any particular result for the Merchant.                               
+                                    </td><br/>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                           <strong>V.</strong> 
+                        </td>
+                        <td class="pdng-top-n">
+                            <strong>INTELLECTUAL PROPERTY RIGHTS  </strong>  
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(a)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        The Parties hereby agree that all intellectual property rights or trade secrets in the Product including the data generated, processed or received under the Agreement and this Addendum shall vest solely with PayU and/or PayU Group (as the case may be). The Merchant is authorized to use the same for a limited purpose as specified under this Addendum. All such information, data, documents and/or records including any analytical data shared with or access whereof is provided, by PayU and/or PayU Group (as the case may be) to the Merchant, in pursuance to this Addendum shall solely remain the proprietary data or information of PayU and/or PayU Group (as the case may be), and the Merchant shall have no claim on such data or information being shared except as provided under this Addendum and all such claims are hereby irrevocably and unconditionally waived by the Merchant.                                        
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(b)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        Nothing contained herein shall authorize either Party to use, apply, invade or in any manner exploit or infringe the intellectual property rights of the other Party without prior written consent of the other Party, and the usage shall be in compliance with this Agreement and such approval and policies as may be notified from time to time. In addition, the Parties undertake not to infringe the intellectual property rights of any third party. This Clause shall survive any expiration or termination of the Agreement.                                
+                                    </td><br/>
+                                </tr>
+                                
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                           <strong>VI.</strong> 
+                        </td>
+                        <td class="pdng-top-n">
+                            <strong>INDEMNITY AND LIMITATION OF LIABILITY  </strong>  
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(a)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        The Merchant shall, at its own expense, without any delay and demur, indemnify,
+                                        defend and hold harmless PayU and PayU Group including their officers, directors and
+                                        agents from and against all actions, proceedings, claims (including third party claims),
+                                        liabilities (including statutory liability), penalties, demands and costs (including
+                                        without limitation, legal costs), awards, damages, losses and/or expenses however
+                                        arising directly or indirectly, including but not limited to, as a result of:<br/>
+                                        i) breach or non-performance by the Merchant of any of its undertakings, warranties,
+                                        covenants, declarations or obligations under this Addendum, including breach of
+                                        confidentiality and intellectual property rights obligations by the Merchant;<br/>
+                                        ii) any claim or proceeding brought by any third party against PayU and/or PayU Group
+                                        in respect of the Product;<br/>
+                                        iii) any act, deed, negligence, omission, misrepresentation, default, misconduct, non-
+                                        performance or fraud by the Merchant or any third party; or<br/>
+                                        iv) breach of law, rules regulations, legal requirements in force in India.
+                                                                         
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td valign="top">
+                                        <strong>(b)</strong>
+                                    </td>
+                                    <td class="pdleft-large" style="padding-left: 10px;">
+                                        Notwithstanding anything stated under this Addendum, the aggregate liability of PayU
+                                        and PayU Group to You from any cause whatsoever arising out of this Addendum shall
+                                        not in any event exceed the sum equivalent to the preceding one month’s aggregate fee
+                                        earned by PayU under this Addendum (if any) from the date of occurrence of such
+                                        liability. Neither PayU nor PayU Group shall be liable for any special, incidental,
+                                        indirect or consequential damages, damages from loss of profits or business
+                                        opportunities even if the Merchant shall have been advised in advance of the possibility
+                                        of such loss, cost or damages. In no event shall PayU and/or PayU Group be liable to
+                                        any third party. The indemnities under this Clause are in addition to and without
+                                        prejudice to the indemnities given elsewhere in this Addendum or the Agreement. The
+                                        indemnities provided herein shall survive the termination of the Agreement.                                
+                                    </td><br/>
+                                </tr>
+                                
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n" >
+                            <strong>2.</strong>
+                        </td>
+                        <td class="pdng-top-n" style="padding-left: 10px;">
+                            The Parties hereby agree that the term of this Addendum shall be valid from the Execution Date
+                            and shall be coextensive with the Agreement.
+                        </td><br/>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            <strong>3.</strong>
+                        </td>
+                        <td  class="pdng-top-n" style="padding-left: 10px;">
+                            For the avoidance of doubt, capitalized terms unless otherwise defined herein shall have the
+                            meaning ascribed to them in the Agreement. 
+                        </td><br/>
+                    </tr>
+                                       
+                    <tr>
+                        <td valign="top" class="pdng-top-n" >
+                            <strong>4.</strong>
+                        </td>
+                        <td  class="pdng-top-n" style="padding-left: 10px;">
+                            Subject to the amendments made under this Addendum, all the other terms and conditions of the
+                            Agreement shall remain unchanged, be binding on the Parties and shall remain in full force and
+                            effect, and apply mutatis mutandis to the Parties and this Addendum shall be governed by the
+                            provisions of the Agreement including provisions of notices, confidentiality, governing law,
+                            jurisdiction and arbitration as provisioned under the Agreement.
+                        </td><br/>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            <strong>5.</strong>
+                        </td>
+                        <td  class="pdng-top-n" style="padding-left: 10px;">
+                            This Addendum shall be deemed to be incorporated by reference in the Agreement and shall be
+                            deemed to be an integral part thereof with effect from the date of this Addendum hereof.
+                        </td><br/>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            <strong>6.</strong>
+                        </td>
+                        <td class="pdng-top-n" style="padding-left: 10px;">
+                            This Addendum shall be read in conjunction with the Agreement and be enforced as if the
+                            provisions of this Addendum were incorporated therein by way of addition.
+                        </td><br/>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            <strong>7.</strong>
+                        </td>
+                        <td class="pdng-top-n" style="padding-left: 10px;">
+                            It is further clarified that in the event of conflict between the terms of the Agreement, and this
+                            Addendum, the terms of this Addendum shall prevail.
+                        </td><br/>
+                    </tr>
+                    
+                    <tr>
+                        <td valign="top" class="pdng-top-n">
+                            <strong>8.</strong>
+                        </td>
+                        <td class="pdng-top-n" style="padding-left: 10px;">
+                            The Addendum may be executed in any number of originals or counterparts, each of which shall
+                            be deemed to be the original and all of which when taken together shall constitute one and the same
+                            agreement.                        
+                        </td><br/>
+                    </tr>
+                    
+                    
+                    
+                </table>
+                <br/>
+                <p><strong>IN WITNESS WHEREOF</strong> the Parties hereto have executed this Addendum through their authorized
+                    signatories on the Execution Date mentioned above: </p>
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%" align="left"><strong><u>For {!accObj.Legal_Name__c} </u></strong></td>
+                        <td width="50%"><strong><u>For PayU Payments Private Limited</u></strong></td>
+                        
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td> ______________________________</td>
+                        <td> ______________________________</td>
+                    </tr>
+                    <tr>
+                        <td>Signature</td>
+                        <td>Signature</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>Name:</td>
+                    </tr>
+                    <tr>
+                        <td>Designation:</td>
+                        <td>Designation:</td>
+                    </tr>
+                </table><br/>
+                
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse; font-weight: bold;page-break-before:always;">
+                    
+                    <tr>
+                        <td>
+                            <h4 style="text-align:center; font-weight:normal; font-size:20px; margin:0px; padding:0px;">
+                                ANNEXURE 1
+                            </h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="text-align:center; font-size:13px; font-weight:bold;">
+                                Pricing Schedule </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="font-size:16px; color:#666666; font-weight:bold; font-style:italic;">
+                                CheckOut Express shall be provided free of cost to the Merchant for the first 3 months, starting from
+                                [Start Date] and ending in [End Date].
+                                Post the completion of 3 months, charge of [●%] to be charged for each transaction which is over and
+                                above MDR.
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    
+                    
+                </table>
+             <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse; font-weight: bold;page-break-before:always;">
+                    
+                    <tr>
+                        <td>
+                            <h4 style="text-align:center; font-weight:normal; font-size:20px; margin:0px; padding:0px;">
+                                ANNEXURE 1
+                            </h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="text-align:center; font-size:13px; font-weight:bold;">
+                                Schedule of Data Heads and Purpose </div>
+                        </td>
+                    </tr>
+                
+               <table style="width: 97%; padding:0px; margin:5px; font-size: 12px; line-height:10px; page-break-before:auto;"  cellpadding="2" cellspacing="0" border="1">
+                    
+                    <tr>
+                        <td width="50%" class="">
+                            <p>
+                                <b><u>Data Head</u></b></p>
+                            
+                        </td>
+                        <td width="50%" class=""><u><b>Purpose</b></u></td>
+                    </tr>
+                    <tr>
+                        <td width="50%" class="">
+                            <p>
+                                <b>Bank Name</b>
+                            </p>
+                        </td>
+                        <td width="50%" class="">{!IF(lstBankAccDetail.size>0 && lstBankAccDetail[0].Bank_Name__c != null, lstBankAccDetail[0].Bank_Name__c, null)}</td>
+                    </tr>
+                </table>
+                    </table>
+            
+        </body>
+    </html>
+</apex:page>

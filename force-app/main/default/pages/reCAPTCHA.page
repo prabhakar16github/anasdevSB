@@ -1,0 +1,54 @@
+<apex:page showHeader="false" sidebar="false">
+    <head>
+        <title>reCAPTCHA</title>
+        <script type="text/javascript">
+            var verifiedCallback = function(response) {
+                parent.postMessage({
+                    action: "CAPTCHA_VERIFIED",
+                    token: response
+                }, '*');
+            };
+
+            var expiredCallback = function(response) {
+                parent.postMessage({
+                    action: "CAPTCHA_EXPIRED"
+                }, '*');
+            };
+            var onloadCallback = function() {            
+                grecaptcha.render('widget', {
+                    'sitekey' : '6LdY9_gkAAAAAL1Li05tJMypoQ3CELivBNayL25N',
+                    'callback' : verifiedCallback,
+                    'expired-callback': expiredCallback
+                });
+            };
+
+            // this function checks if captcha is active and send post message to parent to increse heigh of iframe
+            var observer = new MutationObserver(function (mutations) {
+                if (document.getElementById('captcha') && document.getElementById('captcha').nextSibling && document.getElementById('captcha').nextSibling.nextSibling) {
+                    const isCaptchaVisible = document.getElementById('captcha').nextSibling.nextSibling.style.visibility;
+                    if (isCaptchaVisible) {
+                        parent.postMessage({ 
+                            action: 'CAPTCHA_VISIBLE',
+                            captchaVisible: isCaptchaVisible
+                        }, '*');
+                    }
+                }
+            });
+            var config = { subtree: true, childList: true };
+            observer.observe(document.body, config);
+        </script>
+    </head>
+
+    <body style="display:block; margin: 0px;">
+        <!-- POSTs back to the page's URL upon submit with a g-recaptcha-response POST parameter. -->
+        <form action="?" method="POST">
+            <div id="widget" style="position:absolute transform: scale(0.74);transform-origin: 0 0;-webkit-transform:scale(0.74);-webkit-transform-origin: 0 0"></div>
+            <br/>
+            <input type="submit" value="Submit" style="display:none" />
+        </form>
+        <div id="captcha"></div>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async="true" defer="true">
+        </script>
+    </body>    
+</apex:page>

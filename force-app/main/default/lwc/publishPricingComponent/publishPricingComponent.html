@@ -438,16 +438,25 @@
                                                                 <td style="width:10%;text-align:left;">{payInner2.selectedOnusOffus}</td>
                                                                 <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.tdrAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrPercentage} disabled="true"></lightning-input></div></td>
                                                                 <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.convenienceAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.convenienceFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.conveniencePercentage} disabled="true"></lightning-input></div></td>
-                                                                <td style="width:11%;text-align:left;"><span class={payInner2.className}>
-                                                                    {payInner2.status} 
-                                                                    <template lwc:if={payInner2.showRejectionReason}>
-                                                                        i
-                                                                    </template>
-                                                                    <template lwc:if={payInner2.showRejectionReasonDelete}>
-                                                                        j
-                                                                    </template>
+                                                                <td style="width:11%;text-align:left;">
                                                                     
-                                                                </span></td>
+                                                                    <span class={payInner2.className}>
+                                                                        {payInner2.status} 
+                                                                        <template lwc:if={payInner2.showAP}>
+                                                                            &nbsp;(Awaiting Publishing)
+                                                                        </template>
+                                                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    
+                                                                    
+                                                                        <template lwc:if={payInner2.showRejectionReason}>
+                                                                            <lightning-helptext icon-name="utility:add" content={payInner2.rejectionReason}></lightning-helptext>
+                                                                        </template>
+                                                                        <template lwc:if={payInner2.showRejectionReasonDelete}>
+                                                                            <lightning-helptext icon-name="utility:delete" content={payInner2.rejectionReasonDelete}></lightning-helptext>
+                                                                        </template>
+                                                                    
+                                                                    
+                                                                </td>
                                                                 <td style="width:10%;text-align:left;">{payInner2.gatewayType}</td>
                                                                 <td style="width:6%;text-align:left;">
                                                                     <template if:true={payInner2.showChatter}>

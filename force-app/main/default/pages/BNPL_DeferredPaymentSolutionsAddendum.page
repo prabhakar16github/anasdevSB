@@ -1,0 +1,180 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+ <html> 
+           
+ 
+        <head>
+ 
+            <title>ADDENDUM FOR DEFERRED PAYMENT SOLUTIONS</title>
+ 
+            <style>
+ 
+                @page {
+ 
+                size: a4;
+ 
+               
+ 
+                @top-center {
+ 
+                content: "";
+ 
+                }
+                
+                 <!--@bottom-center {
+ 
+content: "Page " counter(page) " of " counter(pages);
+ 
+}-->
+ 
+                }
+ 
+                .page-break {
+ 
+                display:block;
+ 
+                page-break-after:always;
+ 
+                }
+ 
+                body {
+ 
+                font-family: Arial;
+ 
+                font-size: 14px;
+ 
+                line-height: 20px;
+ 
+                text-align:justify;
+ 
+                padding-left:30px;
+ 
+                padding-right:30px;
+ 
+                }
+ 
+                .table td{border:1px #000 solid!important;}
+ 
+                .footer {
+ 
+                position: fixed;
+ 
+                left: 0;
+ 
+                bottom: 0;
+ 
+                width: 100%;
+ 
+                height:1%;
+ 
+                background-color:white ;
+ 
+                color: red;
+ 
+                text-align: center;
+ 
+                }
+ 
+               
+ 
+                
+ 
+            </style>
+ 
+        </head>
+     
+     
+       <body>
+          <p style="text-align: center;"><span style="text-decoration: underline;"><strong>ADDENDUM FOR DEFERRED PAYMENT SOLUTIONS </strong></span></p>
+
+<p><strong>&nbsp;</strong></p>
+<p>Dear Merchant,</p>
+
+<p><strong>Re: <u>Availing Deferred Payment Solutions Enabled by PayU</u></strong></p>
+<p><strong><u>&nbsp;</u></strong></p>
+<table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td valign="top">1.</td>
+                        <td>We refer to the service agreement entered into between PayU Payments Private Limited (&quot;<strong>PayU</strong>&quot;) and You (&quot;<strong>Service Agreement</strong>&quot;) pursuant to which PayU has been providing aggregate online payment gateway solutions and services to You.</td> 
+                    </tr>
+                    <tr>
+                        <td valign="top">2.</td>
+                        <td>PayU has entered into certain arrangements with Partner Financial Institution(s) (as defined in the Deferred Payment Solutions T&amp;Cs) pursuant to which PayU can enable an option for Your Customers for availing Deferred Payment Solutions (as defined in the Deferred Payment Solutions T&amp;Cs) that are made available by the aforesaid Partner Financial Institution(s) for making payments against the purchase of Products.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">3.</td>
+                        <td >The aforesaid Deferred Payment Solutions by PayU are being offered to the Merchant in accordance with the terms and conditions available at <a href="https://payu.in/deferred-payment-solutions-tnc">https://payu.in/deferred-payment-&nbsp;solutions-tnc</a> ("<strong>Deferred Payment Solutions</strong><strong> T&amp;Cs</strong>").</td>   
+                    </tr>
+                    <tr>
+                        <td valign="top">4.</td>
+                        <td >The Merchant agrees to pay Service Fee to PayU for availing Deferred Payment Solutions, as advised by PayU from time to time and with regard to the two Deferred Payment Solutions as provided in the table below, the following Service Fee will be applicable:</td>   
+                    </tr>
+                    <table style="width:100%;width:100%;border-collapse: collapse;padding:100px" border= "1px solid black">
+                    <tr>
+                        <th style="padding :15px;">Particulars (  Deferred Payment Solutions )</th>
+                        <th style="padding :15px;">Service Fees (Exclusive of Applicable Taxes)</th> 
+                    </tr>
+                    <tr>
+                        <th style="padding :15px;">ICICI Bank PayLater </th>
+                        <th style="padding :15px;">2%</th>
+                    </tr>
+               <tr>
+                        <th style="padding :15px;">HDFC Flexipay </th>
+                        <th style="padding :15px;">2%</th>
+                    </tr>
+               
+                </table>
+                <p>&nbsp;</p>
+    
+    
+                    <tr>
+                        <td valign="top">5.</td>
+                        <td >The Merchant acknowledges and agrees that PayU may in future activate for the Merchant additional Deferred Payment Solutions provided by the Partner Financial Institutions by providing an intimation to the Merchant, at such Service Fee as may be advised by PayU. Upon activation of such additional Deferred Solutions, Deferred Payment Solutions T&amp;Cs will apply to the availment by the Merchant of such additional Deferred Solutions with effect from the date of activation. The Merchant will have the option to request PayU to deactivate such additional Deferred Payment Solutions by providing a prior written notice of 15 business days to PayU and upon receipt of such notice, PayU may deactivate such additional Deferred Payment Solutions without prejudice to any accrued interests or rights of PayU or of Partner Financial Institutions prior to such deactivation.</td>   
+                    </tr>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                
+                    <tr>
+                        <td valign="top">6.</td>
+                        <td >The Merchant confirms that the Service Fee shall be exclusive of all applicable taxes (direct and indirect) and that the Merchant will bear and be liable for the payment of all direct and indirect taxes including, without limitation, GST in relation to the Customer Charge.</td>   
+                    </tr>
+                
+                    <tr>
+                        <td valign="top">7.</td>
+                        <td >The Merchant confirms that the Deferred Payment Solutions shall not be offered by the Merchant against items such as repayment of credit card bills, purchase of mutual funds, purchase of insurance policies and such other Products as may be restricted by Partner Financial Institution(s) and/or PayU, as communicated by PayU to the Merchant from time to time. </td>   
+                    </tr>
+                
+                    <tr>
+                        <td valign="top">8.</td>
+                        <td >Upon your acceptance (provided on Merchant dashboard or otherwise), this communication will constitute an addendum to the Service Agreement and will be effective from the date hereof (<strong>"Deferred Payment Solutions Addendum" and "Deferred Payment Solutions Addendum Effective Date"</strong>, respectively) and shall remain in effect until the earlier of: (i) termination of the Service Agreement in accordance with the provisions of the Service Agreement; or (ii) termination of this Deferred Payment Solutions Addendum or discontinuance of any one or more of the Deferred Payment Solutions by PayU. </td>   
+                    </tr>
+                    <tr>
+                        <td valign="top">9.</td>
+                        <td >This Deferred Payment Solutions Addendum shall constitute a part of the Service Agreement and the terms hereof when read together with the Service Agreement shall constitute the entire agreement between PayU and the Merchant with respect to the Deferred Payment Solutions availed by the Merchant. Except to the extent as amended by this Deferred Payment Solutions Addendum, all other terms and conditions of the Service Agreement shall remain unchanged. </td>   
+                    </tr>
+                    <tr>
+                        <td valign="top">10.</td>
+                        <td >In the event of any inconsistency between the terms and conditions of this Deferred Payment Solutions Addendum and Deferred Payment Solutions T&amp;Cs, the former shall prevail.</td>   
+                    </tr>
+                    <tr>
+                        <td valign="top">11.</td>
+                        <td >Unless otherwise defined in this Deferred Payment Solutions Addendum, capitalized terms used herein shall have the meanings ascribed to them in the Deferred Payment Solutions T&amp;Cs and Service Agreement.</td>   
+                    </tr>
+    
+                    <p><strong>For PayU Payments Private Limited:</strong></p>
+
+<p>Executed/Accepted online by &lt;Authorised Signatory for and on behalf of ______<em>Merchant&rsquo;s Company name</em>____ &gt;</p>
+<p><strong>For Merchant:</strong></p>
+<p>We hereby agree to the terms set out in this Addendum:</p>
+<p>___________________________________</p>
+<p><strong>Validly accepted/executed online</strong></p>
+<p>Executed online by: &lt;Authorised Signatory for and on behalf of ______<em>Merchant&rsquo;s name</em>____ &gt;</p>
+<p>Date: &nbsp; &nbsp;______________________</p>
+    
+                    
+           </table>
+
+
+       </body>       
+ 
+    </html>
+</apex:page>

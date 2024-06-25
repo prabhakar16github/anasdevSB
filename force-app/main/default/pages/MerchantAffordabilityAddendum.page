@@ -1,0 +1,181 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html> 
+        
+        
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            
+            <title>AFFORDABILITY SERVICES ADDENDUM</title>
+            
+            <style>
+                
+                @page {
+                
+                size: a4;
+                
+                
+                
+                @top-center {
+                
+                content: "";
+                
+                }
+                
+                <!--@bottom-center {
+
+content: "Page " counter(page) " of " counter(pages);
+
+}-->
+                
+                }
+                
+                .page-break {
+                
+                display:block;
+                
+                page-break-after:always;
+                
+                }
+                
+                body {
+                
+                font-family: Arial;
+                
+                font-size: 14px;
+                
+                line-height: 20px;
+                
+                text-align:justify;
+                
+                padding-left:30px;
+                
+                padding-right:30px;
+                
+                }
+                
+                .table td{border:1px #000 solid!important;}
+                
+                .footer {
+                
+                position: fixed;
+                
+                left: 0;
+                
+                bottom: 0;
+                
+                width: 100%;
+                
+                height:1%;
+                
+                background-color:white ;
+                
+                color: red;
+                
+                text-align: center;
+                
+                }
+                
+                h1 {text-align: center;
+                font-size: 14px;}
+                
+                
+                
+                
+                
+            </style>
+            
+        </head>
+        
+        
+        <body>
+            <p style="text-align: center;"><strong><u>AFFORDABILITY SERVICES ADDENDUM</u></strong></p>
+            <p><strong>Date : <apex:outputText value="{0, date, d MMMM','  yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> </strong></p>
+            <p><strong>To : </strong></p>
+            <p>{!accObj.Legal_Name__c},</p>
+            <p>{!regAddress.Address_Line__c},{!regAddress.City__c},{!regAddress.State__c},{!regAddress.Country__c}-{!regAddress.Pincode__c} </p>
+            <p>Kind Attention: </p>
+            <p>Dear Merchant,</p>
+            <p>
+                <strong><u>Subject: Affordability Services offered by PayU</u></strong>
+            </p>
+            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                <tr>
+                    <td valign="top">1.</td>
+                    <td>We refer to the service agreement and subsequent addendums (if any) entered into between PayU Payments Private Limited (<strong>"PayU"</strong>) and You in connection with the provision of, amongst others, online payments aggregation solutions and/or offline payment collection and settlement services  (<strong>"Service Agreement"</strong>) whereby Merchant's customers are provided certain options to make payments in relation to the goods and/or service provided by the Merchant through  online merchant sites and/or offline merchant outlets in India (<strong>"Merchant Establishment(s)"</strong>).</td> 
+                </tr>
+                <tr>
+                    <td valign="top">2.</td>
+                    <td>Upon the Merchant's request, PayU has agreed to make available, with effect from the date mentioned above  (<strong>"Addendum Effective Date"</strong>), the Affordability Services of PayU and running of marketing and promotional programmes in which certain discounts, cashbacks and/or offers (<strong>"Campaign Promotions"</strong>) may be made available to the Campaign Customers of the Merchant undertaking transactions on Campaign Channels as per the Campaign Terms set out in each Campaign Order and in accordance with the terms of this addendum with regard to the respective Campaign Payment Mode. The understanding between PayU and the Merchant with respect to the said Affordability Services is as captured in this addendum (<strong>"Affordability Addendum"</strong>) and this Affordability Addendum read with the Service Agreement and the relevant Campaign Order shall constitute the entire agreement between the Parties with respect to the subject matter of this Affordability Addendum (<strong>"Affordability Agreement"</strong>).</td>
+                </tr>
+                <tr>
+                    <td valign="top">3.</td>
+                    <td >All capitalised terms used but not defined in this Affordability Addendum shall have the respective meanings assigned to such terms either in the Service Agreement or in the terms and conditions, as applicable in terms of this Affordability Addendum, as available on [<strong><a href="https://payu.in/affordability-services-terms-and-conditions/">https://payu.in/affordability-services-terms-and-conditions/</a></strong>] (<strong>"Affordability Terms and Conditions"</strong>) which Affordability Terms and Conditions shall be deemed to be incorporated in this Affordability Addendum by reference.</td>   
+                </tr>
+                
+                <tr>
+                    <td valign="top">4.</td>
+                    <td >In connection with the Affordability Services, additional service fees in the nature of: (a) subscription fee for the Offers Engine (<strong>"Affordability Subscription Fee"</strong>) and (b) a transaction service fee on a per Transaction basis (<strong>"Transaction Service Fee"</strong> or <strong>"TSF"</strong>), shall be charged by PayU (collectively <strong>"Affordability Service Fee"</strong>), as described below:</td>   
+                </tr>
+                <br/><br/>
+                <tr>
+                    <td valign="top">(i)</td>
+                    <td >Merchant shall make the following payments to PayU for Affordability Services:</td>   
+                </tr>
+                <br/><br/><br/><br/>
+                
+            </table>
+            
+            <table style="width:100%;width:100%;border-collapse: collapse;padding:100px" border= "1px solid black">
+                <tr>
+                    <th style="padding :15px;">Description</th>
+                    <th style="padding :15px;">Affordability Service Fee</th>
+                    <th style="padding :15px;">Frequency</th> 
+                </tr>
+                <tr>
+                    <td style="padding :15px;">Affordability Subscription Fee for the Offers Engine</td>
+                    <td style="padding :15px;">INR {!oppObj.Offer_Engine_Commercial__c}</td>
+                    <td style="padding :15px;"> {!oppObj.Merchant_Affordability_Frequency__c} </td>
+                </tr>  
+                <tr>
+                    <td style="padding :15px;">Transaction Service Fees or TSF</td>
+                    <td style="padding :15px;">{!oppObj.Rate_Merchant_Affordability__c}</td>
+                    <td style="padding :15px;"> Per Transaction processed through the Offers Engine. </td>
+                </tr>
+            </table>
+            <p>
+                
+            </p>
+            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                <tr>
+                    <td valign="top">(ii)</td>
+                    <td>The aforesaid Affordability Service Fee is exclusive of all applicable taxes, including without limitation, GST.</td> 
+                </tr>
+                <tr>
+                    <td valign="top">5.</td>
+                    <td>The Affordability Subscription Fee will be charged to You in accordance with the manner as described above. The TSF will be charged to You based on each Transaction processed through the Offers Engine. The above Affordability Service Fee, accordingly, shall be in addition to any Service Fee or TDR, as the case may be, agreed by You in terms of the Service Agreement and/or any addendums to the same executed between PayU and You. You confirm that unless otherwise agreed in writing by PayU, the Affordability Service Fee shall be deducted by PayU from the Customer Charge before carrying out the settlement of the Settlement Amounts due to You. </td> 
+                </tr>
+                <tr>
+                    <td valign="top">6.</td>
+                    <td><strong>Termination of Addendum: </strong>This Affordability Addendum shall remain in effect until the earlier of: (i) termination of the Service Agreement, or (ii) termination of this Affordability Addendum, in accordance with the provisions of the Service Agreement read with this Affordability Addendum. PayU shall not be responsible for providing any services under this Addendum after the date of termination of this Addendum, except for honouring any Campaign benefits which were availed by any Campaign Customers prior to the termination hereof. The Merchant shall also honour all its obligations including the payment obligations towards PayU, for such Campaigns.</td> 
+                </tr>
+                <tr>
+                    <td valign="top">7.</td>
+                    <td><strong>Termination of Campaign: </strong>Any Campaign may be terminated in accordance with the terms of the Campaign Terms as described in the applicable Campaign Order. In case no such termination is provided for under the relevant Campaign Terms or under the applicable Campaign Order, the Campaign may be terminated solely by PayU by giving 7 (seven) days' notice to the Merchant.</td> 
+                </tr>
+            </table>
+            
+            <p>Yours sincerely,</p>
+            <p>For PayU Payments Private Limited</p>
+            <br/>
+            <p>[_______]</p>
+            <p>Authorized Signatory </p>
+            <p>Name and Designation:</p>
+            <br/>
+            <p>Accepted for and on behalf of : {!accObj.Legal_Name__c}</p>
+            <br/>
+            <p>Authorized Signatory </p>
+            <p>Name and Designation:</p>
+            <p>Date:</p>
+         </body>       
+    </html>
+</apex:page>

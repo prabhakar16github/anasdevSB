@@ -1,0 +1,74 @@
+<apex:page standardController="Case" recordSetVar="Cases" extensions="ChangeCaseStatus" showHeader="false"
+           lightningStylesheets="true" tabStyle="Case" >
+    <apex:includeLightning />
+    
+    <div style="width: 70%;height: 100px;margin-left: 15%;margin-right: 15%;" id="changeStatusComp" />
+    
+    <script>
+    function checkRecordSelection(){
+        
+        console.log('{!Cases }');
+        var caseLength = '{!mySelectedSize}';
+        if(caseLength==0){
+            alert('Please select atleast one Case record');
+            window.history.back();
+        }
+    }
+    window.onload=checkRecordSelection;
+    
+    
+    $Lightning.use("c:ChangeStatusLightningApp", function() {
+        $Lightning.createComponent("c:ChangeStatusLightningComp",
+                                   {
+                                       selectedCaseSize : '{!mySelectedSize}',
+                                   },
+                                   "changeStatusComp",
+                                   function(cmp) {
+                                       console.log('Component created, do something cool here');
+                                   });
+    });
+    
+    </script>
+    <!--
+    <apex:define name="body">
+        <center>
+            <apex:form id="ChangeStatus">
+                <apex:pageMessages ></apex:pageMessages>
+                <apex:actionStatus startText="requesting..." id="myStatus">
+                </apex:actionStatus>
+                <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="1" styleClass="topPanelContainer">
+                    <apex:pageMessage summary="Selected Collection Size: {!mySelectedSize}" severity="info" id="owner"/>
+                    
+                    
+                    <apex:pageBlock >
+                        <apex:pageBlockSection >
+                            <apex:selectList value="{!case.status}"> Case status is
+                                <apex:selectOptions value="{!Casestatus}"/>
+                            </apex:selectList>
+                            <apex:inputField value="{!Case.Comments}"/>  
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection > 
+                            <apex:pageBlockSectionItem rendered="{IF({!$User.Id}contains{$Label.massConversionofUsers}',true,false)}">
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                        <apex:inputField value="{!case.Problem_area_ETC__c}"/>
+                        <apex:inputField value="{!case.Details_ETC__c}"/>
+                        <apex:pageBlockSection rendered="{!$Profile.Name =='System Administrator'}"> <!-- change profile to merchant maintenance-->
+                     <!--       <apex:selectList value="{!case.Problem_area_ETC__c}" size="1" multiselect="false" required="true">
+                                <apex:selectOptions value="{!caseProblemArea}"/>
+                            </apex:selectList>
+                            <apex:selectList value="{!case.Details_ETC__c}" size="1" multiselect="false" required="true">
+                                <apex:selectOptions value="{!caseDetails}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSection>
+                        
+                        <div style="text-align: center;margin-top:30px">
+                            <apex:commandButton action="{!Save}" value="Save" />
+                            <apex:commandButton value="Cancel" action="{!cancel}" />
+                        </div>
+                    </apex:pageBlock>
+                </apex:panelGrid>
+            </apex:form>
+        </center>
+    </apex:define>-->
+</apex:page>

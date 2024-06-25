@@ -24,6 +24,10 @@ global class BulkPostResponseAPI {
                             Boolean deleteContext = false;
                             Boolean checkerRejectDeleteRequest = false;
                             Boolean checkerApproveDeleteRequest = false;
+
+                            Set<String> overrideRequiredProcesses = new Set<String>{'SaveBulkRules-CheckerFalseActionSave','SaveBulkRules-CheckerTrueActionApprove','SaveBulkRules-CheckerTrueActionReject'};
+                            // Set<String> overrideNotRequiredProcesses = new Set<String>{'SaveBulkRules-CheckerTrueActionRejectDelete','DeleteBulkRules-CheckerFalseActionDelete','DeleteBulkRules-CheckerTrueActionApproveDelete','DeleteBulkRules-CheckerTrueActionReject'};
+
                             if(listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionRejectDelete') deleteContext = true;
                             else if(listPublishPricingDetails[0].Process__c == 'DeleteBulkRules-CheckerTrueActionReject') checkerRejectDeleteRequest = true;
                             else if(listPublishPricingDetails[0].Process__c == 'DeleteBulkRules-CheckerTrueActionApproveDelete') checkerApproveDeleteRequest = true;
@@ -51,7 +55,12 @@ global class BulkPostResponseAPI {
                                     else if(checkerRejectDeleteRequest){
                                         pricing.Deleted__c = false;
                                     }
-                                    
+                                    if(listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionApprove' || listPublishPricingDetails[0].Process__c == 'DeleteBulkRules-CheckerTrueActionApproveDelete'){
+                                        pricing.Banking_Ops_Status__c = 'Checker Approved';
+                                    }
+                                    if(listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionReject' || listPublishPricingDetails[0].Process__c == 'DeleteBulkRules-CheckerTrueActionReject'){
+                                        pricing.Banking_Ops_Status__c = 'Checker Rejected';
+                                    }
                                     
                                    	pricing.Version_Number__c = Integer.valueOf(mapInner2KeyToValue.get('versionNumber'));
                                     
@@ -71,6 +80,7 @@ global class BulkPostResponseAPI {
                                             }else{
                                                 pricing.Temp_Id_TDR__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')); 
                                             }
+                                            pricing.Banking_Ops_Status__c = 'Pending with Checker';
                                             
                                         }
                                         if(checkerApproveDeleteRequest){
@@ -92,11 +102,25 @@ global class BulkPostResponseAPI {
                                             }else{
                                                 pricing.Temp_Id_Conv__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId'));   
                                             }
+                                            pricing.Banking_Ops_Status__c = 'Pending with Checker';
                                         } 
 
                                         if(checkerApproveDeleteRequest){
                                             pricing.Rule_Id_Conv__c = '';
                                         }
+                                    }
+                                }else if(String.valueOf(mapInnerKeyToValue.get('code')) != '2000' && mapInner2KeyToValue.get('sfId') != NULL){
+                                    Pricing__c pricing = new Pricing__c();
+                                    pricing.Id = String.valueOf(mapInner2KeyToValue.get('sfId')).split('#')[0];
+                                    if(mapIdToPricing.containsKey(pricing.Id)) pricing = mapIdToPricing.get(pricing.Id);
+                                    else mapIdToPricing.put(pricing.Id,pricing);
+                                    
+                                    pricing.Error_Message__c = mapInnerKeyToValue.get('message') != NULL ? (String)mapInnerKeyToValue.get('message') : '';
+                                    if(overrideRequiredProcesses.contains(listPublishPricingDetails[0].Process__c)){
+                                        pricing.Banking_Ops_Status__c = 'Error(Override Required)';
+                                    }else{
+                                        pricing.Banking_Ops_Status__c = 'Error(Override Not Required)';
+                                        pricing.Deleted__c = false;
                                     }
                                 }
                             }  

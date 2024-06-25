@@ -126,6 +126,19 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
                                        // if(String.isNotBlank(price.Rule_Id__c)){} setRuleIds.add(price.Rule_Id__c);
                                         //if(String.isNotBlank(price.Rule_Id_Conv__c)) setRuleIds.add(price.Rule_Id_Conv__c);
                                     }
+            if(!setPricingWithRuleId.isEmpty()){
+                List<Pricing__c> listPricing = new List<Pricing__c>();
+                for(String pricingId : setPricingWithRuleId){
+                    Pricing__c pricingIns = new Pricing__c();
+                    pricingIns.Id = pricingId;
+                    pricingIns.Deleted__c = false;
+                    pricingIns.Banking_Ops_Status__c = 'Rejected';
+                    listPricing.add(pricingIns);
+                }
+                if(!listPricing.isEmpty()){
+                    update listPricing;
+                }
+            }
             /*if(setRuleIds.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
                 String ruleIds = '[';
                 for(String ruleId : setRuleIds) {
@@ -136,10 +149,11 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
                 RemovePricingFromTreasuryNew.deletePricing(ruleIds,commercialId,opportunityId);		    
     
             }*/
-            if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
+            /* commented to avoid make a delete request in temp table, commented by Prabhakar */
+            /* if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)) {
                 System.debug('>>>>>>calling PublishPricingToTreasuryTempTable from PublishPricingToTreasuryTempTableReject finish>>>>'+setPricingWithRuleId);
                 Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),50);   
-            }
+            } */
         }	    
     }
     /****************************Finish Method End*****************************************/

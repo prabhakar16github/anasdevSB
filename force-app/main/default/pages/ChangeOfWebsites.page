@@ -1,0 +1,73 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>Change of Websites</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+                .center-text{align:center;}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <p align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>
+                <p>To,</p>
+                <p style="text-align:left;">
+                    <strong>PayU Payments Private Limited</strong>
+                    <br/>9th Floor, Bestech Business Tower, Sector 48, 
+                    <br/> Sohna Road, Gurgaon, Haryana, Pin - 122002
+                    <br/>
+                </p>
+                <p>Dear Sir,</p>
+                <p><strong><u>Subject: Change of Merchant Website.</u></strong></p>
+                <p>We, <strong>{!accObj.Legal_Name__c}</strong> a <strong>{!accObj.Business_Entity__r.Name}</strong> entered into a service agreement/ an agreement vide an account opening form dated <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> ("Service Agreement")</strong> with PayU Payments Private Limited <strong>("PayU")</strong> in accordance to which PayU provides us with aggregate online payment gateway solutions and services through its 'PayU' platform <strong>("PayU Services")</strong> for our website domain: <strong>{!oppObj.Website__c}</strong></p>
+                <p>We would like to inform you that we have changed our Website domain from:</p>
+                <table width="80%" cellpadding="0" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong>Old Website Domain</strong></td>
+                        <td width="50%">{!IF(oppParentObj.Id != null && oppParentObj.Website__c != null, oppParentObj.Website__c, null)}</td>
+                    </tr>
+                </table>
+                <p>To:</p>
+                <table width="80%" cellpadding="0" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong>New Website Domain</strong></td>
+                        <td width="50%">{!oppObj.Website__c}</td>
+                    </tr>
+                </table>
+                <p>We, request PayU to register and provide the PayU Services with respect to the new website domain herein mentioned above and discontinue all PayU Services with respect to Old website domain. We hereby confirm that the above mentioned website domain is owned and controlled by <strong>{!accObj.Legal_Name__c}</strong></p>
+                <p>We, understand that PayU may require certain documents in order to provide PayU Services with respect to the new website domain and agree to provide the same as and when requested by PayU. We further understand that the change of the website domain to the Service Agreement and registration of the same will be subject to the approval by PayU. In addition, we acknowledge PayU will have to integrate the new websites domain to PayU's Software Application and this may take up to 5 Business Days from receipt of this letter and all such documents requested by PayU.</p>
+                <p>We, recognize that the submission of this letter will constitute as an amendment to the Service Agreement and the PayU Services provided on the new website will be governed by the terms and conditions of the Services Agreement. We further confirm that the settlement account for the new website domain remains the same as was for the old website domain.</p>
+                <p>We hereby confirm that there has been no change in the legal name, registered office and/or constitution of <strong>{!accObj.Legal_Name__c}</strong> and/or the Authorized Signatory since the last application submitted to PayU.</p>
+                
+                <p>Best Regards,</p><br/>
+                <p style="text-align:left;">__________________
+                    <br/><strong>Name:</strong> 
+                    <br/><strong>Designation:</strong>
+                    <br/><strong>(Authorized Signatory)</strong>
+                </p>
+            </div>
+        </body>
+    </html>
+</apex:page>
