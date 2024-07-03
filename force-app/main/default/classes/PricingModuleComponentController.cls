@@ -357,14 +357,14 @@ public class PricingModuleComponentController {
                         }
                     }
                     
-                    for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
+                    /* for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
                         FallbackCharges fcObj = new FallbackCharges();
                         fcObj.Id = fc.Id;
                         fcObj.paymentModeName = fc.Payment_Mode__c;
                         fcObj.flatFee = fc.Flat_Fee__c != NULL ? String.valueOf(fc.Flat_Fee__c) : '';
                         fcObj.percentage = fc.Percentage__c != NULL ? String.valueOf(fc.Percentage__c) : '';
                         listFallbackCharges.add(fcObj);
-                    }
+                    } */
                     Integer count = 1;
                     for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
                         PlatformFee pfObj = new PlatformFee();
@@ -597,7 +597,7 @@ using get api treasury we will get the data if data available then  insert other
                                                             Fee_Model__c,Transaction_Type__c,TDR__c,TDR_Amount__c,TDR_Flat_Fee__c,Convenience__c,
                                                             Convenience_Amount__c,Convenience_Flat_Fee__c,Rule_Id__c,Rule_Id_Conv__c,
                                                             Temp_Id_TDR__c,Temp_Id_Conv__c,Version_Number__c, Banking_Ops_Status__c,Added_By__c,
-                                                            Is_Active__c  FROM Pricing__c WHERE Commercial2__c =: commercialId AND (Deleted__c = false OR 
+                                                            Is_Active__c  FROM Pricing__c WHERE Commercial2__c =: commercialId AND Invisible__c = false AND (Deleted__c = false OR 
                                                                                                                                     (Deleted__c = true AND (Temp_Id_TDR__c = '' OR Temp_Id_Conv__c = '') ))]){
                                                                                                                                         if(pricingRecord.Rule_Id__c != NULL)
                                                                                                                                             mapOfExistingPricingData.put(pricingRecord.Rule_Id__c,pricingRecord);
@@ -639,12 +639,19 @@ using get api treasury we will get the data if data available then  insert other
                                            pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
                                            mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
                                        }
-                                    if(String.isNotBlank(pricingExist.Banking_Ops_Status__c)  && pricingExist.Banking_Ops_Status__c.contains('Approved') &&
-                                     pricingExist.Version_Number__c <  Integer.valueOf(tranformDataTreasury.versionNumber) &&
-                                    (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)){
-                                        		pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
+                                    else if(String.isNotBlank(pricingExist.Banking_Ops_Status__c)  && pricingExist.Banking_Ops_Status__c.contains('Approved') &&
+                                            pricingExist.Version_Number__c <  Integer.valueOf(tranformDataTreasury.versionNumber) &&
+                                            (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)){
+                                                pricingExist.Banking_Ops_Status__c = 'Checker Approved';
+                                                pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
                                                 mapOfpricingToUPdate.put(pricingExist.Id,pricingExist);
-                                    }
+                                            }
+                                    else if(String.isNotBlank(pricingExist.Banking_Ops_Status__c) &&  (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)
+                                            && pricingExist.Banking_Ops_Status__c == 'Error(Override Required)'){
+                                                pricingExist.Banking_Ops_Status__c = 'Checker Approved';
+                                                pricingExist.Version_Number__c  = Decimal.valueOf(tranformDataTreasury.versionNumber);
+                                                mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
+                                            }
                                 }
                                 else{
                                     Pricing__c pricingExist = new Pricing__c();
@@ -686,7 +693,7 @@ using get api treasury we will get the data if data available then  insert other
                             }
                             
                             if((newPricingRecordList !=NULL && newPricingRecordList.size()>0) || mapOfpricingToUPdate !=NULL && mapOfpricingToUPdate.size()>0){
-                                if(newPricingRecordList !=NULL)
+                                if(!newPricingRecordList.isEmpty() && newPricingRecordList !=NULL)
                                     insert newPricingRecordList;
                                 if(mapOfpricingToUPdate !=null)
                                     update mapOfpricingToUPdate.values();
@@ -697,10 +704,14 @@ using get api treasury we will get the data if data available then  insert other
                                     pulishPricingDetails.Process__c = tranformData.publishDetails.process ;
                                     pulishPricingDetails.Status__c =  tranformData.publishDetails.status;                             
                                     pulishPricingDetails.Message__c = tranformData.publishDetails.message;
-                                    pulishPricingDetails.Response_Body__c = tranformData.publishDetails.responseBody;
                                     pulishPricingDetails.Request_Body__c =  tranformData.publishDetails.requestBody ;
-                                    pulishPricingDetails.Request_Count__c = tranformData.publishDetails.requestCount ;
-                                    //Insert pulishPricingDetails;  
+                                    pulishPricingDetails.Request_Count__c = GetApiTreasuryDataController.countOfRecords ;
+                                    Insert pulishPricingDetails;  
+                                    Attachment att = new Attachment();
+                                    att.Name = 'Response Body';
+                                    att.ParentId = pulishPricingDetails.Id;
+                                    att.Body = Blob.valueOf(tranformData.publishDetails.responseBody);
+                                    Insert att;
                                 }
                             }
                         }
@@ -1147,13 +1158,13 @@ using get api treasury we will get the data if data available then  insert other
                 insert commercial;
                 commercialId = commercial.Id;
                 
-                List<Fallback_Charge__c> listFallbackCharges = new List<Fallback_Charge__c>();
+                /* List<Fallback_Charge__c> listFallbackCharges = new List<Fallback_Charge__c>();
                 for(Fallback_Payment_Mode__c  pm : [SELECT Id,Name FROM Fallback_Payment_Mode__c]) {
                     Fallback_Charge__c fc = new Fallback_Charge__c();
                     fc.Payment_Mode__c = pm.Name;
                     fc.Commercial__c = commercialId;
                     listFallbackCharges.add(fc);
-                }
+                } */
                 
                 //if(listFallbackCharges.size() > 0) insert listFallbackCharges;
                 
@@ -1199,14 +1210,14 @@ using get api treasury we will get the data if data available then  insert other
                 }
             }
             
-            for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
+            /* for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
                 FallbackCharges fcObj = new FallbackCharges();
                 fcObj.Id = fc.Id;
                 fcObj.paymentModeName = fc.Payment_Mode__c;
                 fcObj.flatFee = fc.Flat_Fee__c != NULL ? String.valueOf(fc.Flat_Fee__c) : '';
                 fcObj.percentage = fc.Percentage__c != NULL ? String.valueOf(fc.Percentage__c) : '';
                 listFallbackCharges.add(fcObj);
-            }
+            } */
             
             Integer count1 = 1;
             for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
@@ -1503,7 +1514,7 @@ AND Invisible__c = false]); */
             
             if(String.isNotBlank(commercialId) && setAllPricingIds.size() > 0) {
                 List<Pricing__c> listPricingRecordToUpdateDelete = new List<Pricing__c>();
-                if(setAllPricingIds.removeAll(setPricingIdsNeedsToBeRetain) || setPricingIdsNeedsToBeRetain.isEmpty()) {
+                if(setAllPricingIds.removeAll(setPricingIdsNeedsToBeRetain) || setPricingIdsNeedsToBeRetain.isEmpty()) { /** Added OR condition by Prabhakar */
                     for(Id pricingId : setAllPricingIds) {
                         Pricing__c pricing = new Pricing__c();
                         pricing.Id = pricingId;
@@ -1651,12 +1662,12 @@ we need to create  commercial in SF side
                     comm.Opportunity__c = recordId;
                     comm.Status__c = 'Live';
                     Insert comm;
-                }
-                if(tranformData.platformWrapperList.size()==0){
-                    Platform_Fee__c pf = new Platform_Fee__c();
-                    pf.Amount__c = 0;
-                    pf.Commercial__c = commercialId;
-                    insert pf;
+                    if(tranformData.platformWrapperList.size()==0){
+                        Platform_Fee__c pf = new Platform_Fee__c();
+                        pf.Amount__c = 0;
+                        pf.Commercial__c = comm.Id;
+                        insert pf;
+                    }
                 }
             }
             /*******END******/
@@ -1831,14 +1842,14 @@ we need to create  commercial in SF side
                     
                 }
                 
-                for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
+                /* for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
                     FallbackCharges fcObj = new FallbackCharges();
                     fcObj.Id = fc.Id;
                     fcObj.paymentModeName = fc.Payment_Mode__c;
                     fcObj.flatFee = fc.Flat_Fee__c != NULL ? String.valueOf(fc.Flat_Fee__c) : '';
                     fcObj.percentage = fc.Percentage__c != NULL ? String.valueOf(fc.Percentage__c) : '';
                     listFallbackCharges.add(fcObj);
-                }
+                } */
                 
                 Integer count = 1;
                 for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
@@ -1969,6 +1980,7 @@ we need to create  commercial in SF side
                                           spdsr.showChatter = true;
                                       }
                                       spdsr.bankingOpsStatus = pricing.Banking_Ops_Status__c;
+                                      /** Added to show the rejection reason to KAM, By Prabhakar */
                                       if(spdsr.bankingOpsStatus == 'Checker Rejected'){
                                         if(String.isNotBlank(pricing.Checker_Rejection_Reason__c)){
                                             spdsr.showRejectionReason = true;
@@ -1978,7 +1990,7 @@ we need to create  commercial in SF side
                                             spdsr.showRejectionReasonDelete = true;
                                             spdsr.rejectionReasonDelete = pricing.Checker_Delete_Rejection_Reason__c;
                                         }
-                                      }
+                                      }/** */
                                       spdsr.bankName = pricing.Bank_Name__c;
                                       spdsr.porType = pricing.POR_Type_Name__c;
                                       spdsr.currentUserProfileName = currentUserProfileName;
@@ -2409,7 +2421,7 @@ we need to create  commercial in SF side
             String htmlBody = body;
             email.setHtmlBody(htmlBody);
             email.setSaveAsActivity(true);
-            email.whatid = commercialId;
+            email.whatId = commercialId;
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
             return 'SUCCESS';    
         }
@@ -2587,7 +2599,7 @@ update commNotLive;
                                                                         }
                                                                         
                                                                         //Fallback Charges Change
-                                                                        Map<Id,Fallback_Charge__c> mapIdToFallbackCharges = new Map<Id,Fallback_Charge__c>();
+                                                                        /* Map<Id,Fallback_Charge__c> mapIdToFallbackCharges = new Map<Id,Fallback_Charge__c>();
                                                                         for(Fallback_Charge__c fc : [SELECT Id,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c = :commercialId]) {
                                                                             mapIdToFallbackCharges.put(fc.Id,fc);	     
                                                                         }
@@ -2608,7 +2620,7 @@ update commNotLive;
                                                                             }
                                                                             
                                                                             if(listFallBackChargesToUpdate.size() > 0) update listFallBackChargesToUpdate;
-                                                                        }
+                                                                        } */
                                                                         
                                                                         
                                                                         //Call API Class to send data to treasury
@@ -2628,7 +2640,7 @@ update commNotLive;
                                                                                                AND Deleted__c = true
                                                                                                AND Invisible__c = false
                                                                                                AND Temp_Id_Delete_TDR__c = NULL 
-                                                                                               AND Temp_Id_Delete_Conv__c = NULL]) {
+                                                                                               AND Temp_Id_Delete_Conv__c = NULL]) { /** Added Temp_Id_Delete_TDR__c,Temp_Id_Delete_Conv__c to skip the record which already have delete request, By Prabhakar  */
                                                                                                    
                                                                                                    if(count == 0) {
                                                                                                        opportunityId = price.Commercial2__r.Opportunity__c;
@@ -2679,15 +2691,13 @@ ruleIds = ruleIds.removeEnd(',');
 ruleids += ']';
 callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);    
 }*/
-                                                                        System.debug('>>>>>>setPricingWithRuleId>>>>>'+setPricingWithRuleId);
+                                                                        
                                                                         if(setPricingWithRuleId.size() > 0 && String.isNotBlank(commercialId) && String.isNotBlank(opportunityId)){
-                                                                            System.debug('>>>>>setPricingWithRuleId>>>>>'+setPricingWithRuleId);
                                                                             Database.executeBatch(new PublishPricingToTreasuryTempTable(setPricingWithRuleId,'DeleteBulkRules-CheckerFalseActionDelete',true),50);   
                                                                         }
-                                                                        System.debug('>>>>>>setPricingIds>>>>>'+setPricingIds);
+                                                                        
                                                                         //Delete data from Main table
                                                                         if(setPricingIds.size() > 0) {
-                                                                            System.debug('>>>>>setPricingIds>>>>>'+setPricingIds);
                                                                             Database.executeBatch(new PublishPricingToTreasuryTempTableReject(setPricingIds,'SaveBulkRules-CheckerTrueActionRejectDelete',false),50);   
                                                                         }
                                                                         
@@ -2748,7 +2758,6 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
 */
     public static void callTreasuryToPushRecords(String commercialId) {
         //Database.executeBatch(new PublishPricingToTreasuryMainTable(commercialId),100); not needed
-        System.debug('>>>>>commercialId>>>>>'+commercialId);
         Database.executeBatch(new PublishPricingToTreasuryTempTable(commercialId,'SaveBulkRules-CheckerFalseActionSave',false),50);
         if(Label.StopPlatformFeeFlowToTreasury.toLowerCase() == 'false') {
             callTreasuryForPlatform(commercialId);    
@@ -2768,7 +2777,7 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
     
     @future(callout=true)
     public static void callTreasuryForFallback(String commercialId) {
-        PublishFallbackToTreasury_CTRL.FallBackToTreasury(commercialId);
+        //PublishFallbackToTreasury_CTRL.FallBackToTreasury(commercialId);
     }
     
     @future(callout=true)
@@ -3182,8 +3191,8 @@ else template.AMC_Interval__c = null;
             if(String.isNotBlank(accessToken)) {
                 List<Opportunity> listOpportunity = [SELECT Prod_Merchant_Id__c FROM Opportunity WHERE Id = :recordId AND Prod_Merchant_Id__c != NULL];
                 if(listOpportunity != NULL && listOpportunity.size() > 0) {
-                    //String body = '{"clientId" : "1","entityId" : "'+listOpportunity[0].Prod_Merchant_Id__c+'"}';
-                    String body = '{"clientId" : "1","entityId" : "2"}';
+                    String body = '{"clientId" : "1","entityId" : "'+listOpportunity[0].Prod_Merchant_Id__c+'"}';
+                    // String body = '{"clientId" : "1","entityId" : "2"}';
                     
                     Map<String,String> mapSFTreasuryTransformerToPayUPGId = new Map<String,String>();
                     String paymentScheme = '';
@@ -3193,11 +3202,11 @@ else template.AMC_Interval__c = null;
                         paymentScheme = String.isNotBlank(sfTrans.Payment_Scheme__c) ? sfTrans.Payment_Scheme__c.toUpperCase() : 'BLANK';
                         cardType = String.isNotBlank(sfTrans.Card_Type__c) ? sfTrans.Card_Type__c.toUpperCase() : 'BLANK';
                         key = sfTrans.Payment_Mode__c.toUpperCase()+'#'+sfTrans.Sub_Payment_Mode__c.toUpperCase()+'#'+paymentScheme+'#'+sfTrans.Payment_Entity__c+'#'+cardType+'#'+sfTrans.IsOnus__c;
-                        mapSFTreasuryTransformerToPayUPGId.put(key,sfTrans.SF_ID__c);
+                        mapSFTreasuryTransformerToPayUPGId.put(key.trim(),sfTrans.SF_ID__c);
                     }
                     
                     Map<String,Master_Pricing_Data__c> mapPayUPGIdToMasterPricingData = new Map<String,Master_Pricing_Data__c>();
-                    for(Master_Pricing_Data__c mpd : [SELECT Salesforce_Primary_Key__c,Payment_Mode__c,Payment_Mode__r.Name,Payment_Option__c,Payment_Option__r.Name,Pricing_Specification__c,Pricing_Specification__r.Name,Payment_Gateway__c,Payment_Gateway__r.Name,ONUS_OFFUS__c FROM Master_Pricing_Data__c]) {
+                    for(Master_Pricing_Data__c mpd : [SELECT Salesforce_Primary_Key__c,Payment_Mode__c,Payment_Mode__r.Name,Payment_Option__c,Payment_Option__r.Name,Pricing_Specification__c,Pricing_Specification__r.Name,Payment_Gateway__c,Payment_Gateway__r.Name,ONUS_OFFUS__c FROM Master_Pricing_Data__c WHERE Active_Instrument__c = true]) {
                         mapPayUPGIdToMasterPricingData.put(mpd.Salesforce_Primary_Key__c,mpd);		    
                     }
                     
@@ -3243,9 +3252,10 @@ else template.AMC_Interval__c = null;
                                             cardType1 = mapKeyValueAttributesString.containsKey('cardType') ? mapKeyValueAttributesString.get('cardType').toUpperCase() : 'BLANK';	
                                             paymentScheme1 = mapKeyValueAttributesString.containsKey('scheme') ? mapKeyValueAttributesString.get('scheme').toUpperCase() : 'BLANK';	
                                             onus = mapKeyValueAttributesString.containsKey('onus') ? '1' : '0';
-                                            key1 = mapKeyValueAttributesString.get('mode').toUpperCase()+'#'+mapKeyValueAttributesString.get('ibiboCode').toUpperCase()+'#'+paymentScheme1+'#'+mapKeyValueAttributesString.get('pgId')+'#'+cardType+'#'+onus;
-                                            if(mapSFTreasuryTransformerToPayUPGId.containsKey(key1)) {
-                                                Master_Pricing_Data__c mpd = mapPayUPGIdToMasterPricingData.get(mapSFTreasuryTransformerToPayUPGId.get(key1)); 
+                                            key1 = mapKeyValueAttributesString.get('mode').toUpperCase()+'#'+mapKeyValueAttributesString.get('ibiboCode').toUpperCase()+'#'+paymentScheme1+'#'+mapKeyValueAttributesString.get('pgId')+'#'+cardType1+'#'+onus;
+                                            if(mapSFTreasuryTransformerToPayUPGId.containsKey(key1.trim())) {
+                                                Master_Pricing_Data__c mpd = mapPayUPGIdToMasterPricingData.get(mapSFTreasuryTransformerToPayUPGId.get(key1.trim())); 
+                                                
                                                 SelectedPaymentData spd = new SelectedPaymentData();
                                                 if(mapPaymentModeIdToSelectedPaymentData.containsKey(mpd.Payment_Mode__c)) {
                                                     spd = mapPaymentModeIdToSelectedPaymentData.get(mpd.Payment_Mode__c);	    
@@ -3345,6 +3355,7 @@ else template.AMC_Interval__c = null;
         LiveCommercialWrapper wrpCls = new LiveCommercialWrapper();
         try {
             String accessToken = PricingIntegrationUtility.getAccessToken('Get_Access_Token_Fetch');
+            System.debug('>>>>>>>accessToken>>>>>>'+accessToken);
             if(String.isNotBlank(accessToken)) {
                 List<Opportunity> listOpportunity = [SELECT Prod_Merchant_Id__c FROM Opportunity WHERE Id = :recordId AND Prod_Merchant_Id__c != NULL];
                 if(listOpportunity != NULL && listOpportunity.size() > 0) {
@@ -3352,8 +3363,11 @@ else template.AMC_Interval__c = null;
                     //String body = '{"clientId" : "1","merchantId" : "22704"}'; 
                     //String body = '{"clientId" : "1","merchantId" : "7200612"}';
                     HttpResponse response = PricingIntegrationUtility.doCallout('API_Callout_Fetch',accessToken,body,'FetchAPI');
+                    System.debug('>>>>>>>response>>>>>>'+response);
+                    System.debug('>>>>>>>response Body>>>>>>'+response.getBody());
                     if(response.getStatus() == 'OK' && response.getStatusCode() == 200) {
                         Map<String,Object> mapKeyToValue = (Map<String,Object>)JSON.deserializeUntyped(response.getBody());
+                        System.debug('>>>>>mapKeyToValue>>>>'+mapKeyToValue);
                         if(mapKeyToValue != NULL && mapKeyToValue.keySet().size() > 0 && mapKeyToValue.containsKey('result')) {
                             Map<String,Map<String,Object>> mapRuleIdToObject = new Map<String,Map<String,Object>>();
                             List<Object> listPricingRecords = (List<Object>)mapKeyToValue.get('result');
@@ -3760,7 +3774,6 @@ else template.AMC_Interval__c = null;
                 
                 Set<String> setInsertedFeeType = new Set<String>();
                 for(FixedPricing2 fp1 : listFixedPricing2New) {
-                    System.debug('>>>>>>fp1>>>>>>'+fp1);
                     FixedPricing2 fpNew = new FixedPricing2();
                     fpNew.recordId = fp1.recordId;
                     fpNew.endDate = fp1.endDate;
@@ -3791,7 +3804,6 @@ else template.AMC_Interval__c = null;
                     
                 }
             }
-            System.debug('>>>>>>newListToReturn>>>>>'+newListToReturn);
             return JSON.serialize(newListToReturn);
             
         } catch (Exception e) {

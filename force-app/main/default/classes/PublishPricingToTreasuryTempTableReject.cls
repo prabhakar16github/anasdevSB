@@ -66,10 +66,6 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
     
     /****************************Start Method*****************************************/
     public Database.QueryLocator start(Database.BatchableContext bc) {
-        System.debug('>>>>>>PublishPricingToTreasuryTempTableReject.pricingIdSet>>>'+this.pricingIds);
-        System.debug('>>>>>>PublishPricingToTreasuryTempTableReject.processName>>>'+this.processName);
-        System.debug('>>>>>>PublishPricingToTreasuryTempTableReject.isDeleteRequest>>>'+this.isDeleteRequest);
-
         String query = PublishPricingUtility.query;
         
         if(this.isDeleteRequest){
@@ -116,6 +112,7 @@ public class PublishPricingToTreasuryTempTableReject implements Database.Batchab
             for(Pricing__c price : [SELECT Id,Rule_Id__c,Rule_Id_Conv__c,Commercial2__r.Opportunity__c,Commercial2__c
                                     FROM Pricing__c 
                                     WHERE Id IN : setPricingIds 
+                                    AND Invisible__c = false 
                                     AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL)]) {
                                         if(count == 0) {
                                             opportunityId = price.Commercial2__r.Opportunity__c;

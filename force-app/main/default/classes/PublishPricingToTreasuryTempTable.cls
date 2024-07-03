@@ -41,9 +41,6 @@ public class PublishPricingToTreasuryTempTable implements Database.Batchable<sOb
     
     /****************************Start Method*****************************************/
     public Database.QueryLocator start(Database.BatchableContext bc) {
-        System.debug('>>>>>>PublishPricingToTreasuryTempTable.pricingIdSet>>>'+this.pricingIds);
-        System.debug('>>>>>>PublishPricingToTreasuryTempTable.processName>>>'+this.processName);
-        System.debug('>>>>>>PublishPricingToTreasuryTempTable.isDeleteRequest>>>'+this.isDeleteRequest);
         String query = PublishPricingUtility.query;
         if(isDeleteRequest){
             query += ' WHERE Id IN :pricingIds AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL) AND Deleted__c = true AND Invisible__c = false';
@@ -52,10 +49,12 @@ public class PublishPricingToTreasuryTempTable implements Database.Batchable<sOb
                 String STATUS_PUBLISHED = 'Live';
             
             if(commId != NULL){
-                query += 'WHERE Commercial2__c = :commId AND Banking_Ops_Status__c IN :statusValues AND Need_To_Publish__c = true AND Invisible__c = false';
+                query += 'WHERE Commercial2__c = :commId AND Banking_Ops_Status__c IN :statusValues AND Need_To_Publish__c = true ';
             }else if(pricingIds != NULL && !pricingIds.isEmpty()){
                 query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
             }
+
+            query +='AND Invisible__c = false';
             //query += 'AND Banking_Ops_Status__c IN :statusValues AND Need_To_Publish__c = true AND Invisible__c = false';
         }
         

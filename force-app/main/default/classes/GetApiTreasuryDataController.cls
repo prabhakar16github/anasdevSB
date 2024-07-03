@@ -3,41 +3,42 @@
 * @Author       Rohit Gupta
 * @Created Date 05-April-2024
 * @Description  This class is used to update or create Fixed pricing, Platform anmd TDR/Convenience data. we'll send entityId and 
-				revenue model comm seperated to treasury, will get the response and update or create on sf.
+revenue model comm seperated to treasury, will get the response and update or create on sf.
 */
 public class GetApiTreasuryDataController{
     /******************Variables**************************/
     /* below map I have created because in sf revenue model picklist value are different from treasury side thats why 
-     we are mapping the values so that same will be update on sf as well.
-	***/
-    private static Map<String,String> mapFeeTypeToRM = new Map<String,String>{'SETUP_FEE'=>'Setup Fee','AMC'=>'AMC','AFFORDABILITY_VAS_FEE'=>'Affordibility VAS','Conv Fee'=>'Convenience','TDR'=>'TDR'};
-    public static Map<String,String> mapOfTransformerData = getMapTreasuryKeyToTreasuryDataId();
+we are mapping the values so that same will be update on sf as well.
+***/
+    private static Map<String,String> mapFeeTypeToRevenueModel = new Map<String,String>{'SETUP_FEE'=>'Setup Fee','AMC'=>'AMC','AFFORDABILITY_VAS_FEE'=>'Affordibility VAS','Conv Fee'=>'Convenience','TDR'=>'TDR'};
+        public static Map<String,String> mapOfTransformerData = getMapTreasuryKeyToTreasuryDataId();
     public static Map<String,Master_Pricing_Data__c> mapOfMpdData = getMapSfKeyToMasterPricingData();
-    public static Map<String,Pricing__c> mapOfPricing = new Map<String,Pricing__c>();
     public static String mId;
     public static String revenueModel;
     public static Integer pages=0;
     public static PricingWrapper pricingWrapper = new PricingWrapper();
     public static Id oppId;
     public static Id commId; 
-	/************End******************/
-	/**
-	 * Below method is used to store  all the MPD data with primary key and mpd data records
-	**/
+    public static Integer countOfRecords =0;
+    public static PublishpricingDetailsWrapper publishDetail = new PublishpricingDetailsWrapper();
+    /************End******************/
+    /**
+* Below method is used to store  all the MPD data with primary key and mpd data records
+**/
     public static Map<String,Master_Pricing_Data__c> getMapSfKeyToMasterPricingData() {
-        Map<String,Master_Pricing_Data__c> mapIdentifierToMasterPricingDataId = new Map<String,Master_Pricing_Data__c>();
+        Map<String,Master_Pricing_Data__c> mapOfPayuPgIdToMasterPricingData = new Map<String,Master_Pricing_Data__c>();
         for(Master_Pricing_Data__c mpd : [SELECT Id,Salesforce_Primary_Key__c,Payment_Mode__c,Payment_Option__c,
                                           Payment_Gateway__c,Pricing_Specification__c,ONUS_OFFUS__c
-                                          FROM Master_Pricing_Data__c LIMIT 50000]) {
-                                              mapIdentifierToMasterPricingDataId.put(mpd.Salesforce_Primary_Key__c,mpd);	    
+                                          FROM Master_Pricing_Data__c WHERE Active_Instrument__c =true LIMIT 50000]) {
+                                              mapOfPayuPgIdToMasterPricingData.put(mpd.Salesforce_Primary_Key__c,mpd);	    
                                           }
-        return mapIdentifierToMasterPricingDataId;
+        return mapOfPayuPgIdToMasterPricingData;
     }
     /**
-	 * Below method is used to store  prepare all the sf treasury key with sf id
-	**/
+* Below method is used to prepare all the sf treasury key with sf id
+**/
     public static Map<String,String> getMapTreasuryKeyToTreasuryDataId() {
-        Map<String,String> mapTreasuryKeyToTreasuryDataId = new Map<String,String>();
+        Map<String,String> mapOfPayuPgIdToTreasuryKeyData = new Map<String,String>();
         for(SF_Treasury_Transformer__c trans :[SELECT Id, SF_ID__c, Payment_Mode__c, Sub_Payment_Mode__c, Payment_Scheme__c,
                                                Payment_Entity__c, Card_Type__c, IsOnus__c, PG_Name__c, PG_Type__c, Bank_Code__c 
                                                FROM SF_Treasury_Transformer__c]){
@@ -45,24 +46,22 @@ public class GetApiTreasuryDataController{
                                                    key += String.isNotBlank(trans.Sub_Payment_Mode__c) ? '#'+trans.Sub_Payment_Mode__c:'#Blank';
                                                    key += String.isNotBlank(trans.Payment_Scheme__c) ? '#'+trans.Payment_Scheme__c:'#Blank';
                                                    key += String.isNotBlank(String.valueOf(trans.Payment_Entity__c)) ? '#'+trans.Payment_Entity__c:'#Blank';
-                                                   key += String.isNotBlank(trans.IsOnus__c) ? '#'+trans.IsOnus__c:'#'+1;
+                                                   key += String.isNotBlank(trans.IsOnus__c) ? '#'+String.valueOf(trans.IsOnus__c):'#'+0;
                                                    key += String.isNotBlank(trans.Card_Type__c) ? '#'+trans.Card_Type__c:'#Blank';
-                                                   mapTreasuryKeyToTreasuryDataId.put(key.toLowerCase(),trans.SF_ID__c);
+                                                   mapOfPayuPgIdToTreasuryKeyData.put(key.toLowerCase(),trans.SF_ID__c);
+                                                   
                                                }
-        return mapTreasuryKeyToTreasuryDataId;
+        return mapOfPayuPgIdToTreasuryKeyData;
     }
     /*This method will except the mid and revenue model as a parameter and send the data to processTreasuryData method 
-    which will make the wrapper and send to treasury in response will get the data*/
+which will make the wrapper and send to treasury in response will get the data*/
     @AuraEnabled
     public static PricingWrapper processTreasuryData(String entityId, String revenueModelCommSep) {
         // Querying the commercial to fetch the opportunity id and commId, we are using both ids while inserting the publish commercial records
         for(Commercial2__c comm :[SELECT Id,Opportunity__c  FROM Commercial2__c WHERE Merchant_MID__c  =: entityId]){
-           	oppId = comm.Opportunity__c;
+            oppId = comm.Opportunity__c;
             commId = comm.Id;
         }
-        System.debug('mapOfMpdData::::'+mapOfMpdData.keySet());
-        System.debug('mapTreasuryKeyToTreasuryDataId:::::'+mapOfTransformerData.keyset());
-        
         // Preparing the wrapper class to send it to treasury
         RevenueModelWrapper wrapper = new RevenueModelWrapper();
         wrapper.entityId = entityId;
@@ -74,14 +73,9 @@ public class GetApiTreasuryDataController{
         mId = entityId;// storing the enitity id in mid
         revenueModel =  wrapper.revenueModel; // storing the revenueModel 
         pages = wrapper.page + 1;// This is written for pagination means when processTreasuryData called then it will 
-        						//increase the page size to reach total pages size
+        //increase the page size to reach total pages size
         // Send the wrapper object to the treasury system and get the data
         PricingWrapper pricingWrap = sendToTreasury(wrapper);// from this line I am calling sendToTreasury method and passing 
-        													//the request body to treaqsury
-        System.debug('pricingWrap:transform::'+pricingWrap.transformedPricingWrapperPricingList);	
-        System.debug('pricingWrap:::'+pricingWrap.UntransformedPricingWrapperPricingList);	
-        System.debug('pricingWrap:::'+pricingWrap);	
-        System.debug('pricingWrap:::'+pricingWrap);	
         return pricingWrap;
     }
     // This method will convert the time field into IST time 
@@ -107,14 +101,14 @@ public class GetApiTreasuryDataController{
     }
     // Method to send the wrapper object to the external system
     private static PricingWrapper sendToTreasury(RevenueModelWrapper wrapper) {
-        Publish_Pricing_Detail__c publishDetail = new Publish_Pricing_Detail__c();
+        
         // Below map created if sfid not null we get from treasury in that case we get the data in map  
         Map<String,transformedPricingWrapper> mapOfTransform = new Map<String,transformedPricingWrapper>();
         // Implementation to send the wrapper object to the treasury system goes here
         try{
-            publishDetail.Merchant__c = oppId;
-            publishDetail.Commercial__c = commId; 
-            publishDetail.Process__c = 'Get API Treasury Data';
+            publishDetail.mId  = oppId;
+            publishDetail.commId  = commId; 
+            publishDetail.process  = 'Get API Treasury Data';
             String access_token = PricingIntegrationUtility.getAccessToken('Get_Access_Token_BasedOnRevenueModel');
             if(access_token != NULL){
                 HttpResponse response = PricingIntegrationUtility.doCallout('API_Callout_BasedOnRevenueModel',access_token,JSON.serialize(wrapper),'');
@@ -122,20 +116,22 @@ public class GetApiTreasuryDataController{
                     ResponseWrapper responseWrap = (ResponseWrapper)JSON.deserialize(response.getBody(),ResponseWrapper.class);
                     if(responseWrap.result !=NULL && responseWrap.code == '2020' && responseWrap.status == 0){
                         Integer totalPages = responseWrap.result.totalPages;
-                        publishDetail.Status__c = 'Success';
-                        publishDetail.Message__c = 'Successfully Consumed';
-                        publishDetail.Response_Body__c = JSON.serialize(responseWrap.result.content);
-                        publishDetail.Request_Body__c = JSON.serialize(wrapper);
-                        publishDetail.Request_Count__c = responseWrap.result.content.size();
+                        publishDetail.status  = 'Success';
+                        publishDetail.message  = 'Successfully Consumed';
+						publishDetail.responseBody  += JSON.serialize(responseWrap.result.content) +pages+' Page data >>>';
+                        //responseBodyFrmTreasury += JSON.serialize(responseWrap.result.content);
+                        publishDetail.requestBody  =  JSON.serialize(wrapper);
+                        countOfRecords += responseWrap.result.content.size();
                         for(ContentWrapper resWrapper : responseWrap.result.content){
                             if (resWrapper.revenueModel == 'SETUP_FEE' || resWrapper.revenueModel == 'AMC' || resWrapper.revenueModel == 'AFFORDABILITY_VAS_FEE') {
                                 fixedPricingWrapper fixedWrapper = new fixedPricingWrapper();
                                 fixedWrapper.debitModel =  resWrapper.debitModel;
                                 fixedWrapper.ruleId = resWrapper.pricingRuleConfigId;
-                                fixedWrapper.percentage = Decimal.valueOf( resWrapper.percentFee);
                                 fixedWrapper.flatfee = Decimal.valueOf(resWrapper.flatFee);
                                 fixedWrapper.published = true;
-                                fixedWrapper.feeType =  mapFeeTypeToRM.get(resWrapper.revenueModel);
+                                fixedWrapper.feeType =  mapFeeTypeToRevenueModel.get(resWrapper.revenueModel);
+                                fixedWrapper.revenueModel = resWrapper.revenueModel;
+                                fixedWrapper.addedBy = resWrapper.addedBy;
                                 if(resWrapper.aggregationPeriod==null){
                                     fixedWrapper.paymentFrequency = resWrapper.frequency;
                                 }
@@ -162,6 +158,8 @@ public class GetApiTreasuryDataController{
                                 platformWrap.paymentFrequency  = resWrapper.aggregationPeriod;
                                 platformWrap.versionNumber  = resWrapper.versionNumber;
                                 platformWrap.source   = resWrapper.source;
+                                platformWrap.revenueModel = resWrapper.revenueModel;
+                                platformWrap.addedBy = resWrapper.addedBy;
                                 if(resWrapper.validFrom !=NULL){
                                     platformWrap.startDate  =  String.valueOf(getDateTimeField(resWrapper.validFrom));
                                 }
@@ -173,92 +171,64 @@ public class GetApiTreasuryDataController{
                                         platformWrap.amount = Decimal.valueOf(attribute.pricingRuleValue);
                                     }
                                 }
-                             pricingWrapper.platformWrapperList.add(platformWrap);
+                                pricingWrapper.platformWrapperList.add(platformWrap);
                             }
-                            else if(resWrapper.sfId==null && (resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='Conv Fee')){
-                                transformedPricingWrapper transFromWrap = new transformedPricingWrapper();
-                                transFromWrap.debitModel  = resWrapper.debitModel;
-                                transFromWrap.transactionType =  mapFeeTypeToRM.get(resWrapper.revenueModel);
-                                
-                                if(resWrapper.revenueModel == 'TDR'){
-                                    transFromWrap.tdrFlatFee  = Decimal.valueOf(resWrapper.flatFee);
-                                    transFromWrap.tdrAmount = Decimal.valueOf(resWrapper.amountSlab);
-                                    transFromWrap.TDR   = String.valueOf( resWrapper.percentFee);
-                                }
-                                if(resWrapper.revenueModel == 'Conv Fee'){
-                                    transFromWrap.convenienceFlatFee   = Decimal.valueOf(resWrapper.flatFee);
-                                    transFromWrap.convenienceAmount  = Decimal.valueOf(resWrapper.amountSlab);
-                                    transFromWrap.convenience   = Decimal.valueOf( resWrapper.percentFee);
-                                }
-                                transFromWrap.source   = resWrapper.source;
-                                transFromWrap.clientId    = resWrapper.clientId;
-                                transFromWrap.subClientId    = resWrapper.subClientId;
-                                transFromWrap.ruleId = resWrapper.pricingRuleConfigId;
-                                transFromWrap.isActive = resWrapper.isActive;
-                                transFromWrap.versionNumber  =String.valueOf(resWrapper.versionNumber) ;
-                                if(resWrapper.validFrom !=NULL){
-                                    transFromWrap.validFrom =  String.valueOf(getDateTimeField(resWrapper.validFrom));
-                                }
-                                if(resWrapper.tillTime  !=null){
-                                    transFromWrap.tillTime  = String.valueOf(getTimeValue(resWrapper.tillTime));
-                                }
-                                if(resWrapper.fromTime !=null){
-                                    transFromWrap.fromTime  = String.valueOf(getTimeValue(resWrapper.fromTime));
-                                }
-                                if(resWrapper.validTill !=NULL){
-                                    transFromWrap.validTill   =  String.valueOf(getDateTimeField(resWrapper.validTill));
-                                }
+                            else if(resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='Conv Fee'){
                                 Master_Pricing_Data__c mpdData = getMasterPricingData(resWrapper);
                                 if(mpdData != null) {
+                                    transformedPricingWrapper transFromWrap = new transformedPricingWrapper();
+                                    transFromWrap.debitModel  = resWrapper.debitModel;
+                                    transFromWrap.transactionType =  mapFeeTypeToRevenueModel.get(resWrapper.revenueModel);
+                                    transFromWrap.pricingRuleConfigId = resWrapper.pricingRuleConfigId;
+                                    if(resWrapper.revenueModel == 'TDR'){
+                                        transFromWrap.tdrFlatFee  = Decimal.valueOf(resWrapper.flatFee);
+                                        transFromWrap.tdrAmount = Decimal.valueOf(resWrapper.amountSlab);
+                                        transFromWrap.tdrPercentFee   = String.valueOf( resWrapper.percentFee);
+                                        transFromWrap.ruleId = resWrapper.pricingRuleConfigId;
+                                    }
+                                    if(resWrapper.revenueModel == 'Conv Fee'){
+                                        transFromWrap.convenienceFlatFee   = Decimal.valueOf(resWrapper.flatFee);
+                                        transFromWrap.convenienceAmount  = Decimal.valueOf(resWrapper.amountSlab);
+                                        transFromWrap.conveniencePercentFee   = resWrapper.percentFee;
+                                        transFromWrap.ruleIdConv = resWrapper.pricingRuleConfigId;
+                                    }
+                                    transFromWrap.source   = resWrapper.source;
+                                    transFromWrap.clientId    = resWrapper.clientId;
+                                    transFromWrap.subClientId    = resWrapper.subClientId;
+                                    transFromWrap.ruleId = resWrapper.pricingRuleConfigId;
+                                    transFromWrap.revenueModel = resWrapper.revenueModel;
+                                    transFromWrap.versionNumber  = resWrapper.versionNumber ;
+                                    transFromWrap.recordId = oppId;
+                                    transFromWrap.addedBy = resWrapper.addedBy;
+                                    transFromWrap.feeModel = resWrapper.debitModel;
+                                    if(resWrapper.validFrom !=NULL){
+                                        transFromWrap.validFrom = resWrapper.validFrom;
+                                    }
+                                    if(resWrapper.tillTime  !=null){
+                                        transFromWrap.tillTime  = resWrapper.tillTime;
+                                    }
+                                    if(resWrapper.fromTime !=null){
+                                        transFromWrap.fromTime  = resWrapper.fromTime;
+                                    }
+                                    if(resWrapper.validTill !=NULL){
+                                        transFromWrap.validTill   = resWrapper.validTill;
+                                    }
+                                    transFromWrap.feeModel = resWrapper.debitModel;
                                     transFromWrap.paymentMode = mpdData.Payment_Mode__c;
                                     transFromWrap.paymentGateway =  mpdData.Payment_Gateway__c;
-                                    transFromWrap.paymentGatewayText  = mpdData.Payment_Gateway_Text__c;
                                     transFromWrap.paymentOptions = mpdData.Payment_Option__c;
                                     transFromWrap.specifications =  mpdData.Pricing_Specification__c;
-                                    transFromWrap.specificationText  = mpdData.Pricing_Specification_Text__c;
                                     transFromWrap.onusOffus = mpdData.ONUS_OFFUS__c;
+                                    transFromWrap.mpdId = mpdData.Id;
+                                    if(resWrapper.sfId !=null){
+                                        transFromWrap.sfId = resWrapper.sfId.substringBefore('#'); 
+                                    }
                                     pricingWrapper.transformedPricingWrapperPricingList.add(transFromWrap);
                                 }
                             }
-                            else if(resWrapper.sfId !=null && (resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='Conv Fee')){
-                                String pricingRecordId = resWrapper.sfId.substringBefore('#'); 
-                                transformedPricingWrapper transFromWrap = mapOfTransform.containsKey(pricingRecordId) ? mapOfTransform.get(pricingRecordId) : new transformedPricingWrapper();
-                                if(resWrapper.revenueModel == 'TDR'){
-                                    transFromWrap.ruleId = resWrapper.pricingRuleConfigId;
-                                    transFromWrap.tdrFlatFee  = Decimal.valueOf(resWrapper.flatFee);
-                                    transFromWrap.tdrAmount = Decimal.valueOf(resWrapper.amountSlab);
-                                    transFromWrap.TDR   = String.valueOf( resWrapper.percentFee);
-                                }
-                                if(resWrapper.revenueModel == 'Conv Fee'){
-                                    transFromWrap.ruleIdConv = resWrapper.pricingRuleConfigId;
-                                    transFromWrap.convenienceFlatFee   = Decimal.valueOf(resWrapper.flatFee);
-                                    transFromWrap.convenienceAmount  = Decimal.valueOf(resWrapper.amountSlab);
-                                    transFromWrap.convenience   = Decimal.valueOf( resWrapper.percentFee);
-                                }
-                                transFromWrap.debitModel  = resWrapper.debitModel;
-                                transFromWrap.transactionType =  mapFeeTypeToRM.get(resWrapper.revenueModel);
-                                transFromWrap.source   = resWrapper.source;
-                                transFromWrap.clientId    = resWrapper.clientId;
-                                transFromWrap.subClientId    = resWrapper.subClientId;
-                                transFromWrap.isActive = resWrapper.isActive;
-                                transFromWrap.versionNumber  = String.valueOf(resWrapper.versionNumber);
-                                if(resWrapper.validFrom !=NULL){
-                                    transFromWrap.validFrom =  String.valueOf(getDateTimeField(resWrapper.validFrom));
-                                }
-                                if(resWrapper.tillTime  !=null){
-                                    transFromWrap.tillTime  = String.valueOf(getTimeValue(resWrapper.tillTime));
-                                }
-                                if(resWrapper.fromTime !=null){
-                                    transFromWrap.fromTime  =String.valueOf(getTimeValue(resWrapper.fromTime));
-                                }
-                                if(resWrapper.validTill !=NULL){
-                                    transFromWrap.validTill =  String.valueOf(getDateTimeField(resWrapper.validTill));
-                                }
-                                mapOfTransform.put(pricingRecordId, transFromWrap);
-                            }
                         }
-                         if(mapOfTransform.values() !=NULL){
-                             pricingWrapper.transformedPricingWrapperPricingList = mapOfTransform.values();
+                        if(!mapOfTransform.isEmpty() && mapOfTransform.values() !=NULL){
+                            pricingWrapper.transformedPricingWrapperPricingList.addAll(mapOfTransform.values());
                         }
                         if(totalPages > pages){
                             processTreasuryData(mId,revenueModel); 
@@ -266,35 +236,38 @@ public class GetApiTreasuryDataController{
                     }
                 }
                 else{
-                    publishDetail.Message__c = 'API Callout Error';
-                    publishDetail.Status__c = 'Error';
+                    publishDetail.message  = 'API Callout Error';
+                    publishDetail.status  = 'Error';
                 }
             }
             else{
-                publishDetail.Message__c = 'Authorization Error';
-                publishDetail.Status__c = 'Error';
-                publishDetail.Response_Body__c = 'SF Error : System not able to authorize the treasury System. Facing issue while getting the access_token.';
+                publishDetail.message = 'Authorization Error';
+                publishDetail.status = 'Error';
+                publishDetail.responseBody  = 'SF Error : System not able to authorize the treasury System. Facing issue while getting the access_token.';
                 
+            } 
+            //This below code is written to add publish pricing detail data 
+            if(publishDetail != null){
+                PricingWrapper.publishDetails = publishDetail;
             }
-            insert publishDetail;
         }
         catch(Exception e){
             Error_Details__c errorDetails = new Error_Details__c(Request__c =JSON.serialize(wrapper),Process__c ='Get API Treasury Data',Message__c = e.getMessage(),Severity__c = 'High', Identifier__c = String.valueOf(e.getLineNumber()));
             insert errorDetails;// If error comes then inserting the proper response in Error_Details__c object
         }
+        System.debug('transformer List:::'+ pricingWrapper.transformedPricingWrapperPricingList);
         return pricingWrapper;// returnig the final wrapper 
     }
     /****** Method to check if the paypgId for MPD  exists in Salesforce records if yes then return mpd data to the method where
-       its get called other wise return the untransform data***********/
+its get called other wise return the untransform data***********/
     private static Master_Pricing_Data__c getMasterPricingData(ContentWrapper  resWrapper) {
         Map<String, String> mapOfKey = getValueByKey(resWrapper.attributes);// passing all the attribute to getValueByKey to get mapOf all the key and there value
         String keyForTreasury = mapOfKey.get('mode');
         keyForTreasury += String.isNotBlank(mapOfKey.get('ibiboCode')) ? '#'+mapOfKey.get('ibiboCode') :'#Blank';
         keyForTreasury += String.isNotBlank(mapOfKey.get('scheme')) ? '#'+mapOfKey.get('scheme') :'#Blank';
         keyForTreasury += String.isNotBlank(mapOfKey.get('pgId')) ? '#'+mapOfKey.get('pgId') :'#Blank';
-        keyForTreasury += String.isNotBlank(mapOfKey.get('onus')) ? '#'+mapOfKey.get('onus') :'#'+1;
+        keyForTreasury += String.isNotBlank(mapOfKey.get('onus')) ? '#'+1:'#'+0;
         keyForTreasury += String.isNotBlank(mapOfKey.get('cardType')) ? '#'+mapOfKey.get('cardType') :'#Blank';
-        System.debug('keyForTreasury:::::'+keyForTreasury.toLowerCase());
         if(mapOfTransformerData.containsKey(keyForTreasury.toLowerCase())){
             Master_Pricing_Data__c mpdData =  mapOfMpdData.get(mapOfTransformerData.get(keyForTreasury.toLowerCase()));
             return mpdData;
@@ -302,7 +275,7 @@ public class GetApiTreasuryDataController{
         else{
             UntransformedPricingWrapper unTransFormData = new UntransformedPricingWrapper();
             unTransFormData.debitModel = resWrapper.debitModel;  
-            unTransFormData.type = mapFeeTypeToRM.get(resWrapper.revenueModel);
+            unTransFormData.type = mapFeeTypeToRevenueModel.get(resWrapper.revenueModel);
             unTransFormData.paymentMode =mapOfKey.get('mode');
             unTransFormData.subPaymentMode =mapOfKey.get('ibiboCode');    
             unTransFormData.paymentScheme = mapOfKey.get('scheme');    
@@ -318,7 +291,7 @@ public class GetApiTreasuryDataController{
     }
     // Method to retrieve the value of a key from the attributes list
     private static Map<String,String>  getValueByKey(List<AttributeWrapper> attributes) {
-  		Map<String,String> mapOfTreasuryKey = new Map<String,String>();
+        Map<String,String> mapOfTreasuryKey = new Map<String,String>();
         for(AttributeWrapper attribute : attributes) {
             mapOfTreasuryKey.put(attribute.pricingRuleKey,attribute.pricingRuleValue);
         }
@@ -330,6 +303,7 @@ public class GetApiTreasuryDataController{
         public List<platFormWrapper> platformWrapperList = new List<platFormWrapper>();
         public List<transformedPricingWrapper > transformedPricingWrapperPricingList = new List<transformedPricingWrapper>();
         public List<UntransformedPricingWrapper > UntransformedPricingWrapperPricingList = new List<UntransformedPricingWrapper>();
+        public PublishpricingDetailsWrapper publishDetails = new PublishpricingDetailsWrapper();
     }
     /********* This wrapper class is use to return transform data*************/ 
     public class transformedPricingWrapper {
@@ -347,10 +321,9 @@ public class GetApiTreasuryDataController{
         public String clientId;
         public String subClientId;
         public String ruleId;
-        public String isActive;
-        public String versionNumber;
+        public Integer versionNumber;
         public String validFrom;
-		public String tillTime;
+        public String tillTime;
         public String fromTime;
         public String validTill;
         public String paymentMode;
@@ -359,10 +332,14 @@ public class GetApiTreasuryDataController{
         public String specifications ;
         public String paymentGateway;
         public String onusOffus;
-        public String TDR;
-        public String convenienceFee ;
-        public String paymentGatewayText ;
-        public String specificationText ;
+        public String tdrPercentFee;
+        public String conveniencePercentFee ;
+        public String revenueModel;
+        public String mpdId;
+        public String feeModel;
+        public String sfId;
+        public String pricingRuleConfigId;
+        public String addedBy;
     }
     /**************End************************/
     /********* This wrapper class is use to return Untransform data*************/ 
@@ -379,11 +356,11 @@ public class GetApiTreasuryDataController{
         public String flatFee;
         public String percentageFee;
     }
-     /**************End************************/
+    /**************End************************/
     /********* This wrapper class is use to return fixed data*************/ 
     public class fixedPricingWrapper {
         public String debitModel;
-		public String ruleId;
+        public String ruleId;
         public Decimal percentage;
         public Decimal flatfee;
         public Boolean published;
@@ -392,25 +369,29 @@ public class GetApiTreasuryDataController{
         public Integer versionNumber;
         public String source;
         public String startDate;
-		public String endDate;
+        public String endDate;
+        public String revenueModel;
+        public String addedBy;
     }
-      /**************End************************/
-     /********* This wrapper class is use to return Platform data*************/ 
+    /**************End************************/
+    /********* This wrapper class is use to return Platform data*************/ 
     public class platFormWrapper{
         public String debitModel;
         public String ruleId;
         public Decimal percentage;
         public Decimal flatfee;
-		public Boolean published;
+        public Boolean published;
         public String type;
-		public String interval;
-		public Integer versionNumber;
+        public String interval;
+        public Integer versionNumber;
         public String source;
         public String startDate;
-		public String endDate;
-		public Decimal amount;
+        public String endDate;
+        public Decimal amount;
         public String feeType;
-        public String paymentFrequency;  
+        public String paymentFrequency;
+        public String revenueModel;
+        public String addedBy;
     }
     /**************End************************/
     // Wrapper class for revenue model data
@@ -436,6 +417,16 @@ public class GetApiTreasuryDataController{
         public String pricingRuleKey;
         public String pricingRuleValue;
     }
+    public class PublishpricingDetailsWrapper{
+        public String mId;
+        public String commId;
+        public String process;
+        public String status;
+        public String message;
+        public String responseBody ='';
+        public String requestBody;
+        public Integer requestCount=0;
+    }
     /** Wrapper class to parse the result object inside the response body. */
     public class ContentWrapper{
         public String pricingRuleConfigId;
@@ -451,25 +442,14 @@ public class GetApiTreasuryDataController{
         public String dayOfWeek;
         public String fromTime;
         public String frequency;
-        public String aggregationRequired;
         public String percentFee;
         public String flatFee;
-        public String isActive;
-        public String sharedFee;
-        public String feeBearerEntity;
-        public String feeBearerEntityId;
         public String mappingId;
-        public String addedOn;
-        public String updatedOn;
-        public String addedBy;
-        public String updatedBy;
-        public String isAggregationRequired;
         public String aggregationPeriod;
-        public String gmvSlabValue;
-        public String aggregatedRevenue;
         public String source;
         public Integer versionNumber;
         public String sfId;
+        public String addedBy;
         public List<AttributeWrapper> attributes;
         
     }/** END */

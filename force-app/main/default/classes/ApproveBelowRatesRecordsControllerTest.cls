@@ -37,7 +37,8 @@ public class ApproveBelowRatesRecordsControllerTest {
         List<Pricing__c> listPricing = [SELECT Id FROM Pricing__c LIMIT 1];
         PageReference pageRef = Page.ApproveBelowRatesRecords;
         Test.setCurrentPage(pageRef);   
-        ApexPages.currentPage().getParameters().put('commercialId',listCommercial[0].Id);
+         String bas64EncodedId = EncodingUtil.base64Encode(Blob.valueOf(listCommercial[0].Id));
+        ApexPages.currentPage().getParameters().put('commercialId',bas64EncodedId);
         ApexPages.currentPage().getParameters().put('pricingId1',listPricing[0].Id);
         ApexPages.currentPage().getParameters().put('pricingId2',listPricing[0].Id);
         ApproveBelowRatesRecordsController controller = new ApproveBelowRatesRecordsController();

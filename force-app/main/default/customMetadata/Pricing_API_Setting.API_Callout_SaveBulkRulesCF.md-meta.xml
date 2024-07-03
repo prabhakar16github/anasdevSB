@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>API Callout - SaveBulkRulesCF</label>
+    <protected>false</protected>
+    <values>
+        <field>Body__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>End_Point_URL__c</field>
+        <value xsi:type="xsd:string">https://pg-treasury-play.payu.in/pricing/pricingRuleConfig/ext/addPaaSBulkRules?checker=false</value>
+    </values>
+    <values>
+        <field>Headers__c</field>
+        <value xsi:type="xsd:string">Content-Type:application/json,Authorization:Bearer &lt;access_token&gt;,Host:payu.in</value>
+    </values>
+    <values>
+        <field>Method__c</field>
+        <value xsi:type="xsd:string">POST</value>
+    </values>
+</CustomMetadata>

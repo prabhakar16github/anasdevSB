@@ -49,7 +49,7 @@ global class BulkPostResponseAPI {
                                     pricing.Published__c = true;
                                     pricing.Need_to_Publish__c = false;
                                     if(deleteContext){
-                                        pricing.Deleted__c = true;
+                                        //pricing.Deleted__c = true;
                                         
                                     } 
                                     else if(checkerRejectDeleteRequest){

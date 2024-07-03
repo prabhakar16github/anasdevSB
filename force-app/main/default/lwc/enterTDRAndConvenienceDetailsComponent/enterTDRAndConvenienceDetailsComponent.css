@@ -430,10 +430,36 @@
     
     .highlightedRow {
         background: #F2F8FF;
-        
-    
     }
-    
+    .highlightedRow.tableHeaderFixed {
+        position: sticky;
+        top: 44px;
+        z-index: 9;
+        border-collapse: separate;
+        }
+     /**** Start : This CSS is using to fixed the header on pricing*******/
+     .tableScrollCls.tableHeaderFixed {
+        border: #DDDBDA solid 1px 
+    }
+    .tableScrollCls.tableHeaderFixed .tableThirdScreen {
+        border-collapse: separate;
+    }
+    .tableScrollCls.tableHeaderFixed .tableThirdScreen thead {
+        border-collapse: separate;
+        position: sticky;
+        top: -1px;
+        left: 0;
+        z-index: 10;
+    }
+    .tableScrollCls.tableHeaderFixed .tableThirdScreen thead th {
+        border-bottom: #DDDBDA solid 1px;
+    }
+    /***********End********/
+    /* New CSS of vertical tab START */
+    .filterPicklist{
+        display: flex;
+        align-items: center;
+    }
     .tableScrollCls {
         overflow-x: scroll;
         width : 100%;
@@ -459,6 +485,7 @@
       .tabordion input[name="sections"] {
         left: -9999px;
         position: absolute;
+        display: none;
         top: -9999px;
       }
       

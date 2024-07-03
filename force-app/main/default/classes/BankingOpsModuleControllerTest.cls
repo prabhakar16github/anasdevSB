@@ -116,7 +116,7 @@ public class BankingOpsModuleControllerTest {
         back.Account_Number__c = '123456765432';
         back.Opportunity__c = opportunityObj.Id;
         back.Active__c = true;
-        Insert back;
+        //Insert back;
     }
     @istest static void testMethodOne(){
         Payment_Gateway2__c pay = [SELECT Type__c FROM Payment_Gateway2__c WHERE Type__c=:'PostApproved'];
@@ -141,7 +141,7 @@ public class BankingOpsModuleControllerTest {
         BankingOpsModuleController.getStatusValueUpdate(pricing2,pricing2[0].Status__c,master.Bank__c,master.POR_Type__c);
         BankingOpsModuleController.getStatusValueUpdate(pricing,pricing[0].Status__c,master.Bank__c,master.POR_Type__c);
         BankingOpsModuleController.getProfileName();
-        BankingOpsModuleController.getBankAndPorType();
-        BankingOpsModuleController.searchBank('AXIS Bank-Cards');
+        //BankingOpsModuleController.getBankAndPorType();
+        //BankingOpsModuleController.searchBank('AXIS Bank-Cards');
     }       
 }

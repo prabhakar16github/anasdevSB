@@ -44,7 +44,7 @@ public class PricingTriggerHandler {
                                           Payment_Mode__r.Name,Payment_Option__r.Name,Pricing_Specification__r.Name,
                                           Payment_Gateway__r.Name,Payment_Option__c,Pricing_Specification__c,
                                           Payment_Mode__c,POR_File_Name__c,POR_Type__c,Bank__c 
-                                          FROM Master_Pricing_Data__c]){
+                                          FROM Master_Pricing_Data__c WHERE Active_Instrument__c = true]){
                                               mapOfMpdDataKeyWithPgId.put(mpd.Salesforce_Primary_Key__c, mpd);        
                                           } 
         return mapOfMpdDataKeyWithPgId;
@@ -150,13 +150,19 @@ public class PricingTriggerHandler {
 * Version.            : 1  
 */
     public static void afterUpdate(List<Pricing__c> triggerNew,Map<Id,Pricing__c> triggerOldMap) {
-        // this list is used to store all the pricing records which we need to query from sf
+       // this list is used to store all the pricing records which we need to query from sf
         Set<String> sfDefaultKeyListToDelete = new Set<String>();
         List<Pricing__c> defaultPricingList = new List<Pricing__c>();
+        Set<Id> pricingId = new Set<Id>();
+        List<String> remarksValue = new List<String>();
         // Created a map to store commercial id and there related pricing records Id
         Map<Id,Set<String>> commPricingMap = new Map<Id,Set<String>>();
         List<Pricing__c> listPricingToUpdate = new List<Pricing__c>();
         for(Pricing__c pricing : triggerNew) {
+            pricingId.add(pricing.Id);
+            if(pricing.Remarks__c !=null){
+                 remarksValue.add(pricing.Remarks__c);
+            }
             Pricing__c oldPricing = triggerOldMap.get(pricing.Id);
             if(pricing.Fee_Model__c != triggeroldMap.get(pricing.Id).Fee_Model__c 
                || pricing.Transaction_Type__c != triggeroldMap.get(pricing.Id).Transaction_Type__c 
@@ -177,7 +183,7 @@ public class PricingTriggerHandler {
                    /***End******/
                }
             /********SFI-1651 By Rohit************/
-            /*else if(pricing.Banking_Ops_Status__c != oldPricing.Banking_Ops_Status__c
+            /*else if(pricing.Banking_Ops_Status__c != NULL && pricing.Banking_Ops_Status__c != oldPricing.Banking_Ops_Status__c
                     && pricing.Banking_Ops_Status__c=='Approved'){
                         Set<String> setPricingIds = new Set<String>();
                         if(commPricingMap.containsKey(pricing.Commercial2__c)) {
@@ -195,12 +201,28 @@ public class PricingTriggerHandler {
                         sfDefaultKeyListToDelete.addAll(mapOfDefaultMetadata.get(pricing.Master_Pricing_SF_Key__c));
                     }
         }
+        if( remarksValue !=Null && remarksValue.size()>0){
+            List<FeedItem> postList = [SELECT Id, ParentId, Body FROM FeedItem WHERE ParentId=:pricingId];
+            List<FeedItem> feedItemList = new List<FeedItem>();
+            for(Pricing__c pricing : triggerNew){
+                if(pricing.Remarks__c !=NULL){
+                    FeedItem feed = new FeedItem();
+                    feed.ParentId =pricing.Id;
+                    feed.Body = pricing.Remarks__c; 
+                    feed.Type='ContentPost';
+                    feedItemList.add(feed);
+                }
+            }
+            if(feedItemList!=null && feedItemList.size()>0){
+                upsert feedItemList;
+            }  
+        }
         // Process collected pricing records in batches
         /********SFI-1651************/
         /*if(!commPricingMap.isEmpty()){
             for(Id commercialId : commPricingMap.keySet()) {
                 // calling the batch class to send every commercial related pricing records to temp table
-                Database.executeBatch(new PublishPricingToTreasuryTempTable(commPricingMap.get(commercialId)),500);
+                Database.executeBatch(new PublishPricingToTreasuryTempTable(commPricingMap.get(commercialId),'SaveBulkRules-CheckerFalseActionSave',false),50);
             }
         }*/
         /********End**********/

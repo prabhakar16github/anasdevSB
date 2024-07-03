@@ -292,6 +292,9 @@ export default class PublishPricingComponent extends LightningElement {
                         newLiveCommercialName : '',
                         oldLiveCommercialName : '',
                     }
+
+                    let ev = new CustomEvent('publish',{}); 
+                    this.dispatchEvent(ev); 
                 }
                 else {
                     this.showSpinner = false;

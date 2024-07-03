@@ -1,5 +1,5 @@
 /*
-* Name of the class : BankingOpsModuleController
+* Name of the class : BankingOpsCTRL
 * Author's Name     : Rohit Gupta  
 * Description       : This class is used for getting Postapproved records from Pricing Object.
 * Version.          : 1   
@@ -7,10 +7,9 @@
 public with sharing class BankingOpsModuleController {
     public static Group gpNew = [Select Id,Name,DeveloperName FROM Group WHERE DeveloperName IN('Banking_Ops_Team') AND Type =: 'Queue'];  
     /*This method is used to return resopnse based on bank name and POR type selected and show it to the user on banking
-ops page.*/
+	ops page.*/
     @AuraEnabled
     public static DataTableResponse GetWrapperOfSObjectFieldColumnActionValues(String bankName,String porNameVar){
-        SYstem.debug('bankName:::::'+bankName+' porNameVar::::::'+porNameVar);
         //List<Pricing__c> pri = new   List<Pricing__c>();
         List<DataTableColumns> lstDataColumns            = new List<DataTableColumns>();
         List<Object> lstDataTableData                    = new List<Object>();
@@ -22,7 +21,6 @@ ops page.*/
         try{
             if(String.isNotEmpty(porNameVar) &&  String.isNotEmpty(bankName)){
                 List<Pricing__c> pri  = [SELECT Bank_Name__c,POR_Type_Name__c,POR_File_NameFormula__c FROM Pricing__c WHERE Bank_Name__c =:bankName AND POR_Type_Name__c =:porNameVar AND Type__c='PostApproved'];
-                System.debug('pri:::::'+pri);
                 if(pri[0].POR_File_NameFormula__c !=Null){
                     TableComponentMetadata = [SELECT Id, DeveloperName,Field_Value__c,Banking_Details__c  , Header_Value__c, Query__c,Website_Page__c,
                                               Pricing_Query__c,Operating_Address__c, Table_Title__c FROM
@@ -37,12 +35,16 @@ ops page.*/
             Set<Id> operatingAddId = new Set<Id>();
             Set<Id> websiteId = new Set<Id>();
             Set<Id> bankingId = new Set<Id>();
-            for(Pricing__c pricing : [Select Payment_Gateway2__r.Name,Opportunity__c, Payment_Mode__r.Name FROM Pricing__c
-                                      WHERE Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar   AND
-                                      (Banking_Ops_Status__c !='Pending with BH' AND Banking_Ops_Status__c !='Rejected with BH' AND Banking_Ops_Status__c !='Approved with BH' AND Banking_Ops_Status__c!=NULL) AND Type__c='PostApproved']){
+            for(Pricing__c pricing : [Select Payment_Gateway2__r.Name,Opportunity__c,Invisible__c, Payment_Mode__r.Name FROM Pricing__c
+                                      WHERE Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar  AND
+                                      (Banking_Ops_Status__c !='Pending with BH' AND Banking_Ops_Status__c !='Rejected with BH' AND Banking_Ops_Status__c !='Approved with BH' AND Banking_Ops_Status__c!=NULL AND Banking_Ops_Status__c !='Checker Approved'  AND Banking_Ops_Status__c !='Checker Rejected') AND Type__c='PostApproved']){
+                                          
                                           oppId.add(pricing.Opportunity__c);
-                                          pricingId.add(pricing.Id);
+                                          pricingId.add(pricing.Id); 
+                                          
+                                          
                                       }
+         
             if(TableComponentMetadata.Operating_Address__c !=null){
                 for(Address_Details__c addressVar : [Select Address_Line__c FROM Address_Details__c WHERE Type__c=:'Operating' AND Opportunity__c=:oppId]){
                     operatingAddId.add(addressVar.Id);
@@ -67,39 +69,39 @@ ops page.*/
                                                                     editableVar);
                 lstDataColumns.add(datacolumns);
             }
-            if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c==null && TableComponentMetadata.Banking_Details__c ==null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+           if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c==null && TableComponentMetadata.Banking_Details__c ==null){
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c==null && TableComponentMetadata.Banking_Details__c !=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c!=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ', ('+TableComponentMetadata.Website_Page__c + ' WHERE Id=:websiteId)' + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ', ('+TableComponentMetadata.Website_Page__c + ' WHERE Id=:websiteId)' + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Banking_Details__c ==null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +',('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +',('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Banking_Details__c !=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c ==null && TableComponentMetadata.Pricing_Query__c==null && TableComponentMetadata.Query__c !=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c   + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c   + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else{
                 if(TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c !=null){
-                    for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' +  ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                    for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' +  ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                         lstDataTableData.add(SObjectItem);
                     }   
                 }
@@ -162,23 +164,23 @@ ops page.*/
             Set<Id> pricingId = new Set<Id>();
             if(req !=NULL && req !='All Request' && req !='New Request'){
                 for(Pricing__c pricing : [Select Payment_Gateway2__r.Name,Opportunity__c, Payment_Mode__r.Name FROM Pricing__c WHERE  Banking_Ops_Status__c=:req AND Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar  AND
-                                          (Banking_Ops_Status__c !='Pending with BH' AND Banking_Ops_Status__c !='Rejected with BH' AND Banking_Ops_Status__c !='Approved with BH' AND Banking_Ops_Status__c!=NULL) AND Type__c='PostApproved']){
-                                              oppId.add(pricing.Opportunity__c);
-                                              pricingId.add(pricing.Id);
-                                          }
+                                      (Banking_Ops_Status__c !='Pending with BH' AND Banking_Ops_Status__c !='Rejected with BH' AND Banking_Ops_Status__c !='Approved with BH' AND Banking_Ops_Status__c!=NULL AND  Banking_Ops_Status__c !='Checker Approved' AND Banking_Ops_Status__c !='Checker Rejected') AND Type__c='PostApproved']){
+                    oppId.add(pricing.Opportunity__c);
+                    pricingId.add(pricing.Id);
+                }
             }
             if(req !=NULL && req =='New Request'){
                 List<Pricing__c> pricingList = [Select Payment_Gateway2__r.Name,Opportunity__c, Payment_Mode__r.Name,(SELECT Id,Oldvalue,newValue FROM Histories WHERE Field='Banking_Ops_Status__c')
-                                                FROM Pricing__c WHERE Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar AND Type__c='PostApproved' AND Banking_Ops_Status__c=:'Pending with Banking ops' AND Banking_Ops_Status__c!=NULL];
+                                          FROM Pricing__c WHERE Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar AND Type__c='PostApproved' AND Banking_Ops_Status__c=:'Pending with Banking ops'];
                 for(Pricing__c pricing : pricingList){
                     if(pricing.Histories.size()==0){
-                        oppId.add(pricing.Opportunity__c);
-                        pricingId.add(pricing.Id); 
+                       oppId.add(pricing.Opportunity__c);
+                       pricingId.add(pricing.Id); 
                     }
                 }
             }
             if(req !=NULL && req =='All Request'){
-                for(Pricing__c pricing : [Select Payment_Gateway2__r.Name,Opportunity__c, Payment_Mode__r.Name FROM Pricing__c WHERE  Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar AND (Banking_Ops_Status__c !='Pending with BH' AND Banking_Ops_Status__c !='Rejected with BH' AND Banking_Ops_Status__c !='Approved with BH' AND Banking_Ops_Status__c!=NULL)]){
+                for(Pricing__c pricing : [Select Payment_Gateway2__r.Name,Opportunity__c, Payment_Mode__r.Name FROM Pricing__c WHERE  Bank_Name__c=:bankName AND POR_Type_Name__c=:porNameVar AND (Banking_Ops_Status__c !='Pending with BH' AND Banking_Ops_Status__c !='Rejected with BH' AND Banking_Ops_Status__c !='Approved with BH') AND  Banking_Ops_Status__c !='Checker Approved' AND Banking_Ops_Status__c !='Checker Rejected']){
                     oppId.add(pricing.Opportunity__c);
                     pricingId.add(pricing.Id);
                 }
@@ -209,38 +211,39 @@ ops page.*/
                 lstDataColumns.add(datacolumns);
             } 
             if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c==null && TableComponentMetadata.Banking_Details__c ==null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c==null && TableComponentMetadata.Banking_Details__c !=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId LIMIT 1)' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
+
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c!=null && TableComponentMetadata.Website_Page__c!=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId )' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ', ('+TableComponentMetadata.Website_Page__c + ' WHERE Id=:websiteId)' + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId )' + ', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ', ('+TableComponentMetadata.Website_Page__c + ' WHERE Id=:websiteId)' + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Banking_Details__c ==null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +',('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +',('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c !=null && TableComponentMetadata.Query__c !=null && TableComponentMetadata.Banking_Details__c !=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Operating_Address__c+ ' WHERE Id=:operatingAddId )' + ', ('+TableComponentMetadata.Banking_Details__c+ ' WHERE Id=:bankingId )'  + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else if(TableComponentMetadata.Operating_Address__c ==null && TableComponentMetadata.Pricing_Query__c==null && TableComponentMetadata.Query__c !=null){
-                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c   + ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c   + ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                     lstDataTableData.add(SObjectItem);
                 }
             }
             else{
                 if(TableComponentMetadata.Query__c !=null && TableComponentMetadata.Pricing_Query__c !=null){
-                    for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId )' +  ' FROM Opportunity '+ ' WHERE Id=:oppId')) {
+                    for(SObject SObjectItem : Database.query(TableComponentMetadata.Query__c +', ('+TableComponentMetadata.Pricing_Query__c+ ' WHERE Id=:pricingId )' +  ' FROM Opportunity '+ ' WHERE Id=:oppId AND LOB_Status_PreRisk__c = \'LOB Approved\' AND  Website_Status__c = \'Website OK\'')) {
                         lstDataTableData.add(SObjectItem);
                     }   
                 }
@@ -254,30 +257,11 @@ ops page.*/
         } 
         return finalWrapper;
     }
-    @AuraEnabled
-    public static List<Pricing__c> getApprovedOrRejectedData(String appOrReject){
-        System.debug('appOrReject:::::'+appOrReject);
-        List<Pricing__c> priList;
-        if(appOrReject !=NULL){
-            priList  = [SELECT Remarks__c ,Banking_Ops_Status__c,Opportunity__r.Prod_Merchant_Id__c,Merchant_Name_Legal__c FROM Pricing__c WHERE Banking_Ops_Status__c =:appOrReject AND Type__c='PostApproved'];
-            System.debug('priList:::;'+priList);
-            if(priList !=NULL && priList.size()>0 ){
-                return priList; 
-            }
-            else{
-                
-            }
-        }
-        return NULL;
-    }
-    
     //This method is used when status will change from 1st page of UI then based on status BO taks Owner Will be changed
     @AuraEnabled
     public static List<Pricing__c> getStatusValueUpdate(List<Pricing__c> pricingList, String statusvalue,String bankName,String PORName) {
-        System.debug('pricingList:::277:'+pricingList);
-        System.debug('pricingList:::277:'+pricingList.size());
         List<Pricing__c> pricingToUpdate =new  List<Pricing__c>();
-        // this map created if pricing record get rejected
+        Map<Id,Set<String>> commPricinMap = new Map<Id,Set<String>>();
         Map<Id,Id> priMapId = new Map<Id,Id>();
         try{
             for(Pricing__c priVar : pricingList){
@@ -286,7 +270,10 @@ ops page.*/
             Map<Id,Opportunity> oppMap = new Map<Id,Opportunity>([SELECT Id,OwnerId FROM Opportunity WHERE Id=:priMapId.keySet()]);
             
             List<User> userList =[SELECT Id,Name FROM USER WHERE Bank__c INCLUDES (:bankName) AND POR_Type__c INCLUDES (:PORName)];
-            for(Pricing__c pricing : [SELECT ID,Bank_Name__c,Commercial2__c,POR_Type_Name__c ,Below_Rack_Rates__c,Banking_Ops_Status__c,OwnerId, Opportunity__c FROM Pricing__c WHERE Bank_Name__c=:bankName AND POR_Type_Name__c=:PORName AND Opportunity__c=:oppMap.keySet()]){
+            for(Pricing__c pricing : [SELECT ID,Bank_Name__c,Commercial2__c,POR_Type_Name__c ,Below_Rack_Rates__c,
+                                      Banking_Ops_Status__c,OwnerId, Opportunity__c FROM Pricing__c WHERE
+                                      Bank_Name__c=:bankName AND POR_Type_Name__c=:PORName AND
+                                      Opportunity__c=:oppMap.keySet() AND Invisible__c =false]){
                 Opportunity opp = oppMap.get(pricing.Opportunity__c);
                 if(!pricing.Below_Rack_Rates__c ){//This condition will store all the prciing records which has below rack rates
                     if(statusvalue=='Pending with KAM' && priMapId.containsKey(pricing.Opportunity__c)){
@@ -294,10 +281,19 @@ ops page.*/
                         pricing.OwnerId = opp.OwnerId;
                         pricingToUpdate.add(pricing);
                     }
-                    else if((statusvalue=='Pending with Banking ops' || statusvalue=='Approved' || statusvalue=='Rejected') && priMapId.containsKey(opp.Id)){
+                    else if((statusvalue=='Pending with Banking ops' || statusvalue.contains('Approved') || statusvalue=='Rejected') && priMapId.containsKey(opp.Id)){
                         pricing.Banking_Ops_Status__c = statusvalue;
                         pricing.OwnerId = userList[0].Id;
                         pricingToUpdate.add(pricing);
+                        if(pricing.Banking_Ops_Status__c.contains('Approved')){
+                            Set<String> setPricingIds = new Set<String>();
+                            if(commPricinMap.containsKey(pricing.Commercial2__c)) {
+                                commPricinMap.get(pricing.Commercial2__c).add(pricing.Id);
+                            } 
+                            else{
+                                commPricinMap.put(pricing.Commercial2__c, new Set<String>{pricing.Id}); 
+                            }
+                        }
                     }
                     else if(statusvalue=='Pending with Bank' && priMapId.containsKey(opp.Id) && userList !=NULL){
                         pricing.Banking_Ops_Status__c = statusvalue;
@@ -306,16 +302,25 @@ ops page.*/
                     }
                 }
                 //This condition will store If pricing has below rack rate and It is approved by BH
-                else if(pricing.Below_Rack_Rates__c && (pricing.Banking_Ops_Status__c=='Approved with BH' || pricing.Banking_Ops_Status__c=='Pending with KAM' || pricing.Banking_Ops_Status__c=='Pending with Banking ops' ||  pricing.Banking_Ops_Status__c=='Rejected' || pricing.Banking_Ops_Status__c=='Approved' || pricing.Banking_Ops_Status__c=='Pending with Bank' )){
+                 else if(pricing.Below_Rack_Rates__c && (pricing.Banking_Ops_Status__c=='Approved with BH' || pricing.Banking_Ops_Status__c=='Pending with KAM' || pricing.Banking_Ops_Status__c=='Pending with Banking ops' ||  pricing.Banking_Ops_Status__c=='Rejected' || pricing.Banking_Ops_Status__c=='Approved' || pricing.Banking_Ops_Status__c=='Pending with Bank' )){
                     if(statusvalue=='Pending with KAM' && priMapId.containsKey(pricing.Opportunity__c)){
                         pricing.Banking_Ops_Status__c = statusvalue;
                         pricing.OwnerId = opp.OwnerId;
                         pricingToUpdate.add(pricing);
                     }
-                    else if((statusvalue=='Pending with Banking ops' || statusvalue=='Approved' || statusvalue=='Rejected') && priMapId.containsKey(opp.Id)){
+                    else if((statusvalue=='Pending with Banking ops' || statusvalue.contains('Approved') || statusvalue=='Rejected') && priMapId.containsKey(opp.Id)){
                         pricing.Banking_Ops_Status__c = statusvalue;
                         pricing.OwnerId = userList[0].Id;
                         pricingToUpdate.add(pricing);
+                        if(pricing.Banking_Ops_Status__c.contains('Approved')){
+                            Set<String> setPricingIds = new Set<String>();
+                            if(commPricinMap.containsKey(pricing.Commercial2__c)) {
+                                commPricinMap.get(pricing.Commercial2__c).add(pricing.Id);
+                            } 
+                            else{
+                                commPricinMap.put(pricing.Commercial2__c, new Set<String>{pricing.Id}); 
+                            }
+                        }
                     }
                     else if(statusvalue=='Pending with Bank' && priMapId.containsKey(opp.Id) && userList !=NULL){
                         pricing.Banking_Ops_Status__c = statusvalue;
@@ -323,9 +328,15 @@ ops page.*/
                         pricingToUpdate.add(pricing);
                     }
                 }
+               
             }
             if(pricingToUpdate.size()>0 && pricingToUpdate !=null){
                 Database.update(pricingToUpdate,false); 
+                if(commPricinMap.keySet().size() > 0){
+                    for(Id commercialId : commPricinMap.keySet()) {
+                        Database.executeBatch(new PublishPricingToTreasuryTempTable (commPricinMap.get(commercialId),'SaveBulkRules-CheckerFalseActionSave',false),50);
+                    }
+                }
             } 
         }
         catch(Exception e) {
@@ -338,12 +349,13 @@ ops page.*/
     @AuraEnabled
     public static String chatterStatusChange(String statusChangeValue,String recdId,String bankName,String porType){
         try{
+            Map<Id,Set<String>> commPricinMap = new Map<Id,Set<String>>();
             List<Pricing__c> priList = [SELECT ID,Bank_Name__c,POR_Type_Name__c ,Banking_Ops_Status__c,OwnerId, Opportunity__c FROM Pricing__c WHERE ID=: recdId];
             List<Pricing__c> pricingUpdate = new List<Pricing__c>();
             List<Opportunity> oppList = [SELECT OwnerId,(SELECT ID,Bank_Name__c,POR_Type_Name__c ,Banking_Ops_Status__c,OwnerId, Opportunity__c FROM Pricings__r WHERE Bank_Name__c=:priList[0].Bank_Name__c AND POR_Type_Name__c=:priList[0].POR_Type_Name__c ) from Opportunity WHERE ID=:priList[0].Opportunity__c];
             Map<Id,Opportunity> oppMap = new Map<Id,Opportunity>([SELECT Id,OwnerId FROM Opportunity WHERE Id=:priList[0].Opportunity__c]);
             List<User> userList =[SELECT Id,Name FROM USER WHERE Bank__c INCLUDES (:bankName) AND POR_Type__c INCLUDES (:porType)];
-            for(Pricing__c pricing : [SELECT ID,Bank_Name__c,POR_Type_Name__c ,Below_Rack_Rates__c ,Commercial2__c,Banking_Ops_Status__c,OwnerId, Opportunity__c FROM Pricing__c WHERE Bank_Name__c=:priList[0].Bank_Name__c AND POR_Type_Name__c=:priList[0].POR_Type_Name__c AND Opportunity__c=:oppMap.keySet()]){
+            for(Pricing__c pricing : [SELECT ID,Bank_Name__c,POR_Type_Name__c ,Below_Rack_Rates__c ,Commercial2__c,Banking_Ops_Status__c,OwnerId, Opportunity__c FROM Pricing__c WHERE Bank_Name__c=:priList[0].Bank_Name__c AND POR_Type_Name__c=:priList[0].POR_Type_Name__c AND Opportunity__c=:oppMap.keySet() AND Invisible__c =false]){
                 Opportunity opp = oppMap.get(pricing.Opportunity__c);
                 if(!pricing.Below_Rack_Rates__c ){
                     if(statusChangeValue !=NULL && statusChangeValue=='Pending with KAM'){
@@ -351,10 +363,19 @@ ops page.*/
                         pricing.OwnerId = opp.OwnerId;
                         pricingUpdate.add(pricing);
                     }
-                    else if(statusChangeValue !=NULL && (statusChangeValue=='Pending with Banking ops' || statusChangeValue=='Approved' || statusChangeValue=='Rejected')){
+                    else if(statusChangeValue !=NULL && (statusChangeValue=='Pending with Banking ops' || statusChangeValue.contains('Approved') || statusChangeValue=='Rejected')){
                         pricing.Banking_Ops_Status__c = statusChangeValue;
                         pricing.OwnerId = userList[0].Id;
                         pricingUpdate.add(pricing);
+                        if(pricing.Banking_Ops_Status__c.contains('Approved')){
+                            Set<String> setPricingIds = new Set<String>();
+                            if(commPricinMap.containsKey(pricing.Commercial2__c)) {
+                                commPricinMap.get(pricing.Commercial2__c).add(pricing.Id);
+                            } 
+                            else{
+                                commPricinMap.put(pricing.Commercial2__c, new Set<String>{pricing.Id}); 
+                            }
+                        }
                     }
                     else if(statusChangeValue !=NULL && statusChangeValue=='Pending with Bank' && userList !=NULL){
                         pricing.Banking_Ops_Status__c = statusChangeValue;
@@ -368,10 +389,19 @@ ops page.*/
                         pricing.OwnerId = opp.OwnerId;
                         pricingUpdate.add(pricing);
                     }
-                    else if(statusChangeValue !=NULL && (statusChangeValue=='Pending with Banking ops' || statusChangeValue=='Approved' || statusChangeValue=='Rejected')){
+                    else if(statusChangeValue !=NULL && (statusChangeValue=='Pending with Banking ops' || statusChangeValue.contains('Approved') || statusChangeValue=='Rejected')){
                         pricing.Banking_Ops_Status__c = statusChangeValue;
                         pricing.OwnerId = userList[0].Id;
                         pricingUpdate.add(pricing);
+                        if(pricing.Banking_Ops_Status__c.contains('Approved')){
+                            Set<String> setPricingIds = new Set<String>();
+                            if(commPricinMap.containsKey(pricing.Commercial2__c)) {
+                                commPricinMap.get(pricing.Commercial2__c).add(pricing.Id);
+                            } 
+                            else{
+                                commPricinMap.put(pricing.Commercial2__c, new Set<String>{pricing.Id}); 
+                            }
+                        }
                     }
                     else if(statusChangeValue !=NULL && statusChangeValue=='Pending with Bank' && userList !=NULL){
                         pricing.Banking_Ops_Status__c = statusChangeValue;
@@ -382,17 +412,22 @@ ops page.*/
             }
             if(pricingUpdate !=null && pricingUpdate.size()>0){
                 Database.update(pricingUpdate,false); 
-            }
-            if(statusChangeValue !=NULL && statusChangeValue=='Pending with KAM'){
-                return [SELECT Owner.Name from Pricing__c WHERE ID=:pricingUpdate[0].Id].Owner.Name; 
-            }
-            if(statusChangeValue !=NULL && (statusChangeValue=='Pending with Banking ops' || statusChangeValue=='Approved' || statusChangeValue=='Rejected')){
-                return [SELECT Owner.Name from Pricing__c WHERE ID=:pricingUpdate[0].Id].Owner.Name;
-            }
-            if(statusChangeValue !=NULL && statusChangeValue=='Pending with Bank'){
-                return bankName;
-            }
-        }    
+                 if(commPricinMap.keySet().size() > 0){
+                     for(Id commercialId : commPricinMap.keySet()) {
+                         Database.executeBatch(new PublishPricingToTreasuryTempTable (commPricinMap.get(commercialId),'SaveBulkRules-CheckerFalseActionSave',false),50);
+                     }
+                }
+                if(statusChangeValue !=NULL && statusChangeValue=='Pending with KAM'){
+                    return [SELECT Owner.Name from Pricing__c WHERE ID=:pricingUpdate[0].Id].Owner.Name; 
+                }
+                if(statusChangeValue !=NULL && (statusChangeValue=='Pending with Banking ops' || statusChangeValue=='Approved' || statusChangeValue=='Rejected')){
+                    return [SELECT Owner.Name from Pricing__c WHERE ID=:pricingUpdate[0].Id].Owner.Name;
+                }
+                if(statusChangeValue !=NULL && statusChangeValue=='Pending with Bank'){
+                    return bankName;
+                }
+            }    
+        }
         catch(Exception e) {
             return e.getMessage(); 
         } 
@@ -411,13 +446,12 @@ ops page.*/
     //This method is used when chnage status then based on status Bo task owner will be displayed on chatter page.
     @AuraEnabled
     public static String OwnerAssignmentLogic(String oppId,String bankingOpsStatus,String bankNameVal,String PORName){
-        System.debug('oppId::::'+oppId + ' bankingOpsStatus::::'+bankingOpsStatus +'  bankNameVal::'+bankNameVal +'  PORName::'+PORName);
         try{
             if(bankingOpsStatus !=NULL && bankingOpsStatus=='Pending with KAM'){
                 List<Opportunity> oppList = [SELECT Owner.Name from Opportunity WHERE ID=:oppId];
                 return oppList[0].Owner.Name;
             }
-            else if( bankingOpsStatus !=NULL && (bankingOpsStatus=='Pending with Banking ops' || bankingOpsStatus =='Approved'  || bankingOpsStatus =='Rejected')){
+            else if( bankingOpsStatus !=NULL && (bankingOpsStatus=='Pending with Banking ops' || bankingOpsStatus.contains('Approved')  || bankingOpsStatus =='Rejected')){
                 List<User> userList =[SELECT Id,Name FROM USER WHERE Bank__c INCLUDES (:bankNameVal) AND POR_Type__c INCLUDES (:PORName)];
                 return userList[0].Name;
             }
@@ -471,45 +505,15 @@ ops page.*/
             }
         }
         catch(Exception e) {
-            System.debug('Message::::'+ e.getMessage()); 
+           System.debug('Message::::'+ e.getMessage()); 
         } 
         return bankingWrapperList;
     }
-    @AuraEnabled
+   /* @AuraEnabled
     public static  List<Bank_PORTypeMapping__c> getBankAndPorType(){
-        List<Bank_PORTypeMapping__c> bankPorList = [SELECT Bank__c ,POR_File_Name__c ,POR_Type__c , Bank_Image__c  FROM Bank_PORTypeMapping__c];
-        return bankPorList;
-    }
-    @AuraEnabled(cacheable=true)
-    public static List<Bank_PORTypeMapping__c> searchBank(String searchTerm) {
-        if(searchTerm.contains('-')){
-            String[] searchTerms = searchTerm.split('-');
-            String bankTerm = searchTerms[0].trim();
-            String porTerm = searchTerms[1].trim();
-            String query = 'SELECT  Bank__c, POR_File_Name__c,POR_Type__c,Bank_Image__c FROM Bank_PORTypeMapping__c WHERE Bank__c LIKE \'%' + bankTerm + '%\' AND POR_Type__c LIKE \'%' + porTerm + '%\'';
-            return Database.query(query);
-        }
-        else{
-            String query = 'SELECT Bank__c ,POR_File_Name__c ,POR_Type__c , Bank_Image__c FROM Bank_PORTypeMapping__c WHERE Bank__c LIKE \'%' + searchTerm + '%\'';
-            return Database.query(query);
-        }
-    }
-    @AuraEnabled
-    public static List<Bank_PORTypeMapping__c> Requestsassignedtome(){
-        String bank;
-        List<String> porTypes = new List<String>();
-        User usr = [SELECT Id,Bank__c,POR_Type__c  FROM USER WHERE ID=:UserInfo.getUserId()];
-        // Get the Bank field value
-        bank = usr.Bank__c;
-        // Get the POR Type field values
-        if (usr.POR_Type__c != null) {
-            porTypes = usr.POR_Type__c.split(';');
-        }
-        System.debug('porTypes::::'+porTypes);
-        List<Bank_PORTypeMapping__c> bankPorList = [SELECT Bank__c ,POR_File_Name__c ,POR_Type__c , Bank_Image__c  FROM Bank_PORTypeMapping__c WHERE Bank__c=:bank AND POR_Type__c=:porTypes];
-        System.debug('bankPorList:::::'+bankPorList);
-        return bankPorList;
-    }
+       List<Bank_PORTypeMapping__c> bankPorList = [SELECT Bank__c ,POR_File_Name__c ,POR_Type__c , Bank_Image__c  FROM Bank_PORTypeMapping__c];
+    return bankPorList;
+    }*/
     //This method is used to retrun current logged in user profile name.
     @AuraEnabled
     public static Boolean getProfileName(){

@@ -11,7 +11,6 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
     @track selectedListPaymentData = [];
     @track listFirstRowForAddCommercials = [];
     showScreen4 = true;
-    @track pushForPaymentMode = [];
     @track listDataForPaymentMode = [];
     paymentModeName = '';
     index = 0;
@@ -22,15 +21,19 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
     @api selectedTemplate = '';
     showBelowRackRateMessage = false;
     belowRackRateMessage = '';
-    commercialId = '';
+    @api commercialId = '';
     disabledCommercialName = false;
    /*********Added by rohit */
    errorSelectPayOptions = false;
-   allSelectedValue =[];
    showErrorMessageForSelectPayOptions;
-   listForShowingAllSpecification=[];
-   errorLineBreakShow='';
-   @track errorMessageClass = '';
+   paymentOptions=[]; // added by rohit
+   specificationOptions = [];// added by rohit
+   PaymentOptionPicklistValue;  //added by rohit
+   specificationPicklistValue;//added by rohit
+   storePaymentOptionValue = '';//added by rohit
+   @track originalSelectedData=[];//added by rohit
+   @track allDataShow=[];//added by rohit
+   @track isChnagePicklist = true;//added by rohit
    /***************End */
     @track SelectedPaymentOptionObject = {
         paymentModeId : '',
@@ -41,7 +44,8 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
 
     @track SelectedPaymentOptionIndividualListObject = {
         key : '',
-        selectedPaymentIndividualList : []
+        selectedPaymentIndividualList : [],
+        restrictTransactionTypeAndFeeModel : false
     }
 
     @track selectetPaymentIndividualObject = {
@@ -63,45 +67,37 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
         tdrFee : '',
         tdrPercentage : '',
         convenienceAmount : '0',
-        convenienceFee : '', 
+        convenienceFee : '',
         conveniencePercentage : '',
         backgroundColor : 'background-color:white;',
         pricingId : '',
         restrictFlatFeeAndPercentageToBeEdited : false,
         restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : false,
-        ruleStatus : 'D'
+        ruleStatus : 'D',
+        isSelectPaymentOption:false
     }
-    paymentOptions=[]; // added by rohit
-    //paymentOptionsArray = [];
-    specificationOptions = [];// added by rohit
-    paymentGatewayOptions = [];// added by rohit
-    PaymentOptionPicklistValue;  //added by rohit
-    specificationPicklistValue;//added by rohit
-    noValueForPaymentsOptionAndSpecification;//added by rohit
-    haveRecords = true;//added by rohit
-    storePaymentOptionValue = '';
-    filteredDataForSelected = [];
-    filteredData = [];
-    @api selectedFilterDataToChange=[];
-    getSelectRow=[];
-    @track originalSelectedData=[];
-    @track saveData=[];
-    @track getAllDataFOrSaving=[];
-    @track allDataShow=[];
-    isClickedOnAnotherTab  =false;
-    @track allPickListDataForFirstRow =[]
-    handleCheckedForCommercialsFirstRowFlag = false;
+
+    listFallbackCharges = [];
+    listFixedPricing2 = [];
+    listPlatformFee = [];
+    selectedType = '';
+    selectedInterval = '';
+    availableType = [];
+    availableInterval = [];
+    availableDebitModel = [];
+    selectedDebitModel = '';
+    selectedStartDate;
+    selectedEndDate;
+    availableIntervalFP = [];
+    availableDebitModelFP = [];
+
     connectedCallback() {
-        this.filteredData = [];
-        this.getSelectRow = [];
         this.PaymentOptionPicklistValue = '--NONE--';
         this.specificationPicklistValue = '--NONE--';
         this.selectedListPaymentData = JSON.parse(JSON.stringify(this.selectedListPaymentDataTemporary));
         this.originalSelectedData = JSON.parse(JSON.stringify(this.selectedListPaymentDataTemporary));
-        this.allPickListDataForFirstRow =  this.originalSelectedData[0].selectedPaymentOptionsList;
         this.listDataForPaymentMode = this.selectedListPaymentData[0].selectedPaymentOptionsList;
-       
-        /******Added by rohit Part 2 story */ 
+        /******Added by rohit Part 2 story */
         this.paymentOptions.unshift({
             label: '--NONE--',
             value: '--NONE--',
@@ -117,7 +113,7 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
             }
            
           }
-        /**********Get specification */
+            /**********Get specification */
         this.specificationOptions.push({
             label: '--NONE--',
             value:'--NONE--',
@@ -132,14 +128,13 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
                 }
             }
         }
-            /**********Get paymentGateway */
         /**********End*********** */
         this.paymentModeName = this.selectedListPaymentData[0].paymentModeName;
         this.index = 0;
         this.selectetPaymentIndividualObject.key = this.selectedListPaymentData[0].paymentModeName;
-        this.selectetPaymentIndividualObject.selectedPaymentOptionName = '--NONE--';//'Set a default rate';//+this.selectedListPaymentData[0].paymentModeName +' rate';
+        this.selectetPaymentIndividualObject.selectedPaymentOptionName = '--NONE--';//+this.selectedListPaymentData[0].paymentModeName +' rate';
         this.selectetPaymentIndividualObject.selectedPaymentOptionId = '';
-        this.selectetPaymentIndividualObject.selectedSpecification = '--NONE--';
+        this.selectetPaymentIndividualObject.selectedSpecification ='--NONE--';
         this.selectetPaymentIndividualObject.selectedPaymentGatewayName = '';
         this.selectetPaymentIndividualObject.selectedOnusOffus = '';
         this.selectetPaymentIndividualObject.listFeeModel = JSON.parse(JSON.stringify(this.listFeeModel));
@@ -160,97 +155,94 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
         this.listFirstRowForAddCommercials.push(JSON.parse(JSON.stringify(this.selectetPaymentIndividualObject))); 
         this.showSpinner = false;
     }
- 
-    handleChangePaymentOption = (event) => {
-       // Filter the data
-        //let index = this.index;
-        this.handleCheckedForCommercialsFirstRowFlag = true;
-        this.listFirstRowForAddCommercials[0].isChecked = false;
-        this.storePaymentOptionValue = event.target.value;
-        this.filteredData = []; 
-        this.allSelectedValue=[];
-
-        /**************Start to get the picklist value */
-
-            // Get the selected value of the first picklist
-    const getPicklistValue = event.target.value;
-
-    // Get the data-id attribute from the event to identify which picklist triggered the change
-    const dataIndex =  event.target.dataset.id;//event.target.dataset.id ||
-    // Depending on the data-id value, you can determine which picklist triggered the change
-    if (dataIndex === 'index') {
-        // This change is from the first picklist
-        // Store the selected value of the first picklist
-        this.PaymentOptionPicklistValue= getPicklistValue;
-        
-    } else if (dataIndex === 'index.key') {
-        // This change is from the second picklist
-        // Store the selected value of the second picklist
-        this.specificationPicklistValue = getPicklistValue;
-        
-         
-    }
-    console.log('selectedPaymentOptionName::183:::::'+ this.PaymentOptionPicklistValue);
-    console.log('selectedSpecification:::189::::'+this.specificationPicklistValue);
-    // You can perform additional logic or actions here if needed
-
-        /**************END************************* */
-        for (let i = 0; i <this.selectedListPaymentData[this.index].selectedPaymentOptionsList.length; i++) {
+    handleChangePaymentOptionSpecification = (event) => { 
+        this.isChnagePicklist = false;
+        // Filter the data
+         let index = this.index;
+         this.listFirstRowForAddCommercials[0].isChecked = false;
+         this.storePaymentOptionValue = event.target.value;
+         /**************Start to get the picklist value */
+        // Get the selected value of the first picklist
+        const getPicklistValue = event.target.value;
+        // Get the data-id attribute from the event to identify which picklist triggered the change
+        const dataIndex =  event.target.dataset.id;//event.target.dataset.id ||
+        // Depending on the data-id value, you can determine which picklist triggered the change
+        if (dataIndex === 'index') {
+         // This change is from the first picklist
+         // Store the selected value of the first picklist
+         this.PaymentOptionPicklistValue= getPicklistValue;
+        } else if (dataIndex === 'index.key') {
+         // This change is from the second picklist
+         // Store the selected value of the second picklist
+         this.specificationPicklistValue = getPicklistValue;
+        }
+         /**************END************************* */
+         for (let i = 0; i <this.selectedListPaymentData[this.index].selectedPaymentOptionsList.length; i++) {
             for (let j = 0; j < this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList.length; j++) {
-                this.allSelectedValue.push(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i]);
-                if (this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedPaymentOptionName === event.detail.value  && this.specificationPicklistValue =='--NONE--'  &&  event.detail.value !== "--NONE--") { 
-                    this.filteredData.push( this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i]);
-                    this.haveRecords = true;
-                    console.log(' this.noRecords:::::204:::'+ this.haveRecords);
-                 }
-                 else if (this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedSpecification === event.detail.value  && this.PaymentOptionPicklistValue =='--NONE--'  &&  event.detail.value !== "--NONE--") { 
-                    this.filteredData.push( this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i]);
-                    this.haveRecords = true;
-                    console.log(' this.noRecords:::::209:::'+ this.haveRecords);
-                 }
-                else if ( this.PaymentOptionPicklistValue == this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedPaymentOptionName && this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedSpecification === event.detail.value && event.detail.value !== "--NONE--") {
-                    console.log('inside else if::224:::');
-                    this.filteredData.push(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i]);
-                    this.haveRecords = true;
+                if( event.detail.value !== "--NONE--"){
+                    if (this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption) { 
+                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption = false;
+                    }
+                    if (!this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption &&
+                          this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedPaymentOptionName === event.detail.value
+                            && this.specificationPicklistValue =='--NONE--'  && event.detail.value !== "--NONE--") { 
+                         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption = true;
+                     }
+                     else if (!this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption &&
+                         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedSpecification === event.detail.value  &&
+                          this.PaymentOptionPicklistValue =='--NONE--'  &&  event.detail.value !== "--NONE--") { 
+                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption = true;
+                    }
+                     else if (!this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption &&
+                         this.PaymentOptionPicklistValue == this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedPaymentOptionName &&
+                          this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedSpecification === event.detail.value && event.detail.value !== "--NONE--") {
+                         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption = true;
+                    }
+                     else if (!this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption &&
+                         this.specificationPicklistValue == this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedSpecification &&
+                          this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedPaymentOptionName == event.detail.value  && 
+                          event.detail.value !== "--NONE--")  {
+                         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption = true;
+                    }
                 }
-                else if ( this.specificationPicklistValue == this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedSpecification && this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].selectedPaymentOptionName == event.detail.value  && event.detail.value !== "--NONE--")  {
-                    this.filteredData.push(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i]);
-                    this.haveRecords = true;
-                    console.log('inside else if::231:::');
-                    /*this.haveRecords = false;
-
-                    this.showToast('ERROR','error','There are no records for selected combination');*/
-                   // console.log(' this.noRecords:::::233:::'+ this.haveRecords);
+                else if( event.detail.value == "--NONE--"){
+                    this.selectedListPaymentData[this.index].selectedPaymentOptionsList[i].selectedPaymentIndividualList[j].isSelectPaymentOption = true;
                 }
-                break;
-             }
+            }
         }
         if( event.detail.value=="--NONE--"){
-            
-            this.listDataForPaymentMode =    this.allSelectedValue// added by rohit to get all the selected values
             this.PaymentOptionPicklistValue = '--NONE--';
             this.specificationPicklistValue = '--NONE--';
-            
+            this.listDataForPaymentMode =  this.selectedListPaymentData[index].selectedPaymentOptionsList;
         }
-        else if(event.detail.value !=="--NONE--" && this.filteredData.length>0){
-            this.listDataForPaymentMode = this.filteredData;
-        }
-        this.showScreen4 = true;
-    }
-
+         this.showScreen4 = true;
+     }
     //this method is called from Screen 4 on click of checkbox from Set Default rate row
     handleCheckedForCommercialsFirstRow(event) {
         this.listFirstRowForAddCommercials[event.currentTarget.dataset.id].isChecked = event.detail.checked;
         let index = this.index;
-        for(let index1=0; index1<this.selectedListPaymentData[index].selectedPaymentOptionsList.length; index1++) { 
-            if(this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].restrictTransactionTypeAndFeeModel == false) {
-                for(let index2=0; index2<this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length; index2++) {
-                    this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = event.detail.checked;
+        if((this.storePaymentOptionValue && this.storePaymentOptionValue !='--NONE--') || ( this.specificationPicklistValue && this.specificationPicklistValue !='--NONE--')) {
+            for(let index1=0; index1<this.selectedListPaymentData[index].selectedPaymentOptionsList.length; index1++) { 
+                if(this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].restrictTransactionTypeAndFeeModel == false) {
+                    for(let index2=0; index2<this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length; index2++) {
+                        if(this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isSelectPaymentOption){
+                            this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = event.detail.checked;
+                       }
+                    }
                 }
             }
         }
+        else{
+            for(let index1=0; index1<this.selectedListPaymentData[index].selectedPaymentOptionsList.length; index1++) { 
+                if(this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].restrictTransactionTypeAndFeeModel == false) {
+                    for(let index2=0; index2<this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length; index2++) {
+                        this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = event.detail.checked;
+                    }
+                }
+            }
+            this.listDataForPaymentMode = this.selectedListPaymentData[index].selectedPaymentOptionsList;
+        }
     }
-
     //this method is called from Screen 4 on click of fee model from Set Default rate row
     handleChangeFeeModelFirstRow(event) {
         this.listFirstRowForAddCommercials[event.currentTarget.dataset.id].selectedFeeModel = event.detail.value; 
@@ -373,29 +365,30 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
             showTdr = true;
             showCon = true;
         }
-            this.selectetPaymentIndividualObject.key = this.listFirstRowForAddCommercials[event.currentTarget.dataset.id].key;
-            this.selectetPaymentIndividualObject.selectedPaymentOptionName = '';
-            this.selectetPaymentIndividualObject.selectedPaymentOptionId = '';
-            this.selectetPaymentIndividualObject.selectedSpecification = '';
-            this.selectetPaymentIndividualObject.selectedPaymentGatewayName = '';
-            this.selectetPaymentIndividualObject.selectedOnusOffus = '';
-            this.selectetPaymentIndividualObject.listFeeModel = JSON.parse(JSON.stringify(this.listFeeModel));
-            this.selectetPaymentIndividualObject.listTransactionType = JSON.parse(JSON.stringify(this.listTransactionType));
-            this.selectetPaymentIndividualObject.selectedFeeModel = this.listFirstRowForAddCommercials[0].selectedFeeModel;
-            this.selectetPaymentIndividualObject.selectedTransactionType = this.listFirstRowForAddCommercials[0].selectedTransactionType;
-            this.selectetPaymentIndividualObject.isChecked = false;
-            this.selectetPaymentIndividualObject.showCheckbox = false;
-            this.selectetPaymentIndividualObject.showTDR = showTdr;
-            this.selectetPaymentIndividualObject.showConvenience = showCon;
-            this.selectetPaymentIndividualObject.tdrAmount = '0';
-            this.selectetPaymentIndividualObject.tdrFee = '';
-            this.selectetPaymentIndividualObject.tdrPercentage = '';
-            this.selectetPaymentIndividualObject.convenienceAmount = '0';
-            this.selectetPaymentIndividualObject.convenienceFee = '';
-            this.selectetPaymentIndividualObject.conveniencePercentage = '';
-            this.listFirstRowForAddCommercials.push(JSON.parse(JSON.stringify(this.selectetPaymentIndividualObject)));
-            this.errorSelectPayOptions = false;// added by rohit
-       
+
+        this.selectetPaymentIndividualObject.key = this.listFirstRowForAddCommercials[event.currentTarget.dataset.id].key;
+        this.selectetPaymentIndividualObject.selectedPaymentOptionName = '';
+        this.selectetPaymentIndividualObject.selectedPaymentOptionId = '';
+        this.selectetPaymentIndividualObject.selectedSpecification = '';
+        this.selectetPaymentIndividualObject.selectedPaymentGatewayName = '';
+        this.selectetPaymentIndividualObject.selectedOnusOffus = '';
+        this.selectetPaymentIndividualObject.listFeeModel = JSON.parse(JSON.stringify(this.listFeeModel));
+        this.selectetPaymentIndividualObject.listTransactionType = JSON.parse(JSON.stringify(this.listTransactionType));
+        this.selectetPaymentIndividualObject.selectedFeeModel = this.listFirstRowForAddCommercials[0].selectedFeeModel;
+        this.selectetPaymentIndividualObject.selectedTransactionType = this.listFirstRowForAddCommercials[0].selectedTransactionType;
+        this.selectetPaymentIndividualObject.isChecked = false;
+        this.selectetPaymentIndividualObject.showCheckbox = false;
+        this.selectetPaymentIndividualObject.showTDR = showTdr;
+        this.selectetPaymentIndividualObject.showConvenience = showCon;
+        this.selectetPaymentIndividualObject.tdrAmount = '0';
+        this.selectetPaymentIndividualObject.tdrFee = '';
+        this.selectetPaymentIndividualObject.tdrPercentage = '';
+        this.selectetPaymentIndividualObject.convenienceAmount = '0';
+        this.selectetPaymentIndividualObject.convenienceFee = '';
+        this.selectetPaymentIndividualObject.conveniencePercentage = '';
+        this.selectetPaymentIndividualObject.isSelectPaymentOption = true;
+        this.listFirstRowForAddCommercials.push(JSON.parse(JSON.stringify(this.selectetPaymentIndividualObject)));
+ 	this.errorSelectPayOptions = false;// added by rohit
     }
 
     //this method is called when - icon clicked from screen 4 and first/highlighed row 
@@ -423,114 +416,110 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
         }
        // }
         /******************End */
-        //this.allSelectedValue = [];
-        console.log('selectedPaymentOptionsList::416::'+JSON.stringify(this.selectedListPaymentData[this.index].selectedPaymentOptionsList));
-        for(let index1=0; index1<this.selectedListPaymentData[this.index].selectedPaymentOptionsList.length; index1++) {
-            if(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].isChecked) {
-                let lengthSelectedPaymentIndividualList = this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length;
-                console.log('lengthSelectedPaymentIndividualList::::::::'+lengthSelectedPaymentIndividualList);
-                for(let index2=0;index2<this.listFirstRowForAddCommercials.length;index2++) {
-                    console.log('index2:::::::'+index2);
-                   
-                    if(index2 == 0 && this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length == 1) {
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = false;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedFeeModel = this.listFirstRowForAddCommercials[index2].selectedFeeModel;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedTransactionType = this.listFirstRowForAddCommercials[index2].selectedTransactionType;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showCheckbox = true;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].tdrAmount = this.listFirstRowForAddCommercials[index2].tdrAmount;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].tdrFee = this.listFirstRowForAddCommercials[index2].tdrFee;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].tdrPercentage = this.listFirstRowForAddCommercials[index2].tdrPercentage;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].convenienceAmount = this.listFirstRowForAddCommercials[index2].convenienceAmount;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].convenienceFee = this.listFirstRowForAddCommercials[index2].convenienceFee; 
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].conveniencePercentage = this.listFirstRowForAddCommercials[index2].conveniencePercentage;  
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].restrictFlatFeeAndPercentageToBeEdited = this.listFirstRowForAddCommercials[index2].restrictFlatFeeAndPercentageToBeEdited; 
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited = this.listFirstRowForAddCommercials[index2].restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited; 
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].ruleStatus = this.listFirstRowForAddCommercials[index2].ruleStatus; 
+            for(let index1=0; index1<this.selectedListPaymentData[this.index].selectedPaymentOptionsList.length; index1++) {
+                if(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].isChecked) {
+                    //if(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].restrictTransactionTypeAndFeeModel == false) {
+                        let lengthSelectedPaymentIndividualList = this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length;
+                        for(let index2=0;index2<this.listFirstRowForAddCommercials.length;index2++) {
+                        if(index2 == 0 && this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length == 1) {
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = false;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedFeeModel = this.listFirstRowForAddCommercials[index2].selectedFeeModel;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedTransactionType = this.listFirstRowForAddCommercials[index2].selectedTransactionType;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showCheckbox = true;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].tdrAmount = this.listFirstRowForAddCommercials[index2].tdrAmount;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].tdrFee = this.listFirstRowForAddCommercials[index2].tdrFee;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].tdrPercentage = this.listFirstRowForAddCommercials[index2].tdrPercentage;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].convenienceAmount = this.listFirstRowForAddCommercials[index2].convenienceAmount;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].convenienceFee = this.listFirstRowForAddCommercials[index2].convenienceFee; 
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].conveniencePercentage = this.listFirstRowForAddCommercials[index2].conveniencePercentage;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].pricingId = this.listFirstRowForAddCommercials[index2].pricingId;  
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].restrictFlatFeeAndPercentageToBeEdited = this.listFirstRowForAddCommercials[index2].restrictFlatFeeAndPercentageToBeEdited; 
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited = this.listFirstRowForAddCommercials[index2].restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited; 
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].ruleStatus = this.listFirstRowForAddCommercials[index2].ruleStatus; 
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isSelectPaymentOption = true
 
-                        if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'TDR') {
-                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showTDR = true;
-                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showConvenience = false;
-                            this.getAllDataFOrSaving.push(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1]);
-                        }   
-                        else if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'Convenience') {
-                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showConvenience = true;
-                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showTDR = false;
-                            this.getAllDataFOrSaving.push(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1]);
-                        }   
+                            if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'TDR') {
+                                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showTDR = true;
+                                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showConvenience = false;
+                            }   
+                            else if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'Convenience') {
+                                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showConvenience = true;
+                                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showTDR = false;
+                            }   
+                            else {
+                                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showTDR = true;
+                                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showConvenience = true;
+                            }    
+                        }
                         else {
-                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showTDR = true;
-                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].showConvenience = true;
-                            this.getAllDataFOrSaving.push(this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1]);
-                        } 
-                        console.log('UnselectedData:470:::'+JSON.stringify(this.getAllDataFOrSaving));   
+                            let showTDR = false;
+                            let showConvenience = false;
+                            if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'TDR') {
+                                showTDR = true;
+                                showConvenience = false;
+                            }   
+                            else if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'Convenience') {
+                                showTDR = false;
+                                showConvenience = true;
+                            }   
+                            else {
+                                showTDR = true;
+                                showConvenience = true;
+                            }
+                            let keyNumber = '';
+                            if(lengthSelectedPaymentIndividualList == 1) {
+                                keyNumber =  lengthSelectedPaymentIndividualList + index2;   
+                            }
+                            else {
+                                keyNumber =  lengthSelectedPaymentIndividualList + index2 + 1; 
+                            }
+                            var newInnerRecord = {
+                                key : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].key+'#'+keyNumber,
+                                selectedPaymentOptionName : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedPaymentOptionName,
+                                selectedPaymentOptionId : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedPaymentOptionId,
+                                selectedSpecification : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedSpecification,
+                                selectedPaymentGatewayName : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedPaymentGatewayName,
+                                selectedOnusOffus : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedOnusOffus,
+                                listFeeModel : JSON.parse(JSON.stringify(this.listFeeModel)),
+                                listTransactionType : JSON.parse(JSON.stringify(this.listTransactionType)),
+                                selectedFeeModel : this.listFirstRowForAddCommercials[index2].selectedFeeModel,
+                                selectedTransactionType : this.listFirstRowForAddCommercials[index2].selectedTransactionType,
+                                isChecked : false,
+                                showCheckbox : false,
+                                showTDR : showTDR,
+                                showConvenience : showConvenience,
+                                tdrAmount : this.listFirstRowForAddCommercials[index2].tdrAmount,
+                                tdrFee : this.listFirstRowForAddCommercials[index2].tdrFee,
+                                tdrPercentage : this.listFirstRowForAddCommercials[index2].tdrPercentage,
+                                convenienceAmount : this.listFirstRowForAddCommercials[index2].convenienceAmount,
+                                convenienceFee : this.listFirstRowForAddCommercials[index2].convenienceFee,
+                                conveniencePercentage : this.listFirstRowForAddCommercials[index2].conveniencePercentage,
+                                pricingId : this.listFirstRowForAddCommercials[index2].pricingId,
+                                restrictFlatFeeAndPercentageToBeEdited : this.listFirstRowForAddCommercials[index2].restrictFlatFeeAndPercentageToBeEdited,
+                                restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : this.listFirstRowForAddCommercials[index2].restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited,
+                                ruleStatus : this.listFirstRowForAddCommercials[index2].ruleStatus,
+                                isSelectPaymentOption : this.listFirstRowForAddCommercials[index2].isSelectPaymentOption,
+                                
+                            };
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].isChecked = false;
+                            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.push(newInnerRecord); 
+                        }
                     }
+                    /*}
                     else {
-                        console.log('inside else:::425');
-                       
-                        let showTDR = false;
-                        let showConvenience = false;
-                        if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'TDR') {
-                            showTDR = true;
-                            showConvenience = false;
-                        }   
-                        else if(this.listFirstRowForAddCommercials[index2].selectedTransactionType == 'Convenience') {
-                            showTDR = false;
-                            showConvenience = true;
-                        }   
-                        else {
-                            showTDR = true;
-                            showConvenience = true;
-                        }
-                        let keyNumber = '';
-                        if(lengthSelectedPaymentIndividualList == 1) {
-                            keyNumber =  lengthSelectedPaymentIndividualList + index2;   
-                        }
-                        else {
-                            keyNumber =  lengthSelectedPaymentIndividualList + index2 + 1; 
-                        }
-                        var newInnerRecord = {
-                            key : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].key+'#'+keyNumber,
-                            selectedPaymentOptionName : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedPaymentOptionName,
-                            selectedPaymentOptionId : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedPaymentOptionId,
-                            selectedSpecification : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedSpecification,
-                            selectedPaymentGatewayName : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedPaymentGatewayName,
-                            selectedOnusOffus : this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].selectedOnusOffus,
-                            listFeeModel : JSON.parse(JSON.stringify(this.listFeeModel)),
-                            listTransactionType : JSON.parse(JSON.stringify(this.listTransactionType)),
-                            selectedFeeModel : this.listFirstRowForAddCommercials[index2].selectedFeeModel,
-                            selectedTransactionType : this.listFirstRowForAddCommercials[index2].selectedTransactionType,
-                            isChecked : false,
-                            showCheckbox : false,
-                            showTDR : showTDR,
-                            showConvenience : showConvenience,
-                            tdrAmount : this.listFirstRowForAddCommercials[index2].tdrAmount,
-                            tdrFee : this.listFirstRowForAddCommercials[index2].tdrFee,
-                            tdrPercentage : this.listFirstRowForAddCommercials[index2].tdrPercentage,
-                            convenienceAmount : this.listFirstRowForAddCommercials[index2].convenienceAmount,
-                            convenienceFee : this.listFirstRowForAddCommercials[index2].convenienceFee,
-                            conveniencePercentage : this.listFirstRowForAddCommercials[index2].conveniencePercentage,
-                            pricingId : this.listFirstRowForAddCommercials[index2].pricingId,
-                            restrictFlatFeeAndPercentageToBeEdited : this.listFirstRowForAddCommercials[index2].restrictFlatFeeAndPercentageToBeEdited,
-                            restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : this.listFirstRowForAddCommercials[index2].restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited,
-                            ruleStatus : this.listFirstRowForAddCommercials[index2].ruleStatus
-                        };
                         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].isChecked = false;
-                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.push(newInnerRecord); 
-                        
-                    }
+                        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList = this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList;  
+                    }*/
+                    
                 }
             }
-            else{
-                console.log('inside else:::::477');
-            }
-        }
-        console.log('all selected Datas::389::::'+JSON.stringify( this.allSelectedValue));
+
         this.listFirstRowForAddCommercials = [];
         this.listDataForPaymentMode = [];
         this.selectetPaymentIndividualObject.key = this.selectedListPaymentData[this.index].paymentModeName;
-        this.selectetPaymentIndividualObject.selectedPaymentOptionName ='--NONE--'// +this.selectedListPaymentData[this.index].paymentModeName +' rate';
+        this.selectetPaymentIndividualObject.selectedPaymentOptionName = '--NONE--'//'Set a default '+this.selectedListPaymentData[this.index].paymentModeName +' rate';
         this.selectetPaymentIndividualObject.selectedPaymentOptionId = '';
-        this.selectetPaymentIndividualObject.selectedSpecification = '--NONE--';
+        this.selectetPaymentIndividualObject.selectedSpecification = '--NONE--';// added by rohit
         this.selectetPaymentIndividualObject.selectedPaymentGatewayName = '';
         this.selectetPaymentIndividualObject.selectedOnusOffus = '';
         this.selectetPaymentIndividualObject.listFeeModel = JSON.parse(JSON.stringify(this.listFeeModel));
@@ -548,6 +537,8 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
         this.selectetPaymentIndividualObject.convenienceFee = '';
         this.selectetPaymentIndividualObject.conveniencePercentage = '';
         this.listFirstRowForAddCommercials.push(JSON.parse(JSON.stringify(this.selectetPaymentIndividualObject)));
+        
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList;
         this.showScreen4 = true;
     }
 
@@ -563,7 +554,8 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
         else {
             this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = true;
         }
-        this.showScreen4 = true; 
+        this.listDataForPaymentMode = this.selectedListPaymentData[index].selectedPaymentOptionsList;  
+        this.showScreen4 = true;  
     }
 
      //this method is called when fee model is changed from screen 4th
@@ -698,41 +690,48 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
             showTdr = true;
             showCon = true;
         }
+         
+        var newInnerRecord = {
+            key : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].key+'#'+(this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length+1),
+            selectedPaymentOptionName : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedPaymentOptionName,
+            selectedPaymentOptionId : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedPaymentOptionId,
+            selectedSpecification : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedSpecification,
+            selectedPaymentGatewayName : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedPaymentGatewayName,
+            selectedOnusOffus : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedOnusOffus,
+            listFeeModel : JSON.parse(JSON.stringify(this.listFeeModel)),
+            listTransactionType : JSON.parse(JSON.stringify(this.listTransactionType)),
+            selectedFeeModel : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedFeeModel,
+            selectedTransactionType : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedTransactionType,
+            isChecked : false,
+            showCheckbox : false,
+            showTDR : showTdr,
+            showConvenience : showCon,
+            tdrAmount : '0',
+            tdrFee : '',
+            tdrPercentage : '',
+            convenienceAmount : '0',
+            convenienceFee : '',
+            conveniencePercentage : '',
+            pricingId : '',
+            restrictFlatFeeAndPercentageToBeEdited : false,
+            restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : false,
+            ruleStatus : 'D',
+            isSelectPaymentOption : true
+        };
+       
+        
+        /* Added to allow inbetween insertion of the records*/
+        let index2Array = this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList;
+        let index2New = parseInt(index2);
+        index2Array.splice(parseInt(index2New)+parseInt(1),0,newInnerRecord);
+        this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList = index2Array;
+        //End | 
 
-                var newInnerRecord = {
-                    key : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[0].key+'#'+(this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length+1),
-                    selectedPaymentOptionName : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedPaymentOptionName,
-                    selectedPaymentOptionId : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedPaymentOptionId,
-                    selectedSpecification : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedSpecification,
-                    selectedPaymentGatewayName : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedPaymentGatewayName,
-                    selectedOnusOffus : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedOnusOffus,
-                    listFeeModel : JSON.parse(JSON.stringify(this.listFeeModel)),
-                    listTransactionType : JSON.parse(JSON.stringify(this.listTransactionType)),
-                    selectedFeeModel : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedFeeModel,
-                    selectedTransactionType : this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].selectedTransactionType,
-                    isChecked : false,
-                    showCheckbox : false,
-                    showTDR : showTdr,
-                    showConvenience : showCon,
-                    tdrAmount : '0',
-                    tdrFee : '',
-                    tdrPercentage : '',
-                    convenienceAmount : '0',
-                    convenienceFee : '',
-                    conveniencePercentage : '',
-                    restrictFlatFeeAndPercentageToBeEdited : false,
-                    restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : false,
-                    ruleStatus : 'D'
-                };
-                /* Added to allow inbetween insertion of the records*/
-                let index2Array = this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList;
-                let index2New = parseInt(index2);
-                index2Array.splice(parseInt(index2New)+parseInt(1),0,newInnerRecord);
-                this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList = index2Array;
-                //End | 
-                this.listDataForPaymentMode = this.selectedListPaymentData[index].selectedPaymentOptionsList;
-                this.errorSelectPayOptions = false;// added by rohit
-                this.showScreen4 = true;
+        //Commented below line to allow insertion in between of the records
+         //this.selectedListPaymentData[index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.push(newInnerRecord);
+        this.listDataForPaymentMode = this.selectedListPaymentData[index].selectedPaymentOptionsList;
+	    this.errorSelectPayOptions = false;// added by rohit
+        this.showScreen4 = true;
     }
 
     //this method is called when - icon clicked from screen 4 and other than highlighted rows
@@ -760,44 +759,50 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
     //this method is called on change on change of tdr amount from screen 4 other than first row
     handleTDRAmountForSecondRow(event) {
         this.showScreen4 = false;
-        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].tdrAmount = event.detail.value;  
-        this.showScreen4 = true;    
+        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].tdrAmount = event.detail.value; 
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList;   
+        this.showScreen4 = true;     
     }
 
     //this method is called on change on change of tdr fee from screen 4 other than first row
     handleTDRFeeForSecondRow(event) {
         this.showScreen4 = false;
-        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].tdrFee = event.detail.value;  
+        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].tdrFee = event.detail.value; 
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList; 
         this.showScreen4 = true;     
     }
 
     //this method is called on change on change of tdr percentage from screen 4 other than first row
     handleTDRPercentageForSecondRow(event) {
         this.showScreen4 = false;
-        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].tdrPercentage = event.detail.value;     
-        this.showScreen4 = true;  
+        this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].tdrPercentage = event.detail.value;   
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList;   
+        this.showScreen4 = true;    
     }
 
     //this method is called on change on change of convenience amount from screen 4 other than first row
     handleConvenienceAmountForSecondRow(event) {
         this.showScreen4 = false; 
         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].convenienceAmount = event.detail.value;
-        this.showScreen4 = true;    
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList;  
+        this.showScreen4 = true;        
     }
 
     //this method is called on change on change of convenience fee from screen 4 other than first row
     handleConvenienceFeeForSecondRow(event) {
         this.showScreen4 = false;
         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].convenienceFee = event.detail.value; 
-        this.showScreen4 = true;  
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList; 
+        this.showScreen4 = true;       
     }
 
     //this method is called on change on change of convenience percentage from screen 4 other than first row
     handleConveniencePercentageForSecondRow(event) {
         this.showScreen4 = false;
         this.selectedListPaymentData[this.index].selectedPaymentOptionsList[event.currentTarget.dataset.id].selectedPaymentIndividualList[event.currentTarget.dataset.key].conveniencePercentage = event.detail.value; 
-        this.showScreen4 = true;    
-    } 
+        this.listDataForPaymentMode = this.selectedListPaymentData[this.index].selectedPaymentOptionsList; 
+        this.showScreen4 = true;             
+    }
 
     //this method is called on click of the Save Pricing button from Screen 4
     savePricing(event) {
@@ -1096,7 +1101,7 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
                 else {
                     this.showSpinner = false;
                     this.disabledSavePricingButton = false;
-                    this.showToast('ERROR','error',result);
+                    this.showToast('ERROR','error',result.message);
                 }
             })
             .catch(error => {
@@ -1106,14 +1111,10 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
             })
         }
         else {
-            console.log('missingPaymentModes.length::::'+missingPaymentModes.length);
-            console.log('missingTdrAmount.length::::'+missingTdrAmount.length);
             if(missingPaymentModes.length > 0) {
-                this.showErrorMessage = true; // Commented by rohit
-                this.errorMessage = 'Payment options missing price :  '+missingPaymentModes.toString()
-                console.log(' this.errorMessage::::870');
-                bothErrorMessageShow.push(this.errorMessage);
-               
+                this.showErrorMessage = true;
+                this.errorMessage = 'Payment options missing price :  '+missingPaymentModes.toString();
+		bothErrorMessageShow.push(this.errorMessage);
             }
             /*******Added by rohit */
             if(missingTdrAmount.length > 0) {
@@ -1131,111 +1132,106 @@ export default class EnterTDRAndConvenienceDetailsComponent extends LightningEle
                 this.errorMessage = 'Payment options pricing more than cieling :  '+moreThanCeilingPaymentModes.toString();
             }
         }
-    } 
-
-  //Method called on click of Payment Mode to show its respective Data : Screen 4
-  getListForPaymentMode(event) {
-    this.PaymentOptionPicklistValue='--NONE--';
-    this.specificationPicklistValue = '--NONE--';//added by rohit 19th april
-    console.log('currentTarget1198::::'+JSON.stringify(this.selectedListPaymentData[event.currentTarget.dataset.id].selectedPaymentOptionsList));
-    //this.isClickedOnAnotherTab = true;
-    if(event.currentTarget.dataset.id !=='0'){
-        this.allDataShow = [];
-        this.allDataShow  = this.originalSelectedData[event.currentTarget.dataset.id].selectedPaymentOptionsList;
-        this.isClickedOnAnotherTab = true;
     }
-    else if(event.currentTarget.dataset.id=='0'){
-        this.allPickListDataForFirstRow =  this.originalSelectedData[0].selectedPaymentOptionsList;
-        this.allDataShow = this.allPickListDataForFirstRow;
-   }
-    this.showScreen4 = false;
-    for(let index1=0; index1<this.selectedListPaymentData[this.index].selectedPaymentOptionsList.length; index1++) { 
-        for(let index2=0; index2<this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length; index2++) {
-            this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = false;
+
+    //Method called on click of Payment Mode to show its respective Data : Screen 4
+    getListForPaymentMode(event) {
+        this.isChnagePicklist = true;
+        this.PaymentOptionPicklistValue='--NONE--';
+        this.specificationPicklistValue = '--NONE--';//added by rohit 19th april
+        if(event.currentTarget.dataset.id !=='0'){
+            this.allDataShow = [];
+            this.allDataShow  = this.originalSelectedData[event.currentTarget.dataset.id].selectedPaymentOptionsList;
         }
-    }
-    this.listDataForPaymentMode = [];
-    this.listFirstRowForAddCommercials = [];
-    this.index = event.currentTarget.dataset.id;
-    this.listDataForPaymentMode = this.selectedListPaymentData[event.currentTarget.dataset.id].selectedPaymentOptionsList;
-    this.paymentModeName = this.selectedListPaymentData[event.currentTarget.dataset.id].paymentModeName;
-    //Added to add color
-    for(let index1=0; index1<this.selectedListPaymentData.length; index1++) { 
-        this.selectedListPaymentData[index1].styleClass = 'background:#F2F8FF;border-left: #F2F8FF solid 4px;color: #222222;';   
-    }
-    this.selectedListPaymentData[event.currentTarget.dataset.id].styleClass = 'background:#C7E1FF;color: #222222;border-left: #599AEA solid 4px;';
-    //end
-
-     /******Added by rohit Part 2 story */
-    this.paymentOptions =[];
-    this.specificationOptions =[];
-      /******Added by rohit Part 2 story */
-      this.paymentOptions.push({
-        label: '--NONE--',
-        value: '--NONE--',
-    });
-    for (const item of this.allDataShow) {
-        for (const paymentOption of item.selectedPaymentIndividualList) {
-            if(!this.paymentOptions.find((option) => option.label === paymentOption.selectedPaymentOptionName)){
-                this.paymentOptions.push({
-                    label: paymentOption.selectedPaymentOptionName,
-                    value: paymentOption.selectedPaymentOptionName
-                });
+        else if(event.currentTarget.dataset.id=='0'){
+            this.allDataShow =this.originalSelectedData[0].selectedPaymentOptionsList;
+       }
+        this.showScreen4 = false;
+        for(let index1=0; index1<this.selectedListPaymentData[this.index].selectedPaymentOptionsList.length; index1++) { 
+            for(let index2=0; index2<this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList.length; index2++) {
+                this.selectedListPaymentData[this.index].selectedPaymentOptionsList[index1].selectedPaymentIndividualList[index2].isChecked = false;
             }
         }
-       
+        this.listDataForPaymentMode = [];
+        this.listFirstRowForAddCommercials = [];
+        this.index = event.currentTarget.dataset.id;
+        this.listDataForPaymentMode = this.selectedListPaymentData[event.currentTarget.dataset.id].selectedPaymentOptionsList;
+        this.paymentModeName = this.selectedListPaymentData[event.currentTarget.dataset.id].paymentModeName;
+
+        //Added to add color
+        for(let index1=0; index1<this.selectedListPaymentData.length; index1++) { 
+            this.selectedListPaymentData[index1].styleClass = 'background:#F2F8FF;border-left: #F2F8FF solid 4px;color: #222222;';   
+        }
+        this.selectedListPaymentData[event.currentTarget.dataset.id].styleClass = 'background:#C7E1FF;color: #222222;border-left: #599AEA solid 4px;';
+        //end
+          /******Added by rohit Part 2 story */
+          this.paymentOptions =[];
+          this.specificationOptions =[];
+          /******Added by rohit Part 2 story */
+          this.paymentOptions.push({
+              label: '--NONE--',
+              value: '--NONE--',
+          });
+          for (const item of this.allDataShow) {
+              for (const paymentOption of item.selectedPaymentIndividualList) {
+                  if(!this.paymentOptions.find((option) => option.label === paymentOption.selectedPaymentOptionName)){
+                      this.paymentOptions.push({
+                          label: paymentOption.selectedPaymentOptionName,
+                          value: paymentOption.selectedPaymentOptionName
+                      });
+                  }
+              }
+             
+          }
+           /**********Get specification */
+         this.specificationOptions.push({
+          label: '--NONE--',
+          value: '--NONE--',
+          });
+         for (const item of this.allDataShow) {
+          for (const paymentOption of item.selectedPaymentIndividualList) {
+              if(!this.specificationOptions.find((option) => option.label === paymentOption.selectedSpecification)){
+                  this.specificationOptions.push({
+                  label: paymentOption.selectedSpecification,
+                  value: paymentOption.selectedSpecification
+                  });
+              }
+          }
       }
-       /**********Get specification */
-       this.specificationOptions.push({
-        label: '--NONE--',
-        value: '--NONE--',
-        });
-       for (const item of this.allDataShow) {
-        for (const paymentOption of item.selectedPaymentIndividualList) {
-            if(!this.specificationOptions.find((option) => option.label === paymentOption.selectedSpecification)){
-                this.specificationOptions.push({
-                label: paymentOption.selectedSpecification,
-                value: paymentOption.selectedSpecification
-                });
-            }
-        }
+      /*******END************/
+        this.selectetPaymentIndividualObject.key = this.selectedListPaymentData[0].paymentModeName;
+        this.selectetPaymentIndividualObject.selectedPaymentOptionName == '--NONE--';// 'Set a default rate';//+this.selectedListPaymentData[event.currentTarget.dataset.id].paymentModeName +' rate';
+        this.selectetPaymentIndividualObject.selectedPaymentOptionId = '';
+        this.selectetPaymentIndividualObject.selectedSpecification = '--NONE--';
+        this.selectetPaymentIndividualObject.selectedPaymentGatewayName = '';
+        this.selectetPaymentIndividualObject.selectedOnusOffus = '';
+        this.selectetPaymentIndividualObject.listFeeModel = JSON.parse(JSON.stringify(this.listFeeModel));
+        this.selectetPaymentIndividualObject.listTransactionType = JSON.parse(JSON.stringify(this.listTransactionType));
+        this.selectetPaymentIndividualObject.selectedFeeModel = 'Net';
+        this.selectetPaymentIndividualObject.selectedTransactionType = 'TDR';
+        this.selectetPaymentIndividualObject.isChecked = false;
+        this.selectetPaymentIndividualObject.showCheckbox = true;
+        this.selectetPaymentIndividualObject.showTDR = true;
+        this.selectetPaymentIndividualObject.showConvenience = false;
+        this.selectetPaymentIndividualObject.tdrAmount = '0';
+        this.selectetPaymentIndividualObject.tdrFee = '';
+        this.selectetPaymentIndividualObject.tdrPercentage = '';
+        this.selectetPaymentIndividualObject.convenienceAmount = '0';
+        this.selectetPaymentIndividualObject.convenienceFee = '';
+        this.selectetPaymentIndividualObject.conveniencePercentage = '';
+
+        this.listFirstRowForAddCommercials.push(JSON.parse(JSON.stringify(this.selectetPaymentIndividualObject)));
+        this.showScreen4 = true; 
     }
-    /*******END************/
-    
-    /**********End*********** */
-    this.selectetPaymentIndividualObject.key = this.selectedListPaymentData[0].paymentModeName;
-    this.selectetPaymentIndividualObject.selectedPaymentOptionName ='--NONE--';// +this.selectedListPaymentData[event.currentTarget.dataset.id].paymentModeName +' rate';//'--NONE--';//'Set a default rate';//
-    this.selectetPaymentIndividualObject.selectedPaymentOptionId = '';
-    this.selectetPaymentIndividualObject.selectedSpecification = '--NONE--';
-    this.selectetPaymentIndividualObject.selectedPaymentGatewayName = '';
-    this.selectetPaymentIndividualObject.selectedOnusOffus = '';
-    this.selectetPaymentIndividualObject.listFeeModel = JSON.parse(JSON.stringify(this.listFeeModel));
-    this.selectetPaymentIndividualObject.listTransactionType = JSON.parse(JSON.stringify(this.listTransactionType));
-    this.selectetPaymentIndividualObject.selectedFeeModel = 'Net';
-    this.selectetPaymentIndividualObject.selectedTransactionType = 'TDR';
-    this.selectetPaymentIndividualObject.isChecked = false;
-    this.selectetPaymentIndividualObject.showCheckbox = true;
-    this.selectetPaymentIndividualObject.showTDR = true;
-    this.selectetPaymentIndividualObject.showConvenience = false;
-    this.selectetPaymentIndividualObject.tdrAmount = '0';
-    this.selectetPaymentIndividualObject.tdrFee = '';
-    this.selectetPaymentIndividualObject.tdrPercentage = '';
-    this.selectetPaymentIndividualObject.convenienceAmount = '0';
-    this.selectetPaymentIndividualObject.convenienceFee = '';
-    this.selectetPaymentIndividualObject.conveniencePercentage = '';
 
-    this.listFirstRowForAddCommercials.push(JSON.parse(JSON.stringify(this.selectetPaymentIndividualObject)));
-    console.log('listFirstRowForAddCommercials:::::::1374:::'+JSON.stringify(this.listFirstRowForAddCommercials));
-     this.showScreen4 = true; 
-}
+    //Method to show Toast Message on the UI
+    showToast(title,variant,message) {
+        const event = new ShowToastEvent({
+            title : title,
+            message : message,
+            variant : variant
+        });
+        this.dispatchEvent(event);
+    }
 
-//Method to show Toast Message on the UI
-showToast(title,variant,message) {
-    const event = new ShowToastEvent({
-        title : title,
-        message : message,
-        variant : variant
-    });
-    this.dispatchEvent(event);
-}
 }
