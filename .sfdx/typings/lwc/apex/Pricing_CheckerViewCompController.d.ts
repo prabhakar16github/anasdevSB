@@ -5,10 +5,10 @@ declare module "@salesforce/apex/Pricing_CheckerViewCompController.getDataOnLoad
   export default function getDataOnLoadDelete(param: {oppId: any}): Promise<any>;
 }
 declare module "@salesforce/apex/Pricing_CheckerViewCompController.handleApprovePricing" {
-  export default function handleApprovePricing(param: {pricingIdList: any}): Promise<any>;
+  export default function handleApprovePricing(param: {pricingIdList: any, pricingIdListFixed: any}): Promise<any>;
 }
 declare module "@salesforce/apex/Pricing_CheckerViewCompController.handleRejectPricing" {
-  export default function handleRejectPricing(param: {pricingIdList: any, rejectionReason: any}): Promise<any>;
+  export default function handleRejectPricing(param: {pricingIdList: any, rejectionReason: any, pricingIdListFixed: any}): Promise<any>;
 }
 declare module "@salesforce/apex/Pricing_CheckerViewCompController.handleDeleteApprovePricing" {
   export default function handleDeleteApprovePricing(param: {pricingIdList: any}): Promise<any>;

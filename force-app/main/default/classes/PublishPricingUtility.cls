@@ -29,7 +29,7 @@ public class PublishPricingUtility {
         DateTime currentDateTimeUTCFormat = PublishPricingUtility.getUTCDateTime(DateTime.now());
         String currentDateTimeUTCFormatString = currentDateTimeUTCFormat.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
         RequestWrapperClass requestWrapper = new RequestWrapperClass();
-        requestWrapper.requestId = EncodingUtil.convertToHex(Blob.valueOf(listPricing[0].Commercial2__c+currentDateTimeUTCFormatString));
+        requestWrapper.requestId = EncodingUtil.convertToHex(Blob.valueOf(listPricing[0].Commercial2__c+currentDateTimeUTCFormatString+processName));
         requestWrapper.userToken = UserInfo.getUserId();
         requestWrapper.action = action;
         for(Pricing__c pricing : listPricing) {
@@ -120,6 +120,7 @@ public class PublishPricingUtility {
             String commId = '';
             if(String.isBlank(commId)) commId = listPricing[0].Commercial2__c;
             Publish_Pricing_Detail__c publishDetail = new Publish_Pricing_Detail__c();
+            publishDetail.Object_API_Name__c = 'Pricing__c';
             publishDetail.Commercial__c = commId;
             publishDetail.Process__c = processName;
             publishDetail.Merchant__c = listPricing[0].Opportunity__c;

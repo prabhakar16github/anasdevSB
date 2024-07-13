@@ -175,8 +175,12 @@ public class OtherProductPricingComponentController {
     public static SaveCommercialWrapper saveCommercialChanges(String opportunityId,String commercialObj) {
         SaveCommercialWrapper wrpCls = new SaveCommercialWrapper();
         try {
+
+            
+
             CommercialWrapper commercial = (CommercialWrapper)JSON.deserialize(commercialObj,CommercialWrapper.class);
             Other_Product_Pricing__c opp = new Other_Product_Pricing__c();
+
             opp.Debit_Model__c = commercial.selectedDebitModel;
             opp.Amount_Slab__c = Decimal.valueOf(commercial.amountSlab);
             if(String.isNotBlank(commercial.percentage)) opp.Percent_Fee__c = Decimal.valueOf(commercial.percentage);
@@ -226,6 +230,11 @@ public class OtherProductPricingComponentController {
                 opp.Client_Id__c = '1';
                 opp.Revenue_Model__c = 'instantSettlementTdr';
                 opp.Opportunity__c = opportunityId;
+
+                List<Commercial2__c> commercialList = [SELECT Id FROM Commercial2__c WHERE Opportunity__c = :opportunityId LIMIT 1];
+                if(!commercialList.isEmpty()){
+                    opp.Commercial2__c = commercialList[0].Id;
+                }
                 opp.RecordTypeId = mapRecordTypeNameToId.get('Instant_Settlement');
                 opp.Need_to_Publish__c = true;
                 opp.Last_Edited_On__c = System.now();
@@ -258,8 +267,10 @@ public class OtherProductPricingComponentController {
         catch(Exception e) {
             wrpCls.message = e.getMessage();	
             if(wrpCls.message.contains('DUPLICATE_VALUE, duplicate value found: Identifier__c')) {
-                wrpCls.message = 'Commercial already exists with this combination of Data';  
-            } 
+                wrpCls.message = 'Pricing already exists with this combination of Data';  
+            } else if(wrpCls.message.contains('REQUIRED_FIELD_MISSING, Required fields are missing: [Commercial2]')){
+                wrpCls.message = 'Commercial is not exist for this Merchant. Please create Commercial first.';  
+            }
         }
         return wrpCls;
     }
@@ -277,7 +288,9 @@ public class OtherProductPricingComponentController {
     public static SaveCommercialWrapper publishCommercial(String opportunityId,String productName) {
         SaveCommercialWrapper wrpCls = new SaveCommercialWrapper();
         try {
-            PublishOtherProductApi_CTRL.otherProductPricingToTreasury(opportunityId,productName);	     
+            if(Label.StopOtherProductPricingFlowToTreasury.toLowerCase() == 'false') {
+                PublishOtherProductApi_CTRL.otherProductPricingToTreasury(opportunityId,productName);
+            }	     
         }
         catch(Exception e) {
             wrpCls.message = e.getMessage();            
@@ -385,6 +398,10 @@ public class OtherProductPricingComponentController {
                 opp.Client_Id__c = '1';
                 opp.Revenue_Model__c = revenueModel;
                 opp.Opportunity__c = opportunityId;
+                List<Commercial2__c> commercialList = [SELECT Id FROM Commercial2__c WHERE Opportunity__c = :opportunityId LIMIT 1];
+                if(!commercialList.isEmpty()){
+                    opp.Commercial2__c = commercialList[0].Id;
+                }
                 opp.RecordTypeId = mapRecordTypeNameToId.get('Offer_Engine');
                 opp.Need_to_Publish__c = true;
                 opp.Last_Edited_On__c = System.now();
@@ -434,8 +451,10 @@ public class OtherProductPricingComponentController {
         catch(Exception e) {
             wrpCls.message = e.getMessage();	
             if(wrpCls.message.contains('DUPLICATE_VALUE, duplicate value found: Identifier__c')) {
-                wrpCls.message = 'Commercial already exists for this Revenue Model';  
-            } 
+                wrpCls.message = 'Pricing already exists for this Revenue Model';  
+            } else if(wrpCls.message.contains('REQUIRED_FIELD_MISSING, Required fields are missing: [Commercial2]')){
+                wrpCls.message = 'Commercial is not exist for this Merchant. Please create Commercial first.';  
+            }
         }
         return wrpCls;
     }
@@ -482,6 +501,10 @@ public class OtherProductPricingComponentController {
                 opp.Client_Id__c = '1';
                 opp.Revenue_Model__c = 'CHECKOUT_EXPRESS_TDR';
                 opp.Opportunity__c = opportunityId;
+                List<Commercial2__c> commercialList = [SELECT Id FROM Commercial2__c WHERE Opportunity__c = :opportunityId LIMIT 1];
+                if(!commercialList.isEmpty()){
+                    opp.Commercial2__c = commercialList[0].Id;
+                }
                 opp.RecordTypeId = mapRecordTypeNameToId.get('Checkout_Express');
                 opp.Need_to_Publish__c = true;
                 opp.Last_Edited_On__c = System.now();
@@ -507,8 +530,10 @@ public class OtherProductPricingComponentController {
         catch(Exception e) {
             wrpCls.message = e.getMessage();	
             if(wrpCls.message.contains('DUPLICATE_VALUE, duplicate value found: Identifier__c')) {
-                wrpCls.message = 'Commercial already exists with this combination of Data';  
-            } 
+                wrpCls.message = 'Pricing already exists with this combination of Data';  
+            } else if(wrpCls.message.contains('REQUIRED_FIELD_MISSING, Required fields are missing: [Commercial2]')){
+                wrpCls.message = 'Commercial is not exist for this Merchant. Please create Commercial first.';  
+            }
         }
         return wrpCls;
     }

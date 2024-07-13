@@ -7,8 +7,8 @@ public with sharing class Pricing_CheckerViewCompController {
             List<Commercial2__c> commercialList = [SELECT Id FROM Commercial2__c 
             WHERE Opportunity__c = :oppId
             LIMIT 1];
-            if(!commercialList.isEmpty() ){
-                if(!isValidToShowData(commercialList[0].Id)){
+            if(String.isNotBlank(oppId) && !commercialList.isEmpty()){
+                if(!isValidToShowData(oppId)){
                     dataWrap.editAllowed = false;
                     return dataWrap;
                 }
@@ -58,9 +58,10 @@ public with sharing class Pricing_CheckerViewCompController {
                 }
                 
                 for(Fixed_Pricing1__c fixedPrice : [SELECT Id,Fee_Type__c,Debit_Model__c,Start_Date__c,End_Date__c,Payment_Frequency__c,
-                Amount__c,Percentage__c,Flat_Fee__c 
+                Amount__c,Percentage__c,Flat_Fee__c,Rule_Id__c
                 FROM Fixed_Pricing1__c
-                WHERE Commercial__c = :commercialList[0].Id]){
+                WHERE Commercial__c = :commercialList[0].Id
+                AND Temp_Id__c != NULL]){
                     FixedAndPlatformFeeWrapper fixedPriceWrap = new FixedAndPlatformFeeWrapper();
                     fixedPriceWrap.recordId = fixedPrice.Id;
                     fixedPriceWrap.feeType = fixedPrice.Fee_Type__c;
@@ -71,6 +72,9 @@ public with sharing class Pricing_CheckerViewCompController {
                     fixedPriceWrap.amount = fixedPrice.Amount__c != NULL ? String.valueOf(fixedPrice.Amount__c): '';
                     fixedPriceWrap.flatFee = fixedPrice.Flat_Fee__c != NULL ? String.valueOf(fixedPrice.Flat_Fee__c): '';
                     fixedPriceWrap.percentage = fixedPrice.Percentage__c != NULL ? String.valueOf(fixedPrice.Percentage__c): '';
+                    /** Added for fixed pricing maker checker and versioning */
+                    if(String.isNotBlank(fixedPrice.Rule_Id__c)) fixedPriceWrap.requestType = 'Update';
+                    /** */
                     dataWrap.listFixedPricing.add(fixedPriceWrap);
                 }
                 
@@ -108,8 +112,8 @@ public with sharing class Pricing_CheckerViewCompController {
             List<Commercial2__c> commercialList = [SELECT Id FROM Commercial2__c 
             WHERE Opportunity__c = :oppId
             LIMIT 1];
-            if(!commercialList.isEmpty()){
-                if(!isValidToShowData(commercialList[0].Id)){
+            if(String.isNotBlank(oppId) && !commercialList.isEmpty()){
+                if(!isValidToShowData(oppId)){
                     dataWrap.editAllowed = false;
                     return dataWrap;
                 }
@@ -161,9 +165,9 @@ public with sharing class Pricing_CheckerViewCompController {
         //return NULL;
     }
     
-    private static Boolean isValidToShowData(String commercialId){
+    private static Boolean isValidToShowData(String oppId){
         List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id FROM Publish_Pricing_Detail__c
-                                                                     WHERE Commercial__c = :commercialId 
+                                                                     WHERE Merchant__c = :oppId 
                                                                      AND Type__c = 'TDR' 
                                                                      AND Sync_Status__c = 'Processing'];
         if(!listPublishPricingDetails.isEmpty()){
@@ -174,33 +178,64 @@ public with sharing class Pricing_CheckerViewCompController {
     }
 
     @AuraEnabled
-    public static string handleApprovePricing(List<String> pricingIdList){
+    public static string handleApprovePricing(List<String> pricingIdList, List<String> pricingIdListFixed){
+        
         try {
-            Set<String> pricingIds = new Set<String>(pricingIdList);
-            Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(pricingIds,'SaveBulkRules-CheckerTrueActionApprove',false),50);
+            if(!pricingIdList.isEmpty()){
+                Set<String> pricingIds = new Set<String>(pricingIdList);
+                Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(pricingIds,'SaveBulkRules-CheckerTrueActionApprove',false),50);
+            }
+            if(!pricingIdListFixed.isEmpty()){
+                Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
+                List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
+                pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'approve' ,pricingIdsFixed, false,listFixedPricing[0].OpportunityId__c);
+                obj.processTheRequest();
+            }
             return 'success';
-        } catch (Exception e) {
+       } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
 
     @AuraEnabled
-    public static string handleRejectPricing(List<String> pricingIdList,String rejectionReason){
+    public static string handleRejectPricing(List<String> pricingIdList,String rejectionReason,List<String> pricingIdListFixed){
         try {
-            Set<String> pricingIds = new Set<String>(pricingIdList);
-            List<Pricing__c> pricingListToUpdate = new List<Pricing__c>();
-            for(String pricingId : pricingIds){
-                Pricing__c pr = new Pricing__c();
-                pr.Id = pricingId;
-                pr.Checker_Rejection_Reason__c = rejectionReason;
-                pricingListToUpdate.add(pr);
+            if(!pricingIdList.isEmpty()){
+
+                Set<String> pricingIds = new Set<String>(pricingIdList);
+                List<Pricing__c> pricingListToUpdate = new List<Pricing__c>();
+                for(String pricingId : pricingIds){
+                    Pricing__c pr = new Pricing__c();
+                    pr.Id = pricingId;
+                    pr.Checker_Rejection_Reason__c = rejectionReason;
+                    pricingListToUpdate.add(pr);
+                }
+                if(!pricingListToUpdate.isEmpty()){
+                    update pricingListToUpdate;
+                }
+    
+                Database.executeBatch(new PublishPricingToTreasuryTempTableReject(pricingIds,'SaveBulkRules-CheckerTrueActionReject',false),50);
+            }
+            
+            if(!pricingIdListFixed.isEmpty()){
+                Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
+                List<Fixed_Pricing1__c> fixedPricingListToUpdate = new List<Fixed_Pricing1__c>();
+                for(String pricingId : pricingIdsFixed){
+                    Fixed_Pricing1__c pr = new Fixed_Pricing1__c();
+                    pr.Id = pricingId;
+                    pr.Rejection_Reason__c = rejectionReason;
+                    fixedPricingListToUpdate.add(pr);
+                }
+                
+                List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
+                pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'reject' ,pricingIdsFixed, false, listFixedPricing[0].OpportunityId__c);
+                obj.processTheRequest();
+                if(!fixedPricingListToUpdate.isEmpty()){
+                    update fixedPricingListToUpdate;
+                }
             }
 
-            if(!pricingListToUpdate.isEmpty()){
-                update pricingListToUpdate;
-            }
-
-            Database.executeBatch(new PublishPricingToTreasuryTempTableReject(pricingIds,'SaveBulkRules-CheckerTrueActionReject',false),50);
+            
             return 'success';
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -272,6 +307,10 @@ public with sharing class Pricing_CheckerViewCompController {
 
     }
     public class FixedAndPlatformFeeWrapper{
+        /** Added for fixed pricing maker checker and versioning */
+        @AuraEnabled public Boolean isChecked = false;
+        @AuraEnabled public String requestType = 'Add';
+        /** */
         @AuraEnabled public String recordId = '';
         @AuraEnabled public String feeType = '';
         @AuraEnabled public String debitModel = '';

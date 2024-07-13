@@ -25,16 +25,18 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
     disableButton = true;
     editAllowed = true;
     selectedRecordIds = [];
+    selectedRecordIdsFixed = [];
 
     selectAllData = false;
+    selectAllDataFixed = false;
+
+    showButtons = false;
+
     
     connectedCallback(){
         this.getInitData();
-        
     }
 
-
-    
     getInitData(){
         
         this.showSpinner = true;
@@ -43,14 +45,17 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
             if(result.listPricing.length > 0){
                 this.pricingDetail.listPricing = result.listPricing;
                 this.pricingDetail.showList = true;
+                this.showButtons = true;
             }
             if(result.listFixedPricing.length > 0){
                 this.fixedPricingDetail.listFixedPricing = result.listFixedPricing;
                 this.fixedPricingDetail.showList = true;
+                this.showButtons = true;
             }
             if(result.listPlatformPricing.length > 0){
                 this.platformFeeDetail.listPlatformPricing = result.listPlatformPricing;
                 this.platformFeeDetail.showList = true;
+
             }
             this.editAllowed = result.editAllowed;
             this.showSpinner = false;
@@ -60,6 +65,8 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
             console.error(error);
         });
     }
+
+
     handleSelectAllData(event){
         this.selectAllData = event.detail.checked;
         this.selectedRecordIds = [];
@@ -80,15 +87,48 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         });
 
         this.pricingDetail.listPricing = tempArr;
-        this.disableButton = !this.selectAllData;
+        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
+            this.disableButton = false;
+        }else{
+            this.disableButton = true;
+        }
     }
+    
+    /** Added for fixed pricing maker checker and versioning */
+    handleSelectAllDataFixed(event){
+        this.selectAllDataFixed = event.detail.checked;
+        this.selectedRecordIdsFixed = [];
+
+        
+        var tempArr = [];
+        this.fixedPricingDetail.listFixedPricing.forEach(item => {
+            item.isChecked = this.selectAllDataFixed;
+            
+            if(item.isChecked){
+                this.selectedRecordIdsFixed.push(item.recordId);
+            }else{
+                this.selectedRecordIdsFixed = [...this.selectedRecordIdsFixed].filter(recordId => {
+                    return recordId != item.recordId;
+                });
+            }
+            tempArr.push(item);
+        });
+
+        this.fixedPricingDetail.listFixedPricing = tempArr;
+        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
+            this.disableButton = false;
+        }else{
+            this.disableButton = true;
+        }
+    }
+    /** */
 
     handleIsChecked(event){
         var isChecked = event.detail.checked;
         var recordId = event.target.dataset.id;
         if(isChecked){
             this.selectedRecordIds.push(recordId);
-            this.disableButton = false;
+            //this.disableButton = false;
         }else{
             this.selectedRecordIds = this.selectedRecordIds.filter(item => {
                 return item != recordId;
@@ -101,10 +141,6 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
                 tempArr.push(listItem);
             });
             this.pricingDetail.listPricing = tempArr;
-
-            if(this.selectedRecordIds.length == 0){
-                this.disableButton = true;
-            }
         }
         
         if(this.selectedRecordIds.length == this.pricingDetail.listPricing.length){
@@ -112,7 +148,47 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         }else{
             this.selectAllData = false;
         }
+
+        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
+            this.disableButton = false;
+        }else{
+            this.disableButton = true;
+        }
     }
+
+    /** Added for fixed pricing maker checker and versioning */
+    handleIsCheckedFixed(event){
+        var isChecked = event.detail.checked;
+        var recordId = event.target.dataset.id;
+        if(isChecked){
+            this.selectedRecordIdsFixed.push(recordId);
+            //this.disableButton = false;
+        }else{
+            this.selectedRecordIdsFixed = this.selectedRecordIdsFixed.filter(item => {
+                return item != recordId;
+            });
+            var tempArr = [];
+            this.fixedPricingDetail.listFixedPricing.forEach(listItem => {
+                if(listItem.recordId == recordId){
+                    listItem.isChecked = false;
+                }
+                tempArr.push(listItem);
+            });
+            this.fixedPricingDetail.listFixedPricing = tempArr;
+        }
+        
+        if(this.selectedRecordIdsFixed.length == this.fixedPricingDetail.listFixedPricing.length){
+            this.selectAllDataFixed = true;
+        }else{
+            this.selectAllDataFixed = false;
+        }
+
+        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
+            this.disableButton = false;
+        }else{
+            this.disableButton = true;
+        }
+    }/** */
     
     async handleApprove(event){
         const result = await LightningConfirm.open({
@@ -121,7 +197,7 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         });
         if(result){
             this.showSpinner = true;
-            handleApprovePricing({"pricingIdList":this.selectedRecordIds})
+            handleApprovePricing({"pricingIdList":this.selectedRecordIds , "pricingIdListFixed":this.selectedRecordIdsFixed})
             .then(result => {
                 if(result.includes('success')){
                     this.editAllowed = false
@@ -159,7 +235,8 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
                     this.showSpinner = true;
                     handleRejectPricing({
                         "pricingIdList":this.selectedRecordIds,
-                        "rejectionReason" : result
+                        "rejectionReason" : result,
+                        "pricingIdListFixed":this.selectedRecordIdsFixed
                     })
                     .then(result => {
                         if(result.includes('success')){

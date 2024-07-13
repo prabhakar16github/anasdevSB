@@ -12,12 +12,13 @@
                 
             </h3>
             <div class="slds-section__content ">
-                <template lwc:if={pricingDetail.showList}>
+                <template lwc:if={showButtons}>
                     <div class="slds-text-align_center slds-m-around_x-small">
                         <lightning-button onclick={handleApprove} disabled={disableButton} label="Approve" class="slds-m-around_x-small" icon-name="utility:check" variant="success"></lightning-button>
                         <lightning-button onclick={handleReject} disabled={disableButton} label="Reject" class="slds-m-around_x-small" icon-name="utility:close" variant="destructive"></lightning-button>
                     </div>
-        
+                </template>
+                <template lwc:if={pricingDetail.showList}>
                     <table class="slds-table slds-table_bordered slds-table_col-bordered">
                         <thead>
                                 <tr>
@@ -80,20 +81,22 @@
                     <table class="slds-table slds-table_bordered slds-table_col-bordered">
                         <thead>
                                 <tr>
-                                <th>Fee Type</th>
-                                <th>Debit Model</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Payment Frequency</th>
-                                <th>Amount</th>
-                                <th>Flat Fee</th>
-                                <th>Percentage</th>
-                                
-                            </tr>
+                                    <th><lightning-input checked={selectAllDataFixed} type="checkbox" onchange={handleSelectAllDataFixed}></lightning-input></th>
+                                    <th>Fee Type</th>
+                                    <th>Debit Model</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Payment Frequency</th>
+                                    <th>Amount</th>
+                                    <th>Flat Fee</th>
+                                    <th>Percentage</th>
+                                    <th>Request Type</th>
+                                </tr>
                             </thead>
                         <tbody>
                             <template for:each={fixedPricingDetail.listFixedPricing} for:item="fixed" for:index="indx">
                                 <tr key={fixed.recordId}>
+                                    <td><lightning-input type="checkbox" checked = {fixed.isChecked} onchange={handleIsCheckedFixed} data-id={fixed.recordId}></lightning-input></td>
                                     <td>{fixed.feeType}</td>
                                     <td>{fixed.debitModel}</td>
                                     <td>{fixed.startDate}</td>
@@ -102,6 +105,7 @@
                                     <td>{fixed.amount}</td>
                                     <td>{fixed.flatFee}</td>
                                     <td>{fixed.percentage}</td>
+                                    <td>{fixed.requestType}</td>
                                 </tr>      
                             </template>
                         </tbody>
