@@ -126,8 +126,12 @@ public class PublishPricingUtility {
             publishDetail.Merchant__c = listPricing[0].Opportunity__c;
             publishDetail.Type__c = 'TDR';
             publishDetail.Request_Count__c = requestWrapper.pricingRuleConfigurationDtoList.size();
+            if(publishDetail.Request_Count__c > 40){
+                publishDetail.Request_Body__c = '*** Please view RequestBody attachment ***';
+            }else{
+                publishDetail.Request_Body__c = requestBody;
+            }
             publishDetail.Request_Id__c = requestWrapper.requestId;
-            publishDetail.Request_Body__c = requestBody;
             publishDetail.Checker__c = checker;
             publishDetail.Delete_Request__c = isDeleteRequest;
             if(String.isNotBlank(requestBody)){
@@ -154,6 +158,13 @@ public class PublishPricingUtility {
                 publishDetail.Response_Body__c = 'SF Error : Pricing not found for the commercial.';
             }
             insert publishDetail;
+            if(publishDetail.Request_Count__c > 40){
+                Attachment att = new Attachment();
+                att.Name = 'RequestBody';
+                att.ParentId = publishDetail.Id;
+                att.Body = Blob.valueOf(requestBody);
+                insert att;
+            }
         }catch(Exception e){
             Error_Details__c errorDetails = new Error_Details__c(Request__c = requestBody,Process__c = processName,Message__c = e.getMessage(),Severity__c = 'High', Identifier__c = String.valueOf(e.getLineNumber()));
             insert errorDetails;

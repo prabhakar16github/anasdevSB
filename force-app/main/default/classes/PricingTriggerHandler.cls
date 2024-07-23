@@ -11,29 +11,19 @@ public class PricingTriggerHandler {
     public static Set<Id> processedIdSet = new Set<Id>();
 
 
-    /** Added to update belowRack Rate = false,if Source != 'Salesforce',  Added by Prabhakar */
-    public static void beforeUpdateHandler(List<Pricing__c> triggerNew,Map<Id,Pricing__c> triggerOldMap){
+    
+    public static void beforeUpdateHandler(List<Pricing__c> triggerNew,Map<Id,Pricing__c> oldMap){
         for(Pricing__c pricing : triggerNew){
-            if(!processedIdSet.contains(pricing.Id)){
-                if(pricing.Source__c != 'Salesforce'){
-                    if(pricing.Fee_Model__c != triggeroldMap.get(pricing.Id).Fee_Model__c 
-                        || pricing.Transaction_Type__c != triggeroldMap.get(pricing.Id).Transaction_Type__c 
-                        || pricing.TDR__c != triggerOldMap.get(pricing.Id).TDR__c
-                        || pricing.TDR_Amount__c != triggerOldMap.get(pricing.Id).TDR_Amount__c 
-                        || pricing.TDR_Flat_Fee__c != triggerOldMap.get(pricing.Id).TDR_Flat_Fee__c
-                        || pricing.Convenience__c != triggerOldMap.get(pricing.Id).Convenience__c
-                        || pricing.Convenience_Amount__c != triggerOldMap.get(pricing.Id).Convenience_Amount__c 
-                        || pricing.Convenience_Flat_Fee__c != triggerOldMap.get(pricing.Id).Convenience_Flat_Fee__c) {
-                            
-                        /***End******/
-                    }else{
-                        pricing.Below_Rack_Rates__c = false;
-                    }
-                }
-                processedIdSet.add(pricing.Id);
+            if(String.isNotBlank(pricing.Banking_Ops_Status__c ) && pricing.Banking_Ops_Status__c  != oldMap.get(pricing.Id).Banking_Ops_Status__c  && pricing.Banking_Ops_Status__c  == 'Error (Override Required)' && String.isBlank(pricing.Rule_Id__c) && String.isBlank(pricing.Rule_Id_Conv__c)){
+                pricing.Banking_Ops_Status__c = 'Error (Override Not Required)';
+                pricing.Temp_Id_TDR__c = NULL;
+                pricing.Temp_Id_Conv__c = NULL;
+                pricing.Temp_Id_Delete_TDR__c = NULL;
+                pricing.Temp_Id_Delete_Conv__c = NULL;
+
             }
         }
-    }/** END */
+    }
 
     /*
 *  Method to fetch all Master Pricing Data records

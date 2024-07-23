@@ -10,6 +10,8 @@ public class ApproveBelowRatesRecordsController {
     public static Map<String,Object> mapPriorityToStatus = (Map<String,Object>)JSON.deserializeUntyped(Label.PricingStatusPriority);
     public static Map<String,Integer> mapStatusToPriority = getStatusToPriorityMap();
     
+    public static String MID{get;set;}
+    
     /*
 * Description       : This method is called internally to get the mapStatusToPriority 
 * Version.          : 1   
@@ -73,6 +75,7 @@ public class ApproveBelowRatesRecordsController {
 * Version.          : 1   
 */
     public ApproveBelowRatesRecordsController() {
+        MID = '';
         String commercialId = ApexPages.currentPage().getParameters().get('commercialId');
         if(commercialId != NULL){
             
@@ -95,12 +98,14 @@ public class ApproveBelowRatesRecordsController {
             listAllRecords = [SELECT Id,Payment_Mode_Text__c,Payment_Option_Text__c,Specifcation__c,Payment_Gateway_Text__c ,TDR_Percentage_Reference__c,
                               TDR_Amount_Reference__c,TDR_Amount__c,TDR_Flat_Fee__c,TDR__c,Convenience_Percentage_Reference__c,Convenience_Amount_Reference__c,
                               Convenience_Amount__c,Convenience_Flat_Fee__c,Convenience__c,BH_Status__c,Bank_Name__c,POR_Type_Name__c,Commercial2__r.Opportunity__c,
-                              Payment_Gateway2__r.Type__c
+                              Payment_Gateway2__r.Type__c,Commercial2__r.Merchant_MID__c
                               FROM Pricing__c 
                               WHERE Commercial2__c = :commercialId
                               AND Deleted__c = false
                               AND Invisible__c = false
                               AND Banking_Ops_Status__c != 'Pending with BH'];
+            
+            if(!listAllRecords.isEmpty()) MID = listAllRecords[0].Commercial2__r.Merchant_MID__c;
         }        
     }
     

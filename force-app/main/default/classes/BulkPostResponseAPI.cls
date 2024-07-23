@@ -11,16 +11,18 @@ global class BulkPostResponseAPI {
     @HttpPost
     global static ResponseClass doConsumeBulkPostAPIResponse() {
         ResponseClass response = new ResponseClass();
+        String requestId = '';
         try {
             if(!String.isBlank(RestContext.request.requestBody.toString())) {
                 Map<String,Object> mapKeyToValue = (Map<String,Object>)JSON.deserializeUntyped(RestContext.request.requestBody.toString()); 
                 if(mapKeyToValue != NULL && mapKeyToValue.keySet().size() > 0 && mapKeyToValue.containsKey('requestId')) {
                     if(mapKeyToValue.get('requestId') != null) {
-                        List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id,Delete_Request__c,Sync_Status__c,Response_Body__c,Checker__c,Process__c,Object_API_Name__c 
+                        List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id,Delete_Request__c,Sync_Status__c,Response_Body__c,Checker__c,Process__c,Object_API_Name__c,Request_Count__c,Request_Id__c 
                                                                                     FROM Publish_Pricing_Detail__c  
                                                                                      WHERE Request_Id__c = :(String)mapKeyToValue.get('requestId') 
                                                                                      AND Sync_Status__c = 'Processing' AND Type__c = 'TDR'];
                         if(listPublishPricingDetails != NULL && listPublishPricingDetails.size() > 0) {
+                            requestId = listPublishPricingDetails[0].Request_Id__c;
                             if(listPublishPricingDetails[0].Object_API_Name__c == 'Pricing__c'){
                                 Pricing_BulkPostResponseAPI_Handler.handlePricingResponse(listPublishPricingDetails,mapKeyToValue,RestContext.request.requestBody.toString());
                             }
@@ -39,6 +41,8 @@ global class BulkPostResponseAPI {
         }
         catch(Exception e) {
             getResponseClass(response,false,e.getMessage());
+            Error_Details__c errorDetails = new Error_Details__c(Request__c = requestId,Process__c = 'BulkPostResponseAPI',Message__c = e.getMessage(),Severity__c = 'High', Identifier__c = String.valueOf(e.getLineNumber()));
+            insert errorDetails;
         }
         return response;
     }

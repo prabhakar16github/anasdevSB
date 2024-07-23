@@ -501,19 +501,21 @@ public class PricingModuleComponentController {
                     Map<Id,Pricing__c> mapOfpricingToUPdate = new Map<Id,Pricing__c>();
                     Map<Id,Fixed_Pricing1__c> mapOfFixedPricingToUPdate = new Map<Id,Fixed_Pricing1__c>();
                     List<Pricing__c> newPricingRecordList = new List<Pricing__c>();
+                    Map<String,Fixed_Pricing1__c> mapOfExistingFixedPricing = new Map<String,Fixed_Pricing1__c>();
                     List<Commercial2__c> commList  = new   List<Commercial2__c>();
+                    List<Fixed_Pricing1__c> fixedPricingList = new  List<Fixed_Pricing1__c>();
+                    Map<String,String> mapOfTresuryFixedPricing = new Map<String,String>();
                     commList = [SELECT Id,Opportunity__r.Prod_MID__c,
                                 (SELECT Id,Amount__c,Debit_Model__c,End_Date__c,Fee_Type__c,
-                                 Flat_Fee__c,Payment_Frequency__c,Percentage__c,Start_Date__c,Rule_Id__c,
+                                 Flat_Fee__c,Payment_Frequency__c,Percentage__c,Start_Date__c,Temp_Id__c,Rule_Id__c,
                                  Version_Number__c,Source__c,Added_By__c,Status__c FROM Fixed_Pricings__r WHERE Deleted__c = false),
                                 (SELECT Id,Amount__c,Rule_Id__c,Flat_Fee__c,Percentage__c,Type__c,Added_By__c,
                                  Interval__c,Start_Date__c,Source__c,Version_Number__c,End_Date__c,Debit_Model__c FROM Platform_Fees__r)
                                 FROM Commercial2__c WHERE Id=:commercialId LIMIT 1];
                     GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(commList[0].Opportunity__r.Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC');
-                    if(tranformData !=NULL){
+                    if(!tranformData.fixedWrapperList.isEmpty() || !tranformData.platformWrapperList.isEmpty() || !tranformData.transformedPricingWrapperPricingList.isEmpty()){
                         Map<String,Platform_Fee__c> mapOfExistingPlatformFee = new Map<String,Platform_Fee__c>();
-                        Map<String,Fixed_Pricing1__c> mapOfExistingFixedPricing = new Map<String,Fixed_Pricing1__c>();
-                        Map<String,String> mapOfTresuryFixedPricing = new Map<String,String>();
+                      
                         if(commList !=NULL && commList.size()>0){
                             for(Commercial2__c comm : commList){
                                 if(comm.Fixed_Pricings__r !=null && comm.Fixed_Pricings__r.size()>0){
@@ -531,8 +533,7 @@ public class PricingModuleComponentController {
                             } 
                         }
                         /******added by Rohit ::In this below logic we are checking If fixed pricing is not in salesforce then
-get the data nad insert other wise updating the existing recrods*******/
-                        List<Fixed_Pricing1__c> fixedPricingList = new  List<Fixed_Pricing1__c>();
+                            get the data nad insert other wise updating the existing recrods*******/
                         if(!tranformData.fixedWrapperList.isEmpty()){
                             for(GetApiTreasuryDataController.fixedPricingWrapper fixedDataTreasury : tranformData.fixedWrapperList){
                                 Fixed_Pricing1__c fixedPricing;
@@ -542,6 +543,7 @@ get the data nad insert other wise updating the existing recrods*******/
                                         fixedPricing.Client_Id__c = fixedDataTreasury.clientId !=null ? fixedDataTreasury.clientId :null;
                                         fixedPricing.Sub_Client_Id__c = fixedDataTreasury.subClientId !=null ? fixedDataTreasury.subClientId :null;
                                         fixedPricing.Debit_Model__c = fixedDataTreasury.debitModel !=null ? fixedDataTreasury.debitModel :null;
+                                        fixedPricing.Amount__c = fixedDataTreasury.amountSlab !=null ? fixedDataTreasury.amountSlab :null;
                                         fixedPricing.Valid_From__c = fixedDataTreasury.validFrom !=null ? fixedDataTreasury.validFrom :null;
                                         fixedPricing.Valid_Till__c = fixedDataTreasury.validTill !=null ? fixedDataTreasury.validTill :null;
                                         fixedPricing.Start_Date__c =fixedDataTreasury.startDate !=null ? Date.valueOf(fixedDataTreasury.startDate) :null;
@@ -554,8 +556,8 @@ get the data nad insert other wise updating the existing recrods*******/
                                         fixedPricing.Flat_Fee__c = fixedDataTreasury.flatfee !=null ? fixedDataTreasury.flatfee :null;
                                         fixedPricing.Max_Cap_TDR_Charge__c = fixedDataTreasury.maxCapTdrCharge !=null ? fixedDataTreasury.maxCapTdrCharge :null;
                                         fixedPricing.Min_Cap_TDR_Charge__c = fixedDataTreasury.minCapTdrCharge !=null ? fixedDataTreasury.minCapTdrCharge :null;
-                                        fixedPricing.Shared_Fee__c = fixedDataTreasury.sharedFee !=null ? Integer.valueOf(fixedDataTreasury.sharedFee) :null;
-                                        fixedPricing.Fee_Bearer_Entity__c = fixedDataTreasury.feeBearerEntity !=null ? String.valueOf(fixedDataTreasury.feeBearerEntity) :null;
+                                        fixedPricing.Shared_Fee__c = fixedDataTreasury.sharedFee !=null ? fixedDataTreasury.sharedFee :null;
+                                        fixedPricing.Fee_Bearer_Entity__c = fixedDataTreasury.feeBearerEntity !=null ? fixedDataTreasury.feeBearerEntity :null;
                                         fixedPricing.Fee_Bearer_Entity_Id__c = fixedDataTreasury.feeBearerEntityId !=null ? fixedDataTreasury.feeBearerEntityId :null;
                                         fixedPricing.Added_On__c = fixedDataTreasury.addedOn !=null ? fixedDataTreasury.addedOn :null;
                                         fixedPricing.Fee_Type__c = fixedDataTreasury.feeType !=null ? fixedDataTreasury.feeType :null;
@@ -566,23 +568,25 @@ get the data nad insert other wise updating the existing recrods*******/
                                         fixedPricing.Aggregated_Revenue__c = fixedDataTreasury.aggregatedRevenue !=null ? fixedDataTreasury.aggregatedRevenue :null;
                                         fixedPricing.Count_Slab_Value__c = fixedDataTreasury.countSlabValue !=null ? fixedDataTreasury.countSlabValue :null;
                                         fixedPricing.Bearer_of_Charges__c = fixedDataTreasury.bearerOfCharges !=null ? fixedDataTreasury.bearerOfCharges :null;
-                                        fixedPricing.Version_Number__c = fixedDataTreasury.versionNumber;
                                         fixedPricing.Source__c = fixedDataTreasury.source !=null ? fixedDataTreasury.source :null;
                                     }
                                     if(String.isNotBlank(fixedPricing.Status__c) && fixedPricing.Status__c.contains('Rejected') && fixedPricing.Rule_Id__c !=NULL){
                                         fixedPricing.Status__c = 'Checker Approved';
                                         fixedPricing.Version_Number__c  = fixedDataTreasury.versionNumber;
+                                        fixedPricing.Temp_Id__c = null;
                                         mapOfFixedPricingToUPdate.put(fixedPricing.Id,fixedPricing); 
                                     }
-                                    else if(String.isNotBlank(fixedPricing.Status__c)  && fixedPricing.Status__c.contains('Approved') &&
-                                        fixedPricing.Version_Number__c <  Integer.valueOf(fixedDataTreasury.versionNumber) && fixedPricing.Rule_Id__c !=NULL){
+                                    else if(String.isNotBlank(fixedPricing.Status__c)  && fixedPricing.Status__c.contains('Approved') && 
+                                    fixedPricing.Version_Number__c  <  fixedDataTreasury.versionNumber && fixedPricing.Rule_Id__c !=NULL){
                                         fixedPricing.Status__c = 'Checker Approved';
+                                        fixedPricing.Temp_Id__c = null;
                                         fixedPricing.Version_Number__c  = fixedDataTreasury.versionNumber;
                                         mapOfFixedPricingToUPdate.put(fixedPricing.Id,fixedPricing);
                                     }
                                     else if(String.isNotBlank(fixedPricing.Status__c) &&  fixedPricing.Rule_Id__c !=NULL && fixedPricing.Status__c == 'Error (Override Required)'){
                                         fixedPricing.Status__c = 'Checker Approved';
                                         fixedPricing.Version_Number__c  = fixedDataTreasury.versionNumber;
+                                        fixedPricing.Temp_Id__c = null;
                                         mapOfFixedPricingToUPdate.put(fixedPricing.Id,fixedPricing); 
                                     }
                                     mapOfTresuryFixedPricing.put(fixedDataTreasury.ruleId,fixedDataTreasury.ruleId);
@@ -625,28 +629,16 @@ get the data nad insert other wise updating the existing recrods*******/
                                     fixedPricingList.add(fixedPricing);
                                 }
                             }
-                            /*******This if condition will execute incase of existing fixed pricing and the records we are getting from the treasury will be not equal means 
-                            suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
-                            if(tranformData.fixedWrapperList.size() != mapOfExistingFixedPricing.size()){
-                                for(Fixed_Pricing1__c existingFixedpricing : mapOfExistingFixedPricing.values()){
-                                        if(!mapOfTresuryFixedPricing.containsKey(existingFixedpricing.Rule_Id__c)){
-                                            existingFixedpricing.Deleted__c = true;
-                                            fixedPricingList.add(existingFixedpricing);
-                                    }
-                                }
-                            }
-                            /**************END ************************/
-                            System.debug('fixedPricingList:::616:::'+fixedPricingList);
-                            if((fixedPricingList !=NULL && fixedPricingList.size()>0) || (mapOfFixedPricingToUPdate !=NULL && mapOfFixedPricingToUPdate.size()>0)){
-                                if(!fixedPricingList.isEmpty() && fixedPricingList !=NULL)
-                                    upsert fixedPricingList;
-                                if(mapOfFixedPricingToUPdate !=null)
-                                    update mapOfFixedPricingToUPdate.values();
-                            }
+                        }
+                        if((fixedPricingList !=NULL && fixedPricingList.size()>0) || (mapOfFixedPricingToUPdate !=NULL && mapOfFixedPricingToUPdate.size()>0)){
+                            if(!fixedPricingList.isEmpty() && fixedPricingList !=NULL)
+                                upsert fixedPricingList;
+                            if(mapOfFixedPricingToUPdate !=null)
+                                update mapOfFixedPricingToUPdate.values();
                         }
                         /************/
                         /******added by Rohit ::Platform fee In this below logic we are checking If platform pricing is not in salesforce then
-using get api treasury we will get the data if data available then  insert other wise updating the existing recrods*******/
+                        using get api treasury we will get the data if data available then  insert other wise updating the existing recrods*******/
                         List<Platform_Fee__c> platformFeeList = new  List<Platform_Fee__c>();
                         if(!tranformData.platformWrapperList.isEmpty()){
                             for(GetApiTreasuryDataController.platFormWrapper platformData : tranformData.platformWrapperList){
@@ -737,6 +729,8 @@ using get api treasury we will get the data if data available then  insert other
                                        && (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)){
                                            pricingExist.Banking_Ops_Status__c = 'Checker Approved';
                                            pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
+                                           if(tranformDataTreasury.revenueModel == 'TDR') pricingExist.Temp_Id_TDR__c = '';
+                                            else pricingExist.Temp_Id_Conv__c = null;
                                            mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
                                        }
                                     else if(String.isNotBlank(pricingExist.Banking_Ops_Status__c)  && pricingExist.Banking_Ops_Status__c.contains('Approved') &&
@@ -744,12 +738,16 @@ using get api treasury we will get the data if data available then  insert other
                                             (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)){
                                                 pricingExist.Banking_Ops_Status__c = 'Checker Approved';
                                                 pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
+                                                if(tranformDataTreasury.revenueModel == 'TDR') pricingExist.Temp_Id_TDR__c = '';
+                                                else pricingExist.Temp_Id_Conv__c = null;
                                                 mapOfpricingToUPdate.put(pricingExist.Id,pricingExist);
                                             }
                                     else if(String.isNotBlank(pricingExist.Banking_Ops_Status__c) &&  (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)
                                             && pricingExist.Banking_Ops_Status__c == 'Error(Override Required)'){
                                                 pricingExist.Banking_Ops_Status__c = 'Checker Approved';
                                                 pricingExist.Version_Number__c  = Decimal.valueOf(tranformDataTreasury.versionNumber);
+                                                if(tranformDataTreasury.revenueModel == 'TDR') pricingExist.Temp_Id_TDR__c = '';
+                                                else pricingExist.Temp_Id_Conv__c = null;
                                                 mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
                                             }
                                 }
@@ -800,7 +798,7 @@ using get api treasury we will get the data if data available then  insert other
                             }
                         }
                           //Creating the Publish pricing record in sf If we get any tranform data from treasury 
-                        if((!fixedPricingList.isEmpty() || !platformFeeList.isEmpty()  || !newPricingRecordList.isEmpty() || !mapOfpricingToUPdate.isEmpty()) && tranformData.publishDetails !=NULL){
+                        if((!fixedPricingList.isEmpty()  || !mapOfFixedPricingToUPdate.isEmpty() || !platformFeeList.isEmpty()  || !newPricingRecordList.isEmpty() || !mapOfpricingToUPdate.isEmpty()) && tranformData.publishDetails !=NULL){
                             Publish_Pricing_Detail__c  pulishPricingDetails = new Publish_Pricing_Detail__c();
                             pulishPricingDetails.Merchant__c = tranformData.publishDetails.mId ;
                             pulishPricingDetails.Commercial__c = tranformData.publishDetails.commId ;
@@ -817,6 +815,22 @@ using get api treasury we will get the data if data available then  insert other
                             Insert att;
                         }
                     }
+                     /*******This if condition will execute incase of existing fixed pricing and the records we are getting from the treasury will be not equal means 
+                            suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
+                            if(tranformData.fixedWrapperList.size() != commList[0].Fixed_Pricings__r.size()){
+                                for(Fixed_Pricing1__c existingFixedpricing : commList[0].Fixed_Pricings__r){
+                                        if(!mapOfTresuryFixedPricing.containsKey(existingFixedpricing.Rule_Id__c)){
+                                            existingFixedpricing.Deleted__c = true;
+                                            existingFixedpricing.Rule_Id__c = null;
+                                            fixedPricingList.add(existingFixedpricing);
+                                    }
+                                }
+                            }
+                            if(fixedPricingList !=null && fixedPricingList.size()>0){
+                                update fixedPricingList;
+                            }
+                            /**************END ************************/
+                  
                     /***********/
                     for(Pricing__c pricing : [SELECT Id,Payment_Mode__c,Payment_Option2__c,Payment_Option2__r.Name,Pricing_Specification__c,
                                               Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,

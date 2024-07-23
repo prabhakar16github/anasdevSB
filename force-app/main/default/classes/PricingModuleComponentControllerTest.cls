@@ -47,7 +47,8 @@ public class PricingModuleComponentControllerTest {
         mpd.Payment_Option__c = po.Id;
         mpd.Pricing_Specification__c = ps.Id;
         mpd.Payment_Gateway__c = pg.Id;
-        mpd.Salesforce_Primary_Key__c = 'SF1';
+        //mpd.Salesforce_Primary_Key__c = 'SF1'; // commented by rohit
+        mpd.Salesforce_Primary_Key__c = 'PayUPG_146';
         mpd.Donation_0_Flat__c = 50;
         mpd.Donation_0_Percentage__c = 1.5;
         mpd.Donation_2000_Flat__c = 100;
@@ -125,6 +126,7 @@ public class PricingModuleComponentControllerTest {
         price.Payment_Gateway2__c = pg.Id;
         price.Rule_Id__c = '7119698';
         price.Opportunity__c = opp.Id;
+        price.Transaction_Type__c = 'TDR';
         listPricing.add(price);
         
         Pricing__c price1 = new Pricing__c();
@@ -133,9 +135,10 @@ public class PricingModuleComponentControllerTest {
         price1.Master_Pricing_Data__c = mpd.Id;
         price1.Payment_Gateway2__c = pg.Id;
         price1.Banking_Ops_Status__c = 'Approved';
-        price1.Rule_Id_Conv__c = '7119698';
+        price1.Rule_Id_Conv__c ='7119698';
         price1.Opportunity__c = opp.Id;
         price.Deleted__c = true;
+        price.Transaction_Type__c = 'TDR';
         listPricing.add(price1); 
         
         Pricing__c price3 = new Pricing__c();
@@ -143,8 +146,9 @@ public class PricingModuleComponentControllerTest {
         price3.Below_Rack_Rates__c = true;
         price3.Master_Pricing_Data__c = mpd.Id;
         price3.Payment_Gateway2__c = pg.Id;
-        price3.Rule_Id__c = '7119698';
+        price3.Rule_Id__c ='7119698';
         price3.Opportunity__c = opp.Id;
+        price.Transaction_Type__c = 'Convenience';
         listPricing.add(price3);
         
         Pricing__c price4 = new Pricing__c();
@@ -164,10 +168,11 @@ public class PricingModuleComponentControllerTest {
         price5.Master_Pricing_Data__c = mpd.Id;
         price5.Payment_Gateway2__c = pg.Id;
         price5.Banking_Ops_Status__c = 'Approved';
-        price5.Rule_Id_Conv__c = '7119698';
+        price5.Rule_Id_Conv__c ='7119698';
         price5.Opportunity__c = opp.Id;
         price5.Deleted__c = false;
         price5.Published__c = true;
+        price.Transaction_Type__c = 'Convenience';
         listPricing.add(price5); 
         
         insert listPricing;
@@ -178,8 +183,18 @@ public class PricingModuleComponentControllerTest {
         
         Fixed_Pricing1__c fp1 = new Fixed_Pricing1__c();
         fp1.Commercial__c = comm.Id;
+        fp1.Rule_Id__c = '13867476'; // This line added by rohit
         fp1.Fee_Type__c = 'AMC';
+        fp1.Status__c = 'Checker Approved';
         insert fp1;
+        //Added by Rohit
+        Fixed_Pricing1__c fp2 = new Fixed_Pricing1__c();
+        fp2.Commercial__c = comm.Id;
+        fp2.Rule_Id__c = '1234321'; // This line added by rohit
+        fp2.Fee_Type__c = 'AMC';
+        fp2.Status__c = 'Checker Approved';
+        insert fp2;
+        // End
         
         /* Fallback_Charge__c fc = new Fallback_Charge__c();
         fc.Commercial__c = comm.Id;
@@ -187,9 +202,11 @@ public class PricingModuleComponentControllerTest {
         insert fc; */
         
         Platform_Fee__c pf = new Platform_Fee__c();
+        pf.Rule_Id__c = '13867532'; // This line added by rohit
         pf.Commercial__c = comm.Id;
         pf.Amount__c = 0;
         insert pf;
+        
         
         /* Fallback_Payment_Mode__c fpm = new Fallback_Payment_Mode__c();
         fpm.Name = 'Test';
@@ -205,6 +222,7 @@ public class PricingModuleComponentControllerTest {
         other.Amount_Slab__c = 10;
         other.Flat_Fee__c = 2.50;
         other.Rule_Id__c ='12345';
+        other.Commercial2__c = comm.Id;
         listOtherProductPricing.add(other);
         
         Other_Product_Pricing__c other1 = new Other_Product_Pricing__c();
@@ -214,6 +232,7 @@ public class PricingModuleComponentControllerTest {
         other1.Revenue_Model__c = 'offerTDR';
         other1.Debit_Model__c = 'Net';
         other1.Flat_Fee__c = 2.50;
+        other1.Commercial2__c = comm.Id;
         listOtherProductPricing.add(other1);
         
         Other_Product_Pricing__c other2 = new Other_Product_Pricing__c();
@@ -224,9 +243,20 @@ public class PricingModuleComponentControllerTest {
         other2.Debit_Model__c = 'Net';
         other2.Flat_Fee__c = 2.50;
         other2.Valid_From__c = Date.newInstance(2024,11,11);
+        other2.Commercial2__c = comm.Id;
         listOtherProductPricing.add(other2);
         
         insert listOtherProductPricing;
+        /**Added by Rohit**/
+        SF_Treasury_Transformer__c transformer = new SF_Treasury_Transformer__c();
+        transformer.SF_ID__c = 'PayUPG_146';
+        transformer.Payment_Mode__c ='cashcard';
+        transformer.Sub_Payment_Mode__c = 'olac';
+        transformer.Payment_Scheme__c = '';
+        transformer.Payment_Entity__c = 245;
+        transformer.IsOnus__c = '1';
+        Insert transformer;
+        /****End****/
     }
     
     @isTest
@@ -303,7 +333,7 @@ public class PricingModuleComponentControllerTest {
         /* List<Fallback_Charge__c> listFallbackChargesExisting = [SELECT Id FROM Fallback_Charge__c LIMIT 1]; */
         List<Fixed_Pricing1__c> listFixedPricing2Existing = [SELECT Id FROM Fixed_Pricing1__c LIMIT 1];
         String listFallbackCharges = '[{"percentage":"2","paymentModeName":"BNPL","Id":"1234","flatFee":"1"}]';
-        String listFixedPricing2 = '[{"startDate":"2023-10-05","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Quarterly","flatFeeType":"Setup Fee","flatFee":"10.00","endDate":"2023-10-31","debitModel":"Net","amount":""},{"startDate":"2023-10-31","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Daily","flatFeeType":"Security Deposit","flatFee":"20.00","endDate":"2023-10-25","debitModel":"Net","amount":""},{"startDate":"2023-10-26","showDeleteButton":false,"recordId":"'+listFixedPricing2Existing[0].Id+'","percentage":"","paymentFrequency":"Weekly","flatFeeType":"AMC","flatFee":"30.00","endDate":"2023-10-26","debitModel":"Gross","amount":""}]';
+        String listFixedPricing2 = '[{"startDate":"2023-10-05","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Quarterly","flatFeeType":"Setup Fee","flatFee":"10.00","endDate":"2023-10-31","debitModel":"Net","amount":""},{"startDate":"2023-10-31","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Daily","flatFeeType":"AMC","flatFee":"20.00","endDate":"2023-10-25","debitModel":"Net","amount":""},{"startDate":"2023-10-26","showDeleteButton":false,"recordId":"'+listFixedPricing2Existing[0].Id+'","percentage":"","paymentFrequency":"Weekly","flatFeeType":"AMC","flatFee":"30.00","endDate":"2023-10-26","debitModel":"Gross","amount":""}]';
         PricingModuleComponentController.insertFixedPricingAndPublishCommercial(listCommercial[0].Id,listFixedPricing,listPlatformFee,listFallbackCharges,'GMV','Daily','2023-09-1','2023-09-30','Gross',listFixedPricing2);
         List<Pricing_Template__c> listTemplate = [SELECT Id FROM Pricing_Template__c LIMIT 1];
         PricingModuleComponentController.getPublicCheckboxForTemplate(listTemplate[0].Id);
@@ -340,7 +370,7 @@ public class PricingModuleComponentControllerTest {
         /* List<Fallback_Charge__c> listFallbackChargesExisting = [SELECT Id FROM Fallback_Charge__c LIMIT 1]; */
         String listFallbackCharges = '[{"percentage":"2","paymentModeName":"BNPL","Id":"1234","flatFee":"1"}]';
         List<Fixed_Pricing1__c> listFixedPricing2Existing = [SELECT Id FROM Fixed_Pricing1__c LIMIT 1];
-        String listFixedPricing2 = '[{"startDate":"2023-10-05","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Quarterly","flatFeeType":"Setup Fee","flatFee":"10.00","endDate":"2023-10-31","debitModel":"Net","amount":""},{"startDate":"2023-10-31","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Daily","flatFeeType":"Security Deposit","flatFee":"20.00","endDate":"2023-10-25","debitModel":"Net","amount":""},{"startDate":"2023-10-26","showDeleteButton":false,"recordId":"'+listFixedPricing2Existing[0].Id+'","percentage":"","paymentFrequency":"Weekly","flatFeeType":"AMC","flatFee":"30.00","endDate":"2023-10-26","debitModel":"Gross","amount":""}]';
+        String listFixedPricing2 = '[{"startDate":"2023-10-05","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Quarterly","flatFeeType":"Setup Fee","flatFee":"10.00","endDate":"2023-10-31","debitModel":"Net","amount":""},{"startDate":"2023-10-31","showDeleteButton":false,"recordId":"","percentage":"","paymentFrequency":"Daily","flatFeeType":"AMC","flatFee":"20.00","endDate":"2023-10-25","debitModel":"Net","amount":""},{"startDate":"2023-10-26","showDeleteButton":false,"recordId":"'+listFixedPricing2Existing[0].Id+'","percentage":"","paymentFrequency":"Weekly","flatFeeType":"AMC","flatFee":"30.00","endDate":"2023-10-26","debitModel":"Gross","amount":""}]';
         PricingModuleComponentController.FixedPricing obj4 = new PricingModuleComponentController.FixedPricing();
         PricingModuleComponentController.insertFixedPricingAndPublishCommercial(listCommercial[0].Id,listFixedPricing,listPlatformFee,listFallbackCharges,'GMV','Daily','2023-09-1','2023-09-30','Gross',listFixedPricing2);
         
@@ -416,7 +446,43 @@ public class PricingModuleComponentControllerTest {
         Database.executeBatch(new CreateCommercialsForExistingMerchant(),2000);
         Test.stopTest();
     }
+    // added by Rohit
+    @isTest
+    public static void testMethod9() {
+        test.startTest();
+        List<Commercial2__c> listCommercial = [SELECT Id,Name FROM Commercial2__c LIMIT 1];
+        List<Fixed_Pricing1__c> fixedList = [SELECT id , Rule_Id__c FROM Fixed_Pricing1__c WHERE Rule_Id__c='13867476'];
+        fixedList[0].Rule_Id__c = '42342';
+        update fixedList;
+        List<Platform_Fee__c> platformList = [SELECT Id,Rule_Id__c FROM Platform_Fee__c WHERE Rule_Id__c ='13867532'];
+        platformList[0].Rule_Id__c = '443223';
+        update platformList;
+     	PricingModuleComponentController.getPaymentDetails('',listCommercial[0].Id);
+        test.stopTest();
+    }  
     
+    @isTest
+    static void testGetFixedPricing(){
+        test.startTest();
+        List<Commercial2__c> listCommercial = [SELECT Id,Name FROM Commercial2__c LIMIT 1];
+        List<Fixed_Pricing1__c> fixedList = [SELECT id , Rule_Id__c FROM Fixed_Pricing1__c WHERE Rule_Id__c='13867476'];
+        PricingModuleComponentController.FixedPricing2 obj = new PricingModuleComponentController.FixedPricing2();
+        obj.recordId = fixedList[0].Id;
+        
+        
+        PricingModuleComponentController.getFixedPricing(JSON.serialize(new List<PricingModuleComponentController.FixedPricing2>{obj}));
+        test.stopTest();
+    }
     
+    @isTest
+    static void testGetNewAPILiveDetailsFromTreasury(){
+        test.startTest();
+        List<Commercial2__c> listCommercial = [SELECT Id,Name,Opportunity__c FROM Commercial2__c LIMIT 1];
+        
+        
+        
+        PricingModuleComponentController.getNewAPILiveDetailsFromTreasury(listCommercial[0].Opportunity__c);
+        test.stopTest();
+    }
     
 }

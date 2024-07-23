@@ -67,39 +67,37 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
     }
 
 
+    /** Function to store all TDR/Conv pricing in a set and check all the child checkboxes in UI 
+    * Calling from master checkbox in TDR/Conv list.
+    */
     handleSelectAllData(event){
         this.selectAllData = event.detail.checked;
         this.selectedRecordIds = [];
-
         
         var tempArr = [];
+        
         this.pricingDetail.listPricing.forEach(item => {
             item.isChecked = this.selectAllData;
             
-            if(item.isChecked){
+            if(this.selectAllData){
                 this.selectedRecordIds.push(item.recordId);
             }else{
-                this.selectedRecordIds = [...this.selectedRecordIds].filter(recordId => {
-                    return recordId != item.recordId;
-                });
+                this.selectedRecordIds = [];
             }
             tempArr.push(item);
         });
 
         this.pricingDetail.listPricing = tempArr;
-        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
-            this.disableButton = false;
-        }else{
-            this.disableButton = true;
-        }
-    }
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
+    }/** END */
     
-    /** Added for fixed pricing maker checker and versioning */
+    /** Function to store all fixed pricing in a set and check all the child checkboxes in UI 
+    * Calling from master checkbox in Fixed pricing list.
+    */
     handleSelectAllDataFixed(event){
         this.selectAllDataFixed = event.detail.checked;
         this.selectedRecordIdsFixed = [];
 
-        
         var tempArr = [];
         this.fixedPricingDetail.listFixedPricing.forEach(item => {
             item.isChecked = this.selectAllDataFixed;
@@ -107,88 +105,73 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
             if(item.isChecked){
                 this.selectedRecordIdsFixed.push(item.recordId);
             }else{
-                this.selectedRecordIdsFixed = [...this.selectedRecordIdsFixed].filter(recordId => {
-                    return recordId != item.recordId;
-                });
+                this.selectedRecordIdsFixed = [];
             }
             tempArr.push(item);
         });
 
         this.fixedPricingDetail.listFixedPricing = tempArr;
-        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
-            this.disableButton = false;
-        }else{
-            this.disableButton = true;
-        }
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
     }
-    /** */
+    /** END */
 
+    /** Function to store selected TDR/Conv pricing in a set
+    * Calling from child checkboxes in TDR/Conv list.
+    */
     handleIsChecked(event){
         var isChecked = event.detail.checked;
         var recordId = event.target.dataset.id;
         if(isChecked){
             this.selectedRecordIds.push(recordId);
-            //this.disableButton = false;
         }else{
             this.selectedRecordIds = this.selectedRecordIds.filter(item => {
                 return item != recordId;
             });
-            var tempArr = [];
-            this.pricingDetail.listPricing.forEach(listItem => {
-                if(listItem.recordId == recordId){
-                    listItem.isChecked = false;
-                }
-                tempArr.push(listItem);
-            });
-            this.pricingDetail.listPricing = tempArr;
-        }
-        
-        if(this.selectedRecordIds.length == this.pricingDetail.listPricing.length){
-            this.selectAllData = true;
-        }else{
-            this.selectAllData = false;
         }
 
-        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
-            this.disableButton = false;
-        }else{
-            this.disableButton = true;
-        }
-    }
+        var tempArr = [];
+        this.pricingDetail.listPricing.forEach(listItem => {
+            if(listItem.recordId == recordId){
+                listItem.isChecked = isChecked;
+            }
+            tempArr.push(listItem);
+        });
+        this.pricingDetail.listPricing = tempArr;
 
-    /** Added for fixed pricing maker checker and versioning */
+        this.selectAllData = (this.selectedRecordIds.length == this.pricingDetail.listPricing.length) ? true : false;
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
+    }/** END */
+
+    /** Function to store selected Fixed pricing in a set
+    * Calling from child checkboxes inFixed pricing list.
+    */
     handleIsCheckedFixed(event){
         var isChecked = event.detail.checked;
         var recordId = event.target.dataset.id;
         if(isChecked){
             this.selectedRecordIdsFixed.push(recordId);
-            //this.disableButton = false;
         }else{
             this.selectedRecordIdsFixed = this.selectedRecordIdsFixed.filter(item => {
                 return item != recordId;
             });
-            var tempArr = [];
-            this.fixedPricingDetail.listFixedPricing.forEach(listItem => {
-                if(listItem.recordId == recordId){
-                    listItem.isChecked = false;
-                }
-                tempArr.push(listItem);
-            });
-            this.fixedPricingDetail.listFixedPricing = tempArr;
-        }
-        
-        if(this.selectedRecordIdsFixed.length == this.fixedPricingDetail.listFixedPricing.length){
-            this.selectAllDataFixed = true;
-        }else{
-            this.selectAllDataFixed = false;
+            
         }
 
-        if(this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0){
-            this.disableButton = false;
-        }else{
-            this.disableButton = true;
-        }
-    }/** */
+        var tempArr = [];
+        this.fixedPricingDetail.listFixedPricing.forEach(listItem => {
+            if(listItem.recordId == recordId){
+                listItem.isChecked = isChecked;
+            }
+            tempArr.push(listItem);
+        });
+        this.fixedPricingDetail.listFixedPricing = tempArr;
+    
+        this.selectAllDataFixed = (this.selectedRecordIdsFixed.length == this.fixedPricingDetail.listFixedPricing.length) ? true : false;
+        
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
+        
+    }/** END */
+    
     
     async handleApprove(event){
         const result = await LightningConfirm.open({
@@ -222,14 +205,14 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
                     
                     LightningAlert.open({
                         message: 'Please provide the reason',
-                        theme: 'error', // a red theme intended for error states
-                        label: 'Error!', // this is the header text
+                        theme: 'error',
+                        label: 'Error!'
                     });
                 }else if(result.length > 255){
                     LightningAlert.open({
                         message: 'Max 255 characters allowed.',
-                        theme: 'error', // a red theme intended for error states
-                        label: 'Error!', // this is the header text
+                        theme: 'error', 
+                        label: 'Error!'
                     });
                 }else{
                     this.showSpinner = true;
@@ -249,10 +232,7 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
                         console.error(error);
                     });
                 }
-                
             }
         });
     }
-    
-    
 }

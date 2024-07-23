@@ -10,9 +10,9 @@ trigger PricingTrigger on Pricing__c (before update,after insert,after update) {
         if(Trigger.isAfter && Trigger.isUpdate)PricingTriggerHandler.afterUpdate(Trigger.new,Trigger.oldMap);
     	if(Trigger.isAfter && Trigger.isInsert)PricingTriggerHandler.afterInsertHandler(Trigger.new);
 
-        /** Added to update belowRack Rate = false,if Source != 'Salesforce',  Added by Prabhakar */
+        
         if(Trigger.isBefore && Trigger.isUpdate){
-            // PricingTriggerHandler.beforeUpdateHandler(Trigger.new,Trigger.oldMap);
+            PricingTriggerHandler.beforeUpdateHandler(Trigger.new,Trigger.oldMap);
         }
     }
 }

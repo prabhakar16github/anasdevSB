@@ -14,7 +14,16 @@ public class Pricing_BulkPostResponseAPI_Handler {
         Boolean checker = listPublishPricingDetails[0].Checker__c; 
         Boolean deleteRequest = listPublishPricingDetails[0].Delete_Request__c;
         listPublishPricingDetails[0].Sync_Status__c = 'Completed';
-        listPublishPricingDetails[0].Async_Response_Body__c  = body;
+        if(listPublishPricingDetails[0].Request_Count__c > 40){
+            listPublishPricingDetails[0].Async_Response_Body__c  = '*** Please view ResponseBody attachment ***';
+            Attachment att = new Attachment();
+                att.Name = 'ResponseBody';
+                att.ParentId = listPublishPricingDetails[0].Id;
+                att.Body = Blob.valueOf(body);
+                insert att;
+        }else{
+            listPublishPricingDetails[0].Async_Response_Body__c  = body;
+        }
         Map<Id,Pricing__c> mapIdToPricing = new Map<Id,Pricing__c>();
         //Traversing the response to get the ruleId and sfId
         for(Object obj : (List<Object>)mapKeyToValue.get('responseDtos')) {

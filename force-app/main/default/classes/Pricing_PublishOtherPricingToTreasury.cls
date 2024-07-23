@@ -150,7 +150,7 @@ public class Pricing_PublishOtherPricingToTreasury {
                 String startDateTimeUTCFormatString = dt.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
                 pricingRecordDetails.validFrom = startDateTimeUTCFormatString;
             }
-            if(String.isNotBlank(fixedPricing.Valid_Till__c)) pricingRecordDetails.validFrom = fixedPricing.Valid_Till__c;
+            if(String.isNotBlank(fixedPricing.Valid_Till__c)) pricingRecordDetails.validTill = fixedPricing.Valid_Till__c;
             else if(fixedPricing.End_Date__c != NULL){
                 DateTime dt = getUTCDateTime(Datetime.newInstance(fixedPricing.End_Date__c,Datetime.now().time()));
                 String startDateTimeUTCFormatString = dt.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');

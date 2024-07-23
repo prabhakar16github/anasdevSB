@@ -1,5 +1,15 @@
+/*
+* Class Name        :       Pricing_CheckerViewCompController
+* Created By        :       Prabhakar Joshi 
+* Created Date      :  
+* Description       :       Controller class for Pricing_CheckerViewComp show the add/update & delete requests for checker and having the feature of appove/reject.
+* Version.          :       1   
+*/ 
 public with sharing class Pricing_CheckerViewCompController {
     
+    /** Mathod to get initial data for add & update request for checker
+     * Calling from connectedCallback in JS
+     */
     @AuraEnabled
     public static DataWrapper getDataOnLoad(String oppId){
         try {
@@ -19,7 +29,8 @@ public with sharing class Pricing_CheckerViewCompController {
                 Convenience_Flat_Fee__c,Convenience__c,Rule_Id__c,Rule_Id_Conv__c
                 FROM Pricing__c
                 WHERE Commercial2__c = :commercialList[0].Id 
-                AND (Temp_Id_TDR__c != NULL OR Temp_Id_Conv__c != NULL)]){
+                AND (Temp_Id_TDR__c != NULL OR Temp_Id_Conv__c != NULL)
+                AND Banking_Ops_Status__c = 'Pending with Checker']){
                     TDRConvPricingWrapper pricingWrap = new TDRConvPricingWrapper();
                     pricingWrap.recordId = price.Id;
                     pricingWrap.paymentMode = price.Payment_Mode_Text__c;
@@ -58,10 +69,12 @@ public with sharing class Pricing_CheckerViewCompController {
                 }
                 
                 for(Fixed_Pricing1__c fixedPrice : [SELECT Id,Fee_Type__c,Debit_Model__c,Start_Date__c,End_Date__c,Payment_Frequency__c,
-                Amount__c,Percentage__c,Flat_Fee__c,Rule_Id__c
-                FROM Fixed_Pricing1__c
-                WHERE Commercial__c = :commercialList[0].Id
-                AND Temp_Id__c != NULL]){
+                                                    Amount__c,Percentage__c,Flat_Fee__c,Rule_Id__c
+                                                    FROM Fixed_Pricing1__c 
+                                                    WHERE Commercial__c = :commercialList[0].Id 
+                                                    AND Temp_Id__c != NULL 
+                                                    AND Status__c = 'Pending with Checker']){
+
                     FixedAndPlatformFeeWrapper fixedPriceWrap = new FixedAndPlatformFeeWrapper();
                     fixedPriceWrap.recordId = fixedPrice.Id;
                     fixedPriceWrap.feeType = fixedPrice.Fee_Type__c;
@@ -79,9 +92,10 @@ public with sharing class Pricing_CheckerViewCompController {
                 }
                 
                 for(Platform_Fee__c platformFee : [SELECT Id,Type__c,Debit_Model__c,Start_Date__c,End_Date__c,Interval__c,
-                Amount__c,Percentage__c,Flat_Fee__c 
-                FROM Platform_Fee__c
-                WHERE Commercial__c = :commercialList[0].Id]){
+                                                   Amount__c,Percentage__c,Flat_Fee__c 
+                                                   FROM Platform_Fee__c 
+                                                   WHERE Commercial__c = :commercialList[0].Id]){
+
                     FixedAndPlatformFeeWrapper platformFeeWrap = new FixedAndPlatformFeeWrapper();
                     platformFeeWrap.recordId = platformFee.Id;
                     platformFeeWrap.feeType = platformFee.Type__c;
@@ -94,17 +108,16 @@ public with sharing class Pricing_CheckerViewCompController {
                     platformFeeWrap.percentage = platformFee.Percentage__c != NULL ? String.valueOf(platformFee.Percentage__c): '';
                     dataWrap.listPlatformPricing.add(platformFeeWrap);
                 }
-                
-                
-                
             }
             return dataWrap;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
-        //return NULL;
-    }
+    }/** END : getDataOnLoad */
     
+    /** Mathod to get initial data for delete request for checker
+     * Calling from connectedCallback in JS
+     */
     @AuraEnabled
     public static DataWrapper getDataOnLoadDelete(String oppId){
         try {
@@ -123,7 +136,9 @@ public with sharing class Pricing_CheckerViewCompController {
                                         Convenience_Flat_Fee__c,Convenience__c
                                         FROM Pricing__c
                                         WHERE Commercial2__c = :commercialList[0].Id 
-                                        AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL)]){
+                                        AND (Temp_Id_Delete_TDR__c != NULL OR Temp_Id_Delete_Conv__c != NULL)
+                                        AND Banking_Ops_Status__c = 'Pending with Checker']){
+
                     TDRConvPricingWrapper pricingWrap = new TDRConvPricingWrapper();
                     pricingWrap.recordId = price.Id;
                     pricingWrap.paymentMode = price.Payment_Mode_Text__c;
@@ -155,51 +170,70 @@ public with sharing class Pricing_CheckerViewCompController {
                     }
                     
                     dataWrap.listPricing.add(pricingWrap);
-                    
                 }
             }
             return dataWrap;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
-        //return NULL;
-    }
+    }/** END : getDataOnLoadDelete */
     
+    /** Private method to validate the data for add/update & delete requests
+     * Calling from getDataOnLoad & getDataOnLoadDelete
+     */
     private static Boolean isValidToShowData(String oppId){
         List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id FROM Publish_Pricing_Detail__c
                                                                      WHERE Merchant__c = :oppId 
                                                                      AND Type__c = 'TDR' 
                                                                      AND Sync_Status__c = 'Processing'];
-        if(!listPublishPricingDetails.isEmpty()){
+                                                                    
+        return  listPublishPricingDetails.isEmpty() ? true : false;                                            
+        /* if(!listPublishPricingDetails.isEmpty()){
             return false;
         }else{
             return true;
-        }
+        } */
     }
 
+    /** Method to approve the request for TDR/Conv & Fixed pricing 
+     * Calling from Approve button in UI
+    */
     @AuraEnabled
     public static string handleApprovePricing(List<String> pricingIdList, List<String> pricingIdListFixed){
         
         try {
+            /** For TDR/Conv pricing */
             if(!pricingIdList.isEmpty()){
                 Set<String> pricingIds = new Set<String>(pricingIdList);
                 Database.executeBatch(new PublishPricingToTreasuryTempTableApprove(pricingIds,'SaveBulkRules-CheckerTrueActionApprove',false),50);
-            }
+            }/** */
+
+            /** For Fixed Pricing */
             if(!pricingIdListFixed.isEmpty()){
-                Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
-                List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
-                pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'approve' ,pricingIdsFixed, false,listFixedPricing[0].OpportunityId__c);
-                obj.processTheRequest();
-            }
+                handleFixedPricingApprove(pricingIdListFixed);
+            }/** */
             return 'success';
        } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
-    }
+    }/** END */
 
+    /** Future method to process the Fixed Pricing for approve */
+    @future(callout=true)
+    public static void handleFixedPricingApprove(List<String> pricingIdListFixed){
+        Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
+        List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
+        pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'approve' ,pricingIdsFixed, false,listFixedPricing[0].OpportunityId__c);
+        obj.processTheRequest();
+    }/** */
+
+    /** Method to reject the request for TDR/Conv & Fixed pricing 
+     * Calling from Reject button in UI
+    */
     @AuraEnabled
     public static string handleRejectPricing(List<String> pricingIdList,String rejectionReason,List<String> pricingIdListFixed){
         try {
+            /** For TDR/Conv pricing */
             if(!pricingIdList.isEmpty()){
 
                 Set<String> pricingIds = new Set<String>(pricingIdList);
@@ -215,8 +249,9 @@ public with sharing class Pricing_CheckerViewCompController {
                 }
     
                 Database.executeBatch(new PublishPricingToTreasuryTempTableReject(pricingIds,'SaveBulkRules-CheckerTrueActionReject',false),50);
-            }
+            }/** */
             
+            /** For Fixed Pricing */
             if(!pricingIdListFixed.isEmpty()){
                 Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
                 List<Fixed_Pricing1__c> fixedPricingListToUpdate = new List<Fixed_Pricing1__c>();
@@ -227,21 +262,29 @@ public with sharing class Pricing_CheckerViewCompController {
                     fixedPricingListToUpdate.add(pr);
                 }
                 
-                List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
-                pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'reject' ,pricingIdsFixed, false, listFixedPricing[0].OpportunityId__c);
-                obj.processTheRequest();
                 if(!fixedPricingListToUpdate.isEmpty()){
                     update fixedPricingListToUpdate;
+                    handleFixedPricingReject(pricingIdListFixed);
                 }
-            }
-
-            
+            }/** */
             return 'success';
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
 
+    /** Future method to process the Fixed Pricing for reject */
+    @future(callout=true)
+    public static void handleFixedPricingReject(List<String> pricingIdListFixed){
+        Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
+        List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
+        pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'reject' ,pricingIdsFixed, false, listFixedPricing[0].OpportunityId__c);
+        obj.processTheRequest();
+    }/** */
+
+    /** Method to approve the delete request for TDR/Conv pricing 
+     * Calling from appove button in UI under Remove request tab
+    */
     @AuraEnabled
     public static string handleDeleteApprovePricing(List<String> pricingIdList){
         try {
@@ -253,6 +296,9 @@ public with sharing class Pricing_CheckerViewCompController {
         }
     }
 
+    /** Method to reject the delete request for TDR/Conv pricing 
+     * Calling from Reject button in UI under Remove request tab
+    */
     @AuraEnabled
     public static string handleDeleteRejectPricing(List<String> pricingIdList,String rejectionReason){
         try {
@@ -285,6 +331,7 @@ public with sharing class Pricing_CheckerViewCompController {
         
     }
     
+    /** Wrapper for  TDR/Conv Pricing */
     public class TDRConvPricingWrapper{
         @AuraEnabled public Boolean isChecked = false;
         @AuraEnabled public String recordId = '';
@@ -304,8 +351,9 @@ public with sharing class Pricing_CheckerViewCompController {
         @AuraEnabled public Boolean showTDR = false;
         @AuraEnabled public Boolean showConv = false;
         @AuraEnabled public String requestType = 'Add';
-
     }
+
+    /** Wrapper for Fixed Pricing */
     public class FixedAndPlatformFeeWrapper{
         /** Added for fixed pricing maker checker and versioning */
         @AuraEnabled public Boolean isChecked = false;
@@ -321,8 +369,4 @@ public with sharing class Pricing_CheckerViewCompController {
         @AuraEnabled public String flatFee = '';
         @AuraEnabled public String percentage = '';
     }
-    
-    
-    
-    
 }
