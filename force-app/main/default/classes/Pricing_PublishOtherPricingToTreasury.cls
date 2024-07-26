@@ -39,12 +39,15 @@ public class Pricing_PublishOtherPricingToTreasury {
         String requestBody = '';
         String processName = '';
         try{
-        		String key = objectAPIName;
-                if(checker) key+= '@@checker';
-                else key+='@@maker';
+            String key = objectAPIName;
+            key += checker ? '@@checker' : '@@maker';
+            /* if(checker){
+                key+= '@@checker';
+            }else{
+                key+='@@maker';
+            } */
+
             if(mapObjectToQuery.containsKey(key)){
-                
-                
                 String query = '';
                 if(checker){
                     String pricingIdStr = '(';
@@ -135,51 +138,86 @@ public class Pricing_PublishOtherPricingToTreasury {
         PricingRuleConfigurationDtoList pricingRecordDetails = new PricingRuleConfigurationDtoList();
         if(objectAPIName == 'Fixed_Pricing1__c'){
             Fixed_Pricing1__c fixedPricing = (Fixed_Pricing1__c)pricing;
-            if(String.isNotBlank(fixedPricing.Temp_Id__c)) pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(fixedPricing.Temp_Id__c);
-            
+            if(String.isNotBlank(fixedPricing.Temp_Id__c)){
+                pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(fixedPricing.Temp_Id__c);
+            } 
             pricingRecordDetails.clientId = Integer.valueOf(fixedPricing.Client_Id__c);
             
-            if(String.isNotBlank(fixedPricing.Sub_Client_Id__c)) pricingRecordDetails.subClientId = fixedPricing.Sub_Client_Id__c;
+            if(String.isNotBlank(fixedPricing.Sub_Client_Id__c)){
+                pricingRecordDetails.subClientId = fixedPricing.Sub_Client_Id__c;
+            } 
             pricingRecordDetails.entityId = Integer.valueOf(fixedPricing.MID__c);
             pricingRecordDetails.revenueModel = mapFeeTypeToRM.get(fixedPricing.Fee_Type__c);
             pricingRecordDetails.debitModel = fixedPricing.Debit_Model__c;
             pricingRecordDetails.amountSlab = fixedPricing.Amount__c;
-            if(String.isNotBlank(fixedPricing.Valid_From__c)) pricingRecordDetails.validFrom = fixedPricing.Valid_From__c;
-            else{
+            if(String.isNotBlank(fixedPricing.Valid_From__c)){
+                pricingRecordDetails.validFrom = fixedPricing.Valid_From__c;
+            }else{
                 DateTime dt = getUTCDateTime(Datetime.newInstance(fixedPricing.Start_Date__c,Datetime.now().time()));
                 String startDateTimeUTCFormatString = dt.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
                 pricingRecordDetails.validFrom = startDateTimeUTCFormatString;
             }
-            if(String.isNotBlank(fixedPricing.Valid_Till__c)) pricingRecordDetails.validTill = fixedPricing.Valid_Till__c;
-            else if(fixedPricing.End_Date__c != NULL){
+            if(String.isNotBlank(fixedPricing.Valid_Till__c)){
+                pricingRecordDetails.validTill = fixedPricing.Valid_Till__c;
+            }else if(fixedPricing.End_Date__c != NULL){
                 DateTime dt = getUTCDateTime(Datetime.newInstance(fixedPricing.End_Date__c,Datetime.now().time()));
                 String startDateTimeUTCFormatString = dt.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
                 pricingRecordDetails.validTill = startDateTimeUTCFormatString;
             }
             pricingRecordDetails.fromTime = Integer.valueOf(fixedPricing.From_Time__c);
             pricingRecordDetails.tillTime = Integer.valueOf(fixedPricing.Till_Time__c);
-            if(String.isNotBlank(fixedPricing.Day_of_Week__c)) pricingRecordDetails.dayOfWeek = fixedPricing.Day_of_Week__c;
-            if(String.isNotBlank(fixedPricing.Payment_Frequency__c)) pricingRecordDetails.frequency = fixedPricing.Payment_Frequency__c;
+            if(String.isNotBlank(fixedPricing.Day_of_Week__c)){
+                pricingRecordDetails.dayOfWeek = fixedPricing.Day_of_Week__c;
+            } 
+            if(String.isNotBlank(fixedPricing.Payment_Frequency__c)){
+                pricingRecordDetails.frequency = fixedPricing.Payment_Frequency__c;
+            } 
             pricingRecordDetails.aggregationRequired = fixedPricing.Aggregation_Required__c;
             pricingRecordDetails.percentFee = fixedPricing.Percentage__c;
             pricingRecordDetails.flatFee = fixedPricing.Flat_Fee__c;
-            if(fixedPricing.Max_Cap_TDR_Charge__c != NULL) pricingRecordDetails.maxCapTdrCharge = fixedPricing.Max_Cap_TDR_Charge__c;
-            if(fixedPricing.Min_Cap_TDR_Charge__c != NULL) pricingRecordDetails.minCapTdrCharge = fixedPricing.Min_Cap_TDR_Charge__c;
+
+            if(fixedPricing.Max_Cap_TDR_Charge__c != NULL){
+                pricingRecordDetails.maxCapTdrCharge = fixedPricing.Max_Cap_TDR_Charge__c;
+            } 
+            if(fixedPricing.Min_Cap_TDR_Charge__c != NULL){
+                pricingRecordDetails.minCapTdrCharge = fixedPricing.Min_Cap_TDR_Charge__c;
+            } 
             pricingRecordDetails.isActive = !isDeleteRequest;
             pricingRecordDetails.sharedFee = fixedPricing.Shared_Fee__c;
-            if(String.isNotBlank(fixedPricing.Fee_Bearer_Entity__c)) pricingRecordDetails.feeBearerEntity = fixedPricing.Fee_Bearer_Entity__c;
+            if(String.isNotBlank(fixedPricing.Fee_Bearer_Entity__c)){
+                pricingRecordDetails.feeBearerEntity = fixedPricing.Fee_Bearer_Entity__c;
+            } 
             pricingRecordDetails.feeBearerEntityId = Integer.valueOf(fixedPricing.Fee_Bearer_Entity_Id__c);
-            if(String.isNotBlank(fixedPricing.Rule_Id__c)) pricingRecordDetails.mappingId = Integer.valueOf(fixedPricing.Rule_Id__c);
-            if(String.isNotBlank(fixedPricing.Added_On__c)) pricingRecordDetails.addedOn = fixedPricing.Added_On__c;
-            else pricingRecordDetails.addedOn = currentDateTimeUTCFormatString;
+            if(String.isNotBlank(fixedPricing.Rule_Id__c)){
+                pricingRecordDetails.mappingId = Integer.valueOf(fixedPricing.Rule_Id__c);
+            }
+            
+            if(String.isNotBlank(fixedPricing.Added_On__c)){
+                pricingRecordDetails.addedOn = fixedPricing.Added_On__c;
+            }else{
+                pricingRecordDetails.addedOn = currentDateTimeUTCFormatString;
+            }
             pricingRecordDetails.addedBy = fixedPricing.Added_By__c;
-            if(checker) pricingRecordDetails.updatedBy = UserInfo.getName();
-            if(String.isNotBlank(fixedPricing.Aggregation_Period__c)) pricingRecordDetails.aggregationPeriod = fixedPricing.Aggregation_Period__c;
+
+            if(checker){
+                pricingRecordDetails.updatedBy = UserInfo.getName();
+            } 
+            if(String.isNotBlank(fixedPricing.Aggregation_Period__c)){
+                pricingRecordDetails.aggregationPeriod = fixedPricing.Aggregation_Period__c;
+            } 
             pricingRecordDetails.sfId = fixedPricing.Id+'#'+fixedPricing.Fee_Type__c;
-            if(fixedPricing.GmvSlabValue__c != NULL) pricingRecordDetails.gmvSlabValue = fixedPricing.GmvSlabValue__c;
-            if(fixedPricing.Aggregated_Revenue__c != NULL)  pricingRecordDetails.aggregatedRevenue = fixedPricing.Aggregated_Revenue__c;
-            if(fixedPricing.Count_Slab_Value__c != NULL)  pricingRecordDetails.countSlabValue = fixedPricing.Count_Slab_Value__c;
-            if(String.isNotBlank(fixedPricing.Bearer_of_Charges__c) )  pricingRecordDetails.bearerOfCharges = fixedPricing.Bearer_of_Charges__c;
+            if(fixedPricing.GmvSlabValue__c != NULL){
+                pricingRecordDetails.gmvSlabValue = fixedPricing.GmvSlabValue__c;
+            } 
+            if(fixedPricing.Aggregated_Revenue__c != NULL){
+                pricingRecordDetails.aggregatedRevenue = fixedPricing.Aggregated_Revenue__c;
+            }  
+            if(fixedPricing.Count_Slab_Value__c != NULL){
+                pricingRecordDetails.countSlabValue = fixedPricing.Count_Slab_Value__c;
+            }  
+            if(String.isNotBlank(fixedPricing.Bearer_of_Charges__c)){
+                pricingRecordDetails.bearerOfCharges = fixedPricing.Bearer_of_Charges__c;
+            }  
             pricingRecordDetails.versionNumber = Integer.valueOf(fixedPricing.Version_Number__c);
             pricingRecordDetails.source = fixedPricing.Source__c;
         }

@@ -28,7 +28,7 @@ we are mapping the values so that same will be update on sf as well.
     public static Map<String,Master_Pricing_Data__c> getMapSfKeyToMasterPricingData() {
         Map<String,Master_Pricing_Data__c> mapOfPayuPgIdToMasterPricingData = new Map<String,Master_Pricing_Data__c>();
         for(Master_Pricing_Data__c mpd : [SELECT Id,Salesforce_Primary_Key__c,Payment_Mode__c,Payment_Option__c,
-                                          Payment_Gateway__c,Pricing_Specification__c,ONUS_OFFUS__c
+                                          Payment_Gateway__c,Pricing_Specification__c,ONUS_OFFUS__c,Payment_Gateway__r.Name,Pricing_Specification__r.Name
                                           FROM Master_Pricing_Data__c WHERE Active_Instrument__c =true LIMIT 50000]) {
                                               mapOfPayuPgIdToMasterPricingData.put(mpd.Salesforce_Primary_Key__c,mpd);	    
                                           }
@@ -231,6 +231,8 @@ which will make the wrapper and send to treasury in response will get the data*/
                                     transFromWrap.feeModel = resWrapper.debitModel;
                                     transFromWrap.paymentMode = mpdData.Payment_Mode__c;
                                     transFromWrap.paymentGateway =  mpdData.Payment_Gateway__c;
+                                    transFromWrap.paymentGatewayText = mpdData.Payment_Gateway__r.Name;
+                                    transFromWrap.specificationsText =  mpdData.Pricing_Specification__r.Name;
                                     transFromWrap.paymentOptions = mpdData.Payment_Option__c;
                                     transFromWrap.specifications =  mpdData.Pricing_Specification__c;
                                     transFromWrap.onusOffus = mpdData.ONUS_OFFUS__c;
@@ -346,7 +348,9 @@ its get called other wise return the untransform data***********/
         public String recordId;
         public String paymentOptions;
         public String specifications ;
+        public String specificationsText;
         public String paymentGateway;
+        public String paymentGatewayText;
         public String onusOffus;
         public Decimal tdrPercentFee;
         public Decimal conveniencePercentFee ;

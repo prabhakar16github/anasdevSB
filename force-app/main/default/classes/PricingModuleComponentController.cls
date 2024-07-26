@@ -771,6 +771,8 @@ public class PricingModuleComponentController {
                                     pricingExist.Payment_Option2__c = tranformDataTreasury.paymentOptions !=null ? tranformDataTreasury.paymentOptions : null;
                                     pricingExist.Pricing_Specification__c = tranformDataTreasury.specifications !=null ? tranformDataTreasury.specifications :null;
                                     pricingExist.Payment_Gateway2__c = tranformDataTreasury.paymentGateway !=null ? tranformDataTreasury.paymentGateway :null;
+                                    pricingExist.Payment_Gateway_Text__c =  tranformDataTreasury.paymentGatewayText !=null ? tranformDataTreasury.paymentGatewayText :null;
+                                    pricingExist.Specifcation__c  =  tranformDataTreasury.specificationsText !=null ? tranformDataTreasury.specificationsText :null;
                                     pricingExist.Published__c = True;
                                     pricingExist.Need_to_Publish__c = false;
                                     pricingExist.Opportunity__c = tranformDataTreasury.recordId;
@@ -819,7 +821,7 @@ public class PricingModuleComponentController {
                             suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
                             if(tranformData.fixedWrapperList.size() != commList[0].Fixed_Pricings__r.size()){
                                 for(Fixed_Pricing1__c existingFixedpricing : commList[0].Fixed_Pricings__r){
-                                        if(!mapOfTresuryFixedPricing.containsKey(existingFixedpricing.Rule_Id__c)){
+                                        if(String.isNotBlank(existingFixedpricing.Rule_Id__c) && !mapOfTresuryFixedPricing.containsKey(existingFixedpricing.Rule_Id__c)){
                                             existingFixedpricing.Deleted__c = true;
                                             existingFixedpricing.Rule_Id__c = null;
                                             fixedPricingList.add(existingFixedpricing);
@@ -2960,7 +2962,7 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
             callTreasuryForPlatform(commercialId);    
         }
         if(Label.StopFallbackChargesFlowToTreasury.toLowerCase() == 'false') {
-            callTreasuryForFallback(commercialId);    
+            //callTreasuryForFallback(commercialId);    
         }
         if(Label.StopFixedPricingFlowToTreasury.toLowerCase() == 'false') {
             //callTreasuryForFixed(commercialId);  
