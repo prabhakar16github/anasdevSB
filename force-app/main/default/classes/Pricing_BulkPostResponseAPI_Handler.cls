@@ -120,6 +120,10 @@ public class Pricing_BulkPostResponseAPI_Handler {
         }  
         if(mapIdToPricing.keySet().size() > 0) update mapIdToPricing.values();
         update listPublishPricingDetails[0];
+
+        if(checker && listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionApprove'){
+            updateCommercial(listPublishPricingDetails[0].Commercial__c);
+        }
     }
 
     public static void handleFixedPricingResponse(List<Publish_Pricing_Detail__c> listPublishPricingDetails,Map<String,Object> mapKeyToValue,String body) {
@@ -175,6 +179,87 @@ public class Pricing_BulkPostResponseAPI_Handler {
             }
         }  
         if(mapIdToFixedPricing.keySet().size() > 0) update mapIdToFixedPricing.values();
+        
         update listPublishPricingDetails[0];
+        
+        if(checker && listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionApprove'){
+            updateCommercial(listPublishPricingDetails[0].Commercial__c);
+        }
+    }
+
+    public static void handlePlatformFeeResponse(List<Publish_Pricing_Detail__c> listPublishPricingDetails,Map<String,Object> mapKeyToValue,String body) {
+        
+        Boolean checker = listPublishPricingDetails[0].Checker__c; 
+        listPublishPricingDetails[0].Sync_Status__c = 'Completed';
+        listPublishPricingDetails[0].Async_Response_Body__c  = body;
+        Map<Id,Platform_Fee__c> mapIdToPlatformFee = new Map<Id,Platform_Fee__c>();
+        //Traversing the response to get the ruleId and sfId
+        for(Object obj : (List<Object>)mapKeyToValue.get('responseDtos')) {
+            Map<String,Object> mapInnerKeyToValue = (Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(obj));
+            Map<String,Object> mapInner2KeyToValue = (Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(mapInnerKeyToValue.get('result')));
+            if(String.valueOf(mapInnerKeyToValue.get('code')) == '2000' && mapInner2KeyToValue.get('sfId') != NULL) {
+                Platform_Fee__c pricing = new Platform_Fee__c();
+                pricing.Id = String.valueOf(mapInner2KeyToValue.get('sfId')).split('#')[0];
+                pricing.Valid_From__c = String.valueOf(mapInner2KeyToValue.get('validFrom'));
+                pricing.Added_On__c = String.valueOf(mapInner2KeyToValue.get('addedOn'));
+                pricing.Valid_Till__c = String.valueOf(mapInner2KeyToValue.get('validTill'));
+
+                if(mapIdToPlatformFee.containsKey(pricing.Id)){
+                    pricing = mapIdToPlatformFee.get(pricing.Id);
+                }else{
+                    mapIdToPlatformFee.put(pricing.Id,pricing);
+                }
+                
+                pricing.Published__c = true;
+                pricing.Need_to_Publish__c = false;
+                pricing.Version_Number__c = Integer.valueOf(mapInner2KeyToValue.get('versionNumber'));
+                
+                if(checker) {
+                    if(String.isNotBlank(String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')))) {
+                        pricing.Rule_Id__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId'));    
+                    }
+                    if(listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckertrueActionapprovePlatform_Fee__c'){ 
+                        pricing.Status__c = 'Checker Approved';
+                    }else{
+                        pricing.Status__c = 'Checker Rejected';
+                    }
+                    
+                    pricing.Temp_Id__c = '';
+
+                } else{
+                    if(String.isNotBlank(String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')))) {
+                        pricing.Temp_Id__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId'));    
+                    }
+                    pricing.Status__c = 'Pending with Checker';
+                }
+                
+            }else if(String.valueOf(mapInnerKeyToValue.get('code')) != '2000' && mapInner2KeyToValue.get('sfId') != NULL){
+                Platform_Fee__c pricing = new Platform_Fee__c();
+                pricing.Id = String.valueOf(mapInner2KeyToValue.get('sfId')).split('#')[0];
+                if(mapIdToPlatformFee.containsKey(pricing.Id)){
+                    pricing = mapIdToPlatformFee.get(pricing.Id);
+                } else{
+                    mapIdToPlatformFee.put(pricing.Id,pricing);
+                } 
+                pricing.Error_Message__c = mapInnerKeyToValue.get('message') != NULL ? (String)mapInnerKeyToValue.get('message') : '';
+                pricing.Status__c = 'Error (Override Required)';
+            }
+        }  
+        if(mapIdToPlatformFee.keySet().size() > 0) update mapIdToPlatformFee.values();
+        update listPublishPricingDetails[0];
+
+        if(checker && listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckerTrueActionApprove'){
+            updateCommercial(listPublishPricingDetails[0].Commercial__c);
+        }
+    }
+
+    private static void updateCommercial(String commId){
+        List<Commercial2__c> commList = [SELECT Id,Status__c,Edited__c,Last_Published_On__c FROM Commercial2__c WHERE Id = :commId AND Status__c != 'Live' LIMIT 1];
+        if(!commList.isEmpty()){
+            commList[0].Status__c = 'Live';
+            commList[0].Edited__c = false;
+            commList[0].Last_Published_On__c = System.now();
+            update commList[0];
+        }
     }
 }

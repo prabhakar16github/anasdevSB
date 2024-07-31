@@ -8,21 +8,26 @@ public class Pricing_PublishOtherPricingToTreasury {
     
     private Map<String,String> mapObjectToQuery = new Map<String,String>{
         'Fixed_Pricing1__c@@maker' => 'SELECT Id, Amount__c, Commercial__c, Debit_Model__c, End_Date__c, Fee_Type__c, Flat_Fee__c, Need_to_Publish__c, Payment_Frequency__c, Percentage__c, Published__c, Rule_Id__c, Start_Date__c, Version_Number__c, Source__c, Added_By__c, Temp_Id__c, Client_Id__c, Sub_Client_Id__c, Valid_From__c, Valid_Till__c, From_Time__c, Till_Time__c, Day_of_Week__c, Aggregation_Required__c, Max_Cap_TDR_Charge__c, Min_Cap_TDR_Charge__c, Shared_Fee__c, Fee_Bearer_Entity__c, Fee_Bearer_Entity_Id__c, Added_On__c, Aggregation_Period__c, GmvSlabValue__c, Deleted__c, Status__c, Aggregated_Revenue__c, Count_Slab_Value__c, Bearer_of_Charges__c, MID__c, OpportunityId__c FROM Fixed_Pricing1__c WHERE OpportunityId__c = \'<MID>\' AND Status__c = \'Approved (Awaiting Publishing)\' AND Need_To_Publish__c = true AND Deleted__c = false',
-        'Fixed_Pricing1__c@@checker' => 'SELECT Id, Amount__c, Commercial__c, Debit_Model__c, End_Date__c, Fee_Type__c, Flat_Fee__c, Need_to_Publish__c, Payment_Frequency__c, Percentage__c, Published__c, Rule_Id__c, Start_Date__c, Version_Number__c, Source__c, Added_By__c, Temp_Id__c, Client_Id__c, Sub_Client_Id__c, Valid_From__c, Valid_Till__c, From_Time__c, Till_Time__c, Day_of_Week__c, Aggregation_Required__c, Max_Cap_TDR_Charge__c, Min_Cap_TDR_Charge__c, Shared_Fee__c, Fee_Bearer_Entity__c, Fee_Bearer_Entity_Id__c, Added_On__c, Aggregation_Period__c, GmvSlabValue__c, Deleted__c, Status__c, Aggregated_Revenue__c, Count_Slab_Value__c, Bearer_of_Charges__c, MID__c, OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN <idSet>'
+        'Fixed_Pricing1__c@@checker' => 'SELECT Id, Amount__c, Commercial__c, Debit_Model__c, End_Date__c, Fee_Type__c, Flat_Fee__c, Need_to_Publish__c, Payment_Frequency__c, Percentage__c, Published__c, Rule_Id__c, Start_Date__c, Version_Number__c, Source__c, Added_By__c, Temp_Id__c, Client_Id__c, Sub_Client_Id__c, Valid_From__c, Valid_Till__c, From_Time__c, Till_Time__c, Day_of_Week__c, Aggregation_Required__c, Max_Cap_TDR_Charge__c, Min_Cap_TDR_Charge__c, Shared_Fee__c, Fee_Bearer_Entity__c, Fee_Bearer_Entity_Id__c, Added_On__c, Aggregation_Period__c, GmvSlabValue__c, Deleted__c, Status__c, Aggregated_Revenue__c, Count_Slab_Value__c, Bearer_of_Charges__c, MID__c, OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN <idSet>',
+        'Platform_Fee__c@@maker' => 'SELECT Id,Commercial__c,Type__c,Interval__c,Amount__c,Flat_Fee__c,Percentage__c,Rule_Id__c,Published__c,Need_to_Publish__c,Start_Date__c,End_Date__c,Debit_Model__c,Version_Number__c,Source__c,Added_By__c,Temp_Id__c,Added_On__c,Aggregated_Revenue__c,Aggregation_Period__c,Aggregation_Required__c,Bearer_of_Charges__c,Client_Id__c,Count_Slab_Value__c,Day_of_Week__c,Deleted__c,Error_Message__c,Fee_Bearer_Entity_Id__c,Fee_Bearer_Entity__c,From_Time__c,GMV_Slab_Value__c,MID__c,Max_Cap_TDR_Charge__c,Min_Cap_TDR_Charge__c,OpportunityId__c,Rejection_Reason__c,Shared_Fee__c,Status__c,Sub_Client_Id__c,Till_Time__c,Valid_From__c,Valid_Till__c FROM Platform_Fee__c WHERE OpportunityId__c = \'<MID>\' AND Status__c = \'Approved (Awaiting Publishing)\' AND Need_To_Publish__c = true AND Deleted__c = false',
+        'Platform_Fee__c@@checker' => 'SELECT Id,Commercial__c,Type__c,Interval__c,Amount__c,Flat_Fee__c,Percentage__c,Rule_Id__c,Published__c,Need_to_Publish__c,Start_Date__c,End_Date__c,Debit_Model__c,Version_Number__c,Source__c,Added_By__c,Temp_Id__c,Added_On__c,Aggregated_Revenue__c,Aggregation_Period__c,Aggregation_Required__c,Bearer_of_Charges__c,Client_Id__c,Count_Slab_Value__c,Day_of_Week__c,Deleted__c,Error_Message__c,Fee_Bearer_Entity_Id__c,Fee_Bearer_Entity__c,From_Time__c,GMV_Slab_Value__c,MID__c,Max_Cap_TDR_Charge__c,Min_Cap_TDR_Charge__c,OpportunityId__c,Rejection_Reason__c,Shared_Fee__c,Status__c,Sub_Client_Id__c,Till_Time__c,Valid_From__c,Valid_Till__c FROM Platform_Fee__c WHERE Id IN <idSet>'
     };
+
     
     private Map<Boolean,String> mapCheckerToIntegrationSetting = new Map<Boolean,String>{true => 'API_Callout_SaveBulkRulesCT', false => 'API_Callout_SaveBulkRulesCF'};
     private Map<String,String> mapFeeTypeToRM = new Map<String,String>{'Setup Fee'=>'SETUP_FEE','AMC'=>'AMC','Affordibility VAS'=>'AFFORDABILITY_VAS_FEE'};
     
     
-    
+    /** @Constructor 
+     * calling from 'PricingModuleComponentController' 
+     */
     public Pricing_PublishOtherPricingToTreasury(String objectAPIName, Boolean checker, String action, String oppId, Boolean isDeleteRequest){
         this.objectAPIName = objectAPIName;
         this.checker = checker;
         this.action = action;
         this.oppId = oppId;
         this.isDeleteRequest = isDeleteRequest;
-    }
+    }/** */
 
     public Pricing_PublishOtherPricingToTreasury(String objectAPIName, Boolean checker, String action, Set<String> pricingIds, Boolean isDeleteRequest,String oppId){
         this.objectAPIName = objectAPIName;
@@ -41,12 +46,7 @@ public class Pricing_PublishOtherPricingToTreasury {
         try{
             String key = objectAPIName;
             key += checker ? '@@checker' : '@@maker';
-            /* if(checker){
-                key+= '@@checker';
-            }else{
-                key+='@@maker';
-            } */
-
+            
             if(mapObjectToQuery.containsKey(key)){
                 String query = '';
                 if(checker){
@@ -58,7 +58,9 @@ public class Pricing_PublishOtherPricingToTreasury {
                     pricingIdStr += ')';
                     query = mapObjectToQuery.get(key).replace('<idSet>', pricingIdStr);
                 } 
-                else query = mapObjectToQuery.get(key).replace('<MID>', oppId);
+                else {
+                    query = mapObjectToQuery.get(key).replace('<MID>', oppId);
+                }
                 
                 
                 if(!isDeleteRequest){
@@ -71,7 +73,7 @@ public class Pricing_PublishOtherPricingToTreasury {
                 if(!sobjList.isEmpty()){
 
                     List<Commercial2__c> commList = [SELECT Id FROM Commercial2__c WHERE Opportunity__c = :oppId LIMIT 1];
-                    RequestWrapperClass requestWrapper = getBody(Database.query(query),action,isDeleteRequest,processName,oppId,checker);
+                    RequestWrapperClass requestWrapper = getBody(sobjList,action,isDeleteRequest,processName,oppId,checker);
                     requestBody = JSON.serialize(requestWrapper);
                     
                     Publish_Pricing_Detail__c publishDetail = new Publish_Pricing_Detail__c();
@@ -220,8 +222,91 @@ public class Pricing_PublishOtherPricingToTreasury {
             }  
             pricingRecordDetails.versionNumber = Integer.valueOf(fixedPricing.Version_Number__c);
             pricingRecordDetails.source = fixedPricing.Source__c;
+        }else if(objectAPIName == 'Platform_Fee__c'){
+            
+            Platform_Fee__c platformFee = (Platform_Fee__c)pricing;
+            pricingRecordDetails = this.getRequestForPlatformFee(platformFee);
+            
         }
         requestWrapper.pricingRuleConfigurationDtoList.add(pricingRecordDetails); 
+    }
+
+    /** Method to generate request for Platform Fee */
+    private PricingRuleConfigurationDtoList getRequestForPlatformFee(Platform_Fee__c platformFee){
+
+        DateTime currentDateTimeUTCFormat = PublishPricingUtility.getUTCDateTime(DateTime.now());
+        String currentDateTimeUTCFormatString = currentDateTimeUTCFormat.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
+        
+        PricingRuleConfigurationDtoList pricingRecordDetails = new PricingRuleConfigurationDtoList();
+        
+        if(String.isNotBlank(platformFee.Temp_Id__c)){
+            pricingRecordDetails.pricingRuleConfigId = Integer.valueOf(platformFee.Temp_Id__c);
+        } 
+        pricingRecordDetails.clientId = Integer.valueOf(platformFee.Client_Id__c);
+        
+        if(String.isNotBlank(platformFee.Sub_Client_Id__c)){
+            pricingRecordDetails.subClientId = platformFee.Sub_Client_Id__c;
+        } 
+        pricingRecordDetails.entityId = Integer.valueOf(platformFee.MID__c);
+        pricingRecordDetails.revenueModel = 'Platform fees';//mapFeeTypeToRM.get(platformFee.Type__c);
+
+        pricingRecordDetails.debitModel = platformFee.Debit_Model__c;
+        pricingRecordDetails.amountSlab = platformFee.Amount__c;
+        if(String.isNotBlank(platformFee.Valid_From__c)){
+            pricingRecordDetails.validFrom = platformFee.Valid_From__c;
+        }else if(platformFee.Start_Date__c != NULL){
+            
+                DateTime dt = getUTCDateTime(Datetime.newInstance(platformFee.Start_Date__c,Datetime.now().time()));
+                String startDateTimeUTCFormatString = dt.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
+                pricingRecordDetails.validFrom = startDateTimeUTCFormatString;
+        }
+        if(String.isNotBlank(platformFee.Valid_Till__c)){
+            pricingRecordDetails.validTill = platformFee.Valid_Till__c;
+        }else if(platformFee.End_Date__c != NULL){
+            DateTime dt = getUTCDateTime(Datetime.newInstance(platformFee.End_Date__c,Datetime.now().time()));
+            String startDateTimeUTCFormatString = dt.format('yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX');
+            pricingRecordDetails.validTill = startDateTimeUTCFormatString;
+        }
+
+        pricingRecordDetails.fromTime = platformFee.From_Time__c != NULL ? Integer.valueOf(platformFee.From_Time__c) : NULL;
+        pricingRecordDetails.tillTime = platformFee.Till_Time__c != NULL ? Integer.valueOf(platformFee.Till_Time__c) : NULL;
+        pricingRecordDetails.dayOfWeek = platformFee.Day_of_Week__c ?? NULL;
+        pricingRecordDetails.frequency = platformFee.Interval__c ?? NULL;
+        pricingRecordDetails.aggregationRequired = platformFee.Aggregation_Required__c;
+        pricingRecordDetails.percentFee = platformFee.Percentage__c;
+        pricingRecordDetails.flatFee = platformFee.Flat_Fee__c;
+        pricingRecordDetails.maxCapTdrCharge = platformFee.Max_Cap_TDR_Charge__c ?? NULL;
+        pricingRecordDetails.minCapTdrCharge = platformFee.Min_Cap_TDR_Charge__c ?? NULL;
+        pricingRecordDetails.isActive = !isDeleteRequest;
+        pricingRecordDetails.sharedFee = platformFee.Shared_Fee__c;
+        pricingRecordDetails.feeBearerEntity = platformFee.Fee_Bearer_Entity__c ?? NULL;
+        pricingRecordDetails.feeBearerEntityId = platformFee.Fee_Bearer_Entity_Id__c != NULL ? Integer.valueOf(platformFee.Fee_Bearer_Entity_Id__c) : NULL;
+        
+        if(String.isNotBlank(platformFee.Rule_Id__c)){
+            pricingRecordDetails.mappingId = Integer.valueOf(platformFee.Rule_Id__c);
+        }
+        
+        if(String.isNotBlank(platformFee.Added_On__c)){
+            pricingRecordDetails.addedOn = platformFee.Added_On__c;
+        }else{
+            pricingRecordDetails.addedOn = currentDateTimeUTCFormatString;
+        }
+        pricingRecordDetails.addedBy = platformFee.Added_By__c;
+
+        if(checker){
+            pricingRecordDetails.updatedBy = UserInfo.getName();
+        } 
+        pricingRecordDetails.aggregationPeriod = platformFee.Aggregation_Period__c ?? NULL;
+        pricingRecordDetails.sfId = platformFee.Id+'#'+platformFee.Type__c;
+        pricingRecordDetails.gmvSlabValue = platformFee.GMV_Slab_Value__c ?? NULL;
+        pricingRecordDetails.aggregatedRevenue = platformFee.Aggregated_Revenue__c ?? NULL;
+        pricingRecordDetails.countSlabValue = platformFee.Count_Slab_Value__c ?? NULL;
+        pricingRecordDetails.bearerOfCharges = platformFee.Bearer_of_Charges__c ?? NULL;
+        pricingRecordDetails.versionNumber = platformFee.Version_Number__c != NULL ? Integer.valueOf(platformFee.Version_Number__c) : NULL;
+        pricingRecordDetails.source = platformFee.Source__c;
+        
+        
+        return pricingRecordDetails;
     }
     
     public DateTime getUTCDateTime(DateTime dt){
@@ -237,29 +322,29 @@ public class Pricing_PublishOtherPricingToTreasury {
     }
     
     public class PricingRuleConfigurationDtoList {
-        public Integer pricingRuleConfigId;                              //Temp Id
-        public Integer clientId ;                                        //clientId
-        public String subClientId;                                      //subClientId
-        public Integer entityId;                                         //Merchant Id
-        public String revenueModel;                                 //Transaction Type
-        public String debitModel;                                   //Fee Model
-        public Decimal amountSlab;  									 //Amount
-        public String validFrom;                                    //Current date time in UTC format
-        public String validTill;                                  //validTill
-        public Integer fromTime;                                     //Default 0
-        public Integer tillTime;                                  //Default 2359
-        public String dayOfWeek;                                  //Default null
+        public Integer pricingRuleConfigId;// Temp Id          
+        public Integer clientId ;                                       
+        public String subClientId;                                     
+        public Integer entityId;// MID                                       
+        public String revenueModel;                                
+        public String debitModel;                                  
+        public Decimal amountSlab;  									
+        public String validFrom;                                    
+        public String validTill;                               
+        public Integer fromTime;                                  
+        public Integer tillTime;                                 
+        public String dayOfWeek;                              
         public String frequency;
         public Boolean aggregationRequired;
-        public Decimal percentFee;                                   //Percent Fee
-        public Decimal flatFee;                                      //Flat Fee
+        public Decimal percentFee;                              
+        public Decimal flatFee;             
         public Decimal maxCapTdrCharge;
         public Decimal minCapTdrCharge;
         public Boolean isActive; 
         public Decimal sharedFee; 
         public String feeBearerEntity; 
         public Integer feeBearerEntityId; 
-        public Integer mappingId;  
+        public Integer mappingId;// RUle Id
         public String addedOn;
         public String addedBy;
         public String updatedBy;
@@ -269,8 +354,19 @@ public class Pricing_PublishOtherPricingToTreasury {
         public Decimal aggregatedRevenue;										
         public Decimal countSlabValue;										
         public String bearerOfCharges;										
-        public Integer versionNumber;                                     //Version Number 
-        public String source = '';                             //source
-        public String requestedBy = 'Salesforce';            //default - Saleforce
+        public Integer versionNumber;                                    
+        public String source = '';                            
+        public String requestedBy = 'Salesforce';    
+        //public List<Attributes> attributes = new List<Attributes>();       
     } 
+
+    /* public class Attributes {
+        public String pricingRuleKey = '';
+        public String pricingRuleValue = '';
+
+        public Attributes(String pricingRuleKey,String pricingRuleValue){
+            this.pricingRuleKey = pricingRuleKey;
+            this.pricingRuleValue = pricingRuleValue;
+        }
+    } */
 }

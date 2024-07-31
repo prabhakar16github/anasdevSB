@@ -17,7 +17,7 @@ global class BulkPostResponseAPI {
                 Map<String,Object> mapKeyToValue = (Map<String,Object>)JSON.deserializeUntyped(RestContext.request.requestBody.toString()); 
                 if(mapKeyToValue != NULL && mapKeyToValue.keySet().size() > 0 && mapKeyToValue.containsKey('requestId')) {
                     if(mapKeyToValue.get('requestId') != null) {
-                        List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id,Delete_Request__c,Sync_Status__c,Response_Body__c,Checker__c,Process__c,Object_API_Name__c,Request_Count__c,Request_Id__c 
+                        List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id,Delete_Request__c,Sync_Status__c,Response_Body__c,Checker__c,Process__c,Object_API_Name__c,Request_Count__c,Request_Id__c,Commercial__c
                                                                                     FROM Publish_Pricing_Detail__c  
                                                                                      WHERE Request_Id__c = :(String)mapKeyToValue.get('requestId') 
                                                                                      AND Sync_Status__c = 'Processing' AND Type__c = 'TDR'];
@@ -29,6 +29,10 @@ global class BulkPostResponseAPI {
                             else if(listPublishPricingDetails[0].Object_API_Name__c == 'Fixed_Pricing1__c'){
                                 Pricing_BulkPostResponseAPI_Handler.handleFixedPricingResponse(listPublishPricingDetails,mapKeyToValue,RestContext.request.requestBody.toString());
                             }
+                            else if(listPublishPricingDetails[0].Object_API_Name__c == 'Platform_Fee__c'){
+                                Pricing_BulkPostResponseAPI_Handler.handlePlatformFeeResponse(listPublishPricingDetails,mapKeyToValue,RestContext.request.requestBody.toString());
+                            }
+                            
                             getResponseClass(response,true,'Async Response processed successfully');
                         }
                         else getResponseClass(response,false,'requestId not found'); 

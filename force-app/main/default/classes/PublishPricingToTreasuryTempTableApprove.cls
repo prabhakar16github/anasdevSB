@@ -52,8 +52,8 @@ public class PublishPricingToTreasuryTempTableApprove implements Database.Batcha
             if(commId != NULL){
                 query += 'WHERE Commercial2__c = :commId ';
             }else if(pricingIds != NULL && !pricingIds.isEmpty()){
-                //query += 'WHERE Id IN :pricingIds ';//AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
-                query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
+                query += 'WHERE Id IN :pricingIds ';//AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
+                // query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
             }
             //query += 'AND Banking_Ops_Status__c IN :statusValues AND Deleted__c = FALSE';// AND Need_To_Publish__c = TRUE AND Published__c = false';
             query += 'AND Deleted__c = false AND Invisible__c = false';

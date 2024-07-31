@@ -57,16 +57,13 @@ we are mapping the values so that same will be update on sf as well.
 which will make the wrapper and send to treasury in response will get the data*/
     @AuraEnabled
     public static PricingWrapper processTreasuryData(String entityId, String revenueModelCommSep) {
-        // Parse revenueModelCSV into individual revenue models
-        List<String> revenueModels = revenueModelCommSep.split(',');
-        // Join revenue models into a single comma-separated string
-        String combinedRevenueModels = String.join(revenueModels, ',');
+        
         // Querying the commercial to fetch the opportunity id and commId, we are using both ids while inserting the publish commercial records
         for(Commercial2__c comm :[SELECT Id,Opportunity__c  FROM Commercial2__c WHERE Merchant_MID__c  =: entityId]){
             oppId = comm.Opportunity__c;
             commId = comm.Id;
         }
-        System.debug('combinedRevenueModels:::::::'+combinedRevenueModels);
+        
         // Preparing the wrapper class to send it to treasury
         RevenueModelWrapper wrapper = new RevenueModelWrapper();
         wrapper.entityId = entityId;
@@ -75,14 +72,14 @@ which will make the wrapper and send to treasury in response will get the data*/
         wrapper.page = pages;
         wrapper.revenueModel = revenueModelCommSep;
         
-        mId = entityId;// storing the enitity id in mid
-        revenueModel =  wrapper.revenueModel; // storing the revenueModel 
-        pages = wrapper.page + 1;// This is written for pagination means when processTreasuryData called then it will 
-        //increase the page size to reach total pages size
-        // Send the wrapper object to the treasury system and get the data
-        PricingWrapper pricingWrap = sendToTreasury(wrapper);// from this line I am calling sendToTreasury method and passing 
+        mId = entityId;
+        revenueModel =  wrapper.revenueModel; 
+        pages = wrapper.page + 1;
+        
+        PricingWrapper pricingWrap = sendToTreasury(wrapper);
         return pricingWrap;
     }
+
     // This method will convert the UTC date field into IST 
     public static Date getDateTimeField(String DatetimeField){
         Date validFromDate;
@@ -162,31 +159,9 @@ which will make the wrapper and send to treasury in response will get the data*/
                                 fixedWrapper.source   = resWrapper.source;
                                 pricingWrapper.fixedWrapperList.add(fixedWrapper);
                             }
-                            else if (resWrapper.revenueModel == 'Platform fees') {
-                                platFormWrapper platformWrap = new platFormWrapper();
-                                platformWrap.debitModel = resWrapper.debitModel;
-                                platformWrap.ruleId = resWrapper.pricingRuleConfigId;
-                                platformWrap.percentage =  resWrapper.percentFee;
-                                platformWrap.flatfee = resWrapper.flatFee;
-                                platformWrap.published = true;
-                                platformWrap.feeType  =  'GMV';
-                                platformWrap.paymentFrequency  = resWrapper.aggregationPeriod;
-                                platformWrap.versionNumber  = resWrapper.versionNumber;
-                                platformWrap.source   = resWrapper.source;
-                                platformWrap.revenueModel = resWrapper.revenueModel;
-                                platformWrap.addedBy = resWrapper.addedBy;
-                                if(resWrapper.validFrom !=NULL){
-                                    platformWrap.startDate  =  String.valueOf(getDateTimeField(resWrapper.validFrom));
-                                }
-                                if(resWrapper.validTill !=NULL){
-                                    platformWrap.endDate  = String.valueOf(getDateTimeField(resWrapper.validTill));
-                                }
-                                for(AttributeWrapper attribute : resWrapper.attributes) {
-                                    if(attribute.pricingRuleKey == 'gmvSlab') {
-                                        platformWrap.amount = Decimal.valueOf(attribute.pricingRuleValue);
-                                    }
-                                }
-                                pricingWrapper.platformWrapperList.add(platformWrap);
+                            else if(resWrapper.revenueModel == 'Platform fees') {
+                                
+                                pricingWrapper.platformWrapperList.add(getPlatformFeeMapping(resWrapper));
                             }
                             else if(resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='Conv Fee'){
                                 Master_Pricing_Data__c mpdData = getMasterPricingData(resWrapper);
@@ -275,6 +250,66 @@ which will make the wrapper and send to treasury in response will get the data*/
         System.debug('transformer fixedWrapperList:::'+  pricingWrapper.fixedWrapperList);
         return pricingWrapper;// returnig the final wrapper 
     }
+
+    /** Method to get the Platform Fee wrapper 
+     * Calling from sendToTreasury method.
+     */
+    private static platFormWrapper getPlatformFeeMapping(ContentWrapper resWrapper){
+        platFormWrapper platformWrap = new platFormWrapper();
+
+        platformWrap.clientId = resWrapper.clientId;
+        platformWrap.subClientId = resWrapper.subClientId;
+        platformWrap.revenueModel = resWrapper.revenueModel;
+        platformWrap.debitModel =  resWrapper.debitModel;
+        // platformWrap.amountSlab = resWrapper.amountSlab;
+        platformWrap.validFrom = resWrapper.validFrom;
+        platformWrap.validTill = resWrapper.validTill;
+        if(resWrapper.validFrom !=NULL){
+            platformWrap.startDate  = String.valueOf(getDateTimeField(resWrapper.validFrom));
+        }
+        if(resWrapper.validTill !=NULL){
+            platformWrap.endDate  = String.valueOf(getDateTimeField(resWrapper.validTill));
+        }
+        platformWrap.fromTime = resWrapper.fromTime !=null ? resWrapper.fromTime :null;
+        platformWrap.tillTime = resWrapper.tillTime !=null ? resWrapper.tillTime :null;
+        platformWrap.dayOfWeek = resWrapper.dayOfWeek;
+        platformWrap.paymentFrequency = resWrapper.frequency;
+        platformWrap.percentage = resWrapper.percentFee;
+        platformWrap.flatfee = resWrapper.flatFee;
+        platformWrap.maxCapTdrCharge = resWrapper.maxCapTdrCharge;
+        platformWrap.minCapTdrCharge = resWrapper.minCapTdrCharge;
+        platformWrap.sharedFee = resWrapper.sharedFee;
+        platformWrap.feeBearerEntity = resWrapper.feeBearerEntity;
+        platformWrap.feeBearerEntityId = resWrapper.feeBearerEntityId;
+        platformWrap.addedOn = resWrapper.addedOn;
+        platformWrap.ruleId = resWrapper.pricingRuleConfigId;
+        // platformWrap.feeType =  mapFeeTypeToRevenueModel.get(resWrapper.revenueModel);
+        platformWrap.addedBy = resWrapper.addedBy;
+        platformWrap.aggregationRequired = resWrapper.aggregationRequired;
+        platformWrap.aggregationPeriod = resWrapper.aggregationPeriod;
+        platformWrap.gmvSlabValue = resWrapper.gmvSlabValue;
+        platformWrap.aggregatedRevenue = resWrapper.aggregatedRevenue;
+        platformWrap.countSlabValue = resWrapper.countSlabValue;
+        platformWrap.bearerOfCharges = resWrapper.bearerOfCharges;
+        platformWrap.versionNumber  = resWrapper.versionNumber;
+        platformWrap.source   = resWrapper.source;
+
+        for(AttributeWrapper attribute : resWrapper.attributes) {
+            
+            if(attribute.pricingRuleKey == 'gmvSlab') {
+                platformWrap.feeType  =  'GMV';
+                platformWrap.amountSlab = Decimal.valueOf(attribute.pricingRuleValue);
+            }else if(attribute.pricingRuleKey == 'transactionCount'){
+                platformWrap.feeType  =  'Transaction Count';
+                platformWrap.amountSlab = Decimal.valueOf(attribute.pricingRuleValue);
+            }
+        }
+        return platformWrap;
+    }/** END : getPlatformFeeMapping */
+
+
+
+
     /****** Method to check if the paypgId for MPD  exists in Salesforce records if yes then return mpd data to the method where
 its get called other wise return the untransform data***********/
     private static Master_Pricing_Data__c getMasterPricingData(ContentWrapper  resWrapper) {
@@ -416,22 +451,39 @@ its get called other wise return the untransform data***********/
     /**************End************************/
     /********* This wrapper class is use to return Platform data*************/ 
     public class platFormWrapper{
+        public String clientId;
+        public String subClientId;
+        public String revenueModel;
         public String debitModel;
+        public Decimal amountSlab;
+        public String validFrom;
+        public String validTill;
+        public Integer fromTime;
+        public Integer tillTime;
+        public String dayOfWeek;
+        public String paymentFrequency;
         public String ruleId;
         public Decimal percentage;
         public Decimal flatfee;
-        public Boolean published;
-        public String type;
-        public String interval;
+        public Decimal maxCapTdrCharge;
+        public Decimal minCapTdrCharge;
+        public Decimal sharedFee;
+        public String feeBearerEntity;
+        public Integer feeBearerEntityId;
+        public String addedOn;
+        public Boolean aggregationRequired;
+        public String aggregationPeriod;
+        public Decimal gmvSlabValue;
+        public Decimal aggregatedRevenue;
+        public String bearerOfCharges;
+        public String feeType;
         public Integer versionNumber;
         public String source;
         public String startDate;
         public String endDate;
-        public Decimal amount;
-        public String feeType;
-        public String paymentFrequency;
-        public String revenueModel;
         public String addedBy;
+        public String bearerOfCharge;
+        public Decimal countSlabValue; 
     }
     /**************End************************/
     // Wrapper class for revenue model data

@@ -51,7 +51,7 @@ public class PublishPricingToTreasuryTempTable implements Database.Batchable<sOb
             if(commId != NULL){
                 query += 'WHERE Commercial2__c = :commId AND Banking_Ops_Status__c IN :statusValues AND Need_To_Publish__c = true ';
             }else if(pricingIds != NULL && !pricingIds.isEmpty()){
-                query += 'WHERE Id IN :pricingIds AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
+                query += 'WHERE Id IN :pricingIds ';//AND Commercial2__r.Status__c = :STATUS_PUBLISHED ';
             }
 
             query +='AND Invisible__c = false';

@@ -354,7 +354,7 @@ public class PricingModuleComponentController {
                         if(String.isNotBlank(fp1.Temp_Id__c)){
                             fpNew.recordLock = true;
                         }
-
+                        
                         if(fpNew.status.containsIgnoreCase('Approved')) {
                             fpNew.className = 'colorPillsOptions2';    
                         }
@@ -380,21 +380,41 @@ public class PricingModuleComponentController {
                         }
                     }
                     
-                    /* for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
-                        FallbackCharges fcObj = new FallbackCharges();
-                        fcObj.Id = fc.Id;
-                        fcObj.paymentModeName = fc.Payment_Mode__c;
-                        fcObj.flatFee = fc.Flat_Fee__c != NULL ? String.valueOf(fc.Flat_Fee__c) : '';
-                        fcObj.percentage = fc.Percentage__c != NULL ? String.valueOf(fc.Percentage__c) : '';
-                        listFallbackCharges.add(fcObj);
-                    } */
                     Integer count = 1;
-                    for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
+                    for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c,Status__c,Rejection_Reason__c,Temp_Id__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                         PlatformFee pfObj = new PlatformFee();
                         pfObj.Id = pf.Id;
                         pfObj.amount = pf.Amount__c != NULL ? String.valueOf(pf.Amount__c) : '';
                         pfObj.flatFee = pf.Flat_Fee__c != NULL ? String.valueOf(pf.Flat_Fee__c) : '';
                         pfObj.percentage = pf.Percentage__c != NULL ? String.valueOf(pf.Percentage__c) : '';
+                        
+                        /** Added for Platform Fee Maker-Checker. */
+                        pfObj.status = pf.Status__c;
+                        if(String.isNotBlank(pfObj.status)){
+
+                            if(pfObj.status == 'Checker Rejected'){
+                                pfObj.showRejectionReason = true;
+                                pfObj.rejectionReason = pf.Rejection_Reason__c;
+                            }
+                            if(String.isNotBlank(pf.Temp_Id__c)){
+                                pfObj.recordLock = true;
+                            }
+                            
+                            if(pfObj.status.containsIgnoreCase('Approved')) {
+                                pfObj.className = 'colorPillsOptions2';    
+                            }
+                            else if(pfObj.status.containsIgnoreCase('Pending')) {
+                                pfObj.className = 'colorPillsOptions3';     
+                            }
+                            else if(pfObj.status.containsIgnoreCase('Rejected')) {
+                                pfObj.className = 'colorPillsOptions4';     
+                            }
+                            else {
+                                pfObj.className = 'colorPillsOptions';     
+                            }
+                        }
+                        /** */
+                        
                         wrpClsPaymentData.selectedType = pf.Type__c;
                         wrpClsPaymentData.selectedInterval= pf.Interval__c;
                         wrpClsPaymentData.selectedStartDate = pf.Start_Date__c;
@@ -506,16 +526,21 @@ public class PricingModuleComponentController {
                     List<Fixed_Pricing1__c> fixedPricingList = new  List<Fixed_Pricing1__c>();
                     Map<String,String> mapOfTresuryFixedPricing = new Map<String,String>();
                     commList = [SELECT Id,Opportunity__r.Prod_MID__c,
-                                (SELECT Id,Amount__c,Debit_Model__c,End_Date__c,Fee_Type__c,
-                                 Flat_Fee__c,Payment_Frequency__c,Percentage__c,Start_Date__c,Temp_Id__c,Rule_Id__c,
-                                 Version_Number__c,Source__c,Added_By__c,Status__c FROM Fixed_Pricings__r WHERE Deleted__c = false),
-                                (SELECT Id,Amount__c,Rule_Id__c,Flat_Fee__c,Percentage__c,Type__c,Added_By__c,
-                                 Interval__c,Start_Date__c,Source__c,Version_Number__c,End_Date__c,Debit_Model__c FROM Platform_Fees__r)
+                                (
+                                    SELECT Id,Amount__c,Debit_Model__c,End_Date__c,Fee_Type__c,
+                                    Flat_Fee__c,Payment_Frequency__c,Percentage__c,Start_Date__c,Temp_Id__c,Rule_Id__c,
+                                    Version_Number__c,Source__c,Added_By__c,Status__c FROM Fixed_Pricings__r WHERE Deleted__c = false
+                                ),
+                                (
+                                    SELECT Id,Amount__c,Rule_Id__c,Flat_Fee__c,Percentage__c,Type__c,Added_By__c,Temp_Id__c,
+                                    Interval__c,Start_Date__c,Source__c,Version_Number__c,End_Date__c,Debit_Model__c,Status__c FROM Platform_Fees__r 
+                                    WHERE Deleted__c = false AND Rule_Id__c != NULL AND Status__c != NULL
+                                )
                                 FROM Commercial2__c WHERE Id=:commercialId LIMIT 1];
                     GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(commList[0].Opportunity__r.Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC');
                     if(!tranformData.fixedWrapperList.isEmpty() || !tranformData.platformWrapperList.isEmpty() || !tranformData.transformedPricingWrapperPricingList.isEmpty()){
-                        Map<String,Platform_Fee__c> mapOfExistingPlatformFee = new Map<String,Platform_Fee__c>();
-                      
+                        
+                        
                         if(commList !=NULL && commList.size()>0){
                             for(Commercial2__c comm : commList){
                                 if(comm.Fixed_Pricings__r !=null && comm.Fixed_Pricings__r.size()>0){
@@ -524,16 +549,16 @@ public class PricingModuleComponentController {
                                             mapOfExistingFixedPricing.put(fixedData.Rule_Id__c,fixedData);
                                     }
                                 }
-                                if(comm.Platform_Fees__r !=null && comm.Platform_Fees__r.size()>0){
-                                    for(Platform_Fee__c platformFeeData : comm.Platform_Fees__r){
-                                        if(platformFeeData.Rule_Id__c !=NULL)
-                                            mapOfExistingPlatformFee.put(platformFeeData.Rule_Id__c,platformFeeData);
-                                    }
-                                }
+                                /* if(comm.Platform_Fees__r !=null && comm.Platform_Fees__r.size()>0){
+for(Platform_Fee__c platformFeeData : comm.Platform_Fees__r){
+if(platformFeeData.Rule_Id__c !=NULL)
+mapOfExistingPlatformFee.put(platformFeeData.Rule_Id__c,platformFeeData);
+}
+} */
                             } 
                         }
                         /******added by Rohit ::In this below logic we are checking If fixed pricing is not in salesforce then
-                            get the data nad insert other wise updating the existing recrods*******/
+get the data nad insert other wise updating the existing recrods*******/
                         if(!tranformData.fixedWrapperList.isEmpty()){
                             for(GetApiTreasuryDataController.fixedPricingWrapper fixedDataTreasury : tranformData.fixedWrapperList){
                                 Fixed_Pricing1__c fixedPricing;
@@ -577,12 +602,12 @@ public class PricingModuleComponentController {
                                         mapOfFixedPricingToUPdate.put(fixedPricing.Id,fixedPricing); 
                                     }
                                     else if(String.isNotBlank(fixedPricing.Status__c)  && fixedPricing.Status__c.contains('Approved') && 
-                                    fixedPricing.Version_Number__c  <  fixedDataTreasury.versionNumber && fixedPricing.Rule_Id__c !=NULL){
-                                        fixedPricing.Status__c = 'Checker Approved';
-                                        fixedPricing.Temp_Id__c = null;
-                                        fixedPricing.Version_Number__c  = fixedDataTreasury.versionNumber;
-                                        mapOfFixedPricingToUPdate.put(fixedPricing.Id,fixedPricing);
-                                    }
+                                            fixedPricing.Version_Number__c  <  fixedDataTreasury.versionNumber && fixedPricing.Rule_Id__c !=NULL){
+                                                fixedPricing.Status__c = 'Checker Approved';
+                                                fixedPricing.Temp_Id__c = null;
+                                                fixedPricing.Version_Number__c  = fixedDataTreasury.versionNumber;
+                                                mapOfFixedPricingToUPdate.put(fixedPricing.Id,fixedPricing);
+                                            }
                                     else if(String.isNotBlank(fixedPricing.Status__c) &&  fixedPricing.Rule_Id__c !=NULL && fixedPricing.Status__c == 'Error (Override Required)'){
                                         fixedPricing.Status__c = 'Checker Approved';
                                         fixedPricing.Version_Number__c  = fixedDataTreasury.versionNumber;
@@ -636,52 +661,14 @@ public class PricingModuleComponentController {
                             if(mapOfFixedPricingToUPdate !=null)
                                 update mapOfFixedPricingToUPdate.values();
                         }
-                        /************/
-                        /******added by Rohit ::Platform fee In this below logic we are checking If platform pricing is not in salesforce then
-                        using get api treasury we will get the data if data available then  insert other wise updating the existing recrods*******/
-                        List<Platform_Fee__c> platformFeeList = new  List<Platform_Fee__c>();
-                        if(!tranformData.platformWrapperList.isEmpty()){
-                            for(GetApiTreasuryDataController.platFormWrapper platformData : tranformData.platformWrapperList){
-                                Platform_Fee__c platformFee;
-                                if(mapOfExistingPlatformFee.containsKey(platformData.ruleId)){
-                                    platformFee = mapOfExistingPlatformFee.get(platformData.ruleId);
-                                    if(platformFee.Version_Number__c != platformData.versionNumber){
-                                        platformFee.Debit_Model__c = platformData.debitModel;
-                                        platformFee.Amount__c  = platformData.amount !=null ? platformData.amount :null;
-                                        platformFee.Version_Number__c = platformData.versionNumber;
-                                        platformFee.Interval__c  = platformData.paymentFrequency !=null ? platformData.paymentFrequency : null;
-                                        platformFee.Source__c = platformData.source !=null ? platformData.source :null;
-                                        platformFee.Flat_Fee__c = platformData.flatfee !=null ? platformData.flatfee : null;
-                                        platformFee.Percentage__c = platformData.percentage !=null ? platformData.percentage : null;
-                                        platformFee.Start_Date__c = platformData.startDate !=null ? Date.valueOf(platformData.startDate) : null;
-                                        platformFee.Added_By__c = platformData.addedBy !=Null ? platformData.addedBy : Null;
-                                        platformFee.End_Date__c = platformData.endDate != null ? Date.valueOf(platformData.endDate) :null;
-                                        platformFeeList.add(platformFee);
-                                    }
-                                }
-                                else{
-                                    platformFee = new Platform_Fee__c();
-                                    platformFee.Type__c = 'GMV';
-                                    platformFee.Debit_Model__c = platformData.debitModel;
-                                    platformFee.Version_Number__c = platformData.versionNumber;
-                                    platformFee.Interval__c  = platformData.paymentFrequency !=null ? platformData.paymentFrequency : null;
-                                    platformFee.Amount__c  = platformData.amount !=null ? platformData.amount :null;
-                                    platformFee.Published__c = True;
-                                    platformFee.Rule_Id__c = platformData.ruleId;
-                                    platformFee.Commercial__c = commercialId;
-                                    platformFee.Source__c = platformData.source !=null ? platformData.source :null;
-                                    platformFee.Flat_Fee__c = platformData.flatfee !=null ? platformData.flatfee : null;
-                                    platformFee.Percentage__c = platformData.percentage !=null ? platformData.percentage : null;
-                                    platformFee.Start_Date__c = platformData.startDate !=null ? Date.valueOf(platformData.startDate) : null;
-                                    platformFee.End_Date__c = platformData.endDate != null ? Date.valueOf(platformData.endDate) :null;
-                                    platformFee.Added_By__c = platformData.addedBy !=Null ? platformData.addedBy : Null;
-                                    platformFeeList.add(platformFee);
-                                }
-                            }
-                            if(platformFeeList !=NULL && platformFeeList.size()>0){
-                                upsert platformFeeList;
-                            }
-                        }
+                        
+                        
+                        /** Calling method 'overridePlatformFee' to override the Platform Fee data 
+* @param1 - platformfee data coming from treasury
+* @param1 - currect commercial with related platform fees.
+*/
+                        List<Platform_Fee__c> platformFeeList = overridePlatformFee(tranformData.platformWrapperList,commList);
+                        /** */
                         /************/
                         if(!tranformData.transformedPricingWrapperPricingList.isEmpty()){
                             Map<String,Pricing__c> mapOfExistingPricingData = new Map<String,Pricing__c>();
@@ -691,14 +678,14 @@ public class PricingModuleComponentController {
                                                             Convenience_Amount__c,Convenience_Flat_Fee__c,Rule_Id__c,Rule_Id_Conv__c,
                                                             Temp_Id_TDR__c,Temp_Id_Conv__c,Version_Number__c, Banking_Ops_Status__c,Added_By__c
                                                             FROM Pricing__c WHERE Commercial2__c =: commercialId AND Invisible__c = false AND (Deleted__c = false OR 
-                                                                                                                                    (Deleted__c = true AND (Temp_Id_TDR__c = '' OR Temp_Id_Conv__c = '') ))]){
-                                                                                                                                        if(pricingRecord.Rule_Id__c != NULL)
-                                                                                                                                            mapOfExistingPricingData.put(pricingRecord.Rule_Id__c,pricingRecord);
-                                                                                                                                        if(pricingRecord.Rule_Id_Conv__c != NULL)
-                                                                                                                                            mapOfExistingPricingData.put(pricingRecord.Rule_Id_Conv__c,pricingRecord);
-                                                                                                                                    }
+                                                                                                                                               (Deleted__c = true AND (Temp_Id_TDR__c = '' OR Temp_Id_Conv__c = '') ))]){
+                                                                                                                                                   if(pricingRecord.Rule_Id__c != NULL)
+                                                                                                                                                       mapOfExistingPricingData.put(pricingRecord.Rule_Id__c,pricingRecord);
+                                                                                                                                                   if(pricingRecord.Rule_Id_Conv__c != NULL)
+                                                                                                                                                       mapOfExistingPricingData.put(pricingRecord.Rule_Id_Conv__c,pricingRecord);
+                                                                                                                                               }
                             
-                          
+                            
                             for(GetApiTreasuryDataController.transformedPricingWrapper tranformDataTreasury : tranformData.transformedPricingWrapperPricingList){
                                 if(mapOfExistingPricingData.containsKey(tranformDataTreasury.pricingRuleConfigId)){
                                     Pricing__c pricingExist  = mapOfExistingPricingData.get(tranformDataTreasury.pricingRuleConfigId);
@@ -730,7 +717,7 @@ public class PricingModuleComponentController {
                                            pricingExist.Banking_Ops_Status__c = 'Checker Approved';
                                            pricingExist.Version_Number__c  = tranformDataTreasury.versionNumber;
                                            if(tranformDataTreasury.revenueModel == 'TDR') pricingExist.Temp_Id_TDR__c = '';
-                                            else pricingExist.Temp_Id_Conv__c = null;
+                                           else pricingExist.Temp_Id_Conv__c = null;
                                            mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
                                        }
                                     else if(String.isNotBlank(pricingExist.Banking_Ops_Status__c)  && pricingExist.Banking_Ops_Status__c.contains('Approved') &&
@@ -799,7 +786,7 @@ public class PricingModuleComponentController {
                                     update mapOfpricingToUPdate.values();
                             }
                         }
-                          //Creating the Publish pricing record in sf If we get any tranform data from treasury 
+                        //Creating the Publish pricing record in sf If we get any tranform data from treasury 
                         if((!fixedPricingList.isEmpty()  || !mapOfFixedPricingToUPdate.isEmpty() || !platformFeeList.isEmpty()  || !newPricingRecordList.isEmpty() || !mapOfpricingToUPdate.isEmpty()) && tranformData.publishDetails !=NULL){
                             Publish_Pricing_Detail__c  pulishPricingDetails = new Publish_Pricing_Detail__c();
                             pulishPricingDetails.Merchant__c = tranformData.publishDetails.mId ;
@@ -817,22 +804,22 @@ public class PricingModuleComponentController {
                             Insert att;
                         }
                     }
-                     /*******This if condition will execute incase of existing fixed pricing and the records we are getting from the treasury will be not equal means 
-                            suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
-                            if(tranformData.fixedWrapperList.size() != commList[0].Fixed_Pricings__r.size()){
-                                for(Fixed_Pricing1__c existingFixedpricing : commList[0].Fixed_Pricings__r){
-                                        if(String.isNotBlank(existingFixedpricing.Rule_Id__c) && !mapOfTresuryFixedPricing.containsKey(existingFixedpricing.Rule_Id__c)){
-                                            existingFixedpricing.Deleted__c = true;
-                                            existingFixedpricing.Rule_Id__c = null;
-                                            fixedPricingList.add(existingFixedpricing);
-                                    }
-                                }
+                    /*******This if condition will execute incase of existing fixed pricing and the records we are getting from the treasury will be not equal means 
+suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
+                    if(tranformData.fixedWrapperList.size() != commList[0].Fixed_Pricings__r.size()){
+                        for(Fixed_Pricing1__c existingFixedpricing : commList[0].Fixed_Pricings__r){
+                            if(String.isNotBlank(existingFixedpricing.Rule_Id__c) && !mapOfTresuryFixedPricing.containsKey(existingFixedpricing.Rule_Id__c)){
+                                existingFixedpricing.Deleted__c = true;
+                                existingFixedpricing.Rule_Id__c = null;
+                                fixedPricingList.add(existingFixedpricing);
                             }
-                            if(fixedPricingList !=null && fixedPricingList.size()>0){
-                                update fixedPricingList;
-                            }
-                            /**************END ************************/
-                  
+                        }
+                    }
+                    if(fixedPricingList !=null && fixedPricingList.size()>0){
+                        update fixedPricingList;
+                    }
+                    /**************END ************************/
+                    
                     /***********/
                     for(Pricing__c pricing : [SELECT Id,Payment_Mode__c,Payment_Option2__c,Payment_Option2__r.Name,Pricing_Specification__c,
                                               Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
@@ -991,6 +978,95 @@ public class PricingModuleComponentController {
         return wrpClsPaymentData;
     }
     
+    /** Method to override the Platform Fee while after get API call to treasury .
+* @param1 - platformfee data coming from treasury.
+* @param1 - currect commercial with related plat form fees.
+*/
+    private static List<Platform_Fee__c> overridePlatformFee(List<GetApiTreasuryDataController.platFormWrapper> platformWrapperList,List<Commercial2__c> commList){
+        Set<String> platformFeeSetFromTreasury = new Set<String> ();
+        List<Platform_Fee__c> platformFeeList = new  List<Platform_Fee__c>();
+        Map<String,Platform_Fee__c> mapOfExistingPlatformFee = new Map<String,Platform_Fee__c>();
+        
+        for(Platform_Fee__c pfObj : commList[0].Platform_Fees__r){
+            mapOfExistingPlatformFee.put(pfObj.Rule_Id__c,pfObj);
+        }
+        
+        if(!platformWrapperList.isEmpty()){
+            
+            for(GetApiTreasuryDataController.platFormWrapper platformData : platformWrapperList){
+                platformFeeSetFromTreasury.add(platformData.ruleId);
+                Platform_Fee__c platformFee = new Platform_Fee__c();
+                Boolean isValidForOverride = false;
+                if(mapOfExistingPlatformFee.containsKey(platformData.ruleId)){
+                    platformFee = mapOfExistingPlatformFee.get(platformData.ruleId);
+                    
+                    if((platformFee.Status__c.contains('Rejected') 
+                        || (platformFee.Status__c.contains('Approved') && platformFee.Version_Number__c  <  platformData.versionNumber)
+                        || platformFee.Status__c == 'Error (Override Required)')){
+                            
+                            platformFee.Status__c = 'Checker Approved';
+                            platformFee.Version_Number__c  = platformData.versionNumber;
+                            platformFee.Temp_Id__c = NULL;
+                            isValidForOverride = true;
+                        }
+                }else{
+                    platformFee.Status__c = 'Checker Approved';
+                    platformFee.Version_Number__c  = platformData.versionNumber;
+                    platformFee.Rule_Id__c = platformData.ruleId;
+                    platformFee.Commercial__c = commList[0].Id;
+                    isValidForOverride = true;
+                }
+                if(isValidForOverride){
+                    platformFee.Type__c = platformData.feeType;
+                    platformFee.Debit_Model__c = platformData.debitModel;
+                    platformFee.Interval__c  = platformData.paymentFrequency ?? NULL;
+                    platformFee.Amount__c  = platformData.amountSlab ?? NULL;
+                    platformFee.Published__c = true;
+                    platformFee.Source__c = platformData.source ?? NULL;
+                    platformFee.Flat_Fee__c = platformData.flatfee ?? NULL;
+                    platformFee.Percentage__c = platformData.percentage ?? NULL;
+                    platformFee.Start_Date__c = Date.valueOf(platformData.startDate);
+                    platformFee.End_Date__c = platformData.endDate != NULL ? Date.valueOf(platformData.endDate) : NULL;
+                    platformFee.Added_By__c = platformData.addedBy  ?? NULL;
+                    
+                    platformFee.Client_Id__c = platformData.clientId ?? NULL;
+                    platformFee.Sub_Client_Id__c = platformData.subClientId ?? NULL;
+                    platformFee.Valid_From__c = platformData.validFrom ?? NULL;
+                    platformFee.Valid_Till__c = platformData.validTill ?? NULL;
+                    platformFee.From_Time__c = platformData.fromTime ?? NULL;
+                    platformFee.Till_Time__c = platformData.tillTime ?? NULL;
+                    platformFee.Day_of_Week__c = platformData.dayOfWeek ?? NULL;
+                    platformFee.Max_Cap_TDR_Charge__c = platformData.maxCapTdrCharge ?? NULL;
+                    platformFee.Min_Cap_TDR_Charge__c = platformData.minCapTdrCharge ?? NULL;
+                    platformFee.Shared_Fee__c = platformData.sharedFee !=null ? Integer.valueOf(platformData.sharedFee) : NULL;
+                    platformFee.Fee_Bearer_Entity__c = platformData.feeBearerEntity ?? NULL;
+                    platformFee.Fee_Bearer_Entity_Id__c = platformData.feeBearerEntityId ?? NULL;
+                    platformFee.Added_On__c = platformData.addedOn ?? NULL;
+                    platformFee.Aggregation_Required__c = platformData.aggregationRequired ?? NULL;
+                    platformFee.Aggregation_Period__c = platformData.aggregationPeriod ?? NULL;
+                    platformFee.GMV_Slab_Value__c = platformData.gmvSlabValue ?? NULL;
+                    platformFee.Aggregated_Revenue__c = platformData.aggregatedRevenue ?? NULL;
+                    platformFee.Count_Slab_Value__c = platformData.countSlabValue ?? NULL;
+                    platformFee.Bearer_of_Charges__c = platformData.bearerOfCharges ?? NULL;
+                    
+                    platformFeeList.add(platformFee);
+                }
+            }
+        }
+        
+        for(String pfRuleId : mapOfExistingPlatformFee.keySet()){
+            if(!platformFeeSetFromTreasury.contains(pfRuleId)){
+                Platform_Fee__c platFee = mapOfExistingPlatformFee.get(pfRuleId);
+                platFee.Deleted__c = true;
+                platformFeeList.add(platFee);
+            }
+        }
+        if(!platformFeeList.isEmpty()){
+            upsert platformFeeList Rule_Id__c;
+        }
+        return platformFeeList;
+    }/** END : overridePlatformFee */
+    
     /*
 * Description       : Wrapper class to return data for Screen 3 Part 1
 * Version.          : 1   
@@ -1100,9 +1176,9 @@ public class PricingModuleComponentController {
         data.convenienceFlatFee = pricing.Convenience_Flat_Fee__c;
         //Addition of the pricingId to support the edit of the commercial
         data.pricingId = pricing.Id;
-
         
-
+        
+        
         //Added to make allow edit of the few fields on the enter tdr components - UI Changes New
         if(pricing.Transaction_Type__c == 'TDR' || pricing.Transaction_Type__c == 'TDR + Convenience') {
             if(String.isNotBlank(pricing.Rule_Id__c) && String.isBlank(pricing.Temp_Id_TDR__c)) {
@@ -1144,7 +1220,7 @@ public class PricingModuleComponentController {
                 }
             }    
         }
-
+        
         /** Added to restrict the record for update in case of pending status. Added by Prabhakar */
         if(String.isNotBlank(pricing.Banking_Ops_Status__c) && pricing.Banking_Ops_Status__c.contains('Pending')){
             data.restrictFlatFeeAndPercentageToBeEdited = true;
@@ -1202,10 +1278,10 @@ public class PricingModuleComponentController {
             Set<Id> setPricingIdsNeedsToBeRetain = new Set<Id>();
             Map<Id,Pricing__c> mapIdToPricing;
             if(String.isNotBlank(commercialId)) mapIdToPricing = new Map<Id,Pricing__c>([SELECT Id,TDR_Amount__c,Convenience_Amount__c,Transaction_Type__c,Fee_Model__c,
-                                                                                        Banking_Ops_Status__c,TDR__c,TDR_Flat_Fee__c,Convenience__c,Convenience_Flat_Fee__c 
-                                                                                        FROM Pricing__c WHERE Commercial2__c = :commercialId 
-                                                                                        AND Invisible__c = false 
-                                                                                        AND Deleted__c = false]); 
+                                                                                         Banking_Ops_Status__c,TDR__c,TDR_Flat_Fee__c,Convenience__c,Convenience_Flat_Fee__c 
+                                                                                         FROM Pricing__c WHERE Commercial2__c = :commercialId 
+                                                                                         AND Invisible__c = false 
+                                                                                         AND Deleted__c = false]); 
             if(mapIdToPricing != NULL && mapIdToPricing.keySet().size() > 0) setAllPricingIds =  mapIdToPricing.keySet();
             String source = 'Scratch';
             if(String.isNotBlank(selectedTemplate)) {
@@ -1275,15 +1351,6 @@ public class PricingModuleComponentController {
                 insert commercial;
                 commercialId = commercial.Id;
                 
-                /* List<Fallback_Charge__c> listFallbackCharges = new List<Fallback_Charge__c>();
-                for(Fallback_Payment_Mode__c  pm : [SELECT Id,Name FROM Fallback_Payment_Mode__c]) {
-                    Fallback_Charge__c fc = new Fallback_Charge__c();
-                    fc.Payment_Mode__c = pm.Name;
-                    fc.Commercial__c = commercialId;
-                    listFallbackCharges.add(fc);
-                } */
-                
-                //if(listFallbackCharges.size() > 0) insert listFallbackCharges;
                 
                 Platform_Fee__c pf = new Platform_Fee__c();
                 pf.Amount__c = 0;
@@ -1336,8 +1403,9 @@ public class PricingModuleComponentController {
                 else {
                     fpNew.className = 'colorPillsOptions';     
                 }
-
+                
                 /** */
+
                 listFixedPricing2.add(fpNew);    
                 setInsertedFeeType.add(fp1.Fee_Type__c);
             }
@@ -1350,22 +1418,44 @@ public class PricingModuleComponentController {
                 }
             }
             
-            /* for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
-                FallbackCharges fcObj = new FallbackCharges();
-                fcObj.Id = fc.Id;
-                fcObj.paymentModeName = fc.Payment_Mode__c;
-                fcObj.flatFee = fc.Flat_Fee__c != NULL ? String.valueOf(fc.Flat_Fee__c) : '';
-                fcObj.percentage = fc.Percentage__c != NULL ? String.valueOf(fc.Percentage__c) : '';
-                listFallbackCharges.add(fcObj);
-            } */
+            
             
             Integer count1 = 1;
-            for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
+            for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c,Status__c,Rejection_Reason__c,Temp_Id__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                 PlatformFee pfObj = new PlatformFee();
                 pfObj.Id = pf.Id;
                 pfObj.amount = pf.Amount__c != NULL ? String.valueOf(pf.Amount__c) : '';
                 pfObj.flatFee = pf.Flat_Fee__c != NULL ? String.valueOf(pf.Flat_Fee__c) : '';
                 pfObj.percentage = pf.Percentage__c != NULL ? String.valueOf(pf.Percentage__c) : '';
+                
+                /** Added for Platform Fee Maker-Checker. */
+                pfObj.status = pf.Status__c;
+                
+                if(String.isNotBlank(pfObj.status)){
+
+                    if(pfObj.status == 'Checker Rejected'){
+                        pfObj.showRejectionReason = true;
+                        pfObj.rejectionReason = pf.Rejection_Reason__c;
+                    }
+                    if(String.isNotBlank(pf.Temp_Id__c)){
+                        pfObj.recordLock = true;
+                    }
+                    
+                    if(pfObj.status.containsIgnoreCase('Approved')) {
+                        pfObj.className = 'colorPillsOptions2';    
+                    }
+                    else if(pfObj.status.containsIgnoreCase('Pending')) {
+                        pfObj.className = 'colorPillsOptions3';     
+                    }
+                    else if(pfObj.status.containsIgnoreCase('Rejected')) {
+                        pfObj.className = 'colorPillsOptions4';     
+                    }
+                    else {
+                        pfObj.className = 'colorPillsOptions';     
+                    }
+                }
+                /** */
+                
                 wrpCls.selectedType = pf.Type__c;
                 wrpCls.selectedInterval= pf.Interval__c;
                 wrpCls.selectedStartDate = pf.Start_Date__c;
@@ -1436,7 +1526,7 @@ WHERE Opportunity__c = :recordId
 AND Deleted__c = false 
 AND Invisible__c = false]); */
             /** */
-
+            
             
             for(SelectedPaymentData spd : listSelectedPaymentData) {
                 for(SelectedPaymentOptions spo : spd.selectedPaymentOptionsList) {
@@ -1455,8 +1545,8 @@ AND Invisible__c = false]); */
                             }
                             /** Commented by Prabhakar  */
                             /* else {
-                                pricing.Need_to_Publish__c = true;
-                            } */
+pricing.Need_to_Publish__c = true;
+} */
                             pricing.Added_By__c = UserInfo.getName();
                             pricing.Need_to_Publish__c = true;
                             pricing.Opportunity__c = recordId;
@@ -1680,20 +1770,20 @@ AND Invisible__c = false]); */
         }
         return wrpCls;
     }
-
+    
     /** Private method the check that previous value and current values are same or different */
     @TestVisible
     private static Boolean isFieldChange(Pricing__c price,SelectedPaymentDataSingleRecord spdsr){
         if(price.Fee_Model__c != spdsr.selectedFeeModel 
-        || price.Transaction_Type__c != spdsr.selectedTransactionType
-        || price.TDR_Amount__c !=  Decimal.valueOf(spdsr.tdrAmount)
-        || price.TDR_Flat_Fee__c !=  Decimal.valueOf(spdsr.tdrFee) 
-        || price.TDR__c != Decimal.valueOf(spdsr.tdrPercentage)
-        || price.Convenience_Amount__c != Decimal.valueOf(spdsr.convenienceAmount) 
-        || price.Convenience_Flat_Fee__c != Decimal.valueOf(spdsr.convenienceFee) 
-        || price.Convenience__c != Decimal.valueOf(spdsr.conveniencePercentage) ){
-            return false;
-        }
+           || price.Transaction_Type__c != spdsr.selectedTransactionType
+           || price.TDR_Amount__c !=  Decimal.valueOf(spdsr.tdrAmount)
+           || price.TDR_Flat_Fee__c !=  Decimal.valueOf(spdsr.tdrFee) 
+           || price.TDR__c != Decimal.valueOf(spdsr.tdrPercentage)
+           || price.Convenience_Amount__c != Decimal.valueOf(spdsr.convenienceAmount) 
+           || price.Convenience_Flat_Fee__c != Decimal.valueOf(spdsr.convenienceFee) 
+           || price.Convenience__c != Decimal.valueOf(spdsr.conveniencePercentage) ){
+               return false;
+           }
         return true;
     }/** END */
     
@@ -1796,20 +1886,20 @@ we need to create  commercial in SF side
             if(oppList[0].Commercial2__r.isEmpty() && oppList[0].Commercial2__r.size()==0){
                 GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(oppList[0].Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC');
                 if((tranformData.transformedPricingWrapperPricingList !=NULL && tranformData.transformedPricingWrapperPricingList.size()>0) || 
-                (tranformData.fixedWrapperList !=NULL && tranformData.fixedWrapperList.size()>0)  ||  (tranformData.platformWrapperList !=NULL && tranformData.platformWrapperList.size()>0)){
-                    Commercial2__c  comm = new Commercial2__c ();
-                    comm.Name =  System.label.Commercial2_Name+oppList[0].Prod_MID__c;
-                    comm.Source__c  = 'Treasury(System_Generated)';
-                    comm.Opportunity__c = recordId;
-                    comm.Status__c = 'Live';
-                    Insert comm;
-                    if(tranformData.platformWrapperList.size()==0){
-                        Platform_Fee__c pf = new Platform_Fee__c();
-                        pf.Amount__c = 0;
-                        pf.Commercial__c = comm.Id;
-                        insert pf;
-                    }
-                }
+                   (tranformData.fixedWrapperList !=NULL && tranformData.fixedWrapperList.size()>0)  ||  (tranformData.platformWrapperList !=NULL && tranformData.platformWrapperList.size()>0)){
+                       Commercial2__c  comm = new Commercial2__c ();
+                       comm.Name =  System.label.Commercial2_Name+oppList[0].Prod_MID__c;
+                       comm.Source__c  = 'Treasury(System_Generated)';
+                       comm.Opportunity__c = recordId;
+                       comm.Status__c = 'Live';
+                       Insert comm;
+                       if(tranformData.platformWrapperList.size()==0){
+                           Platform_Fee__c pf = new Platform_Fee__c();
+                           pf.Amount__c = 0;
+                           pf.Commercial__c = comm.Id;
+                           insert pf;
+                       }
+                   }
             }
             /*******END******/
             for(Commercial2__c comm : [SELECT Id,Name,Status__c,CreatedDate,Source__c,CreatedBy.Name,Last_Edited_On__c,
@@ -1929,9 +2019,9 @@ we need to create  commercial in SF side
         PricingWrapper pricingWrapper = new PricingWrapper();
         try {
             List<Publish_Pricing_Detail__c> listPublishPricingDetails = [SELECT Id FROM Publish_Pricing_Detail__c
-                                                                             WHERE Commercial__c = :commercialId 
-                                                                             AND Type__c = 'TDR' 
-                                                                             AND Sync_Status__c = 'Processing']; 
+                                                                         WHERE Commercial__c = :commercialId 
+                                                                         AND Type__c = 'TDR' 
+                                                                         AND Sync_Status__c = 'Processing']; 
             if(listPublishPricingDetails != NULL && listPublishPricingDetails.size() > 0) {
                 pricingWrapper.allowEdit = false;
                 return pricingWrapper;
@@ -1968,43 +2058,43 @@ we need to create  commercial in SF side
                                              Percentage__c,Start_Date__c FROM Fixed_Pricing1__c 
                                              WHERE Commercial__c = :commercialId 
                                              AND Deleted__c = false]) {
-                    FixedPricing2 fpNew = new FixedPricing2();
-                    fpNew.recordId = fp1.Id;
-                    fpNew.endDate = fp1.End_Date__c != NULL ? String.valueOf(fp1.End_Date__c) : '';
-                    fpNew.startDate = fp1.Start_Date__c != NULL ? String.valueOf(fp1.Start_Date__c) : '';
-                    fpNew.amount = fp1.Amount__c != NULL ? String.valueOf(fp1.Amount__c) : '';
-                    fpNew.flatFee = fp1.Flat_Fee__c != NULL ? String.valueOf(fp1.Flat_Fee__c) : '';
-                    fpNew.percentage = fp1.Percentage__c != NULL ? String.valueOf(fp1.Percentage__c) : '';
-                    fpNew.flatFeeType = fp1.Fee_Type__c;
-                    fpNew.paymentFrequency = fp1.Payment_Frequency__c != NULL ? String.valueOf(fp1.Payment_Frequency__c) : '';
-                    fpNew.debitModel = fp1.Debit_Model__c != NULL ? String.valueOf(fp1.Debit_Model__c) : '';
-                    fpNew.showDeleteButton = false;
-                    /** Added for fixed pricing maker checker */
-                    fpNew.status = fp1.Status__c;
-                    if(fpNew.status == 'Checker Rejected'){
-                        fpNew.showRejectionReason = true;
-                        fpNew.rejectionReason = fp1.Rejection_Reason__c;
-                    }
-                    if(String.isNotBlank(fp1.Temp_Id__c)){
-                        fpNew.recordLock = true;
-                    }
-
-                    if(fpNew.status.containsIgnoreCase('Approved')) {
-                        fpNew.className = 'colorPillsOptions2';    
-                    }
-                    else if(fpNew.status.containsIgnoreCase('Pending')) {
-                        fpNew.className = 'colorPillsOptions3';     
-                    }
-                    else if(fpNew.status.containsIgnoreCase('Rejected')) {
-                        fpNew.className = 'colorPillsOptions4';     
-                    }
-                    else {
-                        fpNew.className = 'colorPillsOptions';     
-                    }
-                    /** */
-                    listFixedPricing2.add(fpNew);    
-                    setInsertedFeeType.add(fp1.Fee_Type__c);
-                }
+                                                 FixedPricing2 fpNew = new FixedPricing2();
+                                                 fpNew.recordId = fp1.Id;
+                                                 fpNew.endDate = fp1.End_Date__c != NULL ? String.valueOf(fp1.End_Date__c) : '';
+                                                 fpNew.startDate = fp1.Start_Date__c != NULL ? String.valueOf(fp1.Start_Date__c) : '';
+                                                 fpNew.amount = fp1.Amount__c != NULL ? String.valueOf(fp1.Amount__c) : '';
+                                                 fpNew.flatFee = fp1.Flat_Fee__c != NULL ? String.valueOf(fp1.Flat_Fee__c) : '';
+                                                 fpNew.percentage = fp1.Percentage__c != NULL ? String.valueOf(fp1.Percentage__c) : '';
+                                                 fpNew.flatFeeType = fp1.Fee_Type__c;
+                                                 fpNew.paymentFrequency = fp1.Payment_Frequency__c != NULL ? String.valueOf(fp1.Payment_Frequency__c) : '';
+                                                 fpNew.debitModel = fp1.Debit_Model__c != NULL ? String.valueOf(fp1.Debit_Model__c) : '';
+                                                 fpNew.showDeleteButton = false;
+                                                 /** Added for fixed pricing maker checker */
+                                                 fpNew.status = fp1.Status__c;
+                                                 if(fpNew.status == 'Checker Rejected'){
+                                                     fpNew.showRejectionReason = true;
+                                                     fpNew.rejectionReason = fp1.Rejection_Reason__c;
+                                                 }
+                                                 if(String.isNotBlank(fp1.Temp_Id__c)){
+                                                     fpNew.recordLock = true;
+                                                 }
+                                                 
+                                                 if(fpNew.status.containsIgnoreCase('Approved')) {
+                                                     fpNew.className = 'colorPillsOptions2';    
+                                                 }
+                                                 else if(fpNew.status.containsIgnoreCase('Pending')) {
+                                                     fpNew.className = 'colorPillsOptions3';     
+                                                 }
+                                                 else if(fpNew.status.containsIgnoreCase('Rejected')) {
+                                                     fpNew.className = 'colorPillsOptions4';     
+                                                 }
+                                                 else {
+                                                     fpNew.className = 'colorPillsOptions';     
+                                                 }
+                                                 /** */
+                                                 listFixedPricing2.add(fpNew);    
+                                                 setInsertedFeeType.add(fp1.Fee_Type__c);
+                                             }
                 
                 if(pricingWrapper.respectiveScreen == 'Draft') {
                     for(String feeType : setFlatFeeType) {
@@ -2017,22 +2107,40 @@ we need to create  commercial in SF side
                     
                 }
                 
-                /* for(Fallback_Charge__c fc : [SELECT Id,Payment_Mode__c,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c =:commercialId]) {
-                    FallbackCharges fcObj = new FallbackCharges();
-                    fcObj.Id = fc.Id;
-                    fcObj.paymentModeName = fc.Payment_Mode__c;
-                    fcObj.flatFee = fc.Flat_Fee__c != NULL ? String.valueOf(fc.Flat_Fee__c) : '';
-                    fcObj.percentage = fc.Percentage__c != NULL ? String.valueOf(fc.Percentage__c) : '';
-                    listFallbackCharges.add(fcObj);
-                } */
                 
                 Integer count = 1;
-                for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
+                for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c,Status__c,Rejection_Reason__c,Temp_Id__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                     PlatformFee pfObj = new PlatformFee();
                     pfObj.Id = pf.Id;
                     pfObj.amount = pf.Amount__c != NULL ? String.valueOf(pf.Amount__c) : '';
                     pfObj.flatFee = pf.Flat_Fee__c != NULL ? String.valueOf(pf.Flat_Fee__c) : '';
                     pfObj.percentage = pf.Percentage__c != NULL ? String.valueOf(pf.Percentage__c) : '';
+                    
+                    /** Added for Platform Fee Maker Checker. */
+                    pfObj.status = pf.Status__c;
+                    if(String.isNotBlank(pfObj.status)){
+                        if(pfObj.status == 'Checker Rejected'){
+                            pfObj.showRejectionReason = true;
+                            pfObj.rejectionReason = pf.Rejection_Reason__c;
+                        }
+                        if(String.isNotBlank(pf.Temp_Id__c)){
+                            pfObj.recordLock = true;
+                        }
+                        
+                        if(pfObj.status.containsIgnoreCase('Approved')) {
+                            pfObj.className = 'colorPillsOptions2';    
+                        }
+                        else if(pfObj.status.containsIgnoreCase('Pending')) {
+                            pfObj.className = 'colorPillsOptions3';     
+                        }
+                        else if(pfObj.status.containsIgnoreCase('Rejected')) {
+                            pfObj.className = 'colorPillsOptions4';     
+                        }
+                        else {
+                            pfObj.className = 'colorPillsOptions';     
+                        }
+                    }
+                    /** */
                     pricingWrapper.selectedType = pf.Type__c;
                     pricingWrapper.selectedInterval= pf.Interval__c;
                     pricingWrapper.selectedStartDate = pf.Start_Date__c;
@@ -2101,7 +2209,7 @@ we need to create  commercial in SF side
         @AuraEnabled public Date selectedEndDate = Date.today();
         @AuraEnabled public String selectedDebitModel = '';
         @AuraEnabled public Boolean allowEdit = true;
-
+        
     } 
     
     /*
@@ -2159,14 +2267,14 @@ we need to create  commercial in SF side
                                       spdsr.bankingOpsStatus = pricing.Banking_Ops_Status__c;
                                       /** Added to show the rejection reason to KAM, By Prabhakar */
                                       if(spdsr.bankingOpsStatus == 'Checker Rejected'){
-                                        if(String.isNotBlank(pricing.Checker_Rejection_Reason__c)){
-                                            spdsr.showRejectionReason = true;
-                                            spdsr.rejectionReason = pricing.Checker_Rejection_Reason__c;
-                                        }
-                                        if(String.isNotBlank(pricing.Checker_Delete_Rejection_Reason__c)){
-                                            spdsr.showRejectionReasonDelete = true;
-                                            spdsr.rejectionReasonDelete = pricing.Checker_Delete_Rejection_Reason__c;
-                                        }
+                                          if(String.isNotBlank(pricing.Checker_Rejection_Reason__c)){
+                                              spdsr.showRejectionReason = true;
+                                              spdsr.rejectionReason = pricing.Checker_Rejection_Reason__c;
+                                          }
+                                          if(String.isNotBlank(pricing.Checker_Delete_Rejection_Reason__c)){
+                                              spdsr.showRejectionReasonDelete = true;
+                                              spdsr.rejectionReasonDelete = pricing.Checker_Delete_Rejection_Reason__c;
+                                          }
                                       }/** */
                                       spdsr.bankName = pricing.Bank_Name__c;
                                       spdsr.porType = pricing.POR_Type_Name__c;
@@ -2186,9 +2294,9 @@ we need to create  commercial in SF side
                                           else {
                                               spdsr.className = 'colorPillsOptions';     
                                           }
-
+                                          
                                           if(pricing.Banking_Ops_Status__c == 'Approved' || pricing.Banking_Ops_Status__c == 'Approved with BH'){
-                                            spdsr.showAP = true;
+                                              spdsr.showAP = true;
                                           }
                                       }
                                       
@@ -2616,69 +2724,20 @@ we need to create  commercial in SF side
                                                                 String listPlatformFee,String listFallbackCharges,
                                                                 String selectedType,String selectedInterval,String selectedStartDate,
                                                                 String selectedEndDate,String selectedDebitModel,String listFixedPricing2) {
+                                                                    
                                                                     try {
-                                                                        //Make only one commercial Active
-                                                                        /*List<Commercial2__c> listCommercial = [SELECT Opportunity__c,Merchant_MID__c FROM Commercial2__c WHERE Id = :commercialId];
-if(listCommercial != NULL && listCommercial.size() > 0) {
-List<Commercial2__c> listLiveCommercial = [SELECT Id FROM Commercial2__c WHERE Opportunity__c = :listCommercial[0].Opportunity__c AND Status__c = 'Live'];
-if(listLiveCommercial != NULL && listLiveCommercial.size() > 0 && listLiveCommercial[0].Id != commercialId) {
-Set<String> setRuleIdsNotLive = new Set<String>();
-List<Pricing__c> listPricingToUpdate = new List<Pricing__c>();
-for(Pricing__c price: [SELECT Id,Rule_Id__c,Rule_Id_Conv__c,Need_to_Publish__c 
-FROM Pricing__c 
-WHERE Commercial2__c = :listLiveCommercial[0].Id 
-AND (Rule_Id__c != NULL OR Rule_Id_Conv__c != NULL)]) {
-if(String.isNotBlank(price.Rule_Id__c)) setRuleIdsNotLive.add(price.Rule_Id__c); 
-if(String.isNotBlank(price.Rule_Id_Conv__c)) setRuleIdsNotLive.add(price.Rule_Id_Conv__c);
-price.Need_to_Publish__c = true;
-listPricingToUpdate.add(price);
-}
-if(setRuleIdsNotLive.size() > 0 && String.isNotBlank(listCommercial[0].Merchant_MID__c) && String.isNotBlank(listCommercial[0].Opportunity__c)) {
-List<String> listRuleIdsNotLive = new List<String>(setRuleIdsNotLive);
-RemovePricingFromTreasury.deletePricing(String.join(listRuleIdsNotLive,','),listCommercial[0].Merchant_MID__c,listCommercial[0].Opportunity__c); 
-}	
-
-if(listPricingToUpdate.size() > 0) update listPricingToUpdate;
-Commercial2__c commNotLive = new Commercial2__c();
-commNotLive.Id = listLiveCommercial[0].Id;
-commNotLive.Status__c = 'Not Live';
-update commNotLive;
-}
-}*/
-                                                                        //End of make only one commercial active
                                                                         
-                                                                        List<FixedPricing> listFixedPricing = (List<FixedPricing>)JSON.deserialize(listFixedPricingString,List<FixedPricing>.class);
-                                                                        List<Fixed_Pricing__c> listFixedPricingToInsert = new List<Fixed_Pricing__c>();
-                                                                        /* for(FixedPricing fp : listFixedPricing) {
-                                                                            Fixed_Pricing__c fpNew = new Fixed_Pricing__c();
-                                                                            fpNew.Setup_Fee__c = Decimal.valueOf(fp.setupFee);
-                                                                            fpNew.Setup_Deposit__c = Decimal.valueOf(fp.securityDeposit);
-                                                                            fpNew.AMC_Fee__c = Decimal.valueOf(fp.amcFee);
-                                                                            fpNew.AMC_Interval__c = Decimal.valueOf(fp.amcInterval);
-                                                                            fpNew.Commercial2__c = commercialId;
-                                                                            listFixedPricingToInsert.add(fpNew);
-                                                                        } */
                                                                         
-                                                                        List<Fixed_Pricing__c> listFixedPricingWithCommercialId = new List<Fixed_Pricing__c>();
-                                                                        listFixedPricingWithCommercialId = [SELECT Id,Commercial2__r.Status__c FROM Fixed_Pricing__c WHERE Commercial2__c = :commercialId];
-                                                                        if(listFixedPricingToInsert.size() > 0 && listFixedPricingWithCommercialId.size() == 0) {
-                                                                            //insert listFixedPricingToInsert;
-                                                                        }
-                                                                        else if(listFixedPricingToInsert.size() > 0 && listFixedPricingWithCommercialId.size() == 1 && listFixedPricingWithCommercialId[0].Commercial2__r.Status__c != 'Draft'/*'Published'*/) {
-                                                                            listFixedPricingToInsert[0].Id = listFixedPricingWithCommercialId[0].Id;
-                                                                            //update listFixedPricingToInsert;
-                                                                        }
-                                                                        
-                                                                        Commercial2__c commercial = new Commercial2__c();
+                                                                        /*Commercial2__c commercial = new Commercial2__c();
                                                                         commercial.Id = commercialId;
                                                                         commercial.Status__c = 'Live';//'Published'
                                                                         commercial.Edited__c = false;
                                                                         commercial.Last_Published_On__c = System.now();
-                                                                        update commercial;
+                                                                        update commercial;*/
                                                                         
                                                                         //Fixed Pricing 2 Logic
                                                                         Map<Id,Fixed_Pricing1__c> mapIdToFixedPricing2 = new Map<Id,Fixed_Pricing1__c>();
-                                                                        for(Fixed_Pricing1__c fp : [SELECT Id,Start_Date__c,End_Date__c,Debit_Model__c,Fee_Type__c,Payment_Frequency__c,Flat_Fee__c,Percentage__c,Amount__c 
+                                                                        for(Fixed_Pricing1__c fp : [SELECT Id,Start_Date__c,End_Date__c,Debit_Model__c,Fee_Type__c,Payment_Frequency__c,Flat_Fee__c,Percentage__c,Amount__c,Status__c,Rejection_Reason__c
                                                                                                     FROM Fixed_Pricing1__c WHERE Commercial__c = :commercialId
                                                                                                     AND Deleted__c = false]) {
                                                                                                         mapIdToFixedPricing2.put(fp.Id,fp);	    
@@ -2721,7 +2780,7 @@ update commNotLive;
                                                                                 fp.Added_By__c = UserInfo.getName();
                                                                                 fp.Status__c = 'Approved (Awaiting Publishing)';
                                                                                 /** */
-
+                                                                                
                                                                                 if(String.isNotBlank(fpObj.flatFeeType)) fp.Fee_Type__c = fpObj.flatFeeType;
                                                                                 if(String.isNotBlank(fpObj.paymentFrequency)) fp.Payment_Frequency__c = fpObj.paymentFrequency;
                                                                                 if(String.isNotBlank(fpObj.debitModel)) fp.Debit_Model__c = fpObj.debitModel;
@@ -2740,8 +2799,8 @@ update commNotLive;
                                                                         
                                                                         //Platform Fee Logic
                                                                         Map<Id,Platform_Fee__c> mapIdToPlatformFee = new Map<Id,Platform_Fee__c>();
-                                                                        for(Platform_Fee__c pf : [SELECT Id,Start_Date__c,End_Date__c,Debit_Model__c,Type__c,Interval__c,Flat_Fee__c,Percentage__c,Amount__c 
-                                                                                                  FROM Platform_Fee__c WHERE Commercial__c = :commercialId ORDER BY Amount__c]) {
+                                                                        for(Platform_Fee__c pf : [SELECT Id,Start_Date__c,End_Date__c,Debit_Model__c,Type__c,Interval__c,Flat_Fee__c,Percentage__c,Amount__c,Status__c,Rejection_Reason__c,Temp_Id__c
+                                                                                                  FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                                                                                                       mapIdToPlatformFee.put(pf.Id,pf);	    
                                                                                                   }
                                                                         
@@ -2767,6 +2826,14 @@ update commNotLive;
                                                                                        pf.End_Date__c != pfExisting.End_Date__c || pf.Amount__c != pfExisting.Amount__c ||
                                                                                        pf.Flat_Fee__c != pfExisting.Flat_Fee__c || pf.Percentage__c != pfExisting.Percentage__c) {
                                                                                            pf.Need_to_Publish__c = true;
+                                                                                           
+                                                                                           /** Added for Platform Fee maker checker and versioning */
+                                                                                           pf.Added_By__c = UserInfo.getName();
+                                                                                           pf.Status__c = 'Approved (Awaiting Publishing)';
+                                                                                           pf.Valid_From__c = '';
+                                                                                           pf.Valid_Till__c = '';
+                                                                                           /** */
+                                                                                           
                                                                                            listPlatformFeeToUpsert.add(pf);
                                                                                        }
                                                                                 }
@@ -2774,6 +2841,12 @@ update commNotLive;
                                                                                     Platform_Fee__c pf = new Platform_Fee__c();
                                                                                     pf.Commercial__c = commercialId;
                                                                                     pf.Need_to_Publish__c = true;
+                                                                                    
+                                                                                    /** Added for Platform Fee maker checker and versioning */
+                                                                                    pf.Added_By__c = UserInfo.getName();
+                                                                                    pf.Status__c = 'Approved (Awaiting Publishing)';
+                                                                                    /** */
+                                                                                    
                                                                                     if(String.isNotBlank(selectedType)) pf.Type__c = selectedType;
                                                                                     if(String.isNotBlank(selectedInterval)) pf.Interval__c = selectedInterval;
                                                                                     if(String.isNotBlank(selectedDebitModel)) pf.Debit_Model__c = selectedDebitModel;
@@ -2787,30 +2860,6 @@ update commNotLive;
                                                                             }
                                                                             if(listPlatformFeeToUpsert.size() > 0) upsert listPlatformFeeToUpsert;
                                                                         }
-                                                                        
-                                                                        //Fallback Charges Change
-                                                                        /* Map<Id,Fallback_Charge__c> mapIdToFallbackCharges = new Map<Id,Fallback_Charge__c>();
-                                                                        for(Fallback_Charge__c fc : [SELECT Id,Flat_Fee__c,Percentage__c FROM Fallback_Charge__c WHERE Commercial__c = :commercialId]) {
-                                                                            mapIdToFallbackCharges.put(fc.Id,fc);	     
-                                                                        }
-                                                                        
-                                                                        if(mapIdToFallbackCharges.keySet().size() > 0) {
-                                                                            List<Fallback_Charge__c> listFallBackChargesToUpdate = new List<Fallback_Charge__c>();
-                                                                            List<FallbackCharges> listFallbackChargesLatest = (List<FallbackCharges>)JSON.deserialize(listFallbackCharges,List<FallbackCharges>.class);
-                                                                            for(FallbackCharges fc : listFallbackChargesLatest) {
-                                                                                Fallback_Charge__c fcExisting = mapIdToFallbackCharges.get(fc.Id);
-                                                                                Fallback_Charge__c fcNew = new Fallback_Charge__c();
-                                                                                fcNew.Id = fc.Id;
-                                                                                fcNew.Flat_Fee__c = String.isNotBlank(fc.flatFee) ? Decimal.valueOf(fc.flatFee) : null;
-                                                                                fcNew.Percentage__c = String.isNotBlank(fc.percentage) ? Decimal.valueOf(fc.percentage) : null;
-                                                                                if(fcNew.Flat_Fee__c != fcExisting.Flat_Fee__c || fcNew.Percentage__c != fcExisting.Percentage__c) {
-                                                                                    fcNew.Need_to_Publish__c = true;
-                                                                                    listFallBackChargesToUpdate.add(fcNew);
-                                                                                }
-                                                                            }
-                                                                            
-                                                                            if(listFallBackChargesToUpdate.size() > 0) update listFallBackChargesToUpdate;
-                                                                        } */
                                                                         
                                                                         
                                                                         //Call API Class to send data to treasury
@@ -2920,7 +2969,7 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
         public String paymentFrequency = '';
         public String debitModel = '';
         public Boolean showDeleteButton = true;
-
+        
         /** Added for fixed pricing maker checker */
         public String status = '';
         public Boolean showRejectionReason = false;
@@ -2939,6 +2988,14 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
         public Boolean showRemoveButton = false;
         public Boolean disabledAmount = false;
         public String backgroundColor = 'background-color:white;';
+        
+        /** Added for Platform Fee maker checker */
+        public String status = '';
+        public Boolean showRejectionReason = false;
+        public String rejectionReason = '';
+        public Boolean recordLock = false;
+        public String className = '';
+        /** */
     }
     
     //Fallback Charges Class
@@ -2958,34 +3015,36 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
         List<Commercial2__c> commList = [SELECT Opportunity__c FROM Commercial2__c WHERE Id =: commercialId LIMIT 1];
         //Database.executeBatch(new PublishPricingToTreasuryMainTable(commercialId),100); not needed
         Database.executeBatch(new PublishPricingToTreasuryTempTable(commercialId,'SaveBulkRules-CheckerFalseActionSave',false),50);
-        if(Label.StopPlatformFeeFlowToTreasury.toLowerCase() == 'false') {
-            callTreasuryForPlatform(commercialId);    
-        }
-        if(Label.StopFallbackChargesFlowToTreasury.toLowerCase() == 'false') {
-            //callTreasuryForFallback(commercialId);    
-        }
+        
         if(Label.StopFixedPricingFlowToTreasury.toLowerCase() == 'false') {
             //callTreasuryForFixed(commercialId);  
             callTreasuryForFixed(commList[0].Opportunity__c);   
         }
+        if(Label.StopPlatformFeeFlowToTreasury.toLowerCase() == 'false') {
+            callTreasuryForPlatform(commList[0].Opportunity__c);    
+        }
+        if(Label.StopFallbackChargesFlowToTreasury.toLowerCase() == 'false') {
+            //callTreasuryForFallback(commercialId);    
+        }
     }
     
     @future(callout=true)
-    public static void callTreasuryForPlatform(String commercialId) {
-        PublishPlatformFeeToTreasury_CTRL.PricingToTreasury(commercialId);
+    public static void callTreasuryForFixed(String oppId) {
+        Pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',false, 'save' ,oppId, false);
+        obj.processTheRequest();
+        //PublishFixedFeeToTreasury_CTRL.FixedFeeToTreasury(commercialId);
+    }
+    
+    @future(callout=true)
+    public static void callTreasuryForPlatform(String oppId) {
+        Pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Platform_Fee__c', false, 'save', oppId, false);
+        obj.processTheRequest();
+        //PublishPlatformFeeToTreasury_CTRL.PricingToTreasury(commercialId);
     }
     
     @future(callout=true)
     public static void callTreasuryForFallback(String commercialId) {
         //PublishFallbackToTreasury_CTRL.FallBackToTreasury(commercialId);
-    }
-    
-    @future(callout=true)
-    public static void callTreasuryForFixed(String oppId) {
-        System.debug('>>>>>>callTreasuryForFixed 2>>>>>>>');
-        Pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',false, 'save' ,oppId, false);
-        obj.processTheRequest();
-        //PublishFixedFeeToTreasury_CTRL.FixedFeeToTreasury(commercialId);
     }
     
     /*

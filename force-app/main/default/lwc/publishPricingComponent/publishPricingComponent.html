@@ -318,7 +318,7 @@
                         <th class="varientThree">Amount</th>
                         <th class="varientThree">Flat Fee</th>
                         <th class="varientThree">Percentage</th>
-                        <!--<th class="varientThree"></th>-->
+                        <th class="varientThree">Status</th>
                     </tr>
                     </thead>
                     <tbody class="secondScreenTableCls">
@@ -356,9 +356,25 @@
                                             <div class="slds-form-element__control">
                                                 <lightning-input type="number" value={pf.percentage} data-id={indx} step="0.001" onchange={handlePlatformFeePercentage} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Percentage"></lightning-input>    
                                             </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Status :  Added for Platform Fee maker checker-->
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <div class={pf.className}> {pf.status} </div>
+                                                &nbsp;&nbsp;
+                                                <template lwc:if={pf.showRejectionReason}>
+                                                    <lightning-helptext content={pf.rejectionReason}></lightning-helptext>
+                                                </template>
                                             </div>
                                         </div>
+                                    </div>
                                 </td>
+                                <!-- -->
                                 <template if:false={hidePublishCommercialButton}>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
