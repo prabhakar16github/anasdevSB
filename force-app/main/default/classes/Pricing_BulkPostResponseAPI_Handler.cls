@@ -53,7 +53,7 @@ public class Pricing_BulkPostResponseAPI_Handler {
                 
                    pricing.Version_Number__c = Integer.valueOf(mapInner2KeyToValue.get('versionNumber'));
                 
-                if((String)mapInner2KeyToValue.get('revenueModel') == 'TDR') {
+                if((String)mapInner2KeyToValue.get('revenueModel') == 'TDR' || (String)mapInner2KeyToValue.get('revenueModel') == 'TDR Plus Conv Fee') {
                     
 
                     if(checker) {
@@ -198,11 +198,12 @@ public class Pricing_BulkPostResponseAPI_Handler {
             Map<String,Object> mapInnerKeyToValue = (Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(obj));
             Map<String,Object> mapInner2KeyToValue = (Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(mapInnerKeyToValue.get('result')));
             if(String.valueOf(mapInnerKeyToValue.get('code')) == '2000' && mapInner2KeyToValue.get('sfId') != NULL) {
+
                 Platform_Fee__c pricing = new Platform_Fee__c();
                 pricing.Id = String.valueOf(mapInner2KeyToValue.get('sfId')).split('#')[0];
-                pricing.Valid_From__c = String.valueOf(mapInner2KeyToValue.get('validFrom'));
-                pricing.Added_On__c = String.valueOf(mapInner2KeyToValue.get('addedOn'));
-                pricing.Valid_Till__c = String.valueOf(mapInner2KeyToValue.get('validTill'));
+                pricing.Valid_From__c = mapInner2KeyToValue.get('validFrom') != NULL ? String.valueOf(mapInner2KeyToValue.get('validFrom')) : NULL;
+                pricing.Valid_Till__c = mapInner2KeyToValue.get('validTill') != NULL ? String.valueOf(mapInner2KeyToValue.get('validTill')) : NULL;
+                pricing.Added_On__c = mapInner2KeyToValue.get('addedOn') != NULL ? String.valueOf(mapInner2KeyToValue.get('addedOn')) : NULL;
 
                 if(mapIdToPlatformFee.containsKey(pricing.Id)){
                     pricing = mapIdToPlatformFee.get(pricing.Id);
@@ -216,7 +217,7 @@ public class Pricing_BulkPostResponseAPI_Handler {
                 
                 if(checker) {
                     if(String.isNotBlank(String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')))) {
-                        pricing.Rule_Id__c = String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId'));    
+                        pricing.Rule_Id__c = mapInner2KeyToValue.get('pricingRuleConfigId') != NULL ? String.valueOf(mapInner2KeyToValue.get('pricingRuleConfigId')) : NULL;    
                     }
                     if(listPublishPricingDetails[0].Process__c == 'SaveBulkRules-CheckertrueActionapprovePlatform_Fee__c'){ 
                         pricing.Status__c = 'Checker Approved';
@@ -232,7 +233,6 @@ public class Pricing_BulkPostResponseAPI_Handler {
                     }
                     pricing.Status__c = 'Pending with Checker';
                 }
-                
             }else if(String.valueOf(mapInnerKeyToValue.get('code')) != '2000' && mapInner2KeyToValue.get('sfId') != NULL){
                 Platform_Fee__c pricing = new Platform_Fee__c();
                 pricing.Id = String.valueOf(mapInner2KeyToValue.get('sfId')).split('#')[0];

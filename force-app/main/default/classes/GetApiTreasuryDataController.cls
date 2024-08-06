@@ -10,7 +10,7 @@ public class GetApiTreasuryDataController{
     /* below map I have created because in sf revenue model picklist value are different from treasury side thats why 
 we are mapping the values so that same will be update on sf as well.
 ***/
-    private static Map<String,String> mapFeeTypeToRevenueModel = new Map<String,String>{'SETUP_FEE'=>'Setup Fee','AMC'=>'AMC','AFFORDABILITY_VAS_FEE'=>'Affordibility VAS','Conv Fee'=>'Convenience','TDR'=>'TDR'};
+    private static Map<String,String> mapFeeTypeToRevenueModel = new Map<String,String>{'SETUP_FEE'=>'Setup Fee','AMC'=>'AMC','AFFORDABILITY_VAS_FEE'=>'Affordibility VAS','Conv Fee'=>'Convenience','TDR'=>'TDR','TDR Plus Conv Fee'=>'TDR + Convenience'};
         public static Map<String,String> mapOfTransformerData = getMapTreasuryKeyToTreasuryDataId();
     public static Map<String,Master_Pricing_Data__c> mapOfMpdData = getMapSfKeyToMasterPricingData();
     public static String mId;
@@ -163,14 +163,14 @@ which will make the wrapper and send to treasury in response will get the data*/
                                 
                                 pricingWrapper.platformWrapperList.add(getPlatformFeeMapping(resWrapper));
                             }
-                            else if(resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='Conv Fee'){
+                            else if(resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='Conv Fee' || resWrapper.revenueModel =='TDR Plus Conv Fee'){
                                 Master_Pricing_Data__c mpdData = getMasterPricingData(resWrapper);
                                 if(mpdData != null) {
                                     transformedPricingWrapper transFromWrap = new transformedPricingWrapper();
                                     transFromWrap.debitModel  = resWrapper.debitModel;
                                     transFromWrap.transactionType =  mapFeeTypeToRevenueModel.get(resWrapper.revenueModel);
                                     transFromWrap.pricingRuleConfigId = resWrapper.pricingRuleConfigId;
-                                    if(resWrapper.revenueModel == 'TDR'){
+                                    if(resWrapper.revenueModel == 'TDR' || resWrapper.revenueModel =='TDR Plus Conv Fee'){
                                         transFromWrap.tdrFlatFee  = resWrapper.flatFee;
                                         transFromWrap.tdrAmount = resWrapper.amountSlab;
                                         transFromWrap.tdrPercentFee   = resWrapper.percentFee;
@@ -299,11 +299,13 @@ which will make the wrapper and send to treasury in response will get the data*/
             if(attribute.pricingRuleKey == 'gmvSlab') {
                 platformWrap.feeType  =  'GMV';
                 platformWrap.amountSlab = Decimal.valueOf(attribute.pricingRuleValue);
-            }else if(attribute.pricingRuleKey == 'transactionCount'){
+            }else if(attribute.pricingRuleKey == 'countSlab'){
                 platformWrap.feeType  =  'Transaction Count';
                 platformWrap.amountSlab = Decimal.valueOf(attribute.pricingRuleValue);
             }
         }
+        System.debug('>>>>>>platformWrap.feeType>>>>'+platformWrap.feeType);
+        System.debug('>>>>>>platformWrap.amountSlab>>>>'+platformWrap.amountSlab);
         return platformWrap;
     }/** END : getPlatformFeeMapping */
 
@@ -484,6 +486,7 @@ its get called other wise return the untransform data***********/
         public String addedBy;
         public String bearerOfCharge;
         public Decimal countSlabValue; 
+        public List<AttributeWrapper> attributes = new List<AttributeWrapper>();
     }
     /**************End************************/
     // Wrapper class for revenue model data

@@ -92,9 +92,11 @@ public with sharing class Pricing_CheckerViewCompController {
                 }
                 
                 for(Platform_Fee__c platformFee : [SELECT Id,Type__c,Debit_Model__c,Start_Date__c,End_Date__c,Interval__c,
-                                                   Amount__c,Percentage__c,Flat_Fee__c 
+                                                   Amount__c,Percentage__c,Flat_Fee__c,Rule_Id__c 
                                                    FROM Platform_Fee__c 
-                                                   WHERE Commercial__c = :commercialList[0].Id]){
+                                                   WHERE Commercial__c = :commercialList[0].Id
+                                                   AND Temp_Id__c != NULL 
+                                                   AND Status__c = 'Pending with Checker']){
 
                     FixedAndPlatformFeeWrapper platformFeeWrap = new FixedAndPlatformFeeWrapper();
                     platformFeeWrap.recordId = platformFee.Id;
@@ -106,6 +108,11 @@ public with sharing class Pricing_CheckerViewCompController {
                     platformFeeWrap.amount = platformFee.Amount__c != NULL ? String.valueOf(platformFee.Amount__c): '';
                     platformFeeWrap.flatFee = platformFee.Flat_Fee__c != NULL ? String.valueOf(platformFee.Flat_Fee__c): '';
                     platformFeeWrap.percentage = platformFee.Percentage__c != NULL ? String.valueOf(platformFee.Percentage__c): '';
+                    /** Added for Platform Fee maker checker and versioning */
+                    if(String.isNotBlank(platformFee.Rule_Id__c)){
+                        platformFeeWrap.requestType = 'Update';
+                    } 
+                    /** */
                     dataWrap.listPlatformPricing.add(platformFeeWrap);
                 }
             }
@@ -199,7 +206,7 @@ public with sharing class Pricing_CheckerViewCompController {
      * Calling from Approve button in UI
     */
     @AuraEnabled
-    public static string handleApprovePricing(List<String> pricingIdList, List<String> pricingIdListFixed){
+    public static string handleApprovePricing(List<String> pricingIdList, List<String> pricingIdListFixed, List<String> platformFeeIdList){
         
         try {
             /** For TDR/Conv pricing */
@@ -212,6 +219,9 @@ public with sharing class Pricing_CheckerViewCompController {
             if(!pricingIdListFixed.isEmpty()){
                 handleFixedPricingApprove(pricingIdListFixed);
             }/** */
+            if(!platformFeeIdList.isEmpty()){
+                handlePlatformFeeApprove(platformFeeIdList);
+            }
             return 'success';
        } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -227,11 +237,20 @@ public with sharing class Pricing_CheckerViewCompController {
         obj.processTheRequest();
     }/** */
 
+    /** Future method to process the Platform Fee for approve */
+    @future(callout=true)
+    public static void handlePlatformFeeApprove(List<String> platformFeeIdList){
+        Set<String> platformFeeIds = new Set<String>(platformFeeIdList);
+        List<Platform_Fee__c> listPlatformFee = [SELECT OpportunityId__c FROM Platform_Fee__c WHERE Id IN :platformFeeIds];
+        pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Platform_Fee__c',true, 'approve' ,platformFeeIds, false,listPlatformFee[0].OpportunityId__c);
+        obj.processTheRequest();
+    }/** */
+
     /** Method to reject the request for TDR/Conv & Fixed pricing 
      * Calling from Reject button in UI
     */
     @AuraEnabled
-    public static string handleRejectPricing(List<String> pricingIdList,String rejectionReason,List<String> pricingIdListFixed){
+    public static string handleRejectPricing(List<String> pricingIdList,String rejectionReason,List<String> pricingIdListFixed, List<String> platformFeeIdList){
         try {
             /** For TDR/Conv pricing */
             if(!pricingIdList.isEmpty()){
@@ -267,6 +286,23 @@ public with sharing class Pricing_CheckerViewCompController {
                     handleFixedPricingReject(pricingIdListFixed);
                 }
             }/** */
+
+            /** For Platform Fee */
+            if(!platformFeeIdList.isEmpty()){
+                Set<String> platformFeeIds = new Set<String>(platformFeeIdList);
+                List<Platform_Fee__c> platformFeeListToUpdate = new List<Platform_Fee__c>();
+                for(String platformId : platformFeeIds){
+                    Platform_Fee__c platform = new Platform_Fee__c();
+                    platform.Id = platformId;
+                    platform.Rejection_Reason__c = rejectionReason;
+                    platformFeeListToUpdate.add(platform);
+                }
+                
+                if(!platformFeeListToUpdate.isEmpty()){
+                    update platformFeeListToUpdate;
+                    handlePlatformFeeReject(platformFeeIdList);
+                }
+            }/** */
             return 'success';
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -279,6 +315,15 @@ public with sharing class Pricing_CheckerViewCompController {
         Set<String> pricingIdsFixed = new Set<String>(pricingIdListFixed);
         List<Fixed_Pricing1__c> listFixedPricing = [SELECT OpportunityId__c FROM Fixed_Pricing1__c WHERE Id IN :pricingIdsFixed];
         pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Fixed_Pricing1__c',true, 'reject' ,pricingIdsFixed, false, listFixedPricing[0].OpportunityId__c);
+        obj.processTheRequest();
+    }/** */
+
+    /** Future method to process the Platform Fee for reject */
+    @future(callout=true)
+    public static void handlePlatformFeeReject(List<String> platformFeeIdList){
+        Set<String> platformFeeIds = new Set<String>(platformFeeIdList);
+        List<Platform_Fee__c> listPlatformFee = [SELECT OpportunityId__c FROM Platform_Fee__c WHERE Id IN :platformFeeIds];
+        pricing_PublishOtherPricingToTreasury obj = new Pricing_PublishOtherPricingToTreasury('Platform_Fee__c',true, 'reject' ,platformFeeIds, false, listPlatformFee[0].OpportunityId__c);
         obj.processTheRequest();
     }/** */
 

@@ -234,7 +234,7 @@
                 <table id="Table1451223">
                     <thead class="thMainRow">
                             
-                        </thead>
+                    </thead>
                     <tbody class="secondScreenTableCls">
                             <tr>
                                 <td class="firstTdCls">
@@ -248,7 +248,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>      
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -262,7 +262,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>      
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -275,7 +275,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>   
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -288,7 +288,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>   
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -302,7 +302,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>   
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
                                 
                                 
@@ -312,18 +312,77 @@
                     </tbody>
                 </table><br/>
                 
-                <table id="Table1451213211" style="width:30%;">
+                <table id="Table1451213211" > <!-- style="width:30%;" -->
                     <thead class="thMainRow">
                         <tr>
-                        <th class="varientThree">Amount</th>
-                        <th class="varientThree">Flat Fee</th>
-                        <th class="varientThree">Percentage</th>
-                        <th class="varientThree">Status</th>
-                    </tr>
+                            <!-- Added for Platform Fee maker checker : UI changes -->
+                            <th class="varientThree">Fee Type</th>
+                            <th class="varientThree">Debit Model</th>
+                            <th class="varientThree">Start Date</th>
+                            <th class="varientThree">End Date</th>
+                            <th class="varientThree">Frequency</th>
+                            <!-- -->
+
+                            <th class="varientThree">Amount</th>
+                            <th class="varientThree">Flat Fee</th>
+                            <th class="varientThree">Percentage</th>
+                            <!-- Added for Platform Fee maker checker -->
+                            <th class="varientThree">Status</th>
+                            <!-- -->
+                        </tr>
                     </thead>
                     <tbody class="secondScreenTableCls">
                         <template for:each={listPlatformFee} for:item="pf" for:index="indx">
                             <tr key={pf.Id} style={pf.backgroundColor}>
+                                <!-- Added for Platform Fee maker checker : UI changes -->
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox value={pf.feeType}
+                                                                    options={availableType}
+                                                                    onchange={handleChangeType}
+                                                                    class="slds-p-right_small" 
+                                                                    disabled={hidePublishCommercialButton}
+                                                                    data-id={indx}></lightning-combobox>
+                                                <!-- <lightning-input type="number" value={pf.feeType} data-id={indx} step="0.001" onchange={handlePlatformFeeFlatFee} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Flat Fee"></lightning-input>        -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-combobox value={pf.debitModel} 
+                                                        options={availableDebitModel} 
+                                                        onchange={handleChangeDebitModel}
+                                                        class="slds-p-right_small" 
+                                                        disabled={hidePublishCommercialButton}
+                                                        data-id={indx}></lightning-combobox>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-input type="date" 
+                                                     value={pf.startDate}
+                                                     onchange={handleChangeStartDate}
+                                                     class="slds-p-right_small" 
+                                                     disabled={hidePublishCommercialButton}
+                                                     data-id={indx}></lightning-input>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-input type="date" 
+                                                     value={pf.endDate}
+                                                     onchange={handleChangeEndDate}
+                                                     class="slds-p-right_small" 
+                                                     disabled={hidePublishCommercialButton}
+                                                     data-id={indx}></lightning-input>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-combobox value={pf.frequency}
+                                                        options={availableInterval}
+                                                        onchange={handleChangeInterval}
+                                                        class="slds-p-right_small" 
+                                                        disabled={hidePublishCommercialButton}
+                                                        data-id={indx}></lightning-combobox>
+                                </td>
+                                <!-- -->
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -340,7 +399,7 @@
                                             
                                         </div>
                                     </div>
-                                    </td>
+                                </td>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -349,7 +408,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    </td>
+                                </td>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">

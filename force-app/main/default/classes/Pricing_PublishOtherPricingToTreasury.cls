@@ -29,6 +29,9 @@ public class Pricing_PublishOtherPricingToTreasury {
         this.isDeleteRequest = isDeleteRequest;
     }/** */
 
+    /** @Constructor 
+     * calling from checker screen 'Pricing_CheckerViewCompController' 
+     */
     public Pricing_PublishOtherPricingToTreasury(String objectAPIName, Boolean checker, String action, Set<String> pricingIds, Boolean isDeleteRequest,String oppId){
         this.objectAPIName = objectAPIName;
         this.checker = checker;
@@ -251,7 +254,7 @@ public class Pricing_PublishOtherPricingToTreasury {
         pricingRecordDetails.revenueModel = 'Platform fees';//mapFeeTypeToRM.get(platformFee.Type__c);
 
         pricingRecordDetails.debitModel = platformFee.Debit_Model__c;
-        pricingRecordDetails.amountSlab = platformFee.Amount__c;
+        //pricingRecordDetails.amountSlab = platformFee.Amount__c;
         if(String.isNotBlank(platformFee.Valid_From__c)){
             pricingRecordDetails.validFrom = platformFee.Valid_From__c;
         }else if(platformFee.Start_Date__c != NULL){
@@ -272,7 +275,7 @@ public class Pricing_PublishOtherPricingToTreasury {
         pricingRecordDetails.tillTime = platformFee.Till_Time__c != NULL ? Integer.valueOf(platformFee.Till_Time__c) : NULL;
         pricingRecordDetails.dayOfWeek = platformFee.Day_of_Week__c ?? NULL;
         pricingRecordDetails.frequency = platformFee.Interval__c ?? NULL;
-        pricingRecordDetails.aggregationRequired = platformFee.Aggregation_Required__c;
+        pricingRecordDetails.aggregationRequired = String.isNotBlank(platformFee.Interval__c) ? true : false;
         pricingRecordDetails.percentFee = platformFee.Percentage__c;
         pricingRecordDetails.flatFee = platformFee.Flat_Fee__c;
         pricingRecordDetails.maxCapTdrCharge = platformFee.Max_Cap_TDR_Charge__c ?? NULL;
@@ -304,7 +307,15 @@ public class Pricing_PublishOtherPricingToTreasury {
         pricingRecordDetails.bearerOfCharges = platformFee.Bearer_of_Charges__c ?? NULL;
         pricingRecordDetails.versionNumber = platformFee.Version_Number__c != NULL ? Integer.valueOf(platformFee.Version_Number__c) : NULL;
         pricingRecordDetails.source = platformFee.Source__c;
-        
+
+        String attributeKey = '';
+        if(platformFee.Type__c == 'GMV'){
+            attributeKey = 'gmvSlab';
+            
+        }else if(platformFee.Type__c == 'Transaction Count'){
+            attributeKey = 'countSlab';
+        }
+        pricingRecordDetails.attributes.add(new Attributes(attributeKey,platformFee.Amount__c));
         
         return pricingRecordDetails;
     }
@@ -357,16 +368,16 @@ public class Pricing_PublishOtherPricingToTreasury {
         public Integer versionNumber;                                    
         public String source = '';                            
         public String requestedBy = 'Salesforce';    
-        //public List<Attributes> attributes = new List<Attributes>();       
+        public List<Attributes> attributes = new List<Attributes>();       
     } 
 
-    /* public class Attributes {
+    public class Attributes {
         public String pricingRuleKey = '';
-        public String pricingRuleValue = '';
+        public Decimal pricingRuleValue = 0;
 
-        public Attributes(String pricingRuleKey,String pricingRuleValue){
+        public Attributes(String pricingRuleKey,Decimal pricingRuleValue){
             this.pricingRuleKey = pricingRuleKey;
             this.pricingRuleValue = pricingRuleValue;
         }
-    } */
+    }
 }

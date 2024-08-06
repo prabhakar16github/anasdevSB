@@ -131,6 +131,7 @@
                     <table class="slds-table slds-table_bordered slds-table_col-bordered">
                         <thead>
                                 <tr>
+                                    <th><lightning-input checked={selectAllDataPlatform} type="checkbox" onchange={handleSelectAllDataPlatform}></lightning-input></th>
                                     <th>Fee Type</th>
                                     <th>Debit Model</th>
                                     <th>Start Date</th>
@@ -139,11 +140,13 @@
                                     <th>Amount</th>
                                     <th>Flat Fee</th>
                                     <th>Percentage</th>
+                                    <th>Request Type</th>
                                 </tr>
                             </thead>
                         <tbody>
                             <template for:each={platformFeeDetail.listPlatformPricing} for:item="platformFee" for:index="indx">
                                 <tr key={platformFee.recordId}>
+                                    <td><lightning-input type="checkbox" checked = {platformFee.isChecked} onchange={handleIsCheckedPlatform} data-id={platformFee.recordId}></lightning-input></td>
                                     <td>{platformFee.feeType}</td>
                                     <td>{platformFee.debitModel}</td>
                                     <td>{platformFee.startDate}</td>
@@ -152,6 +155,7 @@
                                     <td>{platformFee.amount}</td>
                                     <td>{platformFee.flatFee}</td>
                                     <td>{platformFee.percentage}</td>
+                                    <td>{platformFee.requestType}</td>
                                 </tr>      
                             </template>
                         </tbody>

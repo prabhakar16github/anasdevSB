@@ -384,10 +384,18 @@ public class PricingModuleComponentController {
                     for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c,Status__c,Rejection_Reason__c,Temp_Id__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                         PlatformFee pfObj = new PlatformFee();
                         pfObj.Id = pf.Id;
+                        /** Added for Platform Fee Maker-Checker : UI changes */
+                        pfObj.feeType = pf.Type__c != NULL ? String.valueOf(pf.Type__c) : '';
+                        pfObj.debitModel = pf.Debit_Model__c != NULL ? String.valueOf(pf.Debit_Model__c) : '';
+                        pfObj.startDate = pf.Start_Date__c;
+                        pfObj.endDate = pf.End_Date__c;
+                        pfObj.frequency = pf.Interval__c != NULL ? pf.Interval__c : '';
+                        /** */
                         pfObj.amount = pf.Amount__c != NULL ? String.valueOf(pf.Amount__c) : '';
                         pfObj.flatFee = pf.Flat_Fee__c != NULL ? String.valueOf(pf.Flat_Fee__c) : '';
                         pfObj.percentage = pf.Percentage__c != NULL ? String.valueOf(pf.Percentage__c) : '';
                         
+
                         /** Added for Platform Fee Maker-Checker. */
                         pfObj.status = pf.Status__c;
                         if(String.isNotBlank(pfObj.status)){
@@ -415,11 +423,11 @@ public class PricingModuleComponentController {
                         }
                         /** */
                         
-                        wrpClsPaymentData.selectedType = pf.Type__c;
+                        /* wrpClsPaymentData.selectedType = pf.Type__c;
                         wrpClsPaymentData.selectedInterval= pf.Interval__c;
                         wrpClsPaymentData.selectedStartDate = pf.Start_Date__c;
                         wrpClsPaymentData.selectedEndDate = pf.End_Date__c;
-                        wrpClsPaymentData.selectedDebitModel = pf.Debit_Model__c;
+                        wrpClsPaymentData.selectedDebitModel = pf.Debit_Model__c; */
                         if(count == 1) pfObj.disabledAmount = true;
                         count++;
                         listPlatformFee.add(pfObj);    
@@ -525,6 +533,8 @@ public class PricingModuleComponentController {
                     List<Commercial2__c> commList  = new   List<Commercial2__c>();
                     List<Fixed_Pricing1__c> fixedPricingList = new  List<Fixed_Pricing1__c>();
                     Map<String,String> mapOfTresuryFixedPricing = new Map<String,String>();
+                    Set<String> mapOfTresuryPricing = new Set<String>();
+                    Map<String,Pricing__c> mapOfExistingPricingData = new Map<String,Pricing__c>();
                     commList = [SELECT Id,Opportunity__r.Prod_MID__c,
                                 (
                                     SELECT Id,Amount__c,Debit_Model__c,End_Date__c,Fee_Type__c,
@@ -537,7 +547,7 @@ public class PricingModuleComponentController {
                                     WHERE Deleted__c = false AND Rule_Id__c != NULL AND Status__c != NULL
                                 )
                                 FROM Commercial2__c WHERE Id=:commercialId LIMIT 1];
-                    GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(commList[0].Opportunity__r.Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC');
+                    GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(commList[0].Opportunity__r.Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC,TDR Plus Conv Fee');
                     if(!tranformData.fixedWrapperList.isEmpty() || !tranformData.platformWrapperList.isEmpty() || !tranformData.transformedPricingWrapperPricingList.isEmpty()){
                         
                         
@@ -671,7 +681,6 @@ get the data nad insert other wise updating the existing recrods*******/
                         /** */
                         /************/
                         if(!tranformData.transformedPricingWrapperPricingList.isEmpty()){
-                            Map<String,Pricing__c> mapOfExistingPricingData = new Map<String,Pricing__c>();
                             for(Pricing__c pricingRecord : [SELECT Id,Payment_Mode__c,Payment_Option2__c,Payment_Option2__r.Name,Pricing_Specification__c,
                                                             Payment_Gateway2__c,ONUS__c,Pricing_Specification__r.Name,Payment_Gateway2__r.Name,
                                                             Fee_Model__c,Transaction_Type__c,TDR__c,TDR_Amount__c,TDR_Flat_Fee__c,Convenience__c,
@@ -683,14 +692,14 @@ get the data nad insert other wise updating the existing recrods*******/
                                                                                                                                                        mapOfExistingPricingData.put(pricingRecord.Rule_Id__c,pricingRecord);
                                                                                                                                                    if(pricingRecord.Rule_Id_Conv__c != NULL)
                                                                                                                                                        mapOfExistingPricingData.put(pricingRecord.Rule_Id_Conv__c,pricingRecord);
+                                                                                                                                      
                                                                                                                                                }
-                            
                             
                             for(GetApiTreasuryDataController.transformedPricingWrapper tranformDataTreasury : tranformData.transformedPricingWrapperPricingList){
                                 if(mapOfExistingPricingData.containsKey(tranformDataTreasury.pricingRuleConfigId)){
                                     Pricing__c pricingExist  = mapOfExistingPricingData.get(tranformDataTreasury.pricingRuleConfigId);
                                     if(pricingExist !=NULL){
-                                        if(tranformDataTreasury.revenueModel == 'TDR'){
+                                        if(tranformDataTreasury.revenueModel == 'TDR' || tranformDataTreasury.revenueModel =='TDR Plus Conv Fee'){
                                             pricingExist.TDR_Flat_Fee__c  = tranformDataTreasury.tdrFlatFee !=null ? tranformDataTreasury.tdrFlatFee : null;
                                             pricingExist.TDR_Amount__c = tranformDataTreasury.tdrAmount !=null ?  tranformDataTreasury.tdrAmount :null;
                                             pricingExist.TDR__c   = tranformDataTreasury.tdrPercentFee !=null ? tranformDataTreasury.tdrPercentFee : null;
@@ -728,23 +737,28 @@ get the data nad insert other wise updating the existing recrods*******/
                                                 if(tranformDataTreasury.revenueModel == 'TDR') pricingExist.Temp_Id_TDR__c = '';
                                                 else pricingExist.Temp_Id_Conv__c = null;
                                                 mapOfpricingToUPdate.put(pricingExist.Id,pricingExist);
+                                                System.debug('mapOfpricingToUPdate::::'+mapOfpricingToUPdate);
                                             }
                                     else if(String.isNotBlank(pricingExist.Banking_Ops_Status__c) &&  (pricingExist.Rule_Id__c !=NULL || pricingExist.Rule_Id_Conv__c !=NULL)
                                             && pricingExist.Banking_Ops_Status__c == 'Error(Override Required)'){
                                                 pricingExist.Banking_Ops_Status__c = 'Checker Approved';
                                                 pricingExist.Version_Number__c  = Decimal.valueOf(tranformDataTreasury.versionNumber);
-                                                if(tranformDataTreasury.revenueModel == 'TDR') pricingExist.Temp_Id_TDR__c = '';
+                                                if(tranformDataTreasury.revenueModel == 'TDR' || tranformDataTreasury.revenueModel == 'TDR + Convenience') pricingExist.Temp_Id_TDR__c = '';
                                                 else pricingExist.Temp_Id_Conv__c = null;
                                                 mapOfpricingToUPdate.put(pricingExist.Id,pricingExist); 
                                             }
+                                    mapOfTresuryPricing.add(tranformDataTreasury.ruleId);
                                 }
                                 else{
                                     Pricing__c pricingExist = new Pricing__c();
-                                    if(tranformDataTreasury.revenueModel == 'TDR'){
+                                    if(tranformDataTreasury.revenueModel == 'TDR' || tranformDataTreasury.revenueModel =='TDR Plus Conv Fee'){
                                         pricingExist.TDR_Flat_Fee__c  = tranformDataTreasury.tdrFlatFee !=null ? tranformDataTreasury.tdrFlatFee : null;
                                         pricingExist.TDR_Amount__c = tranformDataTreasury.tdrAmount !=null ?  tranformDataTreasury.tdrAmount :null;
                                         pricingExist.TDR__c   =tranformDataTreasury.tdrPercentFee !=null ? tranformDataTreasury.tdrPercentFee : null;
-                                        pricingExist.Transaction_Type__c = 'TDR';
+                                        if(tranformDataTreasury.revenueModel =='TDR Plus Conv Fee')
+                                            pricingExist.Transaction_Type__c = 'TDR + Convenience';
+                                        else
+                                            pricingExist.Transaction_Type__c = 'TDR';
                                         pricingExist.Rule_Id__c = tranformDataTreasury.ruleId;
                                     }
                                     if(tranformDataTreasury.revenueModel == 'Conv Fee'){
@@ -804,6 +818,44 @@ get the data nad insert other wise updating the existing recrods*******/
                             Insert att;
                         }
                     }
+                     /*******This if condition will execute incase of existing fixed pricing and the records we are getting from the treasury will be not equal means 
+suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
+                    Map<String,Pricing__c> deleteExisitingPricing = new  Map<String,Pricing__c>();
+                    if(tranformData.transformedPricingWrapperPricingList.size() != mapOfExistingPricingData.size()){
+                        for(String  ruleIdVar : mapOfExistingPricingData.Keyset()){
+                            if(!mapOfTresuryPricing.contains(ruleIdVar)){
+                                Pricing__c existingPricingRecord  = mapOfExistingPricingData.get(ruleIdVar);
+                                if(existingPricingRecord.Transaction_Type__c=='TDR + Convenience'){
+                                    if(existingPricingRecord.Rule_Id_Conv__c == ruleIdVar ){
+                                        existingPricingRecord.Convenience__c = null;
+                                        existingPricingRecord.Convenience_Amount__c = null;
+                                        existingPricingRecord.Convenience_Flat_Fee__c = null;
+                                        existingPricingRecord.Rule_Id_Conv__c = null;
+                                    }
+                                    else if(existingPricingRecord.Rule_Id__c == ruleIdVar){
+                                        existingPricingRecord.TDR__c = null;
+                                        existingPricingRecord.TDR_Amount__c = null;
+                                        existingPricingRecord.Rule_Id__c = null;
+                                        existingPricingRecord.TDR_Flat_Fee__c = null; 
+                                    }
+                                    if(existingPricingRecord.Rule_Id__c == Null && existingPricingRecord.Rule_Id_Conv__c == Null){
+                                        existingPricingRecord.Deleted__c = true;
+                                    }
+                                }
+                                else{
+                                    existingPricingRecord.Deleted__c = true;
+                                    existingPricingRecord.Rule_Id__c = null;
+                                    existingPricingRecord.Rule_Id_Conv__c = null;
+                                }
+                                deleteExisitingPricing.put(ruleIdVar,existingPricingRecord );
+                            }
+                        }
+                    }
+                    if(deleteExisitingPricing !=null && deleteExisitingPricing.size()>0){
+                        update deleteExisitingPricing.values();
+                    }
+                    /**************END ************************/
+                    
                     /*******This if condition will execute incase of existing fixed pricing and the records we are getting from the treasury will be not equal means 
 suppose if any of these fixed pricing is deleted from treasury side then below code will get executed*******/
                     if(tranformData.fixedWrapperList.size() != commList[0].Fixed_Pricings__r.size()){
@@ -1017,10 +1069,10 @@ suppose if any of these fixed pricing is deleted from treasury side then below c
                     isValidForOverride = true;
                 }
                 if(isValidForOverride){
-                    platformFee.Type__c = platformData.feeType;
+                    
                     platformFee.Debit_Model__c = platformData.debitModel;
                     platformFee.Interval__c  = platformData.paymentFrequency ?? NULL;
-                    platformFee.Amount__c  = platformData.amountSlab ?? NULL;
+                    
                     platformFee.Published__c = true;
                     platformFee.Source__c = platformData.source ?? NULL;
                     platformFee.Flat_Fee__c = platformData.flatfee ?? NULL;
@@ -1048,6 +1100,8 @@ suppose if any of these fixed pricing is deleted from treasury side then below c
                     platformFee.Aggregated_Revenue__c = platformData.aggregatedRevenue ?? NULL;
                     platformFee.Count_Slab_Value__c = platformData.countSlabValue ?? NULL;
                     platformFee.Bearer_of_Charges__c = platformData.bearerOfCharges ?? NULL;
+                    platformFee.Type__c = platformData.feeType;
+                    platformFee.Amount__c  = platformData.amountSlab;
                     
                     platformFeeList.add(platformFee);
                 }
@@ -1424,6 +1478,15 @@ suppose if any of these fixed pricing is deleted from treasury side then below c
             for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c,Status__c,Rejection_Reason__c,Temp_Id__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                 PlatformFee pfObj = new PlatformFee();
                 pfObj.Id = pf.Id;
+
+                /** Added for Platform Fee Maker-Checker : UI changes */
+                pfObj.feeType = pf.Type__c != NULL ? String.valueOf(pf.Type__c) : '';
+                pfObj.debitModel = pf.Debit_Model__c != NULL ? String.valueOf(pf.Debit_Model__c) : '';
+                pfObj.startDate = pf.Start_Date__c;
+                pfObj.endDate = pf.End_Date__c;
+                pfObj.frequency = pf.Interval__c != NULL ? pf.Interval__c : '';
+                /** */
+                
                 pfObj.amount = pf.Amount__c != NULL ? String.valueOf(pf.Amount__c) : '';
                 pfObj.flatFee = pf.Flat_Fee__c != NULL ? String.valueOf(pf.Flat_Fee__c) : '';
                 pfObj.percentage = pf.Percentage__c != NULL ? String.valueOf(pf.Percentage__c) : '';
@@ -1456,11 +1519,11 @@ suppose if any of these fixed pricing is deleted from treasury side then below c
                 }
                 /** */
                 
-                wrpCls.selectedType = pf.Type__c;
+                /* wrpCls.selectedType = pf.Type__c;
                 wrpCls.selectedInterval= pf.Interval__c;
                 wrpCls.selectedStartDate = pf.Start_Date__c;
                 wrpCls.selectedEndDate = pf.End_Date__c;
-                wrpCls.selectedDebitModel = pf.Debit_Model__c;
+                wrpCls.selectedDebitModel = pf.Debit_Model__c; */
                 if(count1 == 1) pfObj.disabledAmount = true;
                 count1++;
                 listPlatformFee.add(pfObj);    
@@ -1884,7 +1947,7 @@ we need to create  commercial in SF side
 ********/
             List<Opportunity> oppList= [SELECT Id,Prod_MID__c,(SELECT Id FROM Commercial2__r) FROM Opportunity WHERE  Id=:recordId LIMIT 1 ];
             if(oppList[0].Commercial2__r.isEmpty() && oppList[0].Commercial2__r.size()==0){
-                GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(oppList[0].Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC');
+                GetApiTreasuryDataController.PricingWrapper tranformData = GetApiTreasuryDataController.processTreasuryData(oppList[0].Prod_MID__c,'TDR,Conv Fee,Platform fees,SETUP_FEE,AFFORDABILITY_VAS_FEE,AMC,TDR Plus Conv Fee');
                 if((tranformData.transformedPricingWrapperPricingList !=NULL && tranformData.transformedPricingWrapperPricingList.size()>0) || 
                    (tranformData.fixedWrapperList !=NULL && tranformData.fixedWrapperList.size()>0)  ||  (tranformData.platformWrapperList !=NULL && tranformData.platformWrapperList.size()>0)){
                        Commercial2__c  comm = new Commercial2__c ();
@@ -2112,6 +2175,13 @@ we need to create  commercial in SF side
                 for(Platform_Fee__c pf : [SELECT Id,Amount__c,Flat_Fee__c,Percentage__c,Type__c,Interval__c,Start_Date__c,End_Date__c,Debit_Model__c,Status__c,Rejection_Reason__c,Temp_Id__c FROM Platform_Fee__c WHERE Commercial__c = :commercialId AND Deleted__c = false ORDER BY Amount__c]) {
                     PlatformFee pfObj = new PlatformFee();
                     pfObj.Id = pf.Id;
+                    /** Added for Platform Fee checker maker : UI changes */
+                    pfObj.feeType = pf.Type__c ?? '';
+                    pfObj.debitModel = pf.Debit_Model__c ?? '';
+                    pfObj.startDate = pf.Start_Date__c;
+                    pfObj.endDate = pf.End_Date__c;
+                    pfObj.frequency = pf.Interval__c ?? '';
+                    /** */
                     pfObj.amount = pf.Amount__c != NULL ? String.valueOf(pf.Amount__c) : '';
                     pfObj.flatFee = pf.Flat_Fee__c != NULL ? String.valueOf(pf.Flat_Fee__c) : '';
                     pfObj.percentage = pf.Percentage__c != NULL ? String.valueOf(pf.Percentage__c) : '';
@@ -2141,11 +2211,11 @@ we need to create  commercial in SF side
                         }
                     }
                     /** */
-                    pricingWrapper.selectedType = pf.Type__c;
+                    /* pricingWrapper.selectedType = pf.Type__c;
                     pricingWrapper.selectedInterval= pf.Interval__c;
                     pricingWrapper.selectedStartDate = pf.Start_Date__c;
                     pricingWrapper.selectedEndDate = pf.End_Date__c;
-                    pricingWrapper.selectedDebitModel = pf.Debit_Model__c;
+                    pricingWrapper.selectedDebitModel = pf.Debit_Model__c; */
                     if(count == 1) pfObj.disabledAmount = true;
                     count++;
                     listPlatformFee.add(pfObj);    
@@ -2813,14 +2883,22 @@ we need to create  commercial in SF side
                                                                                     Platform_Fee__c pf = new Platform_Fee__c();
                                                                                     pf.Id = pfObj.Id;
                                                                                     pf.Commercial__c = commercialId;
-                                                                                    pf.Type__c = String.isNotBlank(selectedType) ? selectedType : null;
+                                                                                    /** Added for Platform Fee checker maker : UI changes */
+                                                                                    pf.Type__c = pfObj.feeType;
+                                                                                    pf.Debit_Model__c = pfObj.debitModel;
+                                                                                    pf.Start_Date__c = pfObj.startDate;
+                                                                                    pf.End_Date__c = pfObj.endDate;
+                                                                                    pf.Interval__c = pfObj.frequency;
+                                                                                    /** */
+                                                                                    /* pf.Type__c = String.isNotBlank(selectedType) ? selectedType : null;
                                                                                     pf.Interval__c = String.isNotBlank(selectedInterval) ? selectedInterval : null;
                                                                                     pf.Debit_Model__c = String.isNotBlank(selectedDebitModel) ? selectedDebitModel : null;
                                                                                     pf.Start_Date__c = String.isNotBlank(selectedStartDate) ? Date.valueOf(selectedStartDate) : null;
-                                                                                    pf.End_Date__c = String.isNotBlank(selectedEndDate) ? Date.valueOf(selectedEndDate) : null;
+                                                                                    pf.End_Date__c = String.isNotBlank(selectedEndDate) ? Date.valueOf(selectedEndDate) : null; */
                                                                                     pf.Amount__c = String.isNotBlank(pfObj.amount) ? Decimal.valueOf(pfObj.amount) : null;
                                                                                     pf.Flat_Fee__c = String.isNotBlank(pfObj.flatFee) ? Decimal.valueOf(pfObj.flatFee) : null;
                                                                                     pf.Percentage__c = String.isNotBlank(pfObj.percentage) ? Decimal.valueOf(pfObj.percentage) : null;
+
                                                                                     if(pf.Debit_Model__c != pfExisting.Debit_Model__c || pf.Type__c != pfExisting.Type__c ||
                                                                                        pf.Interval__c != pfExisting.Interval__c || pf.Start_Date__c != pfExisting.Start_Date__c ||
                                                                                        pf.End_Date__c != pfExisting.End_Date__c || pf.Amount__c != pfExisting.Amount__c ||
@@ -2846,12 +2924,19 @@ we need to create  commercial in SF side
                                                                                     pf.Added_By__c = UserInfo.getName();
                                                                                     pf.Status__c = 'Approved (Awaiting Publishing)';
                                                                                     /** */
-                                                                                    
-                                                                                    if(String.isNotBlank(selectedType)) pf.Type__c = selectedType;
+
+                                                                                    /** Added for Platform Fee maker checker : UI changes */
+                                                                                    pf.Type__c = pfObj.feeType ?? '';
+                                                                                    pf.Debit_Model__c = pfObj.debitModel ?? '';
+                                                                                    pf.Start_Date__c = pfobj.startDate ?? NULL;
+                                                                                    pf.End_Date__c = pfObj.endDate ?? NULL;
+                                                                                    pf.Interval__c = pfObj.frequency ?? '';
+                                                                                    /** */
+                                                                                    /* if(String.isNotBlank(selectedType)) pf.Type__c = selectedType;
                                                                                     if(String.isNotBlank(selectedInterval)) pf.Interval__c = selectedInterval;
                                                                                     if(String.isNotBlank(selectedDebitModel)) pf.Debit_Model__c = selectedDebitModel;
                                                                                     if(String.isNotBlank(selectedStartDate)) pf.Start_Date__c = Date.valueOf(selectedStartDate);
-                                                                                    if(String.isNotBlank(selectedEndDate)) pf.End_Date__c = Date.valueOf(selectedEndDate);
+                                                                                    if(String.isNotBlank(selectedEndDate)) pf.End_Date__c = Date.valueOf(selectedEndDate); */
                                                                                     if(String.isNotBlank(pfObj.amount)) pf.Amount__c = Decimal.valueOf(pfObj.amount);
                                                                                     if(String.isNotBlank(pfObj.flatFee)) pf.Flat_Fee__c = Decimal.valueOf(pfObj.flatFee);
                                                                                     if(String.isNotBlank(pfObj.percentage)) pf.Percentage__c = Decimal.valueOf(pfObj.percentage);
@@ -2982,9 +3067,18 @@ callTreasuryToDeleteRecords(ruleids,commercialId,opportunityId);
     //Platform Fee Class
     public class PlatformFee {
         public String Id;
+        /** Added for Platform Fee checker maker : UI changes */
+        public String feeType;
+        public String debitModel;
+        public Date startDate;
+        public Date endDate;
+        public String frequency;
+        /** */
         public String amount;
         public String flatFee;
         public String percentage;
+
+
         public Boolean showRemoveButton = false;
         public Boolean disabledAmount = false;
         public String backgroundColor = 'background-color:white;';

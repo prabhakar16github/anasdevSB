@@ -24,11 +24,14 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
     }
     disableButton = true;
     editAllowed = true;
+
     selectedRecordIds = [];
     selectedRecordIdsFixed = [];
+    selectedRecordIdsPlatform = [];
 
     selectAllData = false;
     selectAllDataFixed = false;
+    selectAllDataPlatform = false;
 
     showButtons = false;
 
@@ -52,10 +55,11 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
                 this.fixedPricingDetail.showList = true;
                 this.showButtons = true;
             }
+            console.log('>>>>>>>'+JSON.stringify(result.listPlatformPricing));
             if(result.listPlatformPricing.length > 0){
                 this.platformFeeDetail.listPlatformPricing = result.listPlatformPricing;
                 this.platformFeeDetail.showList = true;
-
+                this.showButtons = true;
             }
             this.editAllowed = result.editAllowed;
             this.showSpinner = false;
@@ -88,7 +92,7 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         });
 
         this.pricingDetail.listPricing = tempArr;
-        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0 || this.selectedRecordIdsPlatform.length > 0) ? false : true;
     }/** END */
     
     /** Function to store all fixed pricing in a set and check all the child checkboxes in UI 
@@ -111,9 +115,32 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         });
 
         this.fixedPricingDetail.listFixedPricing = tempArr;
-        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0 || this.selectedRecordIdsPlatform.length > 0 ) ? false : true;
     }
     /** END */
+
+    /** Function to store all Platform Fee in a set and check all the child checkboxes in UI 
+    * Calling from master checkbox in Platform Fee list.
+    */
+    handleSelectAllDataPlatform(event){
+        this.selectAllDataPlatform = event.detail.checked;
+        this.selectedRecordIdsPlatform = [];
+
+        var tempArr = [];
+        this.platformFeeDetail.listPlatformPricing.forEach(item => {
+            item.isChecked = this.selectAllDataPlatform;
+            
+            if(item.isChecked){
+                this.selectedRecordIdsPlatform.push(item.recordId);
+            }else{
+                this.selectedRecordIdsPlatform = [];
+            }
+            tempArr.push(item);
+        });
+
+        this.platformFeeDetail.listPlatformPricing = tempArr;
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0 || this.selectedRecordIdsPlatform.length > 0) ? false : true;
+    }/** END */
 
     /** Function to store selected TDR/Conv pricing in a set
     * Calling from child checkboxes in TDR/Conv list.
@@ -171,6 +198,36 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0) ? false : true;
         
     }/** END */
+
+    /** Function to store selected Platform Fee in a set
+    * Calling from child checkboxes in Platform Fee list.
+    */
+    handleIsCheckedPlatform(event){
+        var isChecked = event.detail.checked;
+        var recordId = event.target.dataset.id;
+        if(isChecked){
+            this.selectedRecordIdsPlatform.push(recordId);
+        }else{
+            this.selectedRecordIdsPlatform = this.selectedRecordIdsPlatform.filter(item => {
+                return item != recordId;
+            });
+            
+        }
+
+        var tempArr = [];
+        this.platformFeeDetail.listPlatformPricing.forEach(listItem => {
+            if(listItem.recordId == recordId){
+                listItem.isChecked = isChecked;
+            }
+            tempArr.push(listItem);
+        });
+        this.platformFeeDetail.listPlatformPricing = tempArr;
+    
+        this.selectAllDataPlatform = (this.selectedRecordIdsPlatform.length == this.platformFeeDetail.listPlatformPricing.length) ? true : false;
+        
+        this.disableButton = (this.selectedRecordIds.length > 0 || this.selectedRecordIdsFixed.length > 0 || this.selectedRecordIdsPlatform.length > 0) ? false : true;
+        
+    }/** END */
     
     
     async handleApprove(event){
@@ -180,7 +237,11 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
         });
         if(result){
             this.showSpinner = true;
-            handleApprovePricing({"pricingIdList":this.selectedRecordIds , "pricingIdListFixed":this.selectedRecordIdsFixed})
+            handleApprovePricing({
+                "pricingIdList":this.selectedRecordIds ,
+                "pricingIdListFixed":this.selectedRecordIdsFixed,
+                "platformFeeIdList":this.selectedRecordIdsPlatform
+            })
             .then(result => {
                 if(result.includes('success')){
                     this.editAllowed = false
@@ -219,7 +280,8 @@ export default class Pricing_CheckerAddUpdateRequestComp extends LightningElemen
                     handleRejectPricing({
                         "pricingIdList":this.selectedRecordIds,
                         "rejectionReason" : result,
-                        "pricingIdListFixed":this.selectedRecordIdsFixed
+                        "pricingIdListFixed":this.selectedRecordIdsFixed,
+                        "platformFeeIdList":this.selectedRecordIdsPlatform
                     })
                     .then(result => {
                         if(result.includes('success')){
