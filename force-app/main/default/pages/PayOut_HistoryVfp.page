@@ -1,0 +1,111 @@
+<apex:page renderAs="pdf" standardController="Opportunity"  extensions="crossSellForMerchant_Controller" applyHtmlTag="false"     
+           sidebar="false"     
+           showHeader="false"     
+           cache="true">
+    <head>    
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />    
+        <style type="text/css">    
+            
+            @page {
+            size: A4 landscape;    
+            border: 2px solid black;    
+            padding-left: 8px;    
+            padding-right: 8px;
+            }    
+            
+            th {
+            text-align: center;    
+            font-weight: bold; 
+            }    
+            
+            
+            td { 
+            text-align: center;    
+            font-size: 14px; 
+            }    
+            
+        </style>    
+        
+    </head>    
+    
+    <center>    
+        
+        <h2>PayOut Details</h2>    
+        
+    </center><br/><br/>    
+    <div style="font-weight: bold;">
+        Merchant details for payout activation.  
+    </div><br/> 
+    <div>
+        <ul>
+            <li><span style="font-weight: bold;">Name of the Merchant :</span><span> {!oppObj.Legal_Name_Account__c}</span></li>
+            <li><span style="font-weight: bold;">Organisation Type :</span><span> {!oppObj.Business_Entity_Formula__c }</span></li>
+            <li><span style="font-weight: bold;">Merchant Line of business :</span><span> {!oppObj.Business_Category__c}</span></li>
+            <li><span style="font-weight: bold;">Merchant Website :</span><span> {!oppObj.Website__c}</span></li>
+            <li><span style="font-weight: bold;">Whether the Merchant using our PG services?  :</span><span> {!oppObj.Integration_Type__c}</span></li>
+            <li>
+                <span style="font-weight: bold;">Registered Address Details/Address Proof :</span><br/><br/>
+                <table border="1" width="99%">
+                    <tr>
+                        <th>Address </th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Country</th>    
+                        <th>Pincode</th>
+                    </tr>
+                    <tr>  
+                        <td>{!registerAddress.Address_Line__c}</td>
+                        <td>{!registerAddress.City__c}</td>
+                        <td>{!registerAddress.State__c}</td>
+                        <td>{!registerAddress.Country__c}</td>    
+                        <td>{!registerAddress.Pincode__c}</td>
+                    </tr>
+                </table><br/>
+            </li>
+            <li>
+                <span style="font-weight: bold;">Operating Address Details/Address Proof :</span><br/><br/>
+                <table border="1" width="99%">
+                    <tr>
+                        <th>Address </th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Country</th>    
+                        <th>Pincode</th>
+                    </tr>    
+                    <tr>  
+                        <td>{!operatingAddress.Address_Line__c}</td>
+                        <td>{!operatingAddress.City__c}</td>
+                        <td>{!operatingAddress.State__c}</td>
+                        <td>{!operatingAddress.Country__c}</td>    
+                        <td>{!operatingAddress.Pincode__c}</td>
+                    </tr>
+                </table><br/>
+            </li>
+            <li>
+                <span style="font-weight: bold;">Payout History :</span><br/><br/>
+                <table border="1" width="99%">
+                    <tr>
+                        <th>Date</th>
+                        <th>Field Name</th>
+                        <th>User</th>
+                        <th>Original Value</th>    
+                        <th>New Value</th>
+                    </tr>    
+                    <apex:repeat value="{!CrossSellHistoryList}" var="crossSell">
+                        <tr> 
+                            <!--<td><output type="DateTime" value="{!crossSell.CreatedDate}"></output></td>-->
+                            <td><apex:outputText value="{0,date,yyyy.MM.dd HH:mm:ss z}">
+                                <apex:param value="{!crossSell.CreatedDate}" /> 
+                                </apex:outputText></td>
+                            <td>{!crossSell.Field}</td>
+                            <td>{!crossSell.CreatedBy.Name}</td>
+                            <td>{!crossSell.OldValue}</td>
+                            <td>{!crossSell.NewValue}</td> 
+                        </tr>
+                    </apex:repeat>
+                </table><br/>
+                
+            </li>
+        </ul> 
+    </div> 
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Animeshs</h1>
+  This is your new Page: my1stPage
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

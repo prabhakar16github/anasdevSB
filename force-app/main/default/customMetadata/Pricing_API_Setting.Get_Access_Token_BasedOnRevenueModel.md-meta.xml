@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Get Access Token - BasedOnRevenueModel</label>
+    <protected>false</protected>
+    <values>
+        <field>Body__c</field>
+        <value xsi:type="xsd:string">{&quot;client_id&quot; : &quot;e44ccf6225320e6e5887f3f1d471cfec9b11152c7a18f38327344368ad3f02ec&quot;,&quot;client_secret&quot;:&quot;f611fa0063b447ec135ed8ed80d0cef8e6badf33cf98ae8c15db55bcc25a7fd0&quot;,&quot;grant_type&quot;:&quot;client_credentials&quot;,&quot;scope&quot;:&quot;get_rules&quot;}</value>
+    </values>
+    <values>
+        <field>End_Point_URL__c</field>
+        <value xsi:type="xsd:string">https://test-accounts.payu.in/oauth/token</value>
+    </values>
+    <values>
+        <field>Headers__c</field>
+        <value xsi:type="xsd:string">Content-Type:application/json</value>
+    </values>
+    <values>
+        <field>Method__c</field>
+        <value xsi:type="xsd:string">POST</value>
+    </values>
+</CustomMetadata>

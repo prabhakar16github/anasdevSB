@@ -1,0 +1,21 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false">
+    
+    <apex:includeLightning />
+    
+    <div id="lightning" />   
+    
+    <script type="text/javascript">    
+    $Lightning.use("c:PayUfeedback_App", function(){        
+        $Lightning.createComponent("c:PayUfeedback",                                   
+                                   {
+                                       "recordId" : "{!$CurrentPage.parameters.id}"
+                                   },                                   
+                                   "lightning",                                   
+                                   function(cmp){                                       
+                                       // do some stuff
+                                       
+                                   });        
+    });    
+    </script>
+    
+</apex:page>

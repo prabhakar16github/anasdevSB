@@ -32,7 +32,7 @@ declare module "@salesforce/apex/PricingModuleComponentController.getSendToBHRec
   export default function getSendToBHRecords(param: {commercialId: any}): Promise<any>;
 }
 declare module "@salesforce/apex/PricingModuleComponentController.sendToBHEmail" {
-  export default function sendToBHEmail(param: {commercialId: any, body: any, subject: any, listPricingIds: any}): Promise<any>;
+  export default function sendToBHEmail(param: {commercialId: any, body: any, subject: any, listPricingIds: any, bhAddress: any}): Promise<any>;
 }
 declare module "@salesforce/apex/PricingModuleComponentController.insertFixedPricingAndPublishCommercial" {
   export default function insertFixedPricingAndPublishCommercial(param: {commercialId: any, listFixedPricingString: any, listPlatformFee: any, listFallbackCharges: any, selectedType: any, selectedInterval: any, selectedStartDate: any, selectedEndDate: any, selectedDebitModel: any, listFixedPricing2: any}): Promise<any>;
@@ -84,4 +84,7 @@ declare module "@salesforce/apex/PricingModuleComponentController.getOverallAudi
 }
 declare module "@salesforce/apex/PricingModuleComponentController.getOverallAuditForStackTrail" {
   export default function getOverallAuditForStackTrail(param: {opportunityId: any}): Promise<any>;
+}
+declare module "@salesforce/apex/PricingModuleComponentController.getFixedPricing" {
+  export default function getFixedPricing(param: {listFixedPricing2: any}): Promise<any>;
 }

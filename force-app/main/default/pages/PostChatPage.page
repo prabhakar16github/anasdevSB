@@ -1,0 +1,8 @@
+<apex:page >
+     
+      <div>
+          We are sorry you decided to leave the chat. Feel free to initiate a new session.
+      </div>
+    
+
+</apex:page>

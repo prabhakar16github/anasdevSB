@@ -68,7 +68,8 @@ export default class GoverenceComponent extends LightningElement {
         pricingId : '',
         restrictFlatFeeAndPercentageToBeEdited : false,
         restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : false,
-        ruleStatus : 'D'
+        ruleStatus : 'D',
+        isSelectPaymentOption:false
     }
 
     connectedCallback() {

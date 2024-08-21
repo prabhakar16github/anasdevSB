@@ -1,0 +1,231 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" standardStylesheets="false" renderAs="PDF" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>MCC Addendum</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+                .center-text{align:center;}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <!--<h3 align="center"><ul>Addendum</ul></h3>-->
+                <p align="center">
+                    <STRONG>ADDENDUM</STRONG>
+                </p>
+                <p>This addendum agreement <strong>("Addendum")</strong> is made at Gurgaon on 
+                    <strong><apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> ("Effective Date")</strong> by and between:
+                </p>
+                <p><strong>{!accObj.Legal_Name__c},</strong> a company incorporated under the Companies Act, 1956 having its registered office at 
+                    <strong>
+                        <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                    </strong> (hereinafter referred to as <strong>"Merchant"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns)</p>
+                <p><strong>AND</strong></p>
+                <p><strong>PayU Payments Private Limited,</strong> a company incorporated under the Companies Act, 1956 having its registered office at 32, Viraj Building, SV Road, above HDFC Bank, Khar West, Mumbai, Maharashtra, Pin - 400052 and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin – 122002 (hereinafter referred to as <strong>"PayU",</strong> which expression shall, unless repugnant to the context thereof, include its successors-in-interest and assigns);</p>
+                <p>(PayU and the Merchant are hereinafter collectively referred to as "Parties" and individually as "Party".) </p>
+                <br/>
+                <p>WHEREAS:</p>
+                <ol type="A">
+                    <li style="line-height: 24px;">PayU has entered into an agreement dated <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> with the Merchant (hereinafter referred to as <strong>"Service Agreement"</strong>) for provision of PayU Services for the website <strong>{!oppObj.Website__c}</strong></li>
+                    <li>The Parties hereto, have mutually agreed to extend the scope of services to include the use of Multicurrency Facility and Multicurrency Option on the terms and conditions herein below.</li>
+                </ol>
+                <p style="text-align: justify;"><strong>NOW THEREFORE, IN CONSIDERATION OF THE MUTUAL COVENANTS, TERMS AND CONDITIONS AND UNDERSTANDINGS SET FORTH IN THIS ADDENDUM AND OTHER GOOD AND VALUABLE CONSIDERATION (THE RECEIPT AND ADEQUACY OF WHICH ARE HEREBY MUTUALLY ACKNOWLEDGED), THE PARTIES WITH THE INTENT TO BE LEGALLY BOUND HEREBY AGREE AS FOLLOWS:</strong></p>
+                
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td ><strong>1.</strong></td>
+                        <td><strong>DEFINITIONS </strong></td>
+                    </tr>
+                    <tr>
+                        <td>1.1</td>
+                        <td><strong>"Authorised Currencies"</strong> shall mean the currencies  detailed in Annexure A attached hereto, and any other currency which PayU may, in writing specify to the Merchant for this purpose, from time to time;</td>
+                    </tr>
+                    <tr>
+                        <td>1.2</td>
+                        <td><strong>"INR"</strong> shall mean Indian Rupees;</td>
+                    </tr>
+                    <tr>
+                        <td>1.3</td>
+                        <td><strong>"MCC Fee Letter"</strong> shall mean any letter or letters addressed by PayU to the Merchant to this Agreement between the Merchant and PayU setting out the MCC Service Fees (the current MCC Fee Letter is attached hereto as Annexure A payable by the Merchant to PayU as specified in paragraph 4.1 (Multicurrency Facility Service Fees) of this Addendum;</td>
+                    </tr>
+                    <tr>
+                        <td>1.4</td>
+                        <td><strong>"MCC Service Fees"</strong> shall have the meaning assigned to such term in paragraph 4.1 (Multicurrency Facility Service Fees) of this Addendum;</td>
+                    </tr>
+                    <tr>
+                        <td>1.5</td>
+                        <td><strong>"Merchant Payment Report"</strong> a daily written report which inter alia records the settlement date of particular transactions along with respective Merchant Service Fees and Service Tax of that transaction under this Addendum</td>
+                    </tr>
+                    <tr>
+                        <td>1.6</td>
+                        <td><strong>"Multicurrency Facility"</strong> shall mean a facility whereby Customers will be able to make payment by utilising the Services in any one of the Authorised Currencies;</td>
+                    </tr>
+                    <tr>
+                        <td>1.7</td>
+                        <td><strong>"Multicurrency Option"</strong> shall mean the option provided by the Merchant to the Customers to make payment in currencies other than INR.</td>
+                    </tr>
+                    <tr>
+                        <td ><strong>2.</strong></td>
+                        <td><strong>Scope of Work:</strong></td>
+                    </tr>
+                    <tr>
+                        <td>2.1</td>
+                        <td>In continuation to the scope of work mentioned in the said Agreement, PayU shall extend the services of Multicurrency Option with Multicurrency Facility ("hereinafter referred to as Services") and permit the Client to use the Services subject to the terms and conditions in this Agreement.</td>
+                    </tr>
+                    <tr>
+                        <td ><strong>3.</strong></td>
+                        <td><strong>ADDITIONAL REPRESENTATIONS, WARRANTIES AND COVENANTS</strong></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">3.1</td>
+                        <td>The Merchant hereby makes the following representations and warranties on the date of commencement of provision of the Multicurrency Facility by PayU and the same shall be deemed to be made by the Merchant (by reference to the facts and circumstances then existing) on each day upto the expiry or termination of the said Agreement:
+                            
+                            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">(a)</td>
+                                    <td>It has all the requisite power and authority to execute, deliver and perform its obligation under this Addendum and offer the Multicurrency Facility to the Customers</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">(b)</td>
+                                    <td>The Multicurrency Option offered/ to be offered by the Merchant is in full compliance with Applicable Law and no consent, permission or authorisation from any Governmental Authority is required by the Merchant for offering the Multicurrency Option;</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">3.2</td>
+                        <td>The Merchant hereby covenants, undertakes and acknowledges as under:
+                            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">(a)</td>
+                                    <td>The exchange rate used by PayU for all the Authorised Currencies will be the inter-bank rate as decided by the respective Banks and shared by PayU with the Merchant by issue of the Merchant Payment Report on every Business Day. The rate applicable for any transaction which is processed on any day which is not a Business Day shall be the rate which was applicable on the immediately preceding Business Day;</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">(b)</td>
+                                    <td>PayU shall, at its sole discretion, change the exchange rate for any currency at any given point of time;</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">(c)</td>
+                                    <td>The Merchant authorises PayU to hold the funds from a Card Transaction identified by PayU as being suspicious in nature and to make payment for such a Card Transaction to the Merchant after it completes investigation and comes to a conclusion that the Card Transaction is a genuine one.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">(d)</td>
+                                    <td>The Merchant acknowledges that the transactions are subject to constant exchange rate fluctuations. The Merchant shall bear all liabilities towards any dispute/chargeback raised by the Customer or any third Party and also initiate refunds if any, involving disputes in the transactions subject to exchange rate fluctuations and will perform its obligations stipulated in the said Agreement with respect to its Products/Services. PayU shall not have any liability for any losses resulting from a fluctuation in the exchange rate/ conversion rate.  </td>
+                                </tr>
+                                
+                            </table>
+                        </td>   
+                    </tr>
+                    <tr>
+                        <td ><strong>4.</strong></td>
+                        <td><strong>MULTICURRENCY FACILITY SERVICE FEES</strong></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">4.1</td>
+                        <td>In consideration of provision by PayU of the Multicurrency Facility, the Merchant shall pay to PayU the fees, charges and/or other sums stipulated in the MCC Fee Letter ("MCC Service Fees") at the times and in the manner stipulated herein in Annexure A attached hereto. PayU reserves the right to revise the MCC Service Fees from time to time, which amended MCC Service Fees shall be effective immediately.The Merchant hereby covenants, undertakes and acknowledges as under:</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">4.2</td>
+                        <td>The Merchant shall bear all applicable taxes including Indian Indirect Tax that may accrue with respect to the MCC Service Fees paid by the Merchant to PayU and/or any other amounts payable pursuant to this Addendum and pay the same as per the terms and conditions in Annexure A hereto. </td>
+                    </tr>
+                    <tr>
+                        <td ><strong>5.</strong></td>
+                        <td><strong>Term and Termination:</strong></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">5.1</td>
+                        <td>This Addendum shall form an integral part of the said Agreement and shall come into force on the Effective Date. This Addendum is co-terminus with the said Agreement and shall automatically stand terminated upon termination and/or determination and/or expiry of the said Agreement.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">5.2</td>
+                        <td>Notwithstanding anything contained anywhere in the said Agreement, this Addendum, may be terminated by any Party as per the terms of termination provided in the said Agreement. The termination of this Addendum shall not affect the rights and obligations of the Parties accrued prior to such termination.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" ><strong>6.</strong></td>
+                        <td><strong>General Terms and conditions:</strong>
+                            <p>Other than as mentioned in this Addendum, all other terms and conditions of the said Agreement shall remain the same. In the event of any inconsistency, contradiction or discrepancy (relation to services rendered herein), between: (i) this Addendum and the terms and conditions provided in the said Agreement, the terms and conditions in the said Agreement shall prevail at all times. </p></td>
+                    </tr>
+                </table>
+                <p><strong>IN WITNESS WHEREOF</strong> the Parties hereto have executed this Agreement through their Authorized Signatories on the day, month and year first herein mentioned above: </p><br/>
+                
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong><u>On Behalf of {!accObj.Legal_Name__c}</u></strong></td>
+                        <td width="50%" align="left"><strong><u>On Behalf of PayU Payments Private Limited </u></strong></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td> ______________________________</td>
+                        <td> ______________________________</td>
+                    </tr>
+                    <tr>
+                        <td>Authorized Signatory</td>
+                        <td>Authorized Signatory</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>Name:</td>
+                    </tr>
+                    <tr>
+                        <td>Designation:</td>
+                        <td>Designation:</td>
+                    </tr>
+                </table>
+                <p align="center">
+                    <STRONG><u>Annexure A</u></STRONG>
+                </p>
+                <!--<h3 align="center"><strong><u>Annexure A</u></strong></h3>-->
+                <table align="center" width="100%"  border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong>Particulars</strong></td>
+                        <td width="50%" align="center"><strong>Service Fee*</strong></td>
+                    </tr>
+                    <tr>
+                        <td>MCC</td>
+                        <td></td>
+                    </tr>
+                </table><br/>
+                <p><strong>Authorised Currencies:</strong></p>
+                <ul><li>TDR is inclusive of transaction processing charges, technology service provider (TSP) fees and/ or any other value added services provided by PayU</li></ul>
+            </div>
+        </body>
+    </html>
+</apex:page>

@@ -27,6 +27,7 @@
                             <th class="varientThree">Amount</th>
                             <th class="varientThree">Flat Fee</th>
                             <th class="varientThree">Percentage</th>
+                            <th class="varientThree">Status</th>
                             <th class="varientThree"></th>
                         </tr>
                         </thead>
@@ -42,15 +43,40 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="firstTdCls">
-                                    <div class="formCheckBoxWrap">
-                                        <div class="slds-form-element">
-                                            <div class="slds-form-element__control">
-                                                <lightning-combobox value={fixed.debitModel} options={availableDebitModelFP} data-id={indx} onchange={handleChangeDebitModelFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>       
+                                <template lwc:if={fixed.recordLock}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-combobox value={fixed.debitModel} options={availableDebitModelFP} data-id={indx} onchange={handleChangeDebitModelFP} required="true" class="validateNew slds-p-right_small" disabled></lightning-combobox>       
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                </template>
+                                <template lwc:else>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-combobox value={fixed.debitModel} options={availableDebitModelFP} data-id={indx} onchange={handleChangeDebitModelFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>       
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </template>
+                                <template lwc:if={fixed.recordLock}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="date" value={fixed.startDate} data-id={indx} onchange={handleChangeStartDateFP} required="true" class="validateNew slds-p-right_small" disabled></lightning-input>    
+                                                </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                </template>
+                                <template lwc:else>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -60,24 +86,53 @@
                                             </div>
                                         </div>
                                 </td>
-                                <td class="firstTdCls">
-                                    <div class="formCheckBoxWrap">
-                                        <div class="slds-form-element">
-                                            <div class="slds-form-element__control">
-                                                <lightning-input type="date" value={fixed.endDate} data-id={indx} onchange={handleChangeEndDateFP} class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>    
+                            </template>
+                            <template lwc:if={fixed.recordLock}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="date" value={fixed.endDate} data-id={indx} onchange={handleChangeEndDateFP} class="slds-p-right_small" disabled></lightning-input>    
+                                                </div>
+                                            </div>
+                                            </div>
+                                    </td>
+                                </template>
+                                <template lwc:else>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="date" value={fixed.endDate} data-id={indx} onchange={handleChangeEndDateFP} class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>    
+                                                </div>
                                             </div>
                                         </div>
-                                        </div>
-                                </td>
-                                <td class="firstTdCls">
-                                    <div class="formCheckBoxWrap">
-                                        <div class="slds-form-element">
-                                            <div class="slds-form-element__control">
-                                                <lightning-combobox value={fixed.paymentFrequency} options={availableIntervalFP} data-id={indx} onchange={handleChangeIntervalFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>       
+                                    </td>
+                                </template>
+
+                                <template lwc:if={fixed.recordLock}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-combobox value={fixed.paymentFrequency} options={availableIntervalFP} data-id={indx} onchange={handleChangeIntervalFP} required="true" class="validateNew slds-p-right_small" disabled></lightning-combobox>       
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                </template>
+                                <template lwc:else>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-combobox value={fixed.paymentFrequency} options={availableIntervalFP} data-id={indx} onchange={handleChangeIntervalFP} required="true" class="validateNew slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>       
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </template>
+
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -87,15 +142,29 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="firstTdCls">
-                                    <div class="formCheckBoxWrap">
-                                        <div class="slds-form-element">
-                                            <div class="slds-form-element__control">
-                                                <lightning-input type="number" value={fixed.flatFee} data-id={indx} onchange={handleChangeFlatFeeFP} step="0.001" class="validateNew slds-p-right_small" required disabled={hidePublishCommercialButton}></lightning-input>
+
+                                <template lwc:if={fixed.recordLock}>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="number" value={fixed.flatFee} data-id={indx} onchange={handleChangeFlatFeeFP} step="0.001" class="validateNew slds-p-right_small" required disabled></lightning-input>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                </template>
+                                <template lwc:else>
+                                    <td class="firstTdCls">
+                                        <div class="formCheckBoxWrap">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input type="number" value={fixed.flatFee} data-id={indx} onchange={handleChangeFlatFeeFP} step="0.001" class="validateNew slds-p-right_small" required disabled={hidePublishCommercialButton}></lightning-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </template>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -105,6 +174,23 @@
                                         </div>
                                     </div>
                                 </td>
+
+                                <!-- Added for fixed pricing maker checker-->
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <div class={fixed.className}> {fixed.status} </div>
+                                                &nbsp;&nbsp;
+                                                <template lwc:if={fixed.showRejectionReason}>
+                                                    <lightning-helptext content={fixed.rejectionReason}></lightning-helptext>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!-- -->
+
                                 <template if:false={hidePublishCommercialButton}>
                                     <td class="firstTdCls">
                                         <div class="formCheckBoxWrap">
@@ -148,7 +234,7 @@
                 <table id="Table1451223">
                     <thead class="thMainRow">
                             
-                        </thead>
+                    </thead>
                     <tbody class="secondScreenTableCls">
                             <tr>
                                 <td class="firstTdCls">
@@ -162,7 +248,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>      
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -176,7 +262,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>      
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -189,7 +275,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>   
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -202,7 +288,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-input>   
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
 
                                 <td class="firstTdCls">
@@ -216,7 +302,7 @@
                                                                 class="slds-p-right_small" disabled={hidePublishCommercialButton}></lightning-combobox>   
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 </td>
                                 
                                 
@@ -226,18 +312,77 @@
                     </tbody>
                 </table><br/>
                 
-                <table id="Table1451213211" style="width:30%;">
+                <table id="Table1451213211" > <!-- style="width:30%;" -->
                     <thead class="thMainRow">
                         <tr>
-                        <th class="varientThree">Amount</th>
-                        <th class="varientThree">Flat Fee</th>
-                        <th class="varientThree">Percentage</th>
-                        <!--<th class="varientThree"></th>-->
-                    </tr>
+                            <!-- Added for Platform Fee maker checker : UI changes -->
+                            <th class="varientThree">Fee Type</th>
+                            <th class="varientThree">Debit Model</th>
+                            <th class="varientThree">Start Date</th>
+                            <th class="varientThree">End Date</th>
+                            <th class="varientThree">Frequency</th>
+                            <!-- -->
+
+                            <th class="varientThree">Amount</th>
+                            <th class="varientThree">Flat Fee</th>
+                            <th class="varientThree">Percentage</th>
+                            <!-- Added for Platform Fee maker checker -->
+                            <th class="varientThree">Status</th>
+                            <!-- -->
+                        </tr>
                     </thead>
                     <tbody class="secondScreenTableCls">
                         <template for:each={listPlatformFee} for:item="pf" for:index="indx">
                             <tr key={pf.Id} style={pf.backgroundColor}>
+                                <!-- Added for Platform Fee maker checker : UI changes -->
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning-combobox value={pf.feeType}
+                                                                    options={availableType}
+                                                                    onchange={handleChangeType}
+                                                                    class="slds-p-right_small" 
+                                                                    disabled={hidePublishCommercialButton}
+                                                                    data-id={indx}></lightning-combobox>
+                                                <!-- <lightning-input type="number" value={pf.feeType} data-id={indx} step="0.001" onchange={handlePlatformFeeFlatFee} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Flat Fee"></lightning-input>        -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-combobox value={pf.debitModel} 
+                                                        options={availableDebitModel} 
+                                                        onchange={handleChangeDebitModel}
+                                                        class="slds-p-right_small" 
+                                                        disabled={hidePublishCommercialButton}
+                                                        data-id={indx}></lightning-combobox>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-input type="date" 
+                                                     value={pf.startDate}
+                                                     onchange={handleChangeStartDate}
+                                                     class="slds-p-right_small" 
+                                                     disabled={hidePublishCommercialButton}
+                                                     data-id={indx}></lightning-input>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-input type="date" 
+                                                     value={pf.endDate}
+                                                     onchange={handleChangeEndDate}
+                                                     class="slds-p-right_small" 
+                                                     disabled={hidePublishCommercialButton}
+                                                     data-id={indx}></lightning-input>
+                                </td>
+                                <td class="firstTdCls">
+                                    <lightning-combobox value={pf.frequency}
+                                                        options={availableInterval}
+                                                        onchange={handleChangeInterval}
+                                                        class="slds-p-right_small" 
+                                                        disabled={hidePublishCommercialButton}
+                                                        data-id={indx}></lightning-combobox>
+                                </td>
+                                <!-- -->
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -254,7 +399,7 @@
                                             
                                         </div>
                                     </div>
-                                    </td>
+                                </td>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
@@ -263,16 +408,32 @@
                                             </div>
                                         </div>
                                     </div>
-                                    </td>
+                                </td>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
                                         <div class="slds-form-element">
                                             <div class="slds-form-element__control">
                                                 <lightning-input type="number" value={pf.percentage} data-id={indx} step="0.001" onchange={handlePlatformFeePercentage} class="slds-p-right_small" disabled={hidePublishCommercialButton} placeholder="Percentage"></lightning-input>    
                                             </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Status :  Added for Platform Fee maker checker-->
+                                <td class="firstTdCls">
+                                    <div class="formCheckBoxWrap">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <div class={pf.className}> {pf.status} </div>
+                                                &nbsp;&nbsp;
+                                                <template lwc:if={pf.showRejectionReason}>
+                                                    <lightning-helptext content={pf.rejectionReason}></lightning-helptext>
+                                                </template>
                                             </div>
                                         </div>
+                                    </div>
                                 </td>
+                                <!-- -->
                                 <template if:false={hidePublishCommercialButton}>
                                 <td class="firstTdCls">
                                     <div class="formCheckBoxWrap">
@@ -438,7 +599,25 @@
                                                                 <td style="width:10%;text-align:left;">{payInner2.selectedOnusOffus}</td>
                                                                 <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.tdrAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.tdrPercentage} disabled="true"></lightning-input></div></td>
                                                                 <td style="width:15%;text-align:center;"><div class="tdrSection globalAllignment"><lightning-input type="text" value={payInner2.convenienceAmount} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.convenienceFee} disabled="true"></lightning-input>&nbsp;<lightning-input type="text" value={payInner2.conveniencePercentage} disabled="true"></lightning-input></div></td>
-                                                                <td style="width:11%;text-align:left;"><span class={payInner2.className}>{payInner2.status}</span></td>
+                                                                <td style="width:11%;text-align:left;">
+                                                                    
+                                                                    <span class={payInner2.className}>
+                                                                        {payInner2.status} 
+                                                                        <template lwc:if={payInner2.showAP}>
+                                                                            &nbsp;(Awaiting Publishing)
+                                                                        </template>
+                                                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    
+                                                                    
+                                                                        <template lwc:if={payInner2.showRejectionReason}>
+                                                                            <lightning-helptext icon-name="utility:add" content={payInner2.rejectionReason}></lightning-helptext>
+                                                                        </template>
+                                                                        <template lwc:if={payInner2.showRejectionReasonDelete}>
+                                                                            <lightning-helptext icon-name="utility:delete" content={payInner2.rejectionReasonDelete}></lightning-helptext>
+                                                                        </template>
+                                                                    
+                                                                    
+                                                                </td>
                                                                 <td style="width:10%;text-align:left;">{payInner2.gatewayType}</td>
                                                                 <td style="width:6%;text-align:left;">
                                                                     <template if:true={payInner2.showChatter}>

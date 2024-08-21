@@ -1,0 +1,316 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>        
+        <head>
+            <title>EMI Addendum</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <!--<h3  class="center-text"><u style="align:center!important;">ADDENDUM</u></h3>-->
+                <p align="center">
+                    <STRONG><u>ADDENDUM</u></STRONG>
+                </p>
+                <p>This addendum agreement
+                    <STRONG>("Agreement")</STRONG> is made at Gurgaon on <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> ("Effective Date") by and between:</p>
+                <p><strong>{!accObj.Legal_Name__c}</strong> a ({!accObj.Business_Entity__r.Name}) having its registered office at &nbsp;
+                    <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                    <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                    (hereinafter referred to as <strong>"Merchant"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns)</p>
+                <p><strong>AND</strong></p>
+                <p><strong>PayU Payments Private Limited,</strong> a company incorporated under the Companies Act, 1956 having its registered office at 32, Viraj Building, SV Road, above HDFC Bank, Khar West, Mumbai, Maharashtra, Pin - 400052 and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002 (hereinafter referred to as <strong>"PayU"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and assigns);</p>
+                <p>(PayU and the Merchant are hereinafter collectively referred to as <strong>"Parties"</strong> and individually as <strong>"Party"</strong>.) </p>
+                <p><strong>WHEREAS:</strong></p>
+                <ol type="A" style="line-height: 24px;">
+                    <li>PayU has entered into an agreement/ agreement vide an account opening form dated <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> with the Merchant (hereinafter referred to as <strong>"Service Agreement"</strong>) for provision of PayU Services for the website <strong>{!oppObj.Website__c}</strong></li>
+                    <li>PayU inter alia has also entered into agreements with various Issuing Banks and other service providers for the purpose of providing equated monthly installment (EMI) payment plan scheme to the Customers holding credit cards and making payments of Customer Charge with respect to Products purchased on the Merchant Site</li>
+                    <li>The Merchant is further desirous of offering its Customers an option to make payments of Customer Charge using EMI facility offered by various banks through PayU.</li>
+                    <li>PayU has agreed to provide solutions for processing EMI payment plan schemes of various Issuing Banks to the Merchant and the Merchant has agreed to avail the same on the terms and conditions hereinafter contained in this Agreement</li>
+                    <li>The Parties have further agreed to modify other terms and conditions of the Service Agreement as per the below mentioned term and conditions.</li>
+                </ol><br/>
+                <p style="text-align: justify;"><strong>NOW THEREFORE, IN CONSIDERATION OF THE MUTUAL COVENANTS, TERMS AND CONDITIONS AND UNDERSTANDINGS SET FORTH IN THIS AGREEMENT AND OTHER GOOD AND VALUABLE CONSIDERATION (THE RECEIPT AND ADEQUACY OF WHICH ARE HEREBY MUTUALLY ACKNOWLEDGED), THE PARTIES WITH THE INTENT TO BE LEGALLY BOUND HEREBY AGREE AS FOLLOWS:</strong></p>
+                <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td><strong>1.</strong></td>
+                        <td><strong>Definition and Interpretation</strong></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">1.1</td>
+                        <td>For the purpose of this Agreement, unless the context requires otherwise, the following terms and conditions shall have the meaning defined below. The terms capitalized and not defined under this Agreement shall have the same meaning ascribed to them under the Service Agreement.
+                            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                                <tr>
+                                    <td>(a)</td>
+                                    <td><strong>"Service Agreement"</strong> shall have the same meaning ascribed to them in Recital A.</td>
+                                </tr>
+                                <tr>
+                                    <td>(b)</td>
+                                    <td><strong>"Issuing Bank"</strong> shall mean a bank issuing a valid credit cards to its customers and which has agreed to offer EMI Facility through PayU</td>
+                                </tr>
+                                <tr>
+                                    <td>(c)</td>
+                                    <td><strong>"EMI Facility"</strong> shall mean a payment option offered to Customers holding Valid Credit Cards of the respective Issuing Bank to pay Customer Charge with respect to Products purchased on the Merchant Site using EMI. </td>
+                                </tr>
+                                <tr>
+                                    <td>(d)</td>
+                                    <td><strong>"EMI"</strong> shall mean equated monthly installments.</td>
+                                </tr>
+                                <tr>
+                                    <td>(e)</td>
+                                    <td><strong>"EMI Transaction"</strong> shall mean a Transaction wherein the Customer opts to make payment through EMI Facility using his Valid Credit Card. </td>
+                                </tr>
+                                <tr>
+                                    <td>(f)</td>
+                                    <td><strong>"Merchant Discount"</strong> shall mean any discount offered by the Merchant on purchase of a Product on the Merchant Site, upon making payment through EMI payment plan scheme of a specific Issuing Bank and such discount is approved by PayU and the Issuing Bank. </td>
+                                </tr>
+                                <tr>
+                                    <td>(g)</td>
+                                    <td><strong>"Valid Credit Card"</strong> shall mean a valid credit card issued by the respective Issuing Bank.</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><strong>2.</strong></td>
+                        <td><strong>Term</strong>
+                            <p>This Agreement shall be in force from the Effective Date and shall remain in force until terminated by either Party in accordance with the provisions of this Agreement or termination of the Service Agreement, whichever is earlier.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><strong>3.</strong></td>
+                        <td><strong>Scope</strong>
+                            <p>PayU will provide EMI Facility to the Merchant to be offered to the Customers wherein the Customers purchasing a Product on the Merchant Site and making payment of Customer Charge using a Valid Credit Card, shall be given an option to make the payment for the purchases in EMI over such period of time and on such terms and conditions as may be imposed by the respective Issuing Bank.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><strong>4.</strong></td>
+                        <td><strong>Covenants of the Parties</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">4.1</td>
+                        <td><strong>Merchant's Covenants</strong>
+                            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">a)</td>
+                                    <td>In order to avail the EMI Facility of a particular Issuing Bank under this Agreement, the Merchant must be approved by the respective Issuing Bank. The Merchant understands that the Issuing Bank may withdraw its approval at any time, without any prior intimation.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">b)</td>
+                                    <td>The Merchant shall comply with the terms and conditions as may be prescribed by the respective Issuing Bank, for provision of services under this Agreement, from time to time including but not limited to the rates at which the EMI is to be offered, the Products on which EMI is to be offered, tenure for which EMI is to be offered, the Customers to whom EMI is to be offered. The Merchant understands that the Issuing Bank may modify the terms of the EMI offering at any time. Further, the Issuing Bank may at its sole discretion choose to reject or change EMI tenure (e.g. basis Customer history, amount of transaction etc.) or withdraw any EMI scheme or make any modifications. </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">c)</td>
+                                    <td>The Merchant shall offer the EMI on the terms and conditions as may be specified by the respective Issuing Bank. The Merchant shall ensure that when the Customer opts to make payment of the Customer Charge through EMI Facility, the Customer shall agree to the terms and conditions for availing EMI Facility as may be informed by PayU to the Merchant from time to time.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">d)</td>
+                                    <td>The Merchant understands that at the time of making a transaction, if the Customer makes payment through EMI Facility, the Customer may be debited for the full amount of the Transaction initially, however, EMI will be booked later by the respective Issuing Bank. The Merchant shall maintain a record of Customer's acceptance of EMI terms &amp; conditions and other supporting documents for a period of upto 1 year after the completion of the EMI tenure agreed to by the Customer. The Merchant acknowledges that PayU or the Acquiring Banks may request the Merchant to provide EMI Transaction related documents including documents evidencing acceptance of terms and conditions by the Customer. The Merchant hereby agrees to provide the same within 2 Business Days of the same being requested, failing which, PayU may impose such penalty as may be necessary</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">e)</td>
+                                    <td>The Merchant shall deliver the Products/Services only after the Merchant receives a confirmation from PayU that EMI is approved and booked by the respective Issuing Bank. Once the EMI is booked, the Merchant shall inform the same to PayU.
+                                        <p>The Merchant understands that booking or rejection of EMI is at the sole discretion of the respective Issuing Bank or PayU. PayU or the Issuing Bank shall not be liable to the Merchant or Customer or any third party for any loss, damage arising due to cancellation or non-booking of EMI.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">f)</td>
+                                    <td>In the event of rejection of EMI by the Issuing Bank, the Merchant acknowledges that PayU will reverse the credit from the Nodal Bank Account / Merchant Bank Account for the EMI Transaction cancelled.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">g)</td>
+                                    <td>The Merchant understands that EMI Transactions once processed cannot be cancelled / reversed by the Merchant or the Customer. </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">h)</td>
+                                    <td>The Merchant shall ensure that an EMI Calculator as per the terms and conditions of the respective Issuing Bank will be available on the Merchant Site to explain the EMI calculation to the Customer and assist the Customer in taking an informed decision. The rate of interest and tenure of EMI must be clearly communicated to the Customer.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">i)</td>
+                                    <td>The Merchant understands and acknowledges that PayU and the Issuing Bank may from time to time request the Merchant to amend the EMI scheme and also the EMI terms and conditions on the Merchant Site. The Merchant hereby agrees to make such amendment within 1 (one) business day of such request.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">j)</td>
+                                    <td>The Merchant understands that PayU and the Issuing Bank shall not be responsible to the Merchant or the Customer for any disputes arising due to non-conversion of a Transaction to EMI Transaction and/or rates at which EMI is approved and/or tenure of EMI and/or informing the Merchant about EMI rejection. The Customer shall be responsible to inquire about the status of their EMI request directly from the respective Issuing Bank.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">k)</td>
+                                    <td>The Merchant hereby agrees to advertise the EMI scheme of a respective Issuing Bank, as and when requested by PayU and on such terms and conditions as may be mutually agreed by the Parties.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">l)</td>
+                                    <td>While offering the EMI facility to the Customers, the Merchant may be asked to use the logo / trademark / image / service mark / style etc. ("Marks") of the respective Issuing Bank. The Merchant agrees to use such Mark as as per the logo usage guidelines provided for the same by PayU. </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">m)</td>
+                                    <td>The Merchant hereby undertakes not to use such logo / mark /trademark/ image / service mark etc. without prior written approval of PayU or the respective Issuing Bank, as the case may be. Also the Merchant shall use only such logo / trademark / image / service mark / style etc. as may be provided and as per the logo usage instructions, if any, by PayU or the Issuing Bank. Further the Merchant hereby authorizes PayU and the respective Issuing Bank to use the Merchant's logo / trademark / image / service mark / style etc. for the purpose of marketing the EMI schemes and also to establish / portray relationship with the Merchant.</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">n)</td>
+                                    <td>The Merchant may with the prior written consent of PayU and the Issuing Bank, offer discounts to Customers availing EMI Facility for making payment of Customer Charge Merchant. In the event of Merchant Discount, PayU is authorized by the Merchant to deduct the discount amount from the Merchant's Customer Charge in the Nodal Account before the same is being settled to the Merchant. The Merchant shall clearly state that the Merchant Discount, if any, is being offered by the Merchant to the Customer on the Merchant Site. The Merchant understands that the Merchant Discount, if any, will be credited to the Customer as per the terms and conditions of the respective Issuing Bank. In the event the Merchant's sufficient funds are not available with PayU and PayU delays or defaults in making such payment, PayU shall be entitled to charge an interest @ 2.5% per month for the due date. </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">o)</td>
+                                    <td>The Merchant undertakes that the Merchant continues to be responsible and liable for all / any disputes raised by the Customer or any third party under the Service Agreement or under this Agreement, against PayU / Issuing Banks / Acquiring Banks / Nodal Banks, for reasons including but not limited to, delivery, services, suitability, merchantability, availability, quality, of the Product under this Agreement. The Merchant hereby agrees to indemnify PayU, Acquiring Banks, Nodal Banks, Issuing Banks for any loss being incurred under this Agreement. </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">4.2</td>
+                        <td><strong>PayU's Covenants</strong>
+                            <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                                <tr>
+                                    <td valign="top">a)</td>
+                                    <td>In the event of Merchant Discount, PayU will, subject to availability of the Merchant’s funds with PayU, will pay the same to the respective Issuing Bank. </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">b)</td>
+                                    <td>PayU will subsequent to any information from the Issuing Bank relating to EMI scheme, will inform the Merchant about the same within reasonable time.</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">5.</td>
+                        <td><strong>Disclaimer</strong>
+                            <p>Notwithstanding anything stated under this Agreement, the Merchant acknowledges that the services provided by PayU and the Issuing Banks under this Agreement, may not be uninterrupted or error free. The Issuing Banks may withdraw, reject, cancel, change the rate of interest etc. of an EMI scheme, or reject an EMI Transaction. Further Issuing Bank may cancel its consent for provision of EMI Facility by the Merchant, at any time. The EMI shall be booked solely at the discretion of the Issuing Bank. The Issuing Bank may refuse to offer an EMI facility to a particular Customer or for a particular transaction at its own discretion. The Merchant Discount will be credited to the Customer as per the terms of the respective Issuing Bank. PayU or the Issuing Bank shall not be liable for any liabilities arising due to Chargebacks, refunds etc. of the EMI Transactions processed under this Agreement.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">6.</td>
+                        <td>The EMI rates and TDR rates specified in Annexure A shall be included in Schedule A of the Service Agreement.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">7.</td>
+                        <td>To the extent of any inconsistency between the terms of this Addendum and the Service Agreement, the provisions of this Addendum shall prevail.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">8.</td>
+                        <td>All the clauses of the Service Agreement shall apply mutatis mutandis to this Agreement. The terms capitalized and not defined in this Agreement shall have the same meaning ascribed to them in the Service Agreement. In case there is a conflict between the terms and conditions of this Agreement with that of the Service Agreement, this Agreement shall prevail over the clauses of the Service Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">9.</td>
+                        <td>This Agreement is co-terminus with the Service Agreement. In the event the Service Agreement is terminated, this Agreement shall terminate on its own.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">10.</td>
+                        <td>Save for changes/additions specified herein above, all the other terms and conditions of the Service Agreement shall remain unchanged and in full force and effect and shall apply mutatis mutandis to the provision of services under this Addendum.
+                        </td>
+                    </tr>
+                </table>
+                <p><strong>IN WITNESS WHEREOF</strong> the Parties hereto have executed this Agreement through their Authorized Signatories on the day, month and year first herein mentioned above:</p><br/>
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%"><strong><u>On Behalf of {!accObj.Legal_Name__c}</u></strong></td>
+                        <td width="50%" align="left"><strong><u>On Behalf of PayU Payments Private Limited </u></strong></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td> ______________________________</td>
+                        <td> ______________________________</td>
+                    </tr>
+                    <tr>
+                        <td>Authorized Signatory</td>
+                        <td>Authorized Signatory</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>Name:</td>
+                    </tr>
+                    <tr>
+                        <td>Designation:</td>
+                        <td>Designation:</td>
+                    </tr>
+                </table><br/>
+                <!--<h4 align="center" style="align:center;"><u>SCHEDULE A</u></h4>
+                <h5 align="center" style="align:center;">CONSIDERATION</h5>-->
+                <p align="center">
+                    <STRONG><u>SCHEDULE A</u></STRONG>
+                </p>
+                <p align="center">
+                    <STRONG><u>CONSIDERATION</u></STRONG>
+                </p>
+                <p style="text-align:left;"><strong>Part I<br/>
+                    The Merchant shall pay to PayU:
+                    </strong>
+                </p>
+                <table align="center" width="90%" cellpadding="10" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%">Particulars</td>
+                        <td width="50%">Fees* (Exclusive of Applicable Taxes)</td>
+                    </tr>
+                    <tr>
+                        <td>Rates for EMI Transactions</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <!--<p><strong>Terms and Conditions:</strong></p>
+                <ul>
+                    <li>All compensation/consideration payments are in relation to Services received / to be received.</li>
+                    <li>*The fees are exclusive of Service Tax and any other taxes/ levies, if any.</li>
+                    <li>Any waiver of AMC shall be only for the first year commencing from Effective Date.</li>
+                    <li>The above rates are for all banks available with PayU subject to approval from the respective bank.</li>
+                    <li>Whenever PayU offers a new bank gateway or EMI facility, the commercials shall be mutually agreed in writing by an addendum or by way of e-mail exchange between the Parties.</li>
+                    <li>In the event TDR is revised by PayU, the same shall be communicated in writing to the Merchant’s registered e-mail ID.</li>
+                    <li>Merchant shall bear and be responsible and liable for the payment of all relevant taxes duties, levies, cess, surcharge or any other charges in relation to the Customer Charge made by its Customer under this Agreement.</li>
+                    <li>If the Customer opts to pay using EMI Facility, the applicable rates for EMI Transactions shall be charged.</li>
+                    <li>TDR is inclusive of transaction processing charges, technology service provider (TSP) fees and/ or any other value added services provided by PayU</li>
+                </ul>-->
+                <p><strong>Explanation:</strong></p>
+                <ul>
+                    <li>Any waiver of AMC shall be only for the first year commencing from the Effective Date;</li>
+                    <li>Whenever PayU offers a new bank gateway or a new payment option, the terms and commercials for such payment gateway or payment option, shall be communicated by PayU to the Merchant through email or dashboard notification;</li>
+                    <li>It is clarified that the Merchant shall bear and be liable for the payment of all relevant taxes including without limitation GST in relation to the Customer Charge under this Agreement;</li>
+                    <li>Service Fee is inclusive of technology fee, bank charges and /or fee for any other value added services as may be specifically agreed to be provided by PayU;</li>
+                    <li>The Service Fee is exclusive of all applicable taxes, including without limitation, GST; and</li>
+                    <li>The Service Fee charged by PayU on Rupay Debit Cards &amp; UPI are reflective of non-levy of MDR by the Acquiring Banks and only represents the amount payable by the Merchant to PayU for providing PayU Services.</li>
+                </ul>
+                <br/>
+                <br/>
+                <p><strong>DISCLAIMER: By accepting this addendum you understand that you are binding the Merchant with the terms and conditions stated hereinabove and you hereby also confirm that you are authorized by the Merchant to accept and bind the Merchant with the terms and conditions under this addendum.</strong></p>
+            </div>
+        </body>        
+    </html>
+</apex:page>

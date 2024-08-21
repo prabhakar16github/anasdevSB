@@ -59,7 +59,8 @@ export default class AllAndSelectedPaymentOptionsComponent extends LightningElem
         pricingId : '',
         restrictFlatFeeAndPercentageToBeEdited : false,
         restrictOtherFieldsOthertThanFlatFeeAndPercentageToBeEdited : false,
-        ruleStatus : 'D'
+        ruleStatus : 'D',
+        isSelectPaymentOption:false
     }
 
     connectedCallback() {

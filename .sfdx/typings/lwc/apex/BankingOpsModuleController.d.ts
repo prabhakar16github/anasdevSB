@@ -4,9 +4,6 @@ declare module "@salesforce/apex/BankingOpsModuleController.GetWrapperOfSObjectF
 declare module "@salesforce/apex/BankingOpsModuleController.getBankingPickListValues" {
   export default function getBankingPickListValues(param: {req: any, bankName: any, porNameVar: any}): Promise<any>;
 }
-declare module "@salesforce/apex/BankingOpsModuleController.getApprovedOrRejectedData" {
-  export default function getApprovedOrRejectedData(param: {appOrReject: any}): Promise<any>;
-}
 declare module "@salesforce/apex/BankingOpsModuleController.getStatusValueUpdate" {
   export default function getStatusValueUpdate(param: {pricingList: any, statusvalue: any, bankName: any, PORName: any}): Promise<any>;
 }
@@ -21,15 +18,6 @@ declare module "@salesforce/apex/BankingOpsModuleController.OwnerAssignmentLogic
 }
 declare module "@salesforce/apex/BankingOpsModuleController.ActivityDetails" {
   export default function ActivityDetails(param: {oppRecId: any, pricingId: any}): Promise<any>;
-}
-declare module "@salesforce/apex/BankingOpsModuleController.getBankAndPorType" {
-  export default function getBankAndPorType(): Promise<any>;
-}
-declare module "@salesforce/apex/BankingOpsModuleController.searchBank" {
-  export default function searchBank(param: {searchTerm: any}): Promise<any>;
-}
-declare module "@salesforce/apex/BankingOpsModuleController.Requestsassignedtome" {
-  export default function Requestsassignedtome(): Promise<any>;
 }
 declare module "@salesforce/apex/BankingOpsModuleController.getProfileName" {
   export default function getProfileName(): Promise<any>;

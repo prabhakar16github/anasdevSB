@@ -1,0 +1,14 @@
+<apex:page standardController="Commercial2__c" extensions="ActionToCallPlatformAndFallBack_CTRL" action="{!executeDml}" lightningStyleSheets="true" sidebar="false" showHeader="false">
+    <apex:form >
+        <apex:pageMessages />
+        <!--<apex:outputPanel >
+            <apex:outputText value="{!noPlatformRecords}" rendered="{!NOT(ISBLANK(noPlatformRecords))}" style="color:red"/>
+        </apex:outputPanel>
+        <apex:outputPanel >
+            <apex:outputText value="{!noFallbackRecords}" rendered="{!NOT(ISBLANK(noFallbackRecords))}" style="color:red"/>
+        </apex:outputPanel>
+        <apex:outputPanel >
+            <apex:outputText value="{!noFixedFeeRecords}" rendered="{!NOT(ISBLANK(noFixedFeeRecords))}" style="color:red"/>
+        </apex:outputPanel>-->
+    </apex:form>
+</apex:page>

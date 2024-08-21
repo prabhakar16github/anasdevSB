@@ -1,0 +1,205 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html> 
+        
+        
+        <head>
+            
+            <title>MCC MCP ADDENDUM</title>
+            
+            
+            <style>
+                
+                @page {
+                
+                size: a4;
+                
+                
+                
+                @top-center {
+                
+                content: "";
+                
+                }
+                
+                <!--@bottom-center {
+
+content: "Page " counter(page) " of " counter(pages);
+
+}-->
+                
+                }
+                
+                .page-break {
+                
+                display:block;
+                
+                page-break-after:always;
+                
+                }
+                
+                body {
+                
+                font-family: Arial;
+                
+                font-size: 14px;
+                
+                line-height: 20px;
+                
+                text-align:justify;
+                
+                padding-left:30px;
+                
+                padding-right:30px;
+                
+                }
+                
+                .table td{border:1px #000 solid!important;}
+                
+                .footer {
+                
+                position: fixed;
+                
+                left: 0;
+                
+                bottom: 0;
+                
+                width: 100%;
+                
+                height:1%;
+                
+                background-color:white ;
+                
+                color: red;
+                
+                text-align: center;
+                
+                }
+                
+                h1 {text-align: center;
+                font-size: 14px;}
+                
+                
+                
+                
+                
+            </style>
+            
+        </head>
+        
+        <body>
+            
+            <p>To</p>
+            
+            <p><strong>{!oppObj.Lead_Business_Name__c}</strong></p>
+            {!regAddress.Address_Line__c}
+            
+            <p>Dear Merchant ( or "<b>you</b>"),<strong></strong></p>
+            <p><strong><b><u>
+                Subject:  International  Card  Processing  Payment  Mechanism  and  the  Multicurrency  Payment Feature
+                </u></b></strong></p>
+            <ol>
+                <li style="padding: 10px;list-style-type:decimal;padding-inline-start: 20px;">
+                    
+                    We  refer  to  the  service  agreement  or  the  master  service  agreement  dated  <strong>{!oppObj.Settlement_Date__c} </strong>  and subsequent addendums (if any) entered into between PayU and you in connection with the provision of, amongst  others,  online  payments  aggregation  solutions  and  services,  as  entered  into  between  PayU Payments Private Limited ("<b>PayU</b>") and the Merchant ("<b>Service Agreement</b>"), pursuant to which PayU has been providing online payment aggregation services and solutions to you.
+                </li>
+                <li style="padding: 10px;list-style-type:decimal;padding-inline-start: 20px;">
+                    Upon your request, PayU has agreed to make available, with effect from <strong><apex:outputText value="{0, date, d MMMM','  yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> ("<b>Addendum Effective  Date</b>"),  the  International  Card  Processing  Payment Mechanism and the Multicurrency Payment Feature  to you, subject to the terms and conditions of this addendum for availing the International Card Processing Payment Mechanism and the Multicurrency Payment Feature ("<b>Addendum</b>") including the service fee applicable to the above International Card Processing Payment Mechanism and the Multicurrency Payment Feature (“<b>Service Fee</b>”) as described in <b><u>Annexure A</u></b> below.
+                </li>
+                <li style="padding: 10px;list-style-type:decimal;padding-inline-start: 20px;text-align:left">
+                    For the purposes of this Addendum, unless the context requires otherwise, the following terms when capitalized shall have the meanings ascribed to such terms below. Any other capitalized terms that are used in this Addendum and are not defined shall have the same meanings as are ascribed to them under the Service Agreement, as the case may be:<br/><br/>“<b>Authorized Currencies</b>” means the currencies as may be specified by PayU from time to time for the International Card Processing Payment Mechanism.<br/><br/>“<b>International Card Processing Payment Mechanism</b> ” means the Payment Mechanism provided by PayU that enables Merchant’s Customers to make payment using international cards on the Merchant Site.<br/><br/>“<b>Multicurrency  Payment  Feature</b>”  means  a  facility  through  which  Customers  of  the  Merchant  are able to make determination of the amount payable by them in any one of the Authorized Currencies
+                </li>
+                <li style="padding: 10px;list-style-type:decimal;padding-inline-start: 20px;">
+                    The  aforesaid  International  Card  Processing  Payment  Mechanism  and  the  Multicurrency  Payment Feature shall be made available to the Merchant on the following terms and conditions:
+                    <table cellpadding="10" cellspacing="0" border="0" style="border-collapse: collapse;">
+                        <tr>
+                            <td valign="top">(a)</td>
+                            <td>Through the Multicurrency Payment Feature, the Merchant will have the ability to reflect the Customer Charge in one of the Authorised Currencies made available by PayU. Upon processing the payment using the International Card Processing Payment Mechanism, whilst the relevant bank account or Valid Card of the Customer will be debited in the Authorised Currency opted for by the Customer, the settlement made to the Merchant by PayU will only be in INR subject to the provisions stated in the Service Agreement.</td> 
+                        </tr>
+                        <tr>
+                            <td valign="top">(b)</td>
+                            <td>The  Merchant  confirms  that  the  International  Card  Processing  Payment  Mechanism  and  the Multicurrency  Payment  Feature  shall  be  provided  solely  at  PayU’s  discretion.  The  Merchant shall  be  subject  to  additional  due  diligence  and  criteria  as  may  be  specified  by  PayU  and/or Acquiring  Banks  and  the  Nodal  Bank  which  may  include,  without  limitation,  verification  of terms and conditions and privacy policy available on the Merchant Site and the Merchant having appropriate authorisations under Applicable Laws. PayU, the Acquiring Banks and/or the Nodal Bank  shall  have  the  right  to  withdraw  their  approval/consent  at  any  time  prior  to  or  after  the activation  of  the  International  Card  Processing  Payment  Mechanism  and  the  Multicurrency Payment Feature, without notice.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">(c)</td>
+                            <td>The  Merchant  shall  be  solely  responsible  for  undertaking  additional  verifications  of  the Customers under Applicable Laws, as may be applicable from time to time, such as know your customer requirements.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">(d)</td>
+                            <td>The  Merchant  hereby  undertakes  to  provide  copies  of,  and  all  assistance  with  respect  to,  any additional  documents  of  the  Merchant  sought  including  but  not  limited  to  income  tax  returns with  audited  balance  sheet  or  Merchant  Bank  Account  statement  along  with  any  undertaking that may be requested by PayU and /or the Acquiring Banks and/or the Nodal Bank from time to time.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">(e)</td>
+                            <td>For  the  International  Card  Processing  Payment  Mechanism  and  the  Multicurrency  Payment Feature,  the  exchange  rate  used  by  PayU  for  all  Authorised  Currencies  will  be  the  inter-bank rate  as  decided  by  the  respective  banks  or  card  associations  and  as  shared  by  PayU  with  the Merchant by issuing the merchant payment report on every Business Day. The rate applicable for any Transaction which is processed on any day which is not a Business Day shall be the rate which  was  applicable  on  the  immediately  preceding  Business  Day.  PayU  may  change  the exchange rate for any Authorised Currency at any given point of time in accordance with the rates specified by the respective banks or card associations.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">(f)</td>
+                            <td>The Merchant acknowledges that the exchange rate of the Authorised Currencies versus INR are subject  to  exchange  rate  fluctuations.  Considering  this,  in  addition  to  the  Chargebacks  which will be treated in accordance with the Service Agreement, the Merchant shall bear all liabilities towards any disputes or refunds or Chargebacks raised by Customers or any third parties due to such fluctuations in the currency rates or disruptions in the foreign exchange market. PayU shall not have any liability for any losses resulting to the Merchant from any fluctuations in exchange rates  or  disruptions  in  the  foreign  exchange  market  and  such  liability  will  be  solely  of  the Merchant.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">(g)</td>
+                            <td>The  Merchant  confirms  that  each  time  when  its  Customers  use  the  Multicurrency  Payment Feature made available to the Merchant by PayU to make determination of the amount payable by  the  Customers  in  any  one  of  the  Authorized  Currencies,  a  charge  is  levied  on  PayU  and therefore, PayU will be entitled to charge such Customers a fee for making such determination ("<b>Currency Calculator Fee</b>") with respect to the Customer Charge payable, at such rate as may be specified by PayU at the time of the Customer making the payment of the Customer Charge, upon the Customer consenting for the same.
+                            </td>
+                        </tr>
+                        
+                    </table>	
+                    <br/>
+                </li>
+                <li style="padding: 10px;list-style-type:decimal;padding-inline-start: 20px;">
+                    Kindly note that the Service Agreement is hereby amended/modified only to the extent specifically set forth  in  this  Addendum  and  all  other  terms  and  conditions  of  the  Service  Agreement  shall  remain unaltered/unchanged and shall remain in full force and effect. 
+                    <br/>  
+                </li>
+                
+                <li style="padding: 10px;list-style-type:decimal;padding-inline-start: 20px;">
+                    This  document  is  an  electronic  record  in  terms  of  Information  Technology  Act,  2000  and  rules thereunder  and  is  published  in  accordance  with  the  provisions  of  Rule  3(1)  of  the  Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 (as amended from time to time).
+                </li>
+            </ol>
+            <p>
+                <b>
+                    For PayU Payments Private Limited</b>
+            </p>
+            <br/>
+            <br/>
+            <p>
+                <b><u>Acknowledged and accepted by:</u></b>
+            </p>
+            <p><strong>{!oppObj.Lead_Business_Name__c}</strong></p>
+            <p>
+                Authorised Signatory
+            </p>
+            <br/>
+            <br/>
+            <p style="text-align: center;"><strong><u>Annexure A</u></strong></p>
+            <p>
+                <strong>
+                    The Merchant shall pay to PayU the following Service Fee:</strong>
+            </p>
+            <table style="margin-left:5.4pt;border-collapse:collapse;border:none;">
+                <tbody>
+                    <tr>
+                        <td style="width: 207pt;border: 1pt solid black;padding: 0cm 5.4pt;vertical-align: top;">
+                            <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:justify;line-height:115%;text-align:center'><strong><span style="font-size:15px;line-height:115%;">Particulars</span></strong></p>
+                        </td>
+                        <td style="width: 248.4pt;border-top: 1pt solid black;border-right: 1pt solid black;border-bottom: 1pt solid black;border-image: initial;border-left: none;padding: 0cm 5.4pt;vertical-align: top;">
+                            <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:justify;line-height:115%;text-align:center'><strong><span style="font-size:15px;line-height:115%;">Service Fee Service Fee (Exclusive of Applicable Taxes</span></strong></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 207pt;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0cm 5.4pt;vertical-align: top;">
+                            <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:justify;line-height:115%;'><span style="font-size:15px;line-height:115%;">International Card Processing Payment Mechanism</span></p>
+                        </td>
+                        <td style="width: 248.4pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0cm 5.4pt;vertical-align: top;">
+                            <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:center;line-height:115%;'><span style="font-size:15px;line-height:115%;">3%</span></p>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+        </body>
+    </html>
+</apex:page>

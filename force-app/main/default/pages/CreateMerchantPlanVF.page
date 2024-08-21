@@ -1,0 +1,18 @@
+<apex:page recordSetVar="Plans__c" standardController="Plan__c">
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+        $Lightning.use("c:CreateMerchantPlanApp", function() {
+          $Lightning.createComponent("c:UpdateMerchantPlan",
+              {},
+              "lightning",
+              function(cmp) {
+                console.log("button was created");
+                // do some stuff
+              }
+          );
+        });
+    </script>
+</apex:page>

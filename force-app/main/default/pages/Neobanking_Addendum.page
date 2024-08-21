@@ -1,0 +1,579 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+<html>       
+ 
+        <head>
+ 
+            <title>PAYOUTS ADDENDUM</title>
+ 
+            <style>
+ 
+                @page {
+ 
+                size: a4;
+ 
+               
+ 
+                @top-center {
+ 
+                content: "";
+ 
+                }
+ 
+                <!--@bottom-center {
+ 
+content: "Page " counter(page) " of " counter(pages);
+ 
+}-->
+ 
+                }
+ 
+                .page-break {
+ 
+                display:block;
+ 
+                page-break-after:always;
+ 
+                }
+ 
+                body {
+ 
+                font-family: Arial;
+ 
+                font-size: 14px;
+ 
+                line-height: 20px;
+ 
+                text-align:justify;
+ 
+                padding-left:30px;
+ 
+                padding-right:30px;
+ 
+                }
+ 
+                .table td{border:1px #000 solid!important;}
+ 
+                .footer {
+ 
+                position: fixed;
+ 
+                left: 0;
+ 
+                bottom: 0;
+ 
+                width: 100%;
+ 
+                height:1%;
+ 
+                background-color:white ;
+ 
+                color: red;
+ 
+                text-align: center;
+ 
+                }
+ 
+               
+ 
+                
+ 
+            </style>
+ 
+        </head>
+ 
+       
+ 
+        <body>
+          
+    <div class="container" style="background-color:#d9e8cf;padding:20px;">      
+<p style="text-align:center"><strong>General Terms and Conditions </strong></p>
+ 
+<p>Dear Merchant,</p>
+ 
+<p>We are offering &quot;<strong>Payout Services</strong>&quot; to help you manage your Business seamlessly from your PayU dashboard. With this option, you can now perform transactions such as vendor payments, salary payouts, and other ad-hoc transactions as necessary using the banking services of our Banking Partner.</p>
+ 
+<p>Once you accept these Terms &amp; Conditions by clicking on &lsquo; I <strong>Accept</strong>&rsquo;, we shall enable the feature for your account.</p>
+ 
+        <p>In case you want to understand further features or do not wish to continue with these Services, please write to us at <a>vista@payu.in</a> and we will be happy to assist.</p>
+ 
+<p>Thank You.</p>
+ 
+<p>&nbsp;</p>
+ 
+<p>&nbsp;</p>
+ 
+</div>
+<div>
+<p style="text-align:center"><strong>General Terms and Conditions applicable to Payouts Services</strong></p>
+ 
+<p>These General Terms and Conditions are made at <strong>New Delhi</strong> on<strong>&nbsp;<apex:outputText value="{0, date, d MMMM','  yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> <strong>("Effective Date")</strong></p>
+ 
+<p>&nbsp;</p>
+ 
+<p>Submission of the Application Form and execution of these terms and conditions (&quot;<strong>General Terms and Conditions</strong>&quot; or &quot;<strong>GTC&#39;s</strong>&quot;) forms the complete agreement between you (the &quot;<strong>Merchant</strong>&quot;, &quot;<strong>you</strong>&quot; or &quot;<strong>your</strong>&quot;) and PayU Payments Private Limited (&quot;<strong>PayU</strong>&quot; &quot;<strong>we</strong>&quot; &quot;<strong>our</strong>&quot; or &quot;<strong>us</strong>&quot;) governing your use of Payouts Services (the &quot;<strong>Agreement</strong>&quot;) where &quot;<strong>Payouts Services</strong>&quot; means domestic payouts services through an electronic facility provided by PayU that enables the Merchant to settle Payouts Amounts to multiple Beneficiaries through a single command given through an application programming interface (&quot;<strong>API</strong>&quot;) that uses the banking services of the Banking Partner.</p>
+ 
+<p>&nbsp;</p>
+ 
+<p>Once executed, the Agreement will a legally binding document terms whereof you must consider carefully when choosing to use the Payouts Services at any time. PLEASE READ THE TERMS AND CONDITIONS APPLICABLE TO THE PAYOUTS SERVICES CAREFULLY BEFORE AGREEING TO THESE.</p>
+ 
+<p>PayU has the right to amend, add, or remove or modify, from time to time, any of the terms and conditions of the Agreement, without any notice to the Merchant with such revised terms and conditions being posted by PayU on the Merchant Dashboard. The Merchant irrevocably and unconditionally agrees to comply with such revised terms and conditions of the Agreement. Such changes will be effective when posted on the Merchant Dashboard. Accordingly. notwithstanding anything to the contrary in the Agreement, the Merchant shall be responsible for regularly reviewing the terms and conditions forming part of the Agreement, including amendments thereto as may be posted on the Merchant Dashboard and by continuing the use of Payouts Services shall be deemed to have accepted the amended Agreement.</p>
+ 
+<p>You are solely responsible for understanding and complying with any and all laws, rules and regulations of your specific jurisdiction that may be applicable to you in connection with your business and your use of the Payouts Services.</p>
+ 
+<p>THE AGREEMENT SHALL BE DEEMED TO HAVE BEEN ACCEPTED AND FORMED AT DELHI, INDIA.</p>
+ 
+<ol>
+<li><strong>DEFINITIONS AND INTERPRETATION:</strong>
+ 
+<ol>
+<li>In the Agreement, except where the context otherwise requires, the following words and expressions shall have the following meanings.
+<ol>
+<li>&quot;<strong>Application Form</strong>&quot; shall mean the registration form filled by the Merchant online for availing Payouts Services.</li>
+<li>&quot;<strong>Banking Partner</strong>&quot; shall mean the scheduled commercial bank which has entered into an arrangement with PayU in order to extend funds transfer facility to the Merchant for the purposes of domestic payouts, that is, transfer of funds in Indian rupees to a Beneficiary based in India from the Merchant who is in turn based in India.</li>
+<li>&quot;<strong>Confidential Information</strong>&quot; shall mean any and all written, oral or other tangible or intangible form of information, discoveries, ideas, concepts, know-how (whether patentable or copyrightable or not), research, development, designs, drawings, blueprints, diagrams, models, samples, flow charts, data, computer programs, disks, diskettes, tapes, algorithms, software programs, marketing plans or techniques, technical, financial or business information or trade secrets which include but are not restricted to any portion of such scientific or technical or proprietary information, design, process, procedure, formula or improvement which is not generally available to the public as delivered by either Party (&quot;<strong>Disclosing Party</strong>&quot;) to the other Party (&quot;<strong>Receiving Party</strong>&quot;) within the framework of the Agreement or resulting therefrom. Provided that confidential information disclosed orally or those produced by electronic media or through any other intangible means shall be deemed confidential if: (a) it is identified as being confidential and (b) is reduced in writing within (30) thirty days from the date of disclosure. Such writing shall specify the date, time, place, persons involved and the substance of the confidential information so disclosed.</li>
+<li>&quot;<strong>Beneficiary</strong>&quot; shall mean an individual or legal entity to whom any funds are to be settled or transferred by the Merchant as per any underlying arrangement, agreement or transaction between the Merchant or such individual or legal entity.</li>
+<li>&quot;<strong>Beneficiary Account</strong>&quot; shall mean a bank account of the Beneficiary to which the funds are to be transferred as per the instructions of the Merchant and &quot;<strong>Beneficiary Accounts</strong>&quot; shall be construed accordingly.</li>
+<li>&quot;<strong>Effective Date</strong>&quot; shall mean the date when the Agreement becomes effective.</li>
+<li>&quot;<strong>IMPS</strong>&quot; shall mean immediate payment service provided by the Banking Partner which facilitates instant electronic fund transfer in accordance with the rules and regulations of RBI.</li>
+<li>&quot;<strong>Merchant Dashboard</strong>&quot; shall mean the dashboard provided by PayU to the Merchant for amongst others issuing Merchant Instructions in relation to domestic payouts, viewing all Transaction details and any effecting any communications between the Merchant and PayU.</li>
+<li>&quot;<strong>Merchant Instruction</strong>&quot; shall mean an instruction issued by the Merchant to PayU to carry out a disbursement or transfer of the Payouts Amount to a Beneficiary through the Merchant Dashboard or in another manner as may be acceptable to PayU after the Merchant having prefunded the Merchant Payouts Account and &quot;<strong>Merchant Instructions</strong>&quot; shall be construed accordingly.</li>
+<li>&quot;<strong>Merchant Payouts Account</strong>&quot; shall mean the Merchant&#39;s virtual account created within the Pool Account of PayU or a designated bank account of the Merchant (maintained with banks having necessary API integrations with PayU for enabling domestic payouts from such bank account, which can be either a savings account or a current account of the Merchant).</li>
+<li>&quot;<strong>Merchant Platform</strong>&quot; shall mean the platform belonging to the Merchant that is integrated with PayU for the purposes of API communications.</li>
+<li>&quot;<strong>Party</strong>&quot; shall mean PayU or the Merchant, individually and &quot;<strong>Parties</strong>&quot; shall mean both of them collectively, as the case may be, and these expressions shall, unless repugnant to the context or meaning thereof, include their respective successors and assigns.</li>
+<li>&quot;<strong>Payouts Amount</strong>&quot; shall mean the amount to be transferred by the Merchant to a particular Beneficiary and &quot;<strong>Payouts Amounts</strong>&quot; shall be construed accordingly.</li>
+<li>&quot;<strong>Pool Account</strong>&quot; shall mean a pooled account maintained by PayU with the Banking Partner for the purpose of pooling monies received from various merchants of PayU in order to provide Payouts Services to such merchants, and the details of which will be provided to the Merchant by PayU through email.</li>
+<li>&quot;<strong>Pricing Schedule</strong>&quot; shall mean the schedule containing the Service Fees to be charged by PayU for Transactions processed under the terms of the Agreement and as more particularly described in Schedule A of the Agreement.</li>
+<li>&quot;<strong>Purpose</strong>&quot; shall mean the purpose which the Merchant declares in the Application Form for the use of Payouts Services.</li>
+<li>&quot;<strong>Registered Email ID</strong>&quot; shall means the email ID specified by the Merchant in the Application Form which shall be kept active and functional by the Merchant at all times during the subsistence of the Agreement and on which any notification, information or notice posted by PayU shall be deemed to have been served on the Merchant when posted by PayU in accordance with the terms of the Agreement.</li>
+<li>&quot;<strong>Service Fees</strong>&quot; shall mean the charges payable by the Merchant to PayU against each Transaction for which Merchant Instructions have been issued by the Merchant.</li>
+<li>&quot;<strong>Transaction</strong>&quot; shall mean each transaction initiated by PayU for settlement or transfer of Payouts Amount in accordance with Merchant Instructions and &quot;<strong>Transactions</strong>&quot; shall be construed accordingly.</li>
+</ol>
+</li>
+<li>In the Agreement:
+<ol>
+<li>Except where the context requires otherwise, references to Clauses, Schedules and Annexures are to Clauses of, Schedules to and Annexures to the General Terms and Conditions.</li>
+<li>Words denoting the singular number include the plural number and vice versa, words denoting the masculine gender include the feminine gender and words denoting persons include companies or any other legal person.</li>
+<li>Headings are inserted for convenience only and shall not affect the construction of the Agreement.</li>
+<li>Any reference to any agreement, deed, instrument, licence, code or other document of any description shall be construed, at the particular time, as a reference to that agreement, deed, instrument, licence code or other document as the same may then have been amended, varied, supplemented, modified, suspended or novated.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>TERM AND TERMINATION</strong>
+<ol>
+<li>The Agreement shall come into effect from the Effective Date and shall remain in force until terminated by either Party in accordance with the provisions of the Agreement.</li>
+<li>The Agreement may be terminated by either Party by giving 30 (thirty) days prior written notice to the other Party.</li>
+<li>Either Party may terminate the Agreement forthwith by giving a written notice in the event:</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li>The Party discovers at any stage that the other Party is in violation of any applicable laws or regulations;</li>
+<li>The other Party is adjudicated as bankrupt or a petition for its insolvency or bankruptcy is admitted or if an officer in the nature of an interim resolution professional or a receiver or a trustee is appointed for it or for a substantial portion of its assets;</li>
+<li>If any assignment for the benefit of the other Party&#39;s creditors is made and such assignment is not set aside within 90 (ninety) business days;</li>
+<li>The other Party goes into liquidation either voluntarily or compulsorily; or</li>
+<li>The other Party is prohibited by any restriction imposed by applicable laws or regulations from continuing to provide services under the Agreement.</li>
+</ol>
+ 
+<p>&nbsp;</p>
+<ol>
+<li>
+<ol>
+<li>PayU may terminate the Agreement forthwith by giving a notice to the Merchant if the Merchant fails to perform its obligations hereunder or is in breach of any terms and conditions of the Agreement.</li>
+<li>The Merchant hereby agrees that in case the Merchant is in breach of any covenant, representation or warranty mentioned in the Agreement or is in breach of any applicable laws or regulations or becomes subject of any government scrutiny/ investigation, any or all funds lying in the Merchant Payouts Account, to the extent these are in PayU&#39;s&nbsp; control, shall be withheld by PayU for such period as may be determined by PayU in its sole discretion considering the nature/ complexity of the issue. The Merchant shall not raise any demur or protest in this regard and hereby irrevocably and unconditionally authorises PayU to withhold such funds.</li>
+<li>Termination rights under this clause are in addition to and without prejudice to any termination rights of the Parties under any other provisions of the Agreement.</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li><strong>SCOPE OF PAYU PAYOUT SERVICES </strong>
+ 
+<ol>
+<li>PayU will provide the domestic payouts facility to the Merchant for settling/ transferring Payouts Amount to Beneficiaries. For this, the Merchant shall transfer the total Payouts Amount in the Merchant Payouts Account along with details of Beneficiary Accounts in the manner specified by PayU and/or as may be mutually agreed between the Parties.</li>
+<li>The Merchant shall provide Merchant Instructions for settlement/transfer of funds through the domestic payouts APIs made available by PayU, which Merchant Instructions shall include details of the Beneficiary Accounts and such other details as may be required by PayU subject to the Merchant having pre-funded the Payouts Amounts proposed to be settled/ transferred to Beneficiaries.</li>
+<li>The Merchant hereby confirms and agrees that PayU shall have the right to demand the records and necessary supporting documents in relation to each of the Transaction(s) carried out by the Merchant using the Payouts Services, including details of the Beneficiaries and purpose for which such Transactions were carried out and the Merchant shall retain such records and supporting documents at least for a period of 2 (two) years from the date of the Transactions.</li>
+<li>Upon receiving Merchant Instructions, PayU shall take steps for effecting the remittances, using the Banking Partner&#39;s API, subject to the system response of the Banking Partner and availability of sufficient funds of the Merchant in the Merchant Payouts Account.</li>
+    <li>In relation to the Payouts Services to be rendered by PayU in accordance with the terms of the Agreement, the Merchant hereby agrees that PayU reserves the right to integrate the APIs with the Merchant Platform to enable Transaction processing (if applicable).</li>
+<li>The Parties hereby agree that they shall cooperate with each other and provide all support in respect of any audit, scrutiny or investigation which maybe initiated by any third party and/or any regulatory body or government against PayU and/or the Merchant in respect of the Transactions contemplated under the Agreement.</li>
+<li>Nothing in the Agreement shall be deemed to limit in any way the right of PayU to provide to a third party any services similar to Payouts Services agreed to be provided by PayU to the Merchant under the Agreement. The Merchant shall have a similar right.</li>
+</ol>
+</li>  
+<li><strong>APPROVAL AND REGISTRATION FOR AVAILING PAYOUT SERIVCES</strong>
+<ol>
+<li>The Merchant shall disclose in the Application Form or while communicating any Merchant Instructions to PayU the exact purpose or purposes for which the Merchant will be using the Payouts Services. To use the Payouts Services for any other purpose or purposes, the Merchant irrevocably and unconditionally agrees to obtain the prior written approval of PayU.</li>
+<li>The Merchant irrevocably and unconditionally accepts that to avail the Payouts Services, the Merchant must first be approved by and registered with PayU and the Banking Partner. Provision of the Payouts Services under the Agreement shall be subject to PayU&#39;s and the Banking Partner&#39;s approval and completion of the specified registration/onboarding process. The Merchant shall provide PayU with all such documents as are required by PayU to register the Merchant with PayU and the Banking Partner and for the purpose of carrying out any Know Your Customer (&quot;<strong>KYC</strong>&quot;) checks on the Merchant by PayU and the Banking Partner. The Merchant irrevocably and unconditionally acknowledges that the Banking Partner and PayU have the right to withdraw their approval/ consent at any time prior to or after commencement of the Payouts Services.</li>
+</ol>
+</li>
+<li><strong>&nbsp;KYC &amp; ON-BOARDING REQUIREMENTS</strong>
+<ol>
+<li>The Merchant hereby irrevocably and unconditionally confirms and agrees to promptly complete the KYC requirements as per the process stipulated/laid out by PayU from time to time and shall ensure to promptly submit all the required on-boarding and due-diligence documents to the complete satisfaction of PayU for availing the Payouts Services (<strong>&quot;KYC &amp; On-boarding Requirements&quot;</strong>).</li>
+<li>The Merchant hereby irrevocably and unconditionally confirms and agrees that:</li>
+</ol>
+</li>
+</ol>
+ 
+<p>(a) Where the Merchant has not been able to meet all KYC &amp; On-boarding Requirements and has only submitted the minimum details and documents specified by PayU, then, all KYC &amp; Onboarding Requirements must be completed by the Merchant within 30 (thirty) days of the date of first utilisation of the Payouts Services under the Agreement, that is, within 30(thirty) days of having submitted the first Merchant Instructions. In such cases, for the aforesaid period of 30 (thirty) days, PayU may in its sole discretion, approve and process Transactions up to an aggregate value of INR 1,00,000/- (Rupees One Lakh only); and</p>
+ 
+<p>(b) If all KYC &amp; On-boarding Requirements are not completed within 30 (thirty) days as specified above, PayU shall not be obliged to process any Transactions to Beneficiary Accounts and PayU may forthwith suspend Payouts Services including disabling the Merchants right to prefund the Merchant Payouts Account. In addition, any or all funds lying in the Merchant Payouts Account, to the extent these are in PayU's control, shall be withheld by PayU and PayU may take any of the actions as specified in Clause TERM AND TERMINATION. </p>
+ 
+<ol>
+<li>
+<ol>
+<li>Notwithstanding anything contained elsewhere in the Agreement, the Merchant understands and agrees that offering of Payouts Services and processing of the Transaction upto the limits specified under clause 5.2 (a) above, is a sole and absolute discretion of PayU and PayU reserves the right to cancel, amend, modify, withdraw, close or decrease the same anytime without providing any notice and/or intimation to the Merchant.</li>
+</ol>
+</li>
+<li><strong>PAYMENT OF SERVICE FEE</strong>
+<ol>
+<li>In consideration for providing the Payouts Services, the Merchant agrees to pay to PayU, Service Fees as detailed in the Pricing Schedule.</li>
+<li>The Service Fees shall be deducted by PayU in respect of each successful Transaction payable to the Beneficiary. PayU reserves the right to revise the Service Fees periodically, and PayU will intimate the Merchant of any such change within a reasonable time by way of a notification on the Merchant Dashboard. The Service Fees shall be debited by PayU from the balance in the Merchant Payouts Account and shall be not be refunded or otherwise adjusted under any circumstances.</li>
+<li>The Merchant understands and agrees that all Transactions will be processed by PayU on prefunding basis only. The Merchant shall at all times maintain such balances as are required to carry out Transactions in the Merchant Payouts Account in such manner as may be specified by PayU.</li>
+<li>All payments under the Agreement shall be subject to applicable tax deduction at source/ GST which shall be the sole responsibility of the Merchant.</li>
+</ol>
+</li>
+<li><strong>COVENANTS AND CONFIRMATIONS OF THE MERCHANT</strong>
+<ol>
+<li>The Merchant hereby irrevocably and unconditionally covenants and agrees that the Merchant:
+<ol>
+<li>Shall be solely responsible for providing accurate Beneficiary details along with relevant Payout Amount as provided to PayU through Merchant Instructions, as may be necessary for carrying out the Transaction by PayU as per the terms and conditions of the Agreement and shall enable integration of the PayU API in relation to the Payouts Services with the Merchant Platform (if applicable). The Merchant understands that PayU shall not be liable to verify the details of the Payouts Amount, Beneficiary Account and other details provided to PayU through the PayU’s API. The Merchant understands that PayU will settle the funds to the Beneficiary Account strictly in accordance with the Merchant Instructions.</li>
+<li>Hereby confirms that the business being carried on by the Merchant is in accordance with applicable laws. The Merchant shall ensure that the Payouts Amount payable by the Merchant to the Beneficiary is legally payable by the Merchant and the Beneficiary is legally entitled to receive the same from the Merchant for a purpose that is both lawful and compliant with the terms and conditions of the Agreement. The Merchant further agrees to provide PayU, such information and documents as may be required by PayU in its sole discretion to ascertain the source of funds of the Merchant.</li>
+<li>Shall ensure to take all necessary steps for identification and registration of the Beneficiary as per its internal policies and obtain relevant details of the Beneficiary in compliance with applicable laws and anti-money laundering regulations to ensure that the Payouts Amount is sent to such Beneficiary with whom the Merchant has entered into the underlying transaction for which a payout is required to be made by the Merchant.&nbsp; The Merchant acknowledges and agrees that PayU reserves the right to seek necessary supporting documents evidencing or confirming the underlying transaction between the Merchant and the Beneficiary in relation to which the Payout Amount is being remitted/transferred to the Beneficiary using Payoushall ensure to take all necessary steps for identification and registration of the Beneficiary as per its internal policies and obtain relevant details of the Beneficiary in compliance with applicable laws and anti-money laundering regulations to ensure that the Payouts Amount is sent to such Beneficiary with whom the Merchant has entered into the underlying transaction for which a payout is required to be made by the Merchant. The Merchant acknowledges and agrees that PayU reserves the right to seek necessary supporting documents evidencing or confirming the underlying transaction between the Merchant and the Beneficiary in relation to which the Payout Amount is being remitted/transferred to the Beneficiary using Payout Services. The Merchant acknowledges, confirms and agrees that PayU reserves the right not to process any Merchant Instructions in case the necessary supporting necessary supporting documents evidencing or confirming the underlying transaction between the Merchant and the Beneficiary is not provided to the satisfaction of PayU.</li>
+<li>Understands that in an event where PayU is required to provide any supporting documentation to any investigating authority in relation to the funds transferred/to be transferred to a particular Beneficiary, the Merchant shall forthwith provide all assistance and cooperation to PayU. </li>
+<li>Shall ensure that prior to initiating a Transaction through the Payouts Services, the Merchant has ensured that sufficient funds to process Merchant Instructions are available in the Merchant Payouts Account. The Merchant confirms that in the event of insufficient funds, PayU will not process any Transactions and shall not be responsible in any manner to the Merchant or to any Beneficiary for non-implementation of Merchant Instructions.</li>
+<li>Hereby agrees to provide Merchant Instructions to PayU and hereby irrevocably and unconditionally authorizes PayU to carry out such Merchant Instructions in accordance with the terms of the Agreement. The Merchant hereby indemnifies and unconditionally and irrevocable undertakes to indemnify PayU for any liability, claim, loss, damage or penalty of any nature whatsoever arising on PayU due to PayU carrying out Merchant Instructions.</li>
+<li>Hereby confirms that in case of any error or fault or incomplete information provided by the Merchant in the Merchant Instruction, PayU shall not be liable for any loss arising out of any such error or fault or incomplete information in the Merchant Instruction and any loss, cost, damage or liability arising due to any such error or fault or incomplete information shall be the sole liability of the Merchant.</li>
+<li>Confirms that subject to: (a) availability of sufficient funds in the Merchant Payout Account and (b) after the receipt of Merchant Instructions by PayU, PayU shall endeavor to instruct the Banking Partner to transmit the Payouts Amount from the Merchant Payouts Account to the Beneficiary Account and shall endeavor that such Merchant Instructions are carried out in a maximum of T+ 3 business days (where "T" shall mean the day on which the Merchant Instruction has been received by PayU).</li>
+<li>Shall use the Payouts Services only for the Purpose as disclosed by the Merchant to PayU and not for any other purpose, except with the prior written consent/ approval of PayU. The Merchant confirms that in the event of any breach or default of this obligation, PayU reserves the right to terminate the Agreement forthwith without any notice or intimation to the Merchant and to take actions as mentioned in Clause 2.5. </li>
+<li>Confirms that PayU, in its sole discretion, reserves the right to impose a penalty in events where: (a) the Merchant is found to be or where PayU has reasons to believe that the Merchant is involved into any fraudulent or illegal or suspicious activities or is or has been using the Payouts Services with respect to any banned or restricted activities (including, without limitation, any restricted or banned activities as published by PayU on its website, as amended from time to time), (b) the Merchant has changed its line of business or is or has been utilizing Payouts Services for a purpose other than the Purpose disclosed to PayU or, (c) the Merchant is in breach of any terms and conditions of the Agreement (including any of the representations and warranties given by the Merchant) and/or applicable laws <strong>(“Penalty”)</strong>.</li>   
+<li>Hereby authorises PayU to recover, set-off and appropriate any Penalty as may be imposed by PayU in terms of this Agreement from any funds of the Merchant available with PayU (whether in the Payouts Account or under any other arrangement with PayU <strong>(“Available Funds”)</strong>.  Where any Penalty claimed or imposed by PayU exceeds Available Funds, the difference thereof shall be a debt due from the Merchant to PayU and shall be forthwith recoverable by appropriate legal action, as determined by PayU in its sole discretion. The provisions of this Clause shall not in any manner preclude or restrict PayU from recourse to any other remedies available to it under the Agreement or applicable laws.</li>
+<li>Confirms that the Merchant does not have any investments from any jurisdictions that are subject to any restrictions under applicable laws or regulations and if any such restrictions are applicable, the Merchant has obtained all relevant approvals that are required for the Merchant in this regard. The Merchant undertakes to intimate PayU in advance of any change in the ownership of the Merchant during the term of the Agreement.</li>
+<li>Shall intimate PayU in advance of any change in the line of business of the Merchant and obtain PayU's written consent, as applicable, so as to ensure that Payouts Services are utilized for only those purposes that are permitted by PayU. The Merchant confirms that in the event of any breach or default of this obligation, PayU reserves the right to terminate the Agreement forthwith without any notice or intimation to the Merchant and to take actions as mentioned in Clause TERM AND TERMINATION.</li>
+<li>Acknowledges that PayU shall not be liable for any Transactions which could not be processed due to any reasons attributable to the Merchant, Banking Partner, Beneficiaries or any third parties.</li>
+<li>Confirms that PayU may store the Beneficiary data/ information shared by the Merchant by way of Merchant Instructions or otherwise in connection with the Payouts Services.</li>
+<li>Shall provide the details of the bank account in a form and manner described in the Application Form, from which the Merchant shall be required to prefund the Merchant Payouts Account (&quot;<strong>Merchant Bank Account</strong>&quot; and shall provide all supporting documents to PayU to verify the Merchant Bank Account.</li> 
+<li>Shall ensure that where the Merchant is also availing PayU's payment aggregation services and intends to utilize the Merchant's settlement amounts available with PayU for prefunding the Merchant Payouts Account, the Merchant shall provide such undertakings and authorizations to PayU as may be required by PayU. Except in the circumstances where the prefunding is done from Merchant's settlement amounts available with PayU as described above, the Merchant confirms that any change in the Merchant Bank Account can be done only with the prior written consent of PayU. Accordingly, where the Merchant Payouts Account is prefunded from an account other than the Merchant Bank Account or from the settlement amounts of the Merchant as available with Payu, the same will amount to a breach of the Agreement and PayU reserves the right to terminate the Agreement forthwith without any notice or intimation to the Merchant and to take actions as mentioned in Clause 2.5.</li>
+<li>Shall supply to PayU promptly upon becoming aware of them, the details of any litigation, arbitration, investigative or administrative proceedings which are current, threatened or pending against it and which might, if adversely determined, have a material adverse effect on its business or operations.</li>
+<li>Shall not use or permit the use of Payouts Services, directly or indirectly, for distributing any funds for any business activities prohibited or restricted under applicable laws including, without limitation, business activities relating to: (i) Cuba, Sudan, Iran, Myanmar (Burma), Syria or North Korea; (ii) any other countries that are subject to economic and/or trade sanctions; and (iii) business activities that are subject to sanctions, restrictions or embargoes imposed by the United Nations, the European Union, the State Secretariat for Economic Affairs of Switzerland, the United States Treasury Department' Office of Foreign Assets Control, HM Treasury of the United Kingdom, the Hong Kong Monetary Authority, the Monetary Authority of Singapore, the RBI and/or any other body. This includes, in particular (but without limitation) business activities involving persons or entities named on any sanctions lists issued by any of the aforementioned bodies.</li>
+<li>Shall comply with all applicable laws, rules and regulations including anti money laundering laws in force in India in relation to any remittances being made to Beneficiaries or proposed to be made by the Merchant and, where applicable, the Merchant has obtained all necessary approvals thereunder after making all material disclosures.</li>
+<li>Shall ensure that it has obtained the consent of Beneficiaries for sharing their details with PayU under this Agreement. As and when required by PayU, the Merchant shall also share the logs of such consents sought from Beneficiaries.</li>
+</ol>
+</li>
+<li>Where the Merchant's line of business includes the offering of any gaming services, the Merchant hereby irrevocably and unconditionally covenants and agrees:
+<ol>
+<li>That all games offered (including all variations) on the Merchant website/mobile application in connection with which the Payouts Services are utilised by the Merchant shall only be games of skill and not games of chance and further that all such gaming services shall all times be in compliance with applicable laws and regulatory requirements.</li>
+<li>That the Merchant will have ensured that no players or participants  on the Merchant's gaming platform (including, without limitation, any Beneficiaries) are from jurisdictions within India that have prohibited or banned or restricted operations of online gaming platforms or participation in any gaming activities (including, without limitation, any games of chance, games of skill or fantasy sports/games/quizzes).</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>OTHER TERMS AND CONDITIONS</strong>
+<ol>
+<li>The Merchant irrevocably and unconditionally confirms that as a part of risk management practices, PayU reserve the right to limit or restrict the Transaction size, Transaction amounts and/or Transaction volumes, Transaction frequency to any Beneficiaries, and/or specify such restrictions on overall utilisation of Payouts Services as PayU may deem fit in its sole discretion. In addition, as a security measure, PayU may at its sole discretion block any Beneficiaries, their bank accounts, groups of bank accounts, IP addresses or geographic locations as PayU may deem fit in its sole discretion.</li>
+<li>The Merchant irrevocably and unconditionally acknowledges that PayU may reject any  Transactions for any reasons including, without limitation, risk management, suspicion of fraudulent, illegal or doubtful Transactions, or pursuant to applicable laws, rules or regulations or any instructions from (or contained in) any guidelines or instructions by police or investigation agencies or any regulatory or governmental authority.</li>
+</ol>
+</li>
+<li><strong>RELATIONSHIP BETWEEN THE PARTIES </strong>
+<ol>
+<li>The relationship between PayU and the Merchant is on principal-to-principal basis. Nothing contained herein shall be deemed to create any association, partnership, joint venture or relationship of principal and agent or master and servant, or employer and employee between the Parties hereto or any of their affiliates or subsidiaries or to provide either Party with the right, power or authority, whether express or implied, to create any such duty or obligation on behalf of the other Party.</li>
+<li>PayU has no connection with or interest of any nature in the business of the Merchant. PayU has no relationship or privity with the Beneficiaries and all actions taken by PayU under the Agreement which may affect any Beneficiaries will be deemed to be based on instructions of the Merchant. The Merchant alone shall be responsible to the Beneficiaries and neither PayU nor the Banking Partner shall have any responsibility or liability towards the Beneficiaries, and the Merchant shall keep PayU and the Banking Partner fully indemnified at all times in this respect.</li>
+<li>The Merchant irrevocably and unconditionally confirms that PayU and the Banking Partner will neither be necessary nor proper parties to any disputes between the Merchant and the Beneficiaries and shall not be made a party to such or disputes.</li> 
+</ol>
+</li>
+<li><strong>USE OF INTELLECTUAL PROPERTY RIGHTS </strong>
+<ol>
+<li>Neither Party will use, display and reproduce the name, brand name, logo, wordmark, trademark or service marks or any other intellectual property of the other Party without written prior consent of the other Party.</li>
+<li>The Merchant undertakes not to infringe the intellectual property rights of PayU and or the Banking Partner respectively, whether directly or indirectly.</li>
+</ol>   
+</li>
+
+<li><strong>INDEMNITY </strong>
+<ol>
+<li>The Merchant hereby undertakes and agrees to indemnify, defend and hold harmless PayU and/or the Banking Partner including their officers, directors and agents from and against all actions, proceedings, claims (including third party claims), liabilities (including statutory liability), penalties, demands and costs (including without limitation, legal costs), awards, damages, losses and/or expenses however arising directly or indirectly, including but not limited to, as a result of:</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li>
+<ol>
+<li>Breach or non-performance by the Merchant of any of its undertakings, warranties, covenants, declarations or obligations under the Agreement;</li>
+<li>Breach of confidentiality and intellectual property rights obligations by the Merchant;</li>
+<li>Use the Payouts Services for a purpose other than the purpose as mentioned and disclosed in the Agreement;</li>
+<li>Any claim or proceeding brought by the Beneficiary or any third party against PayU and/or the Banking partner;</li>
+<li>Any information that may be provided through the Merchant Instructions;</li>
+<li>Utilisation of Payout Services for any illegal/banned/restricted activities;</li>
+<li>Any act, deed, negligence, omission, misrepresentation, default, misconduct, non-performance or fraud by the Merchant, its employees, contractors, agents, Beneficiary or any third party; and</li>
+<li>Breach by the Merchant of applicable laws, rules, regulations or any other legal or regulatory requirements.</li>
+</ol>
+</li>
+</ol> 
+<p>&nbsp;&nbsp;</p>
+<ol>
+<li>
+<ol>
+<li>The indemnities under this Clause are in addition to and without prejudice to the indemnities given elsewhere in the Agreement.</li>
+<li>The indemnities provided herein shall survive the termination of the Agreement.</li>
+</ol>
+</li>
+<li><strong>LIMITATION OF LIABILITY</strong>
+<ol>
+<li>Notwithstanding anything to the contrary in the Agreement: (a) the aggregate liability of PayU to the Merchant from any cause whatsoever shall not in any event exceed the sum equivalent to preceding 1 (one) month's aggregate Service Fee earned by PayU under the Agreement, from the date of occurrence of such liability, (b) PayU shall not be liable to the Merchant for any special, incidental, indirect or consequential damages, any actual or anticipated loss of profits or business opportunities even if PayU shall have been advised in advance of the possibility of such loss, cost or damages and (c) in no event shall PayU or the Banking Partner be liable to any Beneficiaries or any third party.</li>
+</ol>
+</li>
+<li><strong>CONFIDENTIALITY</strong>
+<ol>
+<li>The Parties agree to maintain the confidentiality of the Confidential Information and to protect all portions of the other Party&#39;s Confidential Information by preventing any unauthorized disclosure, copying, use, distribution, or transfer of possession of such information.&nbsp; Dissemination of Confidential Information by each Party shall be limited to those employees with the need to such access for the advancement of the goals anticipated under the Agreement.</li>
+<li>The Parties shall at no time disclose or allow its officers, directors, employees, representatives or subcontractors to disclose the other Party&#39;s Confidential Information to any third party without the prior written consent of the other Party. The Parties agree to protect the Confidential Information of the other with the same standard of care and procedures used by themselves to protect their own Confidential Information of similar importance but at all times using at least a reasonable degree of care.</li>
+<li>The obligations set out in this Clause shall not apply to Confidential Information that:</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li>Is or becomes publicly known other than through breach of this Clause;</li>
+<li>Is in possession of the receiving Party prior to disclosure by the other Party;</li>
+<li>Is independently developed by the receiving Party;</li>
+<li>Needs to be disclosed to professional advisers or in accordance with the order of a competent court or administrative authority;</li>
+<li>Is thereafter rightfully furnished to such receiving Party by a third party without restriction by that third party on disclosure; or</li>
+<li>Is required by law, judicial authority, stock exchanges, government departments or agencies or other regulatory authorities, provided that sufficient notice is given of any such requirement by the receiving Party to the disclosing Party, in order that the disclosing Party may seek an appropriate protective order or exemption from such requirement, prior to any disclosure being made by the receiving Party.</li>
+<li>Such obligation of confidentiality shall continue for a period of 1 (one) year after the termination or expiry of the Agreement.</li>
+</ol>
+ 
+<ol>
+<li><strong>REPRESENTATIONS AND WARRANTIES OF PAYU</strong>
+ 
+<ol>
+<li>PayU hereby represents and warrants that:</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li>It is duly organized and validly existing under the laws of the jurisdiction in which it is established;</li>
+<li>It has the requisite power and authority to execute, deliver and perform the Agreement and that the Agreement has been duly and validly authorized, executed and delivered by it;</li>
+<li>Its obligations hereunder constitute legal, valid, binding and enforceable obligations;</li>
+<li>The execution and delivery of the Agreement and the consummation of the Transactions contemplated herein do not breach its organizational documents or any law, provisions of any contract or order of court applicable to it and do not require any applicable governmental approval; and</li>
+<li>The person executing the Agreement is duly authorized to execute the Agreement for and on behalf of PayU and shall have the authority to bind PayU accordingly.</li>
+</ol>
+ 
+<ol>
+<li><strong>REPRESENTATIONS AND WARRANTIES OF MERCHANT</strong>
+ 
+<ol>
+<li>The Merchant represents, warrants and undertakes that:</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li>It is duly organized and validly existing under the laws of the jurisdiction in which it is established;</li>
+<li>It has the requisite power and authority to execute, deliver and perform the Agreement and that the Agreement has been duly and validly authorized, executed and delivered by it;</li>
+<li>Its obligations hereunder constitute legal, valid, binding and enforceable obligations;</li>
+<li>Has obtained all necessary approvals and licenses for carrying out its business in India in accordance with applicable laws;</li>
+<li>Any factual information provided by or on behalf of the Merchant in connection with Payouts Services is true, complete and accurate in all material respects as at the date it was provided or as at the date (if any) at which it is stated.</li>
+<li>The execution and delivery of the Agreement and the consummation of the Transactions contemplated herein do not breach its organizational documents or any law, provisions of any contract or order of court applicable to it and do not require any applicable governmental approval;</li>
+<li>The person executing the Agreement is duly authorized to execute the Agreement for and on behalf of the Merchant and shall have the authority to bind the Merchant accordingly; and</li>
+<li>Only the authorized personnel of the Merchant are given access to the Merchant Dashboard or Merchant Platform.</li>
+</ol>
+ 
+<p>&nbsp;</p>
+ 
+<ol>
+<li><strong>CONSEQUENCES OF TERMINATION</strong>
+ 
+<ol>
+<li>The termination of the Agreement shall not affect the rights or liabilities of either Party incurred prior to such termination. In addition, any act performed during the term of the Agreement which may result in a dispute post termination or any provision expressed to survive the Agreement or to be effective on termination or the obligations set out in this Clause shall remain in full force and effect notwithstanding termination. Subject to other Clauses of the Agreement, both Parties shall undertake to settle all outstanding amounts within 30 (thirty) days of the termination taking effect.</li>
+<li>The Merchant shall:
+<ol>
+<li>Immediately refrain from any action that would or may indicate any relationship with PayU;</li>
+<li>Immediately cease to use in any manner whatsoever the trademarks, intellectual property or any software material provided by PayU; and</li>
+<li>Within seven (7) days, following the date of termination hand over to each other the possession of all documents, materials including any Confidential Information and any other property belonging to PayU that may be in the possession of the Merchant or any of its employees, agents or individuals assigned to perform the services under the Agreement and also destroy the copy of such documents/materials (on any media) available with the Merchant with proof served to PayU.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>DISCLAIMER</strong>
+<ol>
+<li>PayU will make reasonable efforts to provide uninterrupted service to the Merchant. Although PayU adopts security measures it considers appropriate in offering the Payouts Services, it does not assure or guarantee that no person will overcome or subvert the security measures and gain unauthorized access to the systems or the Merchant/Beneficiary data. PayU shall not be responsible or liable if any unauthorized person hacks into or gains access to the PayU systems or to the Pool Account. PayU shall not be liable for any service or default in service of the Banking Partner.</li>
+<li>PayU&#39;s sole obligation and the Merchant&#39;s sole and exclusive remedy in the event of interruption of Payouts Services shall be to use all reasonable endeavors to restore the Payouts Services as soon as reasonably possible.</li>
+</ol>
+</li>
+<li><strong>ANTI-BRIBERY AND ANTI-CORRUPTION, ANTI-MONEY LAUNDERING AND EXPORT CONTROLS (&quot;Anti-financial Crimes Laws Confirmation&quot;)</strong>
+<ol>
+<li>The Merchant hereby irrevocably and unconditionally agrees and confirms that the Merchant and its group companies are committed to operating the businesses conforming to the highest moral and ethical standards. The Merchant has a stringent code of conduct and confirms hereby that is committed to acting professionally, fairly and with integrity in all its business transactions and relationships wherever the Merchant operates. The Merchant irrevocably and unconditionally undertakes to comply and implement in its processes all legal requirements&nbsp; relevant to counter &#39;bribery and corruption&#39;, &#39;money laundering&#39; and &#39;restricted export-import transactions&#39; applicable in the conduct of its business, the minimum requirements adopted by the US/OFAC, UK, UN and the EU in regards to anti-bribery and anti-corruption, anti-money laundering/ combating the financing of terrorism and other applicable export control laws and regulations including but not limited to any restrictions on the export or import dealings with the &#39;Sanctioned Persons&#39;&nbsp; <strong>(&quot;Anti-Financial Crimes Laws&quot;)</strong>.</li>
+<li>This Anti-Financial Crimes Laws Confirmation constitutes a minimum standard. The Merchant undertakes to be compliant and shall continue to abide to the relevant Anti-Financial Crimes Laws and confirms that it:</li>
+</ol>
+</li>
+</ol>
+ 
+<ol>
+<li>Will comply with all applicable laws, regulations and sanctions relating to anti-bribery, anti-corruption, anti-money laundering and export controls including but not limited to the minimum requirements of the Anti-Financial Crimes Laws.</li>
+<li>Is prohibited from dealing with any acts which may be deemed as money laundering under any applicable law, regulations or restrictions.</li>
+<li>Will prohibit the entering into agreements with any person who has been identified in the sanctions list maintained by different state authorities or organizations.</li>
+<li>Has implemented an internal compliance programme, to ensure compliance with and detect violations of all applicable Anti-Financial Crimes Laws.</li>   
+</ol>
+<ol>
+<li>In the event the Merchant does not honor the commitments described above, the Merchant agrees that this will be considered as a material breach of the Agreement. Therefore, PayU may immediately terminate the Agreement. In addition, any or all funds lying in the Merchant Payouts Account, to the extent these are in PayU's control, shall be withheld by PayU and PayU may take any of the actions as specified in Clause TERM AND TERMINATION above</li>
+</ol>
+ 
+<ol>
+<li><strong>GENERAL PROVISIONS </strong>
+ 
+<ol>
+<li><strong>Assignments: </strong>PayU may assign, in whole or in part, the benefits or obligations of the Agreement by providing a thirty (30) days prior intimation of such assignment to the Merchant, which shall be binding. However, it is agreed by the Merchant that if the assignment by PayU is pursuant to a group restructuring of PayU, Merchant hereby grants its irrevocable and unconditional consent to such assignment.</li>
+<li><strong>Further Assurances: </strong>The Merchant shall execute such documents and shall do all such acts, deeds and things as may be required by PayU in connection with giving full effect to the intention of the Parties as contained in the Agreement.</li>
+<li><strong>Force Majeure: </strong>PayU shall not be liable for its failure to perform under the Agreement as a result of any event that is beyond its reasonable control including, without limitation, events such as acts of god, fire, wars, pandemics, epidemics, lockdowns, sabotage, civil unrest, labour unrest, insolvency of the Banking Partner or any moratorium imposed on it, action of statutory authorities or local or central governments, change in laws, rules and regulations, affecting the performance of PayU or the Banking Partner.</li>
+<li><strong>Governing Law, Settlement of Disputes and Jurisdiction:</strong> The Agreement shall be governed by and construed in accordance with the laws of India. Both Parties agree that if any dispute(s) or difference(s) shall arise between the Parties in connection with or arising out of or relating to the Agreement, the Parties shall attempt, for a period of 30 (thirty) days from the receipt of a notice (&quot;<strong>Disputes Notice</strong>&quot;) from the other Party of the existence of a dispute(s), to settle such dispute(s) by mutual discussions. If the said dispute(s) cannot be settled by mutual discussions within the thirty-day period specified above, such disputes(s) shall be referred to arbitration for final resolution in the manner provided herein. The Parties shall mutually appoint a sole arbitrator within 60 (sixty) days from the date of the Disputes Notice who shall resolve such accordance with the provisions of the Arbitration and Conciliation Act, 1996, as amended from time to time (&quot;<strong>Arbitration Act</strong>&quot;). In the event the Parties fail to appoint a sole arbitrator in accordance with the procedure aforesaid and within the time period as specified above, a panel of arbitrators shall be appointed in accordance with the provisions of the Arbitration Act for the final resolution of the dispute(s). The arbitration proceedings shall be held in English language with the seat of the arbitration being New Delhi. Subject to the arbitration agreement as mentioned above, the courts at New Delhi shall have the exclusive jurisdiction over any dispute(s) as described above.</li>
+<li><strong>Waiver: </strong>Unless otherwise expressly stated in the Agreement, the failure to exercise or delay in exercising a right or remedy under the Agreement shall not constitute a waiver of the right or remedy or a waiver of any other rights or remedies, and no single or partial exercise of any right or remedy under the Agreement shall prevent any further exercise of the right or remedy or the exercise of any other right or remedy.</li>
+<li><strong>Survival of Provisions: </strong>The provisions of the Agreement that by their nature and intent are intended to survive the termination hereof shall so survive the termination of the Agreement.</li>
+<li><strong>Severability: </strong>: If any provision of the Agreement is or becomes, in whole or in part, invalid or unenforceable but would be valid or enforceable if some part of that provision was deleted or struck out, that provision shall apply with such deletions or strike outs, as may be necessary to make it valid. If any court/tribunal of competent jurisdiction holds any of the provisions of the Agreement unlawful or otherwise ineffective, the remainder of the Agreement shall remain in full force and the unlawful or otherwise ineffective provision shall be substituted by a new provision reflecting the intent of the provision so substituted.</li>
+<li><strong>Non-Exclusivity: </strong>It is agreed and clarified that the Agreement is on a non-exclusive basis and the Parties are at liberty to enter into similar contractual arrangements with others.</li>
+<li><strong>Entire agreement: </strong>The Agreement constitutes the entire agreement and understanding between the Parties, and supersedes any previous verbal or written agreement or understanding or promise between the Parties, relating to the subject matter of the Agreement.</li>
+<li><strong>Notices: </strong>Except to the extent expressly provided in the Agreement, all notices, requests, demands, waivers and other communications required or permitted to be given under the Agreement shall be in writing and sent through certified or registered mail, courier, email, facsimile to be sent to the following addresses:</li>
+</ol>
+</li>
+</ol>
+ 
+<p><strong>For PayU: </strong>Attn: Legal Department (PayU India), PayU Payments Private Limited, 9<sup>th</sup> Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon,</p>
+ 
+<p>Haryana, Pin &ndash; 122002</p>
+ 
+<p>&nbsp;</p>
+ 
+<p><strong>For Merchant:&nbsp; </strong>The Address as specified in the Application Form.</p>
+ 
+<p>Or, in each case, at such other address as may be specified in writing to the other Parties in accordance with the requirements of this Clause. All such notices, requests, demands, waivers and other communications shall be deemed duly given (i) if by personal delivery, on the day after such delivery, (ii) if by certified or registered mail, on the10<sup>th</sup> (tenth) day after the mailing thereof, (iii) if by courier service or similar service, on the day delivered, or (iv) if by email or facsimile on the day following the day on which such email, facsimile or telegram was sent, provided that a copy is also sent by registered mail and, in the case of a facsimile, electronic confirmation of receipt is received.</p>
+ 
+<p>&nbsp;</p>
+ 
+<ol>
+<li>
+<ol>
+<li><strong>Amendment: </strong>PayU may communicate any amendments or additional terms and conditions relating to Payouts Services by either sending an intimation email to the Registered Email ID of the Merchant or by way of a notification on the Merchant Dashboard.</li>
+</ol>
+</li>
+</ol>
+ 
+<p>&nbsp;</p>
+    <br/><br/><br/>
+ 
+<p><strong>PRICING SCHEDULE</strong></p>
+ 
+<p>&nbsp;</p>
+ 
+<p><strong>The Merchant shall pay to PayU</strong>:</p>
+    <br/><br/><br/><br/><br/><br/>
+ 
+<p>&nbsp;</p>
+ 
+<table cellpadding="0" cellspacing="0">
+<tbody>
+<table style="width:100%;width:100%;border-collapse: collapse;padding:100px" border= "1px solid black">
+<tr>
+<td colspan="2" style="vertical-align:middle">
+<p><strong>Pricing Schedule </strong></p>  
+</td>
+<td style="vertical-align:middle"></td>
+</tr>
+<tr>
+<td colspan="2" style="vertical-align:middle">
+<p><strong>The Merchant shall pay to PayU:</strong></p>
+</td>
+<td style="vertical-align:middle"></td>
+</tr>
+<tr>
+<td colspan="2" style="vertical-align:middle">
+<p><strong>Particulars</strong></p>
+</td>
+<td style="vertical-align:middle">
+<p><strong>Service Fees (Exclusive of Applicable Taxes) for each successful Transaction</strong></p>
+</td>
+</tr>
+<tr>
+<td style="vertical-align:middle">
+<ol>
+<li>NEFT</li>
+</ol>
+</td>
+<td style="vertical-align:middle">
+<p>Any Amount</p>
+<th style="padding :15px;">Rs 2</th>
+</td>
+
+</tr>
+<tr>
+<td style="vertical-align:middle">
+<ol>
+<li>RTGS</li>
+</ol>
+</td>
+<td style="vertical-align:middle">
+<p>Any Amount</p>
+<th style="padding :15px;">Rs 2</th>
+</td>
+</tr>
+<tr>
+<td rowspan="2" style="vertical-align:middle">
+<ol>
+<li>Credit Card</li>
+</ol>
+</td>
+<td style="vertical-align:middle">
+<p>less than Rs. 25000/-</p>
+<th style="padding :15px;">Rs 2.5</th>
+</td>
+</tr>
+<tr>
+<td style="vertical-align:middle">
+<p>Above Rs. 25000/-</p>
+<th style="padding :15px;">Rs 7</th>
+</td>
+</tr>
+<tr>
+<td rowspan="3" style="vertical-align:middle">
+<ol>
+<li>IMPS/UPI</li>
+</ol>
+</td>
+<td style="vertical-align:middle">
+<p>less than Rs. 1000/-</p>
+<th style="padding :15px;">Rs 1</th>
+</td>
+</tr>
+<tr>
+<td style="vertical-align:middle">
+<p>Rs. 1001/- to 25000/-</p>
+<th style="padding :15px;">Rs 2.5</th>
+</td>
+</tr>
+<tr>
+<td style="vertical-align:middle">
+<p>Above Rs. 25001/-</p>
+<th style="padding :15px;">Rs 7</th>
+</td>
+</tr>
+ 
+</table>     
+</tbody>
+</table>
+   
+ 
+<p><strong>Explanation:</strong></p>
+ 
+<ul>
+<li>Service Fee is in relation to Payouts Services to be received.</li>
+<li>The Service Fee is exclusive of GST and any other applicable taxes/ levies, if any.</li>
+<li>Merchant shall bear and be responsible and liable for the payment of all relevant taxes including GST in relation to the domestic payout Transactions under the Agreement.</li>
+<li>As an early bird offer, you would be entitled to 300 free payouts in a month with lifetime validity.</li>
+</ul>
+ 
+
+ 
+
+</div>
+ 
+        </body>       
+ 
+    </html>
+    </apex:page>

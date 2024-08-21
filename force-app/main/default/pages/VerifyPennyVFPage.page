@@ -1,0 +1,31 @@
+<apex:page showHeader="false">
+    <apex:includeLightning />
+    
+    <div id="lightning" style="background-color: #f5f5f5;"/>
+    <div id="LoadingvfDIV" style="margin-top:20%;">
+        <center>
+            <apex:outputPanel >
+                <img src="/img/loading32.gif" width="25" height="25" />
+                <apex:outputLabel value="Loading..."/>
+            </apex:outputPanel>
+        </center>
+    </div>
+    
+    <script>
+    $Lightning.use("c:VerifyPennyApplication", function() {
+        $Lightning.createComponent("c:MaintenanceRequest",
+                                   {
+                                       recordId : '{!$CurrentPage.parameters.id}',
+                                       parentId : '{!$CurrentPage.parameters.parentId}',
+                                       requestType : '{!$CurrentPage.parameters.requestType}',
+                                       merchantStatus : '{!$CurrentPage.parameters.merchantStatus}'
+                                   },
+                                   "lightning",
+                                   function(component) {
+                                       var loadingDivElt = document.getElementById("LoadingvfDIV");
+                                       loadingDivElt.style.display = 'none' ;
+                                   }
+                                  );
+    });
+    </script>
+</apex:page>

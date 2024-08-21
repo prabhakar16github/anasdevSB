@@ -1,0 +1,513 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" contentType="{!strContentType}" standardStylesheets="false" renderAs="{!strRenderAs}" cache="true">
+    <!-- contentType="application/msword#LtdLiabilityPartnership.doc" cache="true" -->
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>PayU</title>
+            <style>
+                body {
+                padding: 0px;
+                margin: 0;
+                font-size: 14px; line-height:20px;
+                color: #000;
+                text-align:justify;
+                }
+                table td p{
+                padding:0px;
+                }
+                .container{
+                width: 1080px;
+                margin: 0 auto;
+                font-family: 'Arial';
+                font-size: 14px;
+                line-height: 20px;
+                text-align: justify;
+                }
+                .text_center{
+                text-align: center;
+                }
+                ol, ul{
+                padding: 0 ;
+                margin: 0 0 0 18px;
+                }
+                ol li,ul li{
+                margin-bottom: 10px;
+                }
+                table td{
+                vertical-align: top;
+                padding-bottom: 10px;
+                }
+                
+            </style>
+        </head>
+        
+        <body>
+            <table cellpadding="0" cellspacing="0" border="0" width="600" align="center" style="border:1px solid #000000;">
+                <tr>
+                    <td style="padding:10px; padding-bottom:0px; ">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td width="70%" align="left" valign="middle" style="font-size:20px; color:#000;">                                    
+                                    <b><label for="" style="font-size:16px;">E-Stamp: </label></b>{!eStampNo}
+                                </td>
+                                <td width="30%" align="right" style="text-align:right;">
+                                    <div class="merchantLogo" alt="" border="0" style="width:105px; float:right; "><apex:image url="{!$Resource.OnePayu_Logo}" width="100" height="30"/><!--<img src="https://i.imgur.com/7tmZI2W.png" width="100" height="30" alt="PayU logo"/>--></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr> 
+                <tr>
+                    <td valign="middle" style="padding-top:0px; padding:10px; font-size: 14px; line-height:20px; text-align:justify;">
+                        <div class="container" style="padding:10px; padding-bottom:0px;">
+                            <p>
+                                <b><h2 class="text_center"><center>TECHNOLOGY SERVICES AGREEMENT</center></h2></b>
+                            </p>
+                            
+                            <p>This Technology Services Agreement the ("<strong>Agreement</strong>") is made at New Delhi on <strong><apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!todayDate}" /> </apex:outputText></strong> ("<strong>Effective Date</strong>") by and between:</p>
+                            <p><strong>{!accObj.Legal_Name__c}</strong>, <strong>{!accObj.BusinessCategoryName__c}</strong>, having its registered office at
+                                <strong>
+                                    <apex:outputText value="{!IF(regAddress.Address_Line__c!=null && regAddress.Address_Line__c!='', regAddress.Address_Line__c + ', ', null)}"/>
+                                    <apex:outputText value="{!IF(regAddress.City__c!=null && regAddress.City__c!='', regAddress.City__c + ', ', null)}"/>
+                                    <apex:outputText value="{!IF(regAddress.State__c!=null && regAddress.State__c!='', regAddress.State__c + ', ', null)}"/>
+                                    <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Country__c!='', regAddress.Country__c, null)}"/>
+                                    <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Pincode__c!=null, ' - ', null)}"/>
+                                    <apex:outputText value="{!IF(regAddress.Pincode__c!=null && regAddress.Pincode__c!='', regAddress.Pincode__c, null)}"/>
+                                </strong>
+                                (hereinafter referred to as "<strong>Merchant</strong>", which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns)</p>
+                            
+                            <h4>AND</h4>
+                            
+                            <p><strong>PayU Payments Private Limited</strong>, a company incorporated under the Companies Act, 1956, having its registered office at 2nd Floor, P&amp;G Plaza Cardinal Gracious Road, Chakala, Andheri (East) Mumbai, Mumbai City, Maharashtra, Pin-400099 and corporate office at 9th Floor, Bestech Business Tower, Sector 48, Sohna Road, Gurgaon, Haryana, Pin - 122002, (hereinafter referred to as <strong>"PayU"</strong>, which expression shall, unless repugnant to the context thereof, include its successors-in-interest and permitted assigns);</p>
+                            
+                            <p>(PayU and the Merchant are hereinafter collectively referred to as <strong>“Parties”</strong> and individually as <strong>“Party”</strong>.)</p>
+                            
+                            <h4>WHEREAS:</h4>
+                            
+                            <ol type="A">
+                                <li>PayU is inter alia engaged in the business of providing payment support services and technology solutions. PayU has developed and implemented a technology platform and program for enabling repayment options to its merchants in harmony with the Banking Partner (defined hereinafter).</li>
+                                <li>The Merchant is in the business of <b>{!accObj.BusinessCategoryName__c}</b>, and their website is <b>{!oppObj.Website__c}</b>, The Merchant is further desirous of availing the Domestic Payout (defined hereinafter) facility offered by PayU.</li>
+                                <li>Based on the representations and warranties of the Merchant PayU is desirous of entering into an arrangement with the Merchant wherein PayU shall provide certain Domestic Payout Services (as detailed herein, to the Merchant for good and valuable consideration in accordance with the terms of this Agreement.</li>
+                                <li>Accordingly, the Parties are entering into this Agreement to record their mutual rights and obligations and the terms and conditions upon which PayU shall provide the Services (defined hereinafter) to the Merchant.</li>
+                                
+                            </ol>
+                            
+                            <strong>NOW THEREFORE,</strong> in consideration of the mutual promises, covenants set forth hereinafter this Agreement witness set as follows:
+                            <ol type="1">
+                                <h4><li>
+                                    DEFINITIONS
+                                    </li></h4>
+                                <span><p><b>1.1</b> In this Agreement where the context otherwise requires, the following words and expressions shall have the following meanings:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>a)</b> "Agreement" shall mean this Technology Services Agreement, all schedules, appendices, annexures and exhibits attached to it or incorporated in it by reference.</p></span>
+                                        <span><p><b>b)</b> "Banking Partner" shall mean the scheduled commercial bank which has entered into an arrangement with PayU in order to extend IMPS facility to the Merchant through Domestic Payout.</p></span>
+                                        <span><p><b>c)</b> "Pool Account" shall mean the bank account held by PayU with the Banking Partner for the purpose of pooling the monies received from the Merchant in order to provide the Services under the terms herein, and the details of which are provided at Annexure B.</p></span>
+                                        <span><p><b>d)</b> "Confidential Information" shall mean any and all written, oral or other tangible or intangible form of information, discoveries, ideas, concepts, know-how (whether patentable or copyrightable or not), research, development, designs, drawings, blueprints, diagrams, models, samples, flow charts, data, computer programs, disks, diskettes, tapes, algorithms, software programs, marketing plans or techniques, technical, financial, or business information” trade secrets which includes but is not restricted to any portion or scientific or technical or proprietary information, design, process, procedure, formula or improvement which is not generally available to the public as delivered by either Party (“Disclosing Party”) to the other Party (“Receiving Party”) within the framework of this Agreement or resulting therefrom. Provided that confidential information disclosed orally or those produced by electronic media or through any other intangible means shall be deemed confidential if it is identified as being confidential if it is reduced in writing within (30) thirty days of the date of disclosure. Such writing shall specify the date, time, place, persons involved and the substance of the confidential information so disclosed.</p></span>
+                                        <span><p><b>e)</b> "Customer" shall mean an individual or legal entity to whom the funds are to be settled by the Merchant in accordance with the contract between the Merchant and Customer.</p></span>
+                                        <span><p><b>f)</b> "Customer Account" shall mean a bank account of the Customer to which the funds are to be transferred as per the instructions of the Merchant.</p></span>
+                                        <span><p><b>g)</b> "Domestic Payout" shall mean a facility which enables the Merchant to settle Payout Amount to multiple Customers through a single command made through an application programming interface (API), using IMPS services of the Banking Partner.</p></span>
+                                        <span><p><b>h)</b> "Fees" shall mean the charges payable by the Merchant to PayU against each successful Transaction.</p></span>
+                                        <span><p><b>i)</b> "IMPS" shall mean immediate payment service provided by the Banking partner which facilitates instant electronic fund transfer in accordance with the rules and regulations of RBI</p></span>
+                                        <span><p><b>j)</b> "Transaction" shall mean each transaction initiated via IMPS for settlement of the Payout Amount in accordance with the instructions of the Merchant.</p></span>
+                                        <span><p><b>k)</b> "Merchant Platform" shall mean the platform for API communication belonging to the Merchant. </p></span>
+                                        <span><p><b>l)</b> "Payout Amount" shall mean the amount to be transferred by the Merchant to a particular Customer. </p></span>
+                                        <span><p><b>m)</b> "Services" shall mean the technology services i.e. Domestic Payout product being offered to the Merchant under the scope of this Agreement. </p></span>
+                                    </ul>
+                                </ol>
+                                
+                                <span><p><b>1.2</b> In this Agreement:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>a)</b> Except where the context requires otherwise, references to Clauses, Schedules and Annexures are to Clauses of, Schedules to and Annexures to this Agreement.</p></span>
+                                        <span><p><b>b)</b> Words denoting the singular number include the plural number and vice versa, words denoting the masculine gender include the feminine gender and words denoting persons include companies.</p></span>
+                                        <span><p><b>c)</b> Headings are inserted for convenience only and shall not affect the construction of this Agreement.</p></span>
+                                        <span><p><b>d)</b> In case of any ambiguity or discrepancy between the Clauses and the Annexures to this Agreement, the Clauses shall prevail.</p></span>
+                                        <span><p><b>e)</b> Any reference to any agreement, deed, instrument, licence, code or other document of any description shall be construed, at the particular time, as a reference to that agreement, deed, instrument, licence code or other document as the same may then have been amended, varied, supplemented, modified, suspended or novated.</p></span>
+                                        
+                                    </ul>
+                                </ol>
+                                <h4><li>
+                                    TERMS
+                                    </li></h4>
+                                <span><p><b>2.1</b> This Agreement shall be in force from the Effective Date and shall remain in force until terminated by either Party in accordance with the provisions of this Agreement.</p></span>
+                                <h4><li>
+                                    SCOPE OF SERVICES
+                                    </li></h4>
+                                
+                                <span><p><b>3.1</b> PayU will provide Domestic Payout facility to the Merchant for sending/ transferring the Payout Amount through IMPS to the Customers. . For this the Merchant shall transfer the total Payout Amount in the Pool Account of PayU along with Customer Account details in the manner prescribed by PayU and/ or mutually agreed between the Parties.</p></span>
+                                <span><p><b>3.2</b> The Merchant will provide the instruction of remittance via Domestic Payout API which shall include the Customer Account details along with the Payout Amount to be transferred to the Customer.</p></span>
+                                <span><p><b>3.3</b> PayU will do the remittances, using the Banking Partner’s IMPS API, subject to the system response of the Banking Partner and availability of sufficient funds of the Merchant in the Pool Account.</p></span>
+                                <span><p><b>3.4</b> In relation to the Services to rendered by PayU in accordance with the terms of this Agreement, the Merchant hereby agrees to permit PayU to undertake the following:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>(i)</b> ensure the accuracy of the details via API call to PayU in processing of the Transactions in accordance with the terms of this Agreement;</p></span>
+                                        <span><p><b>(ii)</b> integrate the software with the Merchant Platform to enable the Transaction processing. </p></span>
+                                    </ul>
+                                </ol>
+                                <span><p><b>3.5</b> The Parties hereby agree that they shall cooperate with each other and provide all support in respect of any audit which maybe initiated by any third party and/or any regulatory body against PayU and/or the Merchant in respect of the transactions contemplated under this Agreement.</p></span>
+                                <span><p><b>3.6</b> Nothing in this Agreement shall be deemed to limit in any way the right of PayU to provide, to a third party, services which are similar to the Services agreed to be provided by PayU to the Merchant under this Agreement. However the Merchant agrees that it shall not avail the Services or similar services from any other service provider or any third party for a period of at least 1 (one) year from the date of execution of the Agreement. </p></span>
+                                
+                                <h4><li>
+                                    COVENANTS OF THE MERCHANT
+                                    </li></h4>
+                                
+                                <span><p><b>4.1</b> In order to avail the Domestic Payout facility/ services under this Agreement, the Merchant shall comply with the terms and conditions as may be prescribed by PayU for provision of Services under this Agreement.</p></span>
+                                <span><p><b>4.2</b> Merchant shall be solely responsible for providing and accuracy of Customer details as may be necessary for performance of Services by PayU as per the terms and conditions of this Agreement and shall enable integration of the PayU software in relation to the Domestic Payout facility with the Merchant Platform.</p></span>
+                                <span><p><b>4.3</b> The Merchant hereby confirms that the business being carried on by the Merchant is in accordance with applicable laws. The Merchant shall ensure that the Payout Amount payable by the Merchant to the Customer is legally payable by the Merchant and the Customer is legally entitled to recover the same from the Merchant.</p></span>
+                                <span><p><b>4.4</b> In order to avail the Domestic Payout facility/service under this Agreement, the Merchant shall ensure to do the complete KYC of the Customer as per applicable laws including compliance with KYC policy and anti-money laundering regulations.  The Merchant shall provide the documents including KYC as and when required by PayU. </p></span>
+                                <span><p><b>4.5</b> The Merchant shall be responsible for informing PayU for the Payout Amount and the correct details of the Customer Account. The Merchant understands that PayU shall not be liable to verify the details of the Payout Amount, Customer Account and other details provided to PayU through the API. The Merchant understands that PayU will settle the funds to the Customer Account strictly in accordance with the instructions of the Merchant through API.</p></span>
+                                <span><p><b>4.6</b> The Merchant shall ensure that prior initiating a payout request through the Domestic Payout facility, the Merchant shall ensure that sufficient funds to process the same are available in the Pool Account. The Merchant understands that in the event of insufficient funds of the Merchant available in the Pool Account for a payout request, PayU will not process the payout request unless sufficient funds are available in the Pool Account. . </p></span>
+                                <span><p><b>4.7</b> The Merchant agrees that PayU reserve the right to request for such amount from time to time to be held with PayU to secure the performance of the Merchant’s obligations under this Agreement. Non-compliance with this clause shall be considered a breach of this Agreement.</p></span>
+                                <span><p><b>4.8</b> The Merchant shall not engage in any activities that harm the business and/ or brand of PayU and or the Banking Partner.</p></span>
+                                <span><p><b>4.9</b> The Merchant hereby confirms that PayU is acting in accordance with the instructions of the Merchant. The Merchant hereby agrees to indemnify and hold harmless PayU, against any loss, damage, claim, fine, penalty etc. raised by the Customer against PayU for any reason whatsoever.</p></span>
+                                <span><p><b>4.10</b> The Merchant acknowledges that PayU shall not be liable for any Domestic Payout facility/ services which could not be processed for any reason attributable to the Banking Partner/ Merchant/ third party and/ or Customers.</p></span>
+                                <span><p><b>4.11</b> The Merchant acknowledges and agrees that PayU may store the Customer data/ information shared by the Merchant in order to process such request for Domestic Payout services/ facility. </p></span>
+                                <span><p><b>4.12</b> In consideration for the Domestic Payout services, the Merchant agrees to pay to PayU, Fees as detailed at Annexure A.</p></span>
+                                <span><p><b>4.13</b> Merchant shall comply with the all the applicable laws, rules and regulations including RBI regulations, guidelines, and Anti Money Laundering laws in force in India. </p></span>
+                                <span><p><b>4.14</b> The Merchant assures and guarantees to PayU that the Merchant complies with all government laws, rules, and regulations applicable to its business and supports the eradication of corruption. Consistent with the Anti-bribery/Anti-corruption, and Anti-money laundering, the Merchant has had a long-standing commitment to compliance with the minimum requirements adopted by the US/OFAC, UK, UN and the EU in regards to anti-bribery and anti-corruption, anti-money laundering <b>("Anti-Financial Crimes Laws")</b> of all of the countries and territories in which the Company does business. Merchant acknowledges and agrees that the Merchant undertakes to be compliant and shall continue to abide to the relevant Anti-Financial Crimes Laws set out in<b> Schedule B</b> hereto.</p></span>
+                                
+                                <h4><li>
+                                    OBLIGATIONS OF PAYU
+                                    </li></h4>
+                                
+                                <span><p><b>5.1</b> PayU shall endeavor to transfer the Payout Amount to the Customers in accordance with the instructions issued by the Merchant, provided such details were shared as per PayU’s instructions and/ or mutually agreed between the Parties.</p></span>
+                                <span><p><b>5.2</b> Merchant acknowledges and agrees that PayU will transfer the Payout Amount to the Customers only on receipt of advance balance in the Pool Account.</p></span>
+                                
+                                <h4><li>
+                                    REPRESENTATION BY THE PARTIES
+                                    </li></h4>
+                                
+                                <span><p><b>6.1</b> Each of the Parties represents warrants and undertakes that:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>(a)</b> It is duly organized and validly existing under the laws of the jurisdiction in which it is established;</p></span>
+                                        <span><p><b>(b)</b> It has the requisite power and authority to execute, deliver and perform this Agreement and that this Agreement has been duly and validly authorized, executed and delivered by it;</p></span>
+                                        <span><p><b>(c)</b> Its obligations hereunder constitute legal, valid, binding and enforceable obligations; and</p></span>
+                                        <span><p><b>(d)</b> The execution and delivery of this Agreement and the consummation of the Transactions, the PayU services, Software Application and PayU Sites contemplated herein do not breach its organizational documents or any law, provisions of any contract or order of court applicable to it and do not require any applicable governmental approval; and</p></span>
+                                        <span><p><b>(e)</b> The person executing this Agreement is duly authorized to execute the Agreement for and on behalf of the respective Party and shall have the authority to bind the respective Party accordingly.</p></span>
+                                    </ul>
+                                </ol>
+                                
+                                <h4><li>
+                                    PAYMENT TO PAYU
+                                    </li></h4>
+                                
+                                <span><p><b>7.1</b> In consideration for the Services, the Merchant agrees to pay PayU, Fees as detailed at Annexure</p></span>
+                                <span><p><b>7.2</b> The Fees shall be deducted by PayU in respect of each successful Transaction payable to the Customer. PayU reserves the right to revise the Fees periodically, and PayU will intimate the Merchant of any such change within reasonable time.</p></span>
+                                <span><p><b>7.3</b> The Parties understand and agree that all the Transactions are being processed on pre-payment basis. The Merchant shall at all times maintain such balance daily or weekly in INR in Pool Account.</p></span>
+                                <span><p><b>7.4</b> The Parties understand and the Merchant hereby agrees, in case the Merchant is in breach of any covenant, represent or warranty or in breach of any applicable laws of India or becomes subject of any government scrutiny/ investigation, any or all funds towards balance in Pool Account shall be suspended for a period as may be identified by PayU at its sole discretion considering the nature/ complexity of the issue. The Merchant shall not raise any demur or protest in this regard.</p></span>
+                                <span><p><b>7.5</b> In connection with PayU Services the Fees shall be debited from the balance in the Pool Account by PayU which shall be non-refundable in nature for any reason whatsoever.</p></span>
+                                <span><p><b>7.6</b> All payments under this Agreement shall be subject to applicable tax deduction at source/ GST.</p></span>
+                                
+                                <h4><li>
+                                    INTELLECTUAL PROPERTY RIGHTS OBLIGATIONS
+                                    </li></h4>
+                                
+                                <span><p><b>8.1</b> Neither Party will use, display and reproduce the name, brand name, logo, wordmark, trademark, service marks (<b>"Marks"</b>) of the other Party without written prior consent of the other Party.</p></span>
+                                <span><p><b>8.2</b> The Merchant undertakes not to infringe the intellectual property rights of PayU and or the Banking Partner respectively, whether directly or indirectly.</p></span>
+                                
+                                <h4><li>
+                                    CONFIDENTIALITY
+                                    </li></h4>
+                                
+                                <span><p><b>9.1</b> The Parties agree to maintain the confidentiality of the Confidential Information and to protect all portions of the other Party's Confidential Information by preventing any unauthorized disclosure, copying, use, distribution, or transfer of possession of such information.  Dissemination of Confidential Information by each Party shall be limited to those employees with the need to such access for the advancement of the goals anticipated under this Agreement.</p></span>
+                                <span><p><b>9.2</b> The obligations set out in this Clause shall not apply to Confidential Information that:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>(a)</b> is or becomes publicly known other than through breach of this Clause.</p></span>
+                                        <span><p><b>(b)</b> is in possession of the receiving Party prior to disclosure by the other Party;</p></span>
+                                        <span><p><b>(c)</b> is independently developed by the receiving Party;</p></span>
+                                        <span><p><b>(d)</b> needs to be disclosed to professional advisers or in accordance with the order of a competent court or administrative authority;</p></span>
+                                        <span><p><b>(e)</b> is thereafter rightfully furnished to such receiving Party by a third party without restriction by that third party on disclosure; or</p></span>
+                                        <span><p><b>(f)</b> is required by law, judicial court, recognized stock exchange, government department or agency or other regulatory authority, provided that sufficient notice is given of any such requirement, by the receiving Party to the disclosing Party, in order that the disclosing Party may seek for an appropriate protective order or exemption from such requirement, prior to any disclosure being made by the receiving Party and/or its Affiliates.</p></span>
+                                    </ul>
+                                </ol>
+                                
+                                <h4><li>
+                                    RELATIONSHIP BETWEEN THE PARTIES 
+                                    </li></h4>
+                                
+                                <span><p><b>10.1</b> The relationship between PayU and the Merchant is on principal-to-principal basis. Nothing contained herein shall be deemed to create any association, partnership, joint venture or relationship of principal and agent or master and servant, or employer and employee between the Parties hereto or any affiliates or subsidiaries thereof or to provide either Party with the right, power or authority, whether express or implied to create any such duty or obligation on behalf of the other Party.</p></span>
+                                <span><p><b>10.2</b> PayU has no connection or interest of whatsoever nature in the business of the Merchant. PayU has no relationship with the Customers and all actions under this Agreement which may affect the Customers are instructed by the Merchant. The Merchant alone shall be responsible to the Customers and neither PayU nor the Banking Partner shall have any responsibility or liability towards the Customers and the Merchant shall keep PayU and the Banking Partner fully indemnified for all times to come in this respect. </p></span>
+                                
+                                <h4><li>
+                                    INDEMNITY
+                                    </li></h4>
+                                
+                                <span><p><b>11.1</b> The Merchant hereby undertakes and agrees to indemnify, defend and hold harmless PayU and/or the Banking Partner including their officers, directors and agents from and against all actions, proceedings, claims (including third party claims), liabilities (including statutory liability), penalties, demands and costs (including without limitation, legal costs), awards, damages, losses and/or expenses however arising directly or indirectly, including but not limited to, as a result of:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>(a)</b> breach or non-performance by the Merchant of any of its undertakings, warranties, covenants, declarations or obligations under this Agreement;</p></span>
+                                        <span><p><b>(b)</b> breach of confidentiality and intellectual property rights obligations by the Merchant;</p></span>
+                                        <span><p><b>(c)</b> any claim or proceeding brought by the Customer or any third party against PayU and/or the Banking partner;</p></span>
+                                        <span><p><b>(d)</b> any claim or proceeding brought by any third party in regards to the Advance Balance maintained with the Banking Partner;</p></span>
+                                        <span><p><b>(e)</b> any customer information that may be provided through API by the Merchant;</p></span>
+                                        <span><p><b>(f)</b> any claim or proceeding brought by the Customer or any third party against PayU and/or the Banking Partner in respect of services offered under this Agreement;</p></span>
+                                        <span><p><b>(g)</b> any act, deed, negligence, omission, misrepresentation, default, misconduct, non-performance or fraud by the Merchant, its employees, contractors, agents,  Customers or any third party;</p></span>
+                                        <span><p><b>(h)</b> breach of law, rules regulations, legal requirements (including RBI regulations, Card Association Rules, Acquiring Bank rules) in force in India and/or in any place from where the Customers is making the Transaction and/or where the Product is or to be Delivered and/or where the respective Issuing Institution is incorporated/registered/established.</p></span>
+                                    </ul>
+                                </ol>
+                                <span><p><b>11.2</b> The indemnities under this Clause are in addition to and without prejudice to the indemnities given elsewhere in this Agreement.</p></span>
+                                <span><p><b>11.2</b> The indemnities provided herein shall survive the termination of this Agreement.</p></span>
+                                
+                                <h4><li>
+                                    LIMITATION OF LIABILITY
+                                    </li></h4>
+                                
+                                <span><p><b>12.1</b> Notwithstanding anything stated under this Agreement, the aggregate liability of PayU to the Merchant from any cause whatsoever shall not in any event exceed the sum equivalent to preceding 1 (one) month’s aggregate Fees earned by PayU under this Agreement, from the date of occurrence of such liability. Provided that PayU shall not be liable to the Merchant for any special, incidental, indirect or consequential damages, damages from loss of profits or business opportunities even if the Merchant shall have been advised in advance of the possibility of such loss, cost or damages. In no event shall PayU or the Banking Partner be liable to the Customers or any third party.</p></span>
+                                
+                                <h4><li>
+                                    DISCLAIMER
+                                    </li></h4>
+                                
+                                <span><p><b>13.1</b> PayU will make reasonable efforts to provide uninterrupted service to the Merchant. Although PayU adopts security measures it considers appropriate in offering the Service, it does not assure or guarantee that no person will overcome or subvert the security measures and gain unauthorized access to the systems or the Merchant/Customer data. PayU shall not be responsible or liable if any unauthorized person hacks into or gains access to the PayU systems or to the Pool Account. PayU shall not be liable for any service or default in service of the Banking Partner.</p></span>
+                                <span><p><b>13.2</b> PayU's sole obligation and the Merchant’s sole and exclusive remedy in the event of interruption of Services shall be to use all reasonable endeavors to restore the Services as soon as reasonably possible.</p></span>
+                                
+                                <h4><li>
+                                    TERMINATION AND CONSEQUENCES OF TERMINATION
+                                    </li></h4>
+                                
+                                <span><p><b>14.1</b> Either Party may terminate this Agreement by giving 30 (thirty) days prior notice to the other.</p></span>
+                                <span><p><b>14.2</b> PayU shall terminate this Agreement forthwith, if the Merchant fails to perform its obligations hereunder or is in breach of any terms and conditions of this Agreement.</p></span>
+                                <span><p><b>14.3</b> Either Party may terminate this Agreement forthwith in the event:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>(a)</b> the other Party discovers at any stage that the other Party is in violation of any law or regulation;</p></span>
+                                        <span><p><b>(b)</b> the other party is adjudicated as bankrupt or goes into liquidation either voluntarily or compulsorily;</p></span>
+                                        <span><p><b>(c)</b> the other Party is prohibited by any regulatory or statutory restriction from continuing to provide services under this Agreement;</p></span>
+                                        <span><p><b>(d)</b> the other Party is in Violation of applicable laws of India.</p></span>
+                                    </ul>
+                                </ol>
+                                <span><p><b>14.4</b> The Termination of this Agreement shall not affect the rights or liabilities of either Party incurred prior to such termination.</p></span>
+                                <span><p><b>14.5</b> Consequences of Termination</p></span>
+                                <span><p><b>14.6</b> Upon termination of this Agreement for any reason whatsoever, the Merchant will:</p></span>
+                                <ol>
+                                    <ul>
+                                        <span><p><b>(a)</b> Immediately refrain from any action that would or may indicate any relationship with PayU;</p></span>
+                                        <span><p><b>(b)</b> Immediately cease to use in any manner whatsoever the trademarks, Intellectual Property or any software material provided by PayU; and</p></span>
+                                        <span><p><b>(c)</b> Within seven (7) days, following the date of termination hand over to each other the possession of all documents, materials including any Confidential Information and any other property belonging to PayU that may be in the possession of the Merchant or any of its employees, agents or individuals assigned to perform the services under this Agreement and also destroy the copy of such documents/materials (on any media) available with the Merchant with proof served to PayU.</p></span>
+                                    </ul>
+                                </ol>
+                                
+                                <h4><li>
+                                    GENERAL PROVISIONS
+                                    </li></h4>
+                                
+                                <span><p><b>15.1 Assignments:</b> PayU may assign, in whole or in part, the benefits or obligations of this Agreement by providing a thirty (30) days prior intimation of such assignment to the Merchant, which shall be binding on the Parties to this Agreement.</p></span>
+                                <span><p><b>15.2 Force Majeure:</b> PayU shall not be liable for its failure to perform under this Agreement as a result of any event of force majeure events like acts of god, fire, wars, sabotage, civil unrest, labour unrest, action of Statutory Authorities or local or Central Governments, change in Laws, Rules and Regulations, affecting the performance of PayU or the Banking Partner.</p></span>
+                                <span><p><b>15.3 Governing Law:</b> Settlement of Disputes and Jurisdiction: This Agreement (and any dispute or claim relating to it, its enforceability or its termination) is to be governed by and construed in accordance with the laws of India. Each of the Parties agrees that, if any dispute(s) or difference(s) shall arise between the Parties in connection with or arising out of this Agreement, the Parties shall attempt, for a period of 30 (thirty) days from the receipt of a notice from the other Party of the existence of a dispute(s), to settle such dispute(s) by mutual discussions between the Parties. If the said dispute(s) cannot be settled by mutual discussions within the thirty-day period provided above, either Party may refer the matter to a sole arbitrator to be mutually appointed in accordance with the Arbitration and Conciliation Act, 1996. The arbitration proceedings shall be held under the provisions of the Arbitration and Conciliation Act, 1996. The arbitration proceedings shall be held in English language at New Delhi. The courts at New Delhi shall have the exclusive jurisdiction over any disputes relating to the subject matter of this Agreement.</p></span>
+                                <span><p><b>15.4 Waiver:</b> Unless otherwise expressly stated in this Agreement, the failure to exercise or delay in exercising a right or remedy under this Agreement shall not constitute a waiver of the right or remedy or a waiver of any other rights or remedies, and no single or partial exercise of any right or remedy under this Agreement shall prevent any further exercise of the right or remedy or the exercise of any other right or remedy.</p></span>
+                                <span><p><b>15.5 Survival of Provisions:</b> The terms and provisions of  this  Agreement that  by  their  nature and  content  are  intended  to survive  the performance hereof by any or  all  Parties hereto shall so survive the completion and  termination of this Agreement.</p></span>
+                                <span><p><b>15.6 Severability:</b> If any provision of this Agreement is or becomes, in whole or in part, invalid or unenforceable but would be valid or enforceable if some part of that provision was deleted, that provision shall apply with such deletions as may be necessary to make it valid. If any Court/Tribunal of competent jurisdiction holds any of the provisions of this Agreement unlawful or otherwise ineffective, the remainder of this Agreement shall remain in full force and the unlawful or otherwise ineffective provision shall be substituted by a new provision reflecting the intent of the provision so substituted.</p></span>
+                                <span><p><b>15.7 Non-Exclusivity:</b> It is agreed and clarified that this Agreement is on exclusive basis for a period of 1(one) year from the Execution Date and the Merchant is at no liberty to enter into similar agreements with others. Non abidance of this provision shall be considered a material breach under the terms of this Agreement. </p></span>
+                                <span><p><b>15.8 Entire Agreement:</b> This Agreement constitutes the entire Agreement and understanding between the Parties relating to the subject matter herein. All Schedules, Recitals and Annexure to this Agreement shall be an integral part of this Agreement and will be in full force and effect as though they were expressly set out in the body of this Agreement.</p></span>
+                                <span><p><b>15.9 Notices:</b> All notices, requests, demands, waivers and other communications required or permitted to be given under the Agreement shall be in writing through certified or registered mail, courier, email, facsimile or telegram to be sent to the following addresses:</p></span> 
+                                <span><p style="margin-left:25px;">
+                                    <ul>
+                                        <strong style="margin-left:25px;">For PayU:</strong><br/>
+                                        <p style="margin-left:25px;">
+                                            Attn: Legal Department (PayU India)
+                                        </p>
+                                        <p style="margin-left:25px;">
+                                            PayU Payments Private Limited
+                                        </p>
+                                        <p style="margin-left:25px;">
+                                            9th Floor, Bestech Business Tower,
+                                        </p>
+                                        <p style="margin-left:25px;">
+                                            Sector 48, Sohna Road, Gurgaon,
+                                        </p>
+                                        <p style="margin-left:25px;">
+                                            Haryana, Pin - 122002
+                                        </p>
+                                    </ul>
+                                </p></span>
+                            
+                            <span><p>
+                                <ul>                                                           
+                                    <strong style="margin-left:25px;">For {!accObj.legal_Name__c}</strong><br/>
+                                    <p style="margin-left:25px;">
+                                        Or, in each case, at such other address as may be specified in writing to the other Parties in accordance with the requirements of this Clause. All such notices, requests, demands, waivers and other communications shall be deemed duly given (i) if by personal delivery, on the day after such delivery, (ii) if by certified or registered mail, on the10th (tenth) day after the mailing thereof, (iii) if by courier service or similar service, on the day delivered, or (iv) if by email, facsimile or telegram, on the day following the day on which such email, facsimile or telegram was sent, provided that a copy is also sent by registered mail and, in the case of a facsimile, electronic confirmation of receipt is received. 
+                                    </p>
+                                </ul>
+                            </p></span>
+                        
+                        
+                        <span><p><b>15.10 Amendment:</b> This Agreement shall not be varied, amended or modified by any of the Parties in any manner whatsoever unless such variation, amendment or modification is mutually discussed  and agreed to in writing and duly executed by both the Parties.</p></span>
+                        <span><p><b>15.11 Counterparts:</b> This Agreement may be executed in two or more counterparts, each of which, when executed and delivered, is an original, but all the counterparts taken together shall constitute one document.</p></span>
+                        <span><p>
+                            <ul>
+                                
+                                <p style="margin-left:25px;">
+                                    
+                                    <strong >IN WITNESS WHEREOF </strong>the Parties hereto have executed this Agreement through their Authorized Signatories on the day, month and year first herein mentioned above: 
+                                </p>
+                            </ul>
+                        </p></span>
+                <span><p>
+                    <ul>
+                        
+                        <table style="margin-left:25px;">
+                            <tr>
+                                <td width="400"><strong>
+                                    <u>For  {!accObj.Legal_Name__c}</u>
+                                    
+                                    </strong></td>
+                                <td width="100"></td>
+                                <td width="400"><strong><u>For PayU Payments Private Limited</u></strong></td>
+                            </tr>
+                            <tr>
+                                <td><p style="height: 100px; border-bottom:1px dashed #333; margin-bottom: 0"></p>Signature</td>
+                                <td></td>
+                                <td><p style="height: 100px; border-bottom:1px dashed #333; margin-bottom: 0"></p>Authorized Signatory</td>
+                            </tr>
+                            <tr>
+                                <td><p align="left">Name: {!IF(conAuthSign != null, conAuthSign.Name, null)}</p>
+                                    Designation:{!IF(conAuthSign != null, conAuthSign.Designation__c, null)}</td>
+                                <td></td>
+                                <td><p align="left">Name:</p>
+                                    Designation:</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p></span>
+            
+            <br/><br/>
+            <strong><p>
+                DISCLAIMER: By accepting this Agreement you understand that you are binding the Merchant with the terms and conditions stated hereinabove and you hereby also confirm that you are authorized by the Merchant to accept and bind the Merchant with the terms and conditions under this Agreement.
+                </p></strong>
+        </ol>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <p style="text-align: Center;"><strong>ANNEXURE A</strong></p>
+        <p style="text-align: left;margin:10px;"><strong>The Merchant shall pay to PayU:</strong></p>
+        
+        <!-- <tr>
+<td class="graybg" style="background: #f2f2f2;">Mode of Payment</td>
+<td class="graybg" style="background: #f2f2f2;">Transaction Size</td>
+<td class="graybg" style="background: #f2f2f2;">Fees* (Exclusive of Applicable Taxes) for each successful Transaction</td>
+</tr>-->
+        <c:PayoutPricingDetailVFComponent OptyObjId="{!Opportunity.Id}"/>
+      <!--  <apex:outputPanel rendered="{!IF(listPayoutFeeMaster.size>0 && listPayoutFeeMaster != null,true,false)}">
+            
+            <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                
+                <thead>  
+                    <tr>  
+                        <th class="graybg" style="background: #f2f2f2;">Mode of Payment</th>
+                        <th class="graybg" style="background: #f2f2f2;">Transaction Size</th>
+                        <th class="graybg" style="background: #f2f2f2;">Fees* (Exclusive of Applicable Taxes) for each successful Transaction</th>
+                        
+                    </tr>  
+                </thead> 
+                <apex:repeat id="modeRepeatHeader" value="{!modeList}" var="key">         
+                    <apex:variable var="count" value="{!1}"/>            
+                    <apex:repeat id="pricingDetails" value="{!pricingMap[key]}" var="att">
+                        
+                        <tr>
+                            <apex:outputPanel layout="none" rendered="{!count==1}">
+                                <td width="30%" rowspan="{!(pricingCountMap[key])}"><apex:outputText value="{!att.Mode}"/></td>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!(pricingCountMap[key]) <=1}">
+                            	<td width="40%">Any Amount</td>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!(pricingCountMap[key]) > 1}">
+                            	<td width="40%">Greater than &nbsp;<apex:outputText value="{!att.priceRange}"/></td>
+                            </apex:outputPanel>
+                            <td width="30%"><apex:outputText value="{!att.amount}"/></td>
+                            
+                            <apex:variable var="count" value="{!count+1}"/>
+                        </tr>
+                    </apex:repeat>
+                </apex:repeat>
+            </table>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!IF(listPayoutFeeMaster.size==0,true,false)}">
+            <table style="width: 97%; padding:0px; margin:10px; font-size: 14px; line-height:15px; page-break-before:auto;" class="tabData" cellpadding="10" cellspacing="0" border="1">
+                
+                <thead>  
+                    <tr>  
+                        <th class="graybg" style="background: #f2f2f2;">Mode of Payment</th>
+                        <th class="graybg" style="background: #f2f2f2;">Transaction Size</th>
+                        <th class="graybg" style="background: #f2f2f2;">Fees* (Exclusive of Applicable Taxes) for each successful Transaction</th>
+                        
+                    </tr>  
+                </thead> 
+                <tbody>
+                    <tr>                
+                        <td width="40%" class="" rowspan="2"><b>1. IMPS</b></td>
+                        <td width="30%" class="">Less than Rs. 25000/-</td>
+                        <td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].UPI_Transaction_less_than_25000__c !=null,'INR '+listFeeMaster[0].UPI_Transaction_less_than_25000__c,'INR 4.5')}</td>
+                    </tr>
+                    <tr>
+                        <td width="30%" class="">Above Rs. 25001/-</td>
+                        <td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].UPI_Transaction_above_than_25000__c !=null,'INR '+listFeeMaster[0].UPI_Transaction_above_than_25000__c ,'INR 6.5')}</td>
+                    </tr>
+                    <tr>                
+                        <td width="40%" class="" rowspan="3"><b>2. UPI</b></td>
+                        <td width="30%" class="">Rs. 1 to Rs. 1000</td>
+                        <td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].UPI_Transaction_less_than_25000__c !=null,'INR '+listFeeMaster[0].UPI_Transaction_less_than_25000__c,'INR 4')}</td>
+                    </tr>
+                    <tr>
+                        <td width="30%" class="">Rs. 1001 to Rs. 25000</td>
+                        <td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].UPI_Transaction_above_than_25000__c !=null,'INR '+listFeeMaster[0].UPI_Transaction_above_than_25000__c ,'INR 5')}</td>
+                    </tr>
+                    <tr>
+                        <td width="30%" class="">Rs. 25001 and Above</td>
+                        <td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].UPI_Transaction_above_than_25000__c !=null,'INR '+listFeeMaster[0].UPI_Transaction_above_than_25000__c ,'INR 9')}</td>
+                    </tr>
+                    <tr>                
+                        <td width="40%" class=""><b>3.	NEFT</b></td>
+                        <td width="30%" class="">Any Amount </td>
+                        <td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].NEFT__c !=null,'INR '+listFeeMaster[0].NEFT__c,'INR 1.5')}</td>
+                    </tr>-->
+                    <!--<tr>                
+<td width="40%" class=""><b>3.	RTGS</b></td>
+<td width="30%" class="">Any Amount </td>
+<td width="30%" class="">{!IF(listFeeMaster.size>0 && listFeeMaster!= null && listFeeMaster[0].RTGS__c !=null,'INR '+listFeeMaster[0].RTGS__c,'INR 8')}</td>
+</tr>-->
+              <!--  </tbody>
+            </table>
+        </apex:outputPanel>-->
+        
+        <br/>
+        <p style="text-align: left;margin:10px;"><strong>Terms and Conditions:</strong></p>
+        <ol>
+            <ul style="text-align: left;margin:10px;">
+                <li >All consideration payments are in relation to Services to be received.</li>
+                <li >The fees are exclusive of GST and any other applicable taxes/ levies, if any.</li>
+                <li>Merchant shall bear and be responsible and liable for the payment of all relevant taxes including GST in relation to the Domestic Payout Transactions under this Agreement.</li>
+            </ul>
+        </ol>
+        
+        <br/><br/><br/>
+        <p style="text-align: Center;"><strong>SCHEDULE B</strong></p>
+        <p style="text-align: left;margin:10px;"><strong>CONFIRMATION ON ANTI-BRIBERY AND ANTI-CORRUPTION, ANTI-MONEY LAUNDERING AND EXPORT CONTROLS (“Anti-financial Crimes Laws Confirmation”)</strong></p>
+        <p style="text-align: left;margin:10px;"><strong>Statement and Purpose:</strong> The Merchant and its group companies are committed to operating its businesses conforming to the highest moral and ethical standards. The Merchant has a stringent code of conduct and confirms hereby that is committed to acting professionally, fairly and with integrity in all its business transactions and relationships wherever it operates. The Merchant undertakes to comply and implement in its processes all legal requirements  relevant to counter ‘bribery and corruption’, ‘money laundering’ and ‘restricted export-import transactions’ applicable in the conduct of its business, the minimum requirements adopted by the US/OFAC, UK, UN and the EU in regards to anti-bribery and anti-corruption, anti-money laundering/ combating the financing of terrorism and other applicable export control laws and regulations including but not limited to any restrictions on the export or import dealings with the ‘Sanctioned Persons’<sup>1</sup> <b> (“Anti-Financial Crimes Laws”).</b>
+            
+        </p>
+        <p style="text-align: left;margin:10px;"><strong>This Anti-Financial Crimes Laws Confirmation constitutes a minimum standard. </strong>The Merchant undertakes to be compliant and shall continue to abide to the relevant Anti-Financial Crimes Laws: By signing the main services agreement, Merchant acknowledges and agrees that it:
+            
+        </p>
+        <ol>
+            <li style="text-align: left;margin:10px;"> will comply with all applicable laws, regulations and sanctions relating to anti-bribery, anti-corruption, anti-money laundering and export controls including but not limited to the minimum requirements of the Anti-Financial Crimes Laws.</li>
+            <li style="text-align: left;margin:10px;"> is prohibited from dealing with any acts which may be deemed as money laundering under any applicable law, regulations or restrictions. </li>
+            <li style="text-align: left;margin:10px;"> will prohibit the entering into agreements with any person who has been identified in the sanctions list maintained by different state authorities or organisations. </li>
+            <li style="text-align: left;margin:10px;"> has implemented an internal compliance programme, to ensure compliance with and detect violations of all applicable Anti-Financial Crimes Laws.</li>
+            <li style="text-align: left;margin:10px;"> in the event the Merchant does not honor these commitments, the Merchant agrees that this will be considered as a material breach of the Agreement. Therefore, PayU may immediately terminate the Agreement.</li>
+        </ol>
+        
+        <br/><br/><br/><br/><br/><br/>
+        
+        ________________________
+        <p style="text-align: left;margin:10px;font-size:12px;"><sup>1</sup>‘Sanction Persons’ refer to those persons who are identified in the sanctions list maintained by the US (OFAC), UN and EU.
+            
+        </p>
+    </div>
+</td>
+</tr>
+</table> 
+</body>
+</html>
+</apex:page>

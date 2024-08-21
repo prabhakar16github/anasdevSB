@@ -198,6 +198,5 @@ public class VKYC_DetailsController {
         public Video_KYC__c vkycObj = new Video_KYC__c();
         @AuraEnabled
         public boolean isValidLink = true;
-        
     }
 }

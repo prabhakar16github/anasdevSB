@@ -1,0 +1,17 @@
+<apex:page standardController="Lead" recordSetVar="leads">
+  <apex:includeLightning />
+    <div id="lightning" />
+	<script>
+		$Lightning.use("c:offlineOnboardingApp", function() {
+        	 $Lightning.createComponent("c:offlineOnboardingFormCmp", {
+            	   objectName: "Lead"
+                 },
+              "lightning",
+              function(cmp) {
+                console.log("LWC component was created");
+                // do some stuff
+              }
+          );
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,66 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="pdf" standardStylesheets="false"  showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>Chnage in Legal Name</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td 
+                {
+                border:1px #000 solid!important;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <p align="center">[On New Legal Entity Letterhead]</p>
+                <p id="dt" align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>
+                <p>To,</p>
+                <p style="text-align:left;">
+                    <strong>PayU Payments Private Limited</strong>
+                    <br/>9th Floor, Bestech Business Tower, Sector 48, 
+                    <br/>Sohna Road, Gurgaon, Haryana, Pin - 122002
+                    <br/>
+                </p>
+                <p>Dear Sir,</p>
+                <p><strong><u>Subject: Change in the Legal Name of the Company</u></strong></p>
+                <p>We, <strong>{!accObj.Legal_Name__c} </strong> a ({!accObj.Business_Entity__r.Name}) entered into a service agreement/ an agreement vide an account opening form dated <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText> ("Service Agreement")</strong> with <strong>PayU Payments Private Limited ("PayU")</strong> in accordance to which PayU provides us with aggregate online payment gateway solutions and services through its 'PayU' platform (<strong>"PayU Services"</strong>) for our website with domain: <strong>{!oppObj.Website__c}</strong>  </p>
+                <p>This letter is to inform PayU that our legal name has been changed from;</p>
+                <p><strong>{!IF(accParentObj.Id != null && accParentObj.Legal_Name__c != null, accParentObj.Legal_Name__c, null)}</strong></p>
+                <p>To</p>
+                <p><strong>{!accObj.Legal_Name__c}</strong></p>
+                <p>In this respect, we request PayU to make the requisite change to the Service Agreement and such other documents as required in order to avail the PayU Services.</p>
+                <p>We understand that the submission of this letter will constitute as an amendment to the Service Agreement and hereby confirm that there has been no change in the constitution, management and registered address of <strong>{!IF(accParentObj.Id != null && accParentObj.Legal_Name__c != null, accParentObj.Legal_Name__c, null)}</strong> and/or the Authorized Signatory since the last application submitted to PayU.</p>
+                <p>In addition, please find attached the requisite documents requested.</p>                
+                <br/>
+                <p>Best Regards,</p><br/>
+                <p>__________________</p>
+                <p style="text-align:left;">
+                    <strong>Name:</strong><br/>
+                    <strong>Designation:</strong> <br/>
+                    <strong>(Authorized Signatory)</strong>
+                </p>
+            </div>
+        </body>
+    </html>
+</apex:page>

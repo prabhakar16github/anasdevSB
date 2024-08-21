@@ -103,6 +103,10 @@ export default class ExistingCommercialsComponent extends LightningElement {
         .then(result => {
             if(result.message.includes('SUCCESS')) {
                 this.showSpinner = false;
+                if(!result.allowEdit){
+                    this.showToast('INFO','info','Commercial can not be edit at this time. Some request are still processing.');
+                    return;
+                }
                 let listFixedPricing = [];
                 let listFallbackCharges = [];
                 let listPlatformFee = [];

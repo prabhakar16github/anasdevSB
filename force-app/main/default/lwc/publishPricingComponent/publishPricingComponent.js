@@ -292,6 +292,9 @@ export default class PublishPricingComponent extends LightningElement {
                         newLiveCommercialName : '',
                         oldLiveCommercialName : '',
                     }
+
+                    let ev = new CustomEvent('publish',{}); 
+                    this.dispatchEvent(ev); 
                 }
                 else {
                     this.showSpinner = false;
@@ -913,6 +916,13 @@ export default class PublishPricingComponent extends LightningElement {
         if(length < 10) {
             let platformFeeObj = {
                 Id : '',
+                /**Added for Platform Fee maker-checker : UI changes */
+                feeType : '',
+                debitModel : '',
+                startDate : null,
+                endDate : null,
+                frequency : '',
+                /** */
                 amount : '',
                 flatFee : '',
                 percentage : '',
@@ -944,25 +954,32 @@ export default class PublishPricingComponent extends LightningElement {
         this.listPlatformFee[event.currentTarget.dataset.id].percentage = event.detail.value;
     }
 
-    handleChangeInterval(event) {
-        this.selectedInterval = event.detail.value;
-    }
-
     handleChangeType(event) {
-        this.selectedType = event.detail.value;
-    }
-
-    handleChangeStartDate(event) {
-        this.selectedStartDate = event.detail.value;
-    }
-
-    handleChangeEndDate(event) {
-        this.selectedEndDate = event.detail.value;
+        this.listPlatformFee[event.currentTarget.dataset.id].feeType = event.detail.value;
+        // this.selectedType = event.detail.value;
     }
 
     handleChangeDebitModel(event) {
-        this.selectedDebitModel = event.detail.value;
+        this.listPlatformFee[event.currentTarget.dataset.id].debitModel = event.detail.value;
+        // this.selectedDebitModel = event.detail.value;
     }
+
+    handleChangeStartDate(event) {
+        this.listPlatformFee[event.currentTarget.dataset.id].startDate = event.detail.value;
+        // this.selectedStartDate = event.detail.value;
+    }
+
+    handleChangeEndDate(event) {
+        this.listPlatformFee[event.currentTarget.dataset.id].endDate = event.detail.value;
+        // this.selectedEndDate = event.detail.value;
+    }
+
+    handleChangeInterval(event) {
+        this.listPlatformFee[event.currentTarget.dataset.id].frequency = event.detail.value;
+        // this.selectedInterval = event.detail.value;
+    }
+
+    
 
     deleteFixedPricingRow(event) {
         let index = event.currentTarget.dataset.id;

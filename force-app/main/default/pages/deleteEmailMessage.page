@@ -1,0 +1,22 @@
+<apex:page standardController="EmailMessage" standardStylesheets="false">
+
+   
+    <apex:includeLightning />
+
+    <div id="pageContainer" />
+
+    <script>
+        $Lightning.use("c:CSATApp", function() {
+            $Lightning.createComponent(
+                "c:deleteEmailMessageComponent",
+                {
+                	
+                },
+                "pageContainer",
+                function(component) {
+
+                }
+            );
+        });
+    </script>
+</apex:page>

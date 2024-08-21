@@ -1,0 +1,175 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>        
+        <head>
+            <title>PayU</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+                
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <!--<h3  class="center-text"><u style="align:center!important;">ADDENDUM</u></h3>-->
+                <p align="center">
+                    <STRONG><u>[On the letterhead of the Merchant]</u></STRONG>
+                </p>
+                <p>
+                    To,
+                </p>
+                <p align="left">
+                    PayU Payments Private Limited<br/>
+                    9th Floor, Bestech Business Tower<br/>
+                    Sohna Road, Sector 48<br/>
+                    Gurgaon, Haryana- 122002<br/><br/>
+                    Kind Attention: <b>PayU Legal Team</b><br/><br/>
+                    Dear Sir/ Madam,<br/><br/>
+                    <b>Subject: Letter of Representations and Undertakings</b>
+                </p>
+                <p>
+                    We, <strong>{!accObj.Legal_Name__c}</strong> <b>("Merchant" or "we" or "our")</b> hereby submit to you this letter of representations and undertakings <b>("Letter of Representations and Undertakings")</b> in relation to availing PayU Services being offered by PayU Payments Private Limited <b>("PayU Payments")</b> and for which the Merchant and PayU Payments have entered into a technology service agreement or shall enter into such technology service agreement after the execution of this Letter of Representations and Undertakings <b>("Domestic Payout Agreement")</b>. 
+                </p>
+                <p>
+                    For the purposes of this Letter of Representation and Undertakings, <b>"PayU Services"</b> shall mean and include the facilitation by PayU Payments of Domestic Payout facility to the Merchant for sending/ transferring the Payout Amount(s) to individual or multiple beneficiaries as per the Merchant Instructions in terms of Domestic Payout Agreement.
+                </p>
+                
+                <ol type="1">
+                    <span><p><b>1. SCOPE OF THIS LETTER OF REPRESENTATIONS AND UNDERTAKINGS</b></p></span>
+                    <span><p><b>1.1	Representations</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>1.1.1</b> The Merchant makes the representations and warranties to PayU Payments as set out in paragraph 2 (Representations and Warranties) hereof, separately in relation to itself and where applicable each of its sub-merchants. Such representations and warranties are in addition to and not derogation with any other or further representations and warranties that the Merchant itself and for and on behalf of each of its sub merchants is making or shall make under or in connection with PayU Services or in the Domestic Payout Agreement.</p></span>    
+                            <span><p><b>1.1.2</b> Each of the representations and warranties set out in paragraph 2 (Representations and Warranties), are deemed to be made by the Merchant by reference to the facts and circumstances then existing on the date of this Letter of Representations and Undertakings and shall be repeated on each day on which any PayU Services are being availed by the Merchant pursuant to the Domestic Payout Agreement.</p></span>                        
+                        </ul>
+                    </ol>
+                    <span><p><b>1.2	Covenants and Undertakings</b></p></span>
+					<ol>
+                        <ul>
+                            <span><p><b>1.2.1</b> The Merchant agrees and undertakes to irrevocably and unconditionally abide by the covenants and undertakings set out in paragraph 3 (Covenants and Undertakings), at all times while availing PayU Services. Such covenants and undertakings are in addition to and not in derogation with any other or further covenants and undertakings that the Merchant or any of the sub merchants of the Merchant are making or shall make under or in connection with PayU Services or in the Domestic Payout Agreement.</p></span>
+                        </ul>
+                    </ol>
+                    <span><p><b>2. REPRESENTATIONS AND WARRANTIES </b></p></span>
+                    <span><p><b>2.1 Legal Status</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>2.1.1</b> The Merchant is a company/partnership/limited liability partnership/sole proprietor/ society/trust, duly incorporated under the jurisdiction of its incorporation and validly existing under the laws of India.</p></span>    
+                            <span><p><b>2.1.2</b> The Merchant has the power to own its assets and carry on its business in the manner it is being currently conducted.</p></span>  
+                            <span><p><b>2.1.3</b> The Merchant has obtained all necessary approvals and licenses for carrying out its business in India in accordance with Applicable Laws.</p></span>                        
+                        </ul>
+                    </ol>
+                    <span><p><b>2.2	Binding Obligations</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>2.2.1</b> The obligations expressed to be assumed by the Merchant and for and on behalf of its sub merchants under the Domestic Payout Agreement to which it is a party, are legal, valid, binding and enforceable.</p></span>    
+                        </ul>
+                    </ol>
+                    <span><p><b>2.3	Non-conflict with other obligations</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>2.3.1</b> The entry into and performance by the Merchant of, and the transactions contemplated herein and in the Domestic Payout Agreement to which it is a party, do not and will not conflict with:</p></span>    
+                            <ol>
+                                <ul>
+                                    <span><p>(a)	any statute, national, state, provincial, local, municipal, foreign, international, multinational or other law, treaty, code, regulation, ordinance, rule, judgment, order, decree, bye-law, approval of any governmental or regulatory authority, directive, guideline, policy, requirement or other governmental or regulatory restrictions or any similar form of decision of or determination by, or any interpretation or administration having the force of law of any of the foregoing by any governmental or regulatory authority having jurisdiction over the matter in question, whether in effect as of the date of this Letter of Representations and Undertakings or at any time thereafter <b>(" Applicable Laws")</b>. </p></span>  
+                                    <span><p>(b)	the memorandum or the articles of association or any of the constitutional documents of the Merchant; or </p></span>
+                                    <span><p>(c)	any agreement or instrument binding upon the Merchant or any assets or business of the Merchant. </p></span>
+                                </ul>
+                            </ol>
+                        </ul>
+                    </ol>
+                    <p style="font-size:8px;align:left">
+                        ___________________________________________<br/>
+                        <sup>1</sup>Retain whichever is applicable.
+                    </p>
+                    <span><p><b>2.4 Power and Authority</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>2.4.1</b> The Merchant has the power and authority to enter into, perform and deliver, and has taken all necessary actions to authorize its entry into, and performance and delivery, of the Domestic Payout Agreement to which it is or will be a party, and the transactions contemplated by the Domestic Payout Agreement.</p></span>    
+                        </ul>
+                    </ol>
+                    <span><p><b>2.5 Compliances with Applicable Laws</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>2.5.1</b> Any remittances being made or proposed to be made by the Merchant (and each of its sub merchants) are or will be in compliance with all Applicable Laws (including, without limitation, anti money laundering laws and all applicable regulations and directions issued by the Reserve Bank of India ("<b>RBI</b>")) and the Merchant has obtained all necessary approvals thereunder after making all material disclosures. </p></span>    
+                            <span><p><b>2.5.2</b> The offering and/or services by the Merchant in India for which the payments are proposed to be received using PayU Services are compliant with all Applicable Laws.</p></span>    
+                        </ul>
+                    </ol>
+                    <span><p><b>2.6	No Misleading Information</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>2.6.1</b> Any factual information provided by or on behalf of the Merchant or any other sub-merchant of the Merchant in connection with PayU Services or in the Domestic Payout Agreement was true, complete and accurate in all material respects as at the date it was provided or as at the date (if any) at which it is stated.</p></span>    
+                            <span><p><b>2.6.2</b> Nothing has occurred or been omitted from the information so provided and no information has been given or withheld that results in the information provided by or on behalf of the Merchant or any other sub merchant of the Merchant being untrue or misleading in any material respect.</p></span>    
+                        </ul>
+                    </ol>   
+                    
+                    <span><p><b>3.	COVENANTS AND UNDERTAKINGS </b></p></span>
+                    <span><p><b>3.1	Information Undertakings</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>3.1.1</b> The Merchant shall supply to PayU Payments: </p></span>
+                            <ul>
+                                <span><p>(a)	promptly upon becoming aware of them, the details of any litigation, arbitration, investigative or administrative proceedings which are current, threatened or pending against it and which might, if adversely determined, have a material adverse effect on its business or operations; </p></span>  
+                                <span><p>(b)	details of all orders, directions, notices, of any court/tribunal or any governmental or regulatory authority relating to its business or operations; and</p></span>
+                                <span><p>(c)	all documents filed by the Merchant or any of the sub merchants of the Merchant with any governmental or regulatory authority or any person or entity acting under any authority delegated by any governmental or regulatory authority in connection with its or their business or operations. </p></span>
+                            </ul>
+                        </ul>
+                    </ol>
+                    <span><p><b>3.2	General Undertakings</b></p></span>
+                    <ol>
+                        <ul>
+                            <span><p><b>3.2.1 Authorization</b> </p></span>
+                            <p>
+                                The Merchant shall (and shall ensure that each of the sub merchants of the Merchant shall) promptly:
+                            </p>
+                            <ul>
+                                <span><p>(a)	obtain, comply with and do all that is necessary to maintain in full force and effect; and </p></span>  
+                                <span><p>(b)	supply certified copies to the PayU Payments of, </p></span>
+                            </ul>
+                             any authorization required under any Applicable Laws to enable the Merchant to perform its obligations under the Domestic Payout Agreement and to ensure the legality, validity, enforceability or admissibility in evidence of the Domestic Payout Agreement or otherwise required for carrying on its or their business or operations.
+                            <span><p><b>3.2.2	Compliance with laws</b> </p></span>
+                            <ul>
+                                <span><p>(a)	The Merchant shall  (and shall ensure that each sub merchant of the Merchant shall) comply in all respects with Applicable Laws. </p></span>  
+                                <span><p>(b)	Without prejudice to the generality of sub-paragraph (a) above, the Merchant shall (and shall ensure that each sub Merchant of the Merchant shall) comply in all respects with any circular, guideline, direction, notification or rule issued by any governmental or regulatory authority including, without limitation, the RBI with respect to its or their business or operations. </p></span>
+                            </ul>
+                            <span><p><b>3.2.3	Limitation on use of funds</b> </p></span>
+                           <p>
+                               The Merchant shall not use or permit the use PayU Services for distributing any funds directly or indirectly for any business activities prohibited or restricted under Applicable Laws including, without limitation, the business activities relating to (i) Cuba, Sudan, Iran, Myanmar (Burma), Syria or North Korea; and (ii) any other countries that are subject to economic and/or trade sanctions. The Merchant also undertakes not to distribute any of the funds using PayU Services, directly or indirectly for business activities that are subject to sanctions, restrictions or embargoes imposed by the United Nations, the European Union, the State Secretariat for Economic Affairs of Switzerland, the United States Treasury Department’s Office of Foreign Assets Control, HM Treasury of the United Kingdom, the Hong Kong Monetary Authority, the Monetary Authority of Singapore, the RBI and/or any other body. This includes, in particular (but without limitation) business activities involving persons or entities named on any sanctions lists issued by any of the aforementioned bodies.
+                            </p>
+                            <span><p><b>3.2.4</b>	The Merchant hereby undertakes and confirms that the Merchant does not have any ownership from People's Republic of China or ownership from any other restricted countries/categories as may be prescribed by the Government of India or any other regulatory body from time to time. The Merchant shall intimate PayU in advance of any change in the ownership of the Merchant during the term of the Domestic Payout Agreement. The Merchant hereby confirms and undertakes to remain compliant with all the covenants and representations mentioned herein this Letter of Representations and Undertakings during the entire term of the Domestic Payout Agreement. </p></span>
+                        </ul>
+                        <span><p><b>4.</b> The terms capitalized and not defined in this Letter of Representations and Undertakings shall have the same meaning ascribed to them in the Domestic Payout Agreement.</p></span>
+
+                    </ol>
+                </ol>
+                <p align= "left">
+                    Yours sincerely,<br/>
+                    For and on behalf of {!accObj.Legal_Name__c}:<br/>
+                    Name: {!IF(conAuthSign != null, conAuthSign.Name, null)}<br/>
+                    Designation: {!IF(conAuthSign != null, conAuthSign.Designation__c, null)}<br/>
+
+                </p>
+            </div>
+        </body>
+    </html>
+</apex:page>

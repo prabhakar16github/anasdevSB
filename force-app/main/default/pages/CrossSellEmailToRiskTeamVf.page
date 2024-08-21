@@ -1,0 +1,74 @@
+<apex:page standardController="Cross_Sell__c" recordSetVar="CrossSells" extensions="CrossSellEmailtoRiskUser" showHeader="false"
+           lightningStylesheets="true" tabStyle="Cross_Sell__c">
+    
+    <!-- This loads the JavaScript file needed to use Lightning Components for Visualforce-->
+    <apex:includeLightning />
+    <apex:slds />
+    <!-- div tag act as locator while calling Lightning.createComponent Spinner-->
+    <div id="lightningSpinner" class="slds-spinner_container" style="display:block;">
+        <div class="slds-spinner slds-spinner--large" aria-hidden="false" role="alert">
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <!-- div tag act as locator while calling Lightning.createComponent-->
+    <div class="slds-m-around--xx-small">
+        <div id="lightningComponent" style="min-height: 100vh !important;display:none;"/>
+    </div>
+    
+    <script>
+    function test(){
+        console.log('Cross Sell Id '+'{!CrossSells}' );
+        console.log('Cross Sell Id selected '+'{!SelectedCrossSell}');
+        var MCPselectedIds = '{!SelectedCrossSell}';
+        var oppLength = '{!mySelectedSize}';
+        var sentMail = false;
+        if(oppLength ==0){
+            sforce.one.showToast({                
+                "title": "Hello There!!",                
+                "message": "Please select atleast one record to proceed.",                
+                "type": "info"                
+            });
+            window.history.back();
+        }else if(oppLength >0){
+            var confirmCheck = confirm("Do you want to attach the files?");
+            if(confirmCheck == true) {     
+                var lightningSpinnerElt = document.getElementById("lightningSpinner");
+                lightningSpinnerElt.style.display = 'block' ;
+                $Lightning.use("c:InstantSettlementDocUpload_App", function() {
+                    $Lightning.createComponent("c:InstantSettlementDocUpload",
+                                               {"MCPIds":MCPselectedIds,"VFpageCall":true},
+                                               "lightningComponent",
+                                               function(cmp) {
+                                                   var lightningSpinnerElt = document.getElementById("lightningSpinner");
+                                                   lightningSpinnerElt.style.display = 'none' ;
+                                                   var lightningComponentELT = document.getElementById("lightningComponent");
+                                                   lightningComponentELT.style.display = 'block' ;
+                                                   console.log("button was created");
+                                                   // do some stuff
+                                               }
+                                              );
+                });
+            }else{
+                sendEmailToRisk();
+                
+                //window.history.back();
+            }
+        }
+    }
+    window.onload=test;
+    
+    function afterMailSend(){
+        sforce.one.showToast({                
+            "title": "Hello There!!",                
+            "message": "Mail sent successfully.",                
+            "type": "success"                
+        });
+        window.history.back();
+    }
+    </script>
+    
+    <apex:form >
+        <apex:actionFunction name="sendEmailToRisk" action="{!sendEmailtoRiskTeam}" onComplete="afterMailSend();"/>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,7 @@
+<apex:page standardController="Opportunity"  extensions="crossSellForMerchant_Controller"
+           applyHtmlTag="false"     
+           sidebar="false"     
+           showHeader="false"     
+           cache="true">
+   <c:PayoutPricingDetailVFComponent OptyObjId="{!currentRecordId}"></c:PayoutPricingDetailVFComponent>
+</apex:page>

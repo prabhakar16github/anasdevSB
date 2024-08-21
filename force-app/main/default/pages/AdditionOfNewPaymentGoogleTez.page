@@ -1,0 +1,127 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>        
+        <head>
+            <title></title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td{border:1px #000 solid!important;}
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <p align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>  
+                <p style="line-height: 24px; text-align:left;">
+                    {!accObj.Legal_Name__c}<br/>
+                    <strong>
+                        <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                        <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                    </strong>            
+                </p>
+                <p>Dear Sir,</p>
+                <p><strong><u>Subject: Addition and enablement of Google Tez payment option.</u></strong></p>
+                <p><strong>{!accObj.Legal_Name__c}, ("Merchant"),</strong> a <strong>[{!accObj.Business_Entity__r.Name}],</strong> entered into a service agreement dated 
+                    <strong>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!TODAY()}" />
+                        </apex:outputText>, ("Service Agreement")
+                    </strong> with PayU Payments Private Limited ("PayU") in accordance to which PayU provides the Merchant with PayU services for the website domain: <strong>{!oppObj.Website__c}</strong> (hereinafter referred to as "Merchant Site")</p>
+                <p>Merchant is now desirous to enable UPI mobile application of Google “Google Tez” on its Merchant Site and PayU has agreed to activate the same on the Merchant Site on the same terms and condition of the Service Agreement subject to the Merchant accepting the following additional terms and conditions towards enablement of Google Tez. The Merchant understands and confirm to the following.:</p>
+                
+                <ol type="A" style="line-height: 24px;">
+                    <li>The Merchant shall ensure that it is in compliance with (i) Google Privacy Policy on https://www.google.com/intl/ALL/policies/privacy/index.html (ii) Tez Brand Guidelines on <a href="https://support.google.com/tez/business/answer/7530448?p=tez_logo_guidelines&visit_id=0-636487713259263309-1916511869&rd=1" target="_blank">https://support.google.com</a> and Prohibited products and services under Tez for Business Program Policies on https://tez.google.com/business/policy/.</li>
+                    <li>Google will have the right to make public announcement or press release about the enablement of Google Tez and utilizing the Google Platform services Google may enter into license agreement or marketing release with the Merchant for the purposes of utilizing the Merchant’s brand features (including Merchant’s logos) to make any public announcement or press release about enablement of Google Tez.</li>
+                    <li>It is herein clarified that this agreement document may be subject to termination at any time in the event the agreement between Google and PayU does not subsist. PayU reserves the right to suspend Google Tez payment option at any time, if instructed by Google. However PayU shall on a best effort basis provide the Merchant a prior notice of suspension.</li>
+                </ol>
+                
+                <p>The Merchant shall at all times indemnify PayU for breach of this clause, in accordance to the Service Agreement.</p>
+                <p>The Merchant and PayU India agrees that the TDR for Google Tez shall be charged in accordance with the rates mentioned in Schedule A attached hereto.</p>
+                <ol style="line-height:22px;">
+                    <li>The settlement shall be made to the Merchant to the designated bank account of the Merchant as specified in SCHEDULE A attached hereto.</li>
+                    <li>This document shall be effective from the date of signing by both the parties and shall be valid unless otherwise terminated by the parties. This document can be terminated in accordance with the termination provisions under the Service Agreement.</li>
+                    <li>Other than as mentioned in this document, all other terms and conditions of Agreement remain the same. The parties hereby agree that in the event the terms of this document are contradictory to the Service Agreement, the terms of this document shall prevail.</li>
+                </ol><br/>
+                <p>Best Regards,</p><br/>
+                <p>Name:</p>
+                <p>(Authorized Signatory)</p>
+                <p>Acknowledged and Agreed on behalf of <strong>{!accObj.Legal_Name__c}</strong></p><br/>
+                <p>Name:</p>
+                <p>Designation:</p>
+                <p>(Authorized Signatory)</p>
+                <p>[By acknowledging this document, the Merchant hereby confirms that above PayU Services will be provided to the Merchant in accordance with the terms and conditions stated under this document and the Service Agreement.]</p>
+                
+                <!--<h3 align="center">SCHEDULE A <br/>CONSIDERATION</h3>-->
+                <p align="center"><STRONG>SCHEDULE A</STRONG></p>
+                <p align="center"><STRONG>CONSIDERATION</STRONG></p>
+                <p style="text-align:left;"><strong>Part A <br/>
+                    The Merchant shall pay to PayU:</strong>
+                </p>                
+                <table align="center" width="100%" cellpadding="0" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <tr>
+                        <td width="50%" style="padding-left:10px;">Particulars</td>
+                        <td width="50%" style="padding-left:10px;">Fees (Exclusive of Applicable Taxes)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left:10px;">A. Google Tez UPI</td>
+                        <td></td>
+                    </tr>
+                </table><br/>
+                <ul style="margin: 0; padding: 0;">
+                    <li>TDR is inclusive of transaction processing charges, technology service provider (TSP) fees and/ or any other value added services provided by PayU</li>
+                </ul>
+                <p style="text-align:left;"><strong>Part B<br/>
+                    Mode of payment to Merchant:</strong>
+                </p>
+                <table align="center" width="80%" cellpadding="10" cellspacing="0" border="1" style="border-collapse: collapse;">
+                    <th align="left"><u>Particulars</u></th>
+                    <th align="left"><u>Details</u></th>
+                    <tr>     
+                        <td>Bank Name</td>
+                        <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Bank_Name__c != null, lstBankAccDetailParent[0].Bank_Name__c, null)}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Account No.</td>
+                        <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Account_Number__c != null, lstBankAccDetailParent[0].Account_Number__c, null)}</td>
+                    </tr>
+                    <tr>
+                        <td>Branch Address</td>
+                        <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Branch_Address__c != null, lstBankAccDetailParent[0].Branch_Address__c, null)}</td>
+                    </tr>
+                    <tr>
+                        <td>IFSC Code</td>
+                        <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].IFSC_Code__c != null, lstBankAccDetailParent[0].IFSC_Code__c, null)}</td>
+                    </tr>
+                    <tr>
+                        <td>Account Holder Name</td>
+                        <td>{!IF(lstBankAccDetailParent.size>0 && lstBankAccDetailParent[0].Account_Holder_Name__c != null, lstBankAccDetailParent[0].Account_Holder_Name__c, null)}</td>
+                    </tr>
+                </table>    
+            </div>
+        </body>        
+    </html>
+</apex:page>

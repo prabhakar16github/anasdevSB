@@ -1,0 +1,91 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="pdf" standardStylesheets="false"  showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html>
+        <head>
+            <title>Change of Registered Address</title>
+            <style>
+                @page {
+                size: a4;
+                
+                @top-center {
+                content: "";
+                }
+                @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                }
+                }
+                .page-break {
+                display:block;
+                page-break-after:always;
+                }
+                body {
+                font-family: Arial;
+                font-size: 14px;
+                line-height: 20px;
+                text-align:justify;
+                padding-left:30px;
+                padding-right:30px;
+                }
+                .table td 
+                {
+                border:1px #000 solid!important;
+                }
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <p id="dt" align="right">Date:&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></p>  
+                <p>To,</p>
+                <p style="text-align:left;">
+                    <strong>PayU Payments Private Limited</strong>
+                    <br/>9th Floor, Bestech Business Tower, Sector 48, 
+                    <br/> Sohna Road, Gurgaon, Haryana, Pin - 122002
+                    <br/>
+                </p>
+                <p>Dear Sir,</p>
+                <p><strong><u>Subject: Change of Merchant Registered Address.</u></strong></p>
+                <p>We, <strong>{!accObj.Legal_Name__c}</strong> a ({!accObj.Business_Entity__r.Name})  entered into a service agreement/ an agreement vide an account opening form dated <strong>&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></strong> ("Service Agreement") with PayU Payments Private Limited ("PayU") in accordance to which PayU provides us with aggregate online payment gateway solutions and services through its 'PayU' platform ("PayU Services") for our website domain name: <strong>{!oppObj.Website__c}</strong></p>
+                <p>We would like to inform you that we have changed our registered office address from:</p>
+                
+                <table align="center" width="100%" cellpadding="10" cellspacing="0" border="1" style="border-collapse: collapse;" class="table">
+                    <tr>
+                        <td width="50%"><strong>Old Registered office Address</strong></td>
+                        <td width="50%">
+                            <apex:outputText value="{!IF(regParentAddress.Address_Line__c!=null && regParentAddress.Address_Line__c!='', regParentAddress.Address_Line__c + ', ', null)}"/>
+                            <apex:outputText value="{!IF(regParentAddress.City__c!=null && regParentAddress.City__c!='', regParentAddress.City__c + ', ', null)}"/>
+                            <apex:outputText value="{!IF(regParentAddress.State__c!=null && regParentAddress.State__c!='', regParentAddress.State__c + ', ', null)}"/>
+                            <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Country__c!='', regParentAddress.Country__c, null)}"/>
+                            <apex:outputText value="{!IF(regParentAddress.Country__c!=null && regParentAddress.Pincode__c!=null, ' - ', null)}"/>
+                            <apex:outputText value="{!IF(regParentAddress.Pincode__c!=null && regParentAddress.Pincode__c!='', regParentAddress.Pincode__c, null)}"/>
+                        </td>
+                    </tr>
+                </table>
+                <p><strong>To:</strong></p>
+                <table align="center" width="100%" cellpadding="10" cellspacing="0" border="1" style="border-collapse: collapse;" class="table">
+                    <tr>
+                        <td width="50%"><strong>New Registered office Address</strong></td>
+                        <td width="50%">
+                            <apex:outputText value="{!IF(regAddress.Address_Line__c!=null && regAddress.Address_Line__c!='', regAddress.Address_Line__c + ', ', null)}"/>
+                            <apex:outputText value="{!IF(regAddress.City__c!=null && regAddress.City__c!='', regAddress.City__c + ', ', null)}"/>
+                            <apex:outputText value="{!IF(regAddress.State__c!=null && regAddress.State__c!='', regAddress.State__c + ', ', null)}"/>
+                            <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Country__c!='', regAddress.Country__c, null)}"/>
+                            <apex:outputText value="{!IF(regAddress.Country__c!=null && regAddress.Pincode__c!=null, ' - ', null)}"/>
+                            <apex:outputText value="{!IF(regAddress.Pincode__c!=null && regAddress.Pincode__c!='', regAddress.Pincode__c, null)}"/>
+                        </td>
+                    </tr>
+                </table><br/>
+                <p>We request PayU to register and update its records with respect to our new registered office address and provide all communication relating to the Service Agreement including notices, requests, demands, waivers and other communications required or permitted to be given under the Service Agreement shall made in writing to the above mentioned new registered office address.</p>
+                <p>We understand that PayU may require certain documents in order to update its records with respect to our new registered office address and agree to provide the same as and when requested by PayU. We further understand that the change of the new registered office address will be subject to approval by PayU. In addition, we acknowledge PayU will have to update the new registered office address to PayU's record and this may take upto 10 (ten) Business Days from receipt of this letter and such other documents as may be requested by PayU.</p>
+                <p>We recognize that the submission of this letter will constitute an amendment to the Service Agreement and the PayU Services provided will be governed by the terms and conditions of the Service Agreement.</p>
+                <p>We hereby confirm that there has been no change in the legal name, website domain name and/or constitution of <strong>{!accObj.Legal_Name__c}</strong> and/or the authorized signatory since the last application submitted to PayU.</p>
+                
+                <p>Best Regards,</p>
+                <p style="text-align:left;">__________________<br/>                
+                    <strong>Name:</strong><br/>
+                    <strong>Designation:</strong> <br/>
+                    <strong>(Authorized Signatory)</strong>
+                </p>                
+            </div>            
+        </body>
+    </html>
+</apex:page>

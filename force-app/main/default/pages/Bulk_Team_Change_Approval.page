@@ -1,0 +1,48 @@
+<apex:page standardController="Opportunity" recordSetVar="opportunities" extensions="BulkTeamChangeApprovalController" showHeader="false"
+           lightningStylesheets="true" tabStyle="Opportunity" >
+    <script>
+    function test(){
+        console.log('{!opportunities}' );
+        var oppLength = '{!mySelectedSize}';
+        if(oppLength ==0){
+            alert('Please select atleast one Opportunity record');
+            window.history.back();
+        }
+    }
+    window.onload=test;
+    </script>
+    <apex:define name="body">
+        <center>
+            <apex:form id="BulkTeamChangeApprovalController">
+                <apex:pageMessages ></apex:pageMessages>
+                <apex:actionStatus startText="requesting..." id="myStatus">
+                </apex:actionStatus>
+                <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="1" styleClass="topPanelContainer">
+                    <apex:pageMessage summary="Selected Collection Size: {!mySelectedSize}" severity="info" id="owner"/>
+                    <apex:pageBlock >
+                        <apex:pageBlockSection >
+                            <apex:inputField value="{!Opportunity.New_Merchant_Business_Type_Requested__c}" />
+                            <apex:inputField value="{!Opportunity.New_Team_Requested__c}" />
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection > 
+                            <apex:pageBlockSectionItem rendered="{IF({!$User.Id}contains{$Label.massConversionofUsers}',true,false)}">
+                               </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                        
+                        <apex:pageBlockTable value="{!SelectedOpps}" var="oppo">
+                            <apex:column value="{!oppo.Prod_Merchant_Id__c}" />
+                            <apex:column value="{!oppo.Merchant_Business_Type__c}"/>
+                            <apex:column value="{!oppo.Team__c}"/>
+                            <apex:column value="{!oppo.KAM_Change_Approval__c}"/>
+                            <apex:column value="{!oppo.Team_Change_Approval_Status__c}"/>
+                        </apex:pageBlockTable>
+                        <div style="text-align: center;margin-top:30px">
+                            <apex:commandButton action="{!Save}" value="Save" />
+                            <apex:commandButton value="Cancel" action="{!cancel}" />
+                        </div>
+                    </apex:pageBlock>
+                </apex:panelGrid>
+            </apex:form>
+        </center>
+    </apex:define>
+</apex:page>

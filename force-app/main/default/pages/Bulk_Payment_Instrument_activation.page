@@ -1,0 +1,180 @@
+<apex:page standardController="Opportunity" extensions="ServiceAgreementController" renderAs="PDF" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" cache="true">
+    <html xmlns="http://www.w3.org/1999/xhtml"> 
+        
+        
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            
+            <title>Activation of new payment instruments</title>
+            
+            <style>
+                
+                @page {
+                
+                size: a4;
+                
+                
+                
+                @top-center {
+                
+                content: "";
+                
+                }
+                
+                <!--@bottom-center {
+
+content: "Page " counter(page) " of " counter(pages);
+
+}-->
+                
+                }
+                
+                .page-break {
+                
+                display:block;
+                
+                page-break-after:always;
+                
+                }
+                
+                body {
+                
+                font-family: Arial;
+                
+                font-size: 14px;
+                
+                line-height: 20px;
+                
+                text-align:justify;
+                
+                padding-left:30px;
+                
+                padding-right:30px;
+                
+                }
+                
+                .table td{border:1px #000 solid!important;}
+                
+                .footer {
+                
+                position: fixed;
+                
+                left: 0;
+                
+                bottom: 0;
+                
+                width: 100%;
+                
+                height:1%;
+                
+                background-color:white ;
+                
+                color: red;
+                
+                text-align: center;
+                
+                }
+                
+                h1 {text-align: center;
+                font-size: 14px;}
+                
+                
+                
+                
+                
+            </style>
+            
+        </head>
+        
+        
+        <body>
+            <table cellpadding="5px" cellspacing="0" border="0" width="95%" style="border:1px solid #000000;background-color:#e7f3f1;">
+                <tr>
+                    <td width="100%" align="left" valign="middle" style="font-size:15px; color:#000;">
+                        <p>
+                            Congratulations! You can now enable a variety of new payment modes on your PayU account and grow your order value by 3x. No additional documentation required!
+                        </p>
+                        <p>
+                            With these payment options, your customers shall now have extra options to make their payments. This shall promote adoption/conversion rate of your products/services and help increase average customer spend.                                        
+                        </p>
+                        <p>
+                            All you need to do is provide your consent by clicking on "ACCEPT" and we will enable these modes on your account.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="text-align: center;"><strong>Activation of new payment instruments</strong></p>
+            <p>
+                Dear Merchant, (MID:{!oppObj.Prod_Merchant_Id__c})
+            </p>
+            <p>
+                We thank you for choosing PayU as your preferred payments partner and trust that you have been enjoying the wide array of products that PayU has to offer.
+            </p>
+            <p>
+                The Service Fee or TDR or Technology Service Fee or Convenience Fee, as applicable, as defined in the service agreement and subsequent addendums (if any) entered into between PayU and you in connection with the provision of, amongst others, online payments aggregation solutions and services ("Service Agreement"), as revised by PayU from time to time, applicable to the respective payment instruments (that is, payment mechanisms or modes) on a per transaction basis is as follows: 
+            </p>
+            <table style="border-collapse: collapse;padding:100px; text-align : left" border= "1px solid black">
+                <tr>
+                    <th style="padding :3px; width : 100px ">Particulars</th>
+                    <th style="padding :3px; width : 200px">Service Fees or TDR or Technology Service Fee or Convenience Fee, as applicable (excluding GST).</th>
+                </tr>
+                <tr>
+                    <td style="padding :2px;">American Express cards</td>
+                    <td style="padding :2px;">{!prdctaccObj.American_Express_cards__c}</td>
+                </tr>
+                <tr>
+                    <td style="padding :2px;">Diners Credit cards</td>
+                    <td style="padding :2px;">{!prdctaccObj.Diners_Credit_cards__c}</td>
+                </tr><tr>
+                <td style="padding :2px;">Rupay Credit cards</td>
+                <td style="padding :2px;">{!prdctaccObj.Rupay_Credit_cards__c}</td>
+                </tr><tr>
+                <td style="padding :2px;">LazyPay</td>
+                <td style="padding :2px;">{!prdctaccObj.LazyPay__c}</td>
+                </tr><tr>
+                <td style="padding :2px;">Credit card EMIs</td>
+                <td style="padding :2px;">{!prdctaccObj.Credit_card_EMIs__c}</td>
+                </tr><tr>
+                <td style="padding :2px;">Debit card EMIs</td>
+                <td style="padding :2px;">{!prdctaccObj.Debit_card_EMIs__c}</td>
+                </tr><tr>
+                <td style="padding :2px;">Wallets</td>
+                <td style="padding :2px;">{!prdctaccObj.Wallets__c}</td>
+                </tr><tr>
+                <td style="padding :2px;">Deferred Payment Solutions</td>
+                <td style="padding :2px;">{!prdctaccObj.Deferred_Payment_Solutions__c}</td>
+                </tr>
+                
+            </table>
+            <p>
+                The above payment instruments (that is, payment mechanisms or modes) will be activated on your checkout page upon receipt of your consent to activate such additional payment instruments (that is, payment mechanisms or modes). Please note that some of the new payment instruments (that is, payment mechanisms or modes) mentioned in this communication carry additional terms and conditions which will be applicable, as available on the link below: <a href="https://payu.in/payment-instruments-terms-and-conditions/">https://payu.in/payment-instruments-terms-and-conditions/</a>
+            </p>
+            <p>
+                We request you to acknowledge and agree that PayU may in future activate for you new or additional payment instruments (that is, payment mechanisms or modes) by providing an intimation, at such Service Fee or TDR or Technology Service Fee or Convenience Fee, as applicable, as may be advised by PayU together with any additional terms and conditions that may be applicable to the use of such payment instruments (that is, payment mechanisms or modes). Such Service Fee or TDR or Technology Service Fee or Convenience Fee, as applicable, will be subject to revision by PayU from time to time.
+            </p>
+            <p>
+                Unless otherwise defined in this communication, capitalized terms used here will have meanings attributed to them in the Service Agreement or the additional terms and conditions. The additional terms and conditions of this communication when read together with the Service Agreement will constitute the entire agreement between PayU and you.
+            </p>
+            <p>
+                In case of any queries, please raise a ticket at <a href="https://help.payu.in/">https://help.payu.in/</a> or reach out to us at <a href="care@payu.in">care@payu.in</a> including for any opt-out requests, in case you decide to opt out of any of the payment instruments (that is, payment mechanisms or modes). 
+            </p>
+            <p>
+                For PayU Payments Private Limited
+            </p>
+            <p>
+                Acknowledged and accepted by:
+            </p>
+            <p>
+                {!accObj.Legal_Name__c}
+            </p>
+            <p>
+                Authorised Signatory
+            </p>
+            <p>
+                Date: <apex:outputText value="{0, date, d MMMM','  yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText>
+            </p>
+            
+        </body>       
+    </html>
+</apex:page>

@@ -1,0 +1,20 @@
+<apex:page standardStylesheets="false" showHeader="false" sideBar="false" cache="false">
+    <apex:includeLightning />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <div id="csatContainer" />
+
+    <script>
+        $Lightning.use("c:CSATApp", function() {
+            $Lightning.createComponent(
+                "c:CSATForm",
+                {
+                    caseId: '{!$CurrentPage.parameters.id}'
+                },
+                "csatContainer",
+                function(component) {
+
+                }
+            );
+        });
+    </script>
+</apex:page>

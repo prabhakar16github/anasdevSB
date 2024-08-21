@@ -1,0 +1,2 @@
+<apex:page Controller="EmailStatusTrackingController" action="{!messageDoInit}" showHeader="false" sidebar="false">
+</apex:page>
